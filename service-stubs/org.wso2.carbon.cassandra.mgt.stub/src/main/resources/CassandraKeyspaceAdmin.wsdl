@@ -1,0 +1,1001 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://mgt.cassandra.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax21="http://mgt.cassandra.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://mgt.cassandra.carbon.wso2.org">
+    <wsdl:documentation>CassandraKeyspaceAdmin</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ax22="http://mgt.cassandra.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://mgt.cassandra.carbon.wso2.org">
+            <xs:import namespace="http://mgt.cassandra.carbon.wso2.org/xsd"/>
+            <xs:element name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="CassandraServerManagementException" nillable="true" type="ax21:CassandraServerManagementException"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updatedKeyspace">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="keyspaceInformation" nillable="true" type="ax21:KeyspaceInformation"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateColumnFamily">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="columnFamilyInformation" nillable="true" type="ax21:ColumnFamilyInformation"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listKeyspacesOfCurrentUser">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listKeyspacesOfCurrentUserResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listKeyspaces">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="clusterName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="password" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listKeyspacesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listColumnFamiliesOfCurrentUser">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="keyspaceName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listColumnFamiliesOfCurrentUserResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getTokenRange">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getTokenRangeResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax21:TokenRangeInformation"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getResourcePermissionsOfRoles">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="resourcePath" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getResourcePermissionsOfRolesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax21:AuthorizedRolesInformation"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getKeyspaceofCurrentUser">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="keyspaceName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getKeyspaceofCurrentUserResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax21:KeyspaceInformation"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getColumnFamilyOfCurrentUser">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="keyspaceName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="columnFamilyName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getColumnFamilyOfCurrentUserResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax21:ColumnFamilyInformation"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getClusterName">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getClusterNameResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllRoles">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllRolesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteKeyspace">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="keyspaceName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteKeyspaceResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteColumnFamily">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="keyspaceName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="columnFamilyName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteColumnFamilyResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="clearResourcePermissions">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="infoList" nillable="true" type="ax21:AuthorizedRolesInformation"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="clearResourcePermissionsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="authorizeRolesForResource">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="infoList" nillable="true" type="ax21:AuthorizedRolesInformation"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="authorizeRolesForResourceResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addKeyspace">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="keyspaceInformation" nillable="true" type="ax21:KeyspaceInformation"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addColumnFamily">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="columnFamilyInformation" nillable="true" type="ax21:ColumnFamilyInformation"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://mgt.cassandra.carbon.wso2.org/xsd">
+            <xs:complexType name="CassandraServerManagementException">
+                <xs:sequence/>
+            </xs:complexType>
+            <xs:complexType name="KeyspaceInformation">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="columnFamilies" nillable="true" type="ax21:ColumnFamilyInformation"/>
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="replicationFactor" type="xs:int"/>
+                    <xs:element minOccurs="0" name="strategyClass" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="strategyOptions" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ColumnFamilyInformation">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="columns" nillable="true" type="ax21:ColumnInformation"/>
+                    <xs:element minOccurs="0" name="comment" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="comparatorType" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="defaultValidationClass" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="gcGraceSeconds" type="xs:int"/>
+                    <xs:element minOccurs="0" name="id" type="xs:int"/>
+                    <xs:element minOccurs="0" name="keyCacheSize" type="xs:double"/>
+                    <xs:element minOccurs="0" name="keyValidationClass" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="maxCompactionThreshold" type="xs:int"/>
+                    <xs:element minOccurs="0" name="minCompactionThreshold" type="xs:int"/>
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="readRepairChance" type="xs:double"/>
+                    <xs:element minOccurs="0" name="rowCacheSavePeriodInSeconds" type="xs:int"/>
+                    <xs:element minOccurs="0" name="rowCacheSize" type="xs:double"/>
+                    <xs:element minOccurs="0" name="subComparatorType" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ColumnInformation">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="indexName" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="indexType" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="validationClass" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="TokenRangeInformation">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="endToken" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="endpoints" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="startToken" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="AuthorizedRolesInformation">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="authorizedRoles" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="permission" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="resource" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getKeyspaceofCurrentUserRequest">
+        <wsdl:part name="parameters" element="ns:getKeyspaceofCurrentUser"/>
+    </wsdl:message>
+    <wsdl:message name="getKeyspaceofCurrentUserResponse">
+        <wsdl:part name="parameters" element="ns:getKeyspaceofCurrentUserResponse"/>
+    </wsdl:message>
+    <wsdl:message name="CassandraKeyspaceAdminCassandraServerManagementException">
+        <wsdl:part name="parameters" element="ns:CassandraKeyspaceAdminCassandraServerManagementException"/>
+    </wsdl:message>
+    <wsdl:message name="updateColumnFamilyRequest">
+        <wsdl:part name="parameters" element="ns:updateColumnFamily"/>
+    </wsdl:message>
+    <wsdl:message name="getResourcePermissionsOfRolesRequest">
+        <wsdl:part name="parameters" element="ns:getResourcePermissionsOfRoles"/>
+    </wsdl:message>
+    <wsdl:message name="getResourcePermissionsOfRolesResponse">
+        <wsdl:part name="parameters" element="ns:getResourcePermissionsOfRolesResponse"/>
+    </wsdl:message>
+    <wsdl:message name="listColumnFamiliesOfCurrentUserRequest">
+        <wsdl:part name="parameters" element="ns:listColumnFamiliesOfCurrentUser"/>
+    </wsdl:message>
+    <wsdl:message name="listColumnFamiliesOfCurrentUserResponse">
+        <wsdl:part name="parameters" element="ns:listColumnFamiliesOfCurrentUserResponse"/>
+    </wsdl:message>
+    <wsdl:message name="addColumnFamilyRequest">
+        <wsdl:part name="parameters" element="ns:addColumnFamily"/>
+    </wsdl:message>
+    <wsdl:message name="getColumnFamilyOfCurrentUserRequest">
+        <wsdl:part name="parameters" element="ns:getColumnFamilyOfCurrentUser"/>
+    </wsdl:message>
+    <wsdl:message name="getColumnFamilyOfCurrentUserResponse">
+        <wsdl:part name="parameters" element="ns:getColumnFamilyOfCurrentUserResponse"/>
+    </wsdl:message>
+    <wsdl:message name="authorizeRolesForResourceRequest">
+        <wsdl:part name="parameters" element="ns:authorizeRolesForResource"/>
+    </wsdl:message>
+    <wsdl:message name="authorizeRolesForResourceResponse">
+        <wsdl:part name="parameters" element="ns:authorizeRolesForResourceResponse"/>
+    </wsdl:message>
+    <wsdl:message name="deleteColumnFamilyRequest">
+        <wsdl:part name="parameters" element="ns:deleteColumnFamily"/>
+    </wsdl:message>
+    <wsdl:message name="deleteColumnFamilyResponse">
+        <wsdl:part name="parameters" element="ns:deleteColumnFamilyResponse"/>
+    </wsdl:message>
+    <wsdl:message name="updatedKeyspaceRequest">
+        <wsdl:part name="parameters" element="ns:updatedKeyspace"/>
+    </wsdl:message>
+    <wsdl:message name="deleteKeyspaceRequest">
+        <wsdl:part name="parameters" element="ns:deleteKeyspace"/>
+    </wsdl:message>
+    <wsdl:message name="deleteKeyspaceResponse">
+        <wsdl:part name="parameters" element="ns:deleteKeyspaceResponse"/>
+    </wsdl:message>
+    <wsdl:message name="listKeyspacesRequest">
+        <wsdl:part name="parameters" element="ns:listKeyspaces"/>
+    </wsdl:message>
+    <wsdl:message name="listKeyspacesResponse">
+        <wsdl:part name="parameters" element="ns:listKeyspacesResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getClusterNameRequest">
+        <wsdl:part name="parameters" element="ns:getClusterName"/>
+    </wsdl:message>
+    <wsdl:message name="getClusterNameResponse">
+        <wsdl:part name="parameters" element="ns:getClusterNameResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getAllRolesRequest">
+        <wsdl:part name="parameters" element="ns:getAllRoles"/>
+    </wsdl:message>
+    <wsdl:message name="getAllRolesResponse">
+        <wsdl:part name="parameters" element="ns:getAllRolesResponse"/>
+    </wsdl:message>
+    <wsdl:message name="listKeyspacesOfCurrentUserRequest">
+        <wsdl:part name="parameters" element="ns:listKeyspacesOfCurrentUser"/>
+    </wsdl:message>
+    <wsdl:message name="listKeyspacesOfCurrentUserResponse">
+        <wsdl:part name="parameters" element="ns:listKeyspacesOfCurrentUserResponse"/>
+    </wsdl:message>
+    <wsdl:message name="clearResourcePermissionsRequest">
+        <wsdl:part name="parameters" element="ns:clearResourcePermissions"/>
+    </wsdl:message>
+    <wsdl:message name="clearResourcePermissionsResponse">
+        <wsdl:part name="parameters" element="ns:clearResourcePermissionsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getTokenRangeRequest">
+        <wsdl:part name="parameters" element="ns:getTokenRange"/>
+    </wsdl:message>
+    <wsdl:message name="getTokenRangeResponse">
+        <wsdl:part name="parameters" element="ns:getTokenRangeResponse"/>
+    </wsdl:message>
+    <wsdl:message name="addKeyspaceRequest">
+        <wsdl:part name="parameters" element="ns:addKeyspace"/>
+    </wsdl:message>
+    <wsdl:portType name="CassandraKeyspaceAdminPortType">
+        <wsdl:operation name="getKeyspaceofCurrentUser">
+            <wsdl:input message="ns:getKeyspaceofCurrentUserRequest" wsaw:Action="urn:getKeyspaceofCurrentUser"/>
+            <wsdl:output message="ns:getKeyspaceofCurrentUserResponse" wsaw:Action="urn:getKeyspaceofCurrentUserResponse"/>
+            <wsdl:fault message="ns:CassandraKeyspaceAdminCassandraServerManagementException" name="CassandraKeyspaceAdminCassandraServerManagementException" wsaw:Action="urn:getKeyspaceofCurrentUserCassandraKeyspaceAdminCassandraServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateColumnFamily">
+            <wsdl:input message="ns:updateColumnFamilyRequest" wsaw:Action="urn:updateColumnFamily"/>
+            <wsdl:fault message="ns:CassandraKeyspaceAdminCassandraServerManagementException" name="CassandraKeyspaceAdminCassandraServerManagementException" wsaw:Action="urn:updateColumnFamilyCassandraKeyspaceAdminCassandraServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getResourcePermissionsOfRoles">
+            <wsdl:input message="ns:getResourcePermissionsOfRolesRequest" wsaw:Action="urn:getResourcePermissionsOfRoles"/>
+            <wsdl:output message="ns:getResourcePermissionsOfRolesResponse" wsaw:Action="urn:getResourcePermissionsOfRolesResponse"/>
+            <wsdl:fault message="ns:CassandraKeyspaceAdminCassandraServerManagementException" name="CassandraKeyspaceAdminCassandraServerManagementException" wsaw:Action="urn:getResourcePermissionsOfRolesCassandraKeyspaceAdminCassandraServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="listColumnFamiliesOfCurrentUser">
+            <wsdl:input message="ns:listColumnFamiliesOfCurrentUserRequest" wsaw:Action="urn:listColumnFamiliesOfCurrentUser"/>
+            <wsdl:output message="ns:listColumnFamiliesOfCurrentUserResponse" wsaw:Action="urn:listColumnFamiliesOfCurrentUserResponse"/>
+            <wsdl:fault message="ns:CassandraKeyspaceAdminCassandraServerManagementException" name="CassandraKeyspaceAdminCassandraServerManagementException" wsaw:Action="urn:listColumnFamiliesOfCurrentUserCassandraKeyspaceAdminCassandraServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="addColumnFamily">
+            <wsdl:input message="ns:addColumnFamilyRequest" wsaw:Action="urn:addColumnFamily"/>
+            <wsdl:fault message="ns:CassandraKeyspaceAdminCassandraServerManagementException" name="CassandraKeyspaceAdminCassandraServerManagementException" wsaw:Action="urn:addColumnFamilyCassandraKeyspaceAdminCassandraServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getColumnFamilyOfCurrentUser">
+            <wsdl:input message="ns:getColumnFamilyOfCurrentUserRequest" wsaw:Action="urn:getColumnFamilyOfCurrentUser"/>
+            <wsdl:output message="ns:getColumnFamilyOfCurrentUserResponse" wsaw:Action="urn:getColumnFamilyOfCurrentUserResponse"/>
+            <wsdl:fault message="ns:CassandraKeyspaceAdminCassandraServerManagementException" name="CassandraKeyspaceAdminCassandraServerManagementException" wsaw:Action="urn:getColumnFamilyOfCurrentUserCassandraKeyspaceAdminCassandraServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="authorizeRolesForResource">
+            <wsdl:input message="ns:authorizeRolesForResourceRequest" wsaw:Action="urn:authorizeRolesForResource"/>
+            <wsdl:output message="ns:authorizeRolesForResourceResponse" wsaw:Action="urn:authorizeRolesForResourceResponse"/>
+            <wsdl:fault message="ns:CassandraKeyspaceAdminCassandraServerManagementException" name="CassandraKeyspaceAdminCassandraServerManagementException" wsaw:Action="urn:authorizeRolesForResourceCassandraKeyspaceAdminCassandraServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="deleteColumnFamily">
+            <wsdl:input message="ns:deleteColumnFamilyRequest" wsaw:Action="urn:deleteColumnFamily"/>
+            <wsdl:output message="ns:deleteColumnFamilyResponse" wsaw:Action="urn:deleteColumnFamilyResponse"/>
+            <wsdl:fault message="ns:CassandraKeyspaceAdminCassandraServerManagementException" name="CassandraKeyspaceAdminCassandraServerManagementException" wsaw:Action="urn:deleteColumnFamilyCassandraKeyspaceAdminCassandraServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="updatedKeyspace">
+            <wsdl:input message="ns:updatedKeyspaceRequest" wsaw:Action="urn:updatedKeyspace"/>
+            <wsdl:fault message="ns:CassandraKeyspaceAdminCassandraServerManagementException" name="CassandraKeyspaceAdminCassandraServerManagementException" wsaw:Action="urn:updatedKeyspaceCassandraKeyspaceAdminCassandraServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="deleteKeyspace">
+            <wsdl:input message="ns:deleteKeyspaceRequest" wsaw:Action="urn:deleteKeyspace"/>
+            <wsdl:output message="ns:deleteKeyspaceResponse" wsaw:Action="urn:deleteKeyspaceResponse"/>
+            <wsdl:fault message="ns:CassandraKeyspaceAdminCassandraServerManagementException" name="CassandraKeyspaceAdminCassandraServerManagementException" wsaw:Action="urn:deleteKeyspaceCassandraKeyspaceAdminCassandraServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="listKeyspaces">
+            <wsdl:input message="ns:listKeyspacesRequest" wsaw:Action="urn:listKeyspaces"/>
+            <wsdl:output message="ns:listKeyspacesResponse" wsaw:Action="urn:listKeyspacesResponse"/>
+            <wsdl:fault message="ns:CassandraKeyspaceAdminCassandraServerManagementException" name="CassandraKeyspaceAdminCassandraServerManagementException" wsaw:Action="urn:listKeyspacesCassandraKeyspaceAdminCassandraServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getClusterName">
+            <wsdl:input message="ns:getClusterNameRequest" wsaw:Action="urn:getClusterName"/>
+            <wsdl:output message="ns:getClusterNameResponse" wsaw:Action="urn:getClusterNameResponse"/>
+            <wsdl:fault message="ns:CassandraKeyspaceAdminCassandraServerManagementException" name="CassandraKeyspaceAdminCassandraServerManagementException" wsaw:Action="urn:getClusterNameCassandraKeyspaceAdminCassandraServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getAllRoles">
+            <wsdl:input message="ns:getAllRolesRequest" wsaw:Action="urn:getAllRoles"/>
+            <wsdl:output message="ns:getAllRolesResponse" wsaw:Action="urn:getAllRolesResponse"/>
+            <wsdl:fault message="ns:CassandraKeyspaceAdminCassandraServerManagementException" name="CassandraKeyspaceAdminCassandraServerManagementException" wsaw:Action="urn:getAllRolesCassandraKeyspaceAdminCassandraServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="listKeyspacesOfCurrentUser">
+            <wsdl:input message="ns:listKeyspacesOfCurrentUserRequest" wsaw:Action="urn:listKeyspacesOfCurrentUser"/>
+            <wsdl:output message="ns:listKeyspacesOfCurrentUserResponse" wsaw:Action="urn:listKeyspacesOfCurrentUserResponse"/>
+            <wsdl:fault message="ns:CassandraKeyspaceAdminCassandraServerManagementException" name="CassandraKeyspaceAdminCassandraServerManagementException" wsaw:Action="urn:listKeyspacesOfCurrentUserCassandraKeyspaceAdminCassandraServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="clearResourcePermissions">
+            <wsdl:input message="ns:clearResourcePermissionsRequest" wsaw:Action="urn:clearResourcePermissions"/>
+            <wsdl:output message="ns:clearResourcePermissionsResponse" wsaw:Action="urn:clearResourcePermissionsResponse"/>
+            <wsdl:fault message="ns:CassandraKeyspaceAdminCassandraServerManagementException" name="CassandraKeyspaceAdminCassandraServerManagementException" wsaw:Action="urn:clearResourcePermissionsCassandraKeyspaceAdminCassandraServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getTokenRange">
+            <wsdl:input message="ns:getTokenRangeRequest" wsaw:Action="urn:getTokenRange"/>
+            <wsdl:output message="ns:getTokenRangeResponse" wsaw:Action="urn:getTokenRangeResponse"/>
+            <wsdl:fault message="ns:CassandraKeyspaceAdminCassandraServerManagementException" name="CassandraKeyspaceAdminCassandraServerManagementException" wsaw:Action="urn:getTokenRangeCassandraKeyspaceAdminCassandraServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="addKeyspace">
+            <wsdl:input message="ns:addKeyspaceRequest" wsaw:Action="urn:addKeyspace"/>
+            <wsdl:fault message="ns:CassandraKeyspaceAdminCassandraServerManagementException" name="CassandraKeyspaceAdminCassandraServerManagementException" wsaw:Action="urn:addKeyspaceCassandraKeyspaceAdminCassandraServerManagementException"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="CassandraKeyspaceAdminSoap11Binding" type="ns:CassandraKeyspaceAdminPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getKeyspaceofCurrentUser">
+            <soap:operation soapAction="urn:getKeyspaceofCurrentUser" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getResourcePermissionsOfRoles">
+            <soap:operation soapAction="urn:getResourcePermissionsOfRoles" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateColumnFamily">
+            <soap:operation soapAction="urn:updateColumnFamily" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listColumnFamiliesOfCurrentUser">
+            <soap:operation soapAction="urn:listColumnFamiliesOfCurrentUser" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addColumnFamily">
+            <soap:operation soapAction="urn:addColumnFamily" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getColumnFamilyOfCurrentUser">
+            <soap:operation soapAction="urn:getColumnFamilyOfCurrentUser" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="authorizeRolesForResource">
+            <soap:operation soapAction="urn:authorizeRolesForResource" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteColumnFamily">
+            <soap:operation soapAction="urn:deleteColumnFamily" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updatedKeyspace">
+            <soap:operation soapAction="urn:updatedKeyspace" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteKeyspace">
+            <soap:operation soapAction="urn:deleteKeyspace" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listKeyspaces">
+            <soap:operation soapAction="urn:listKeyspaces" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getClusterName">
+            <soap:operation soapAction="urn:getClusterName" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllRoles">
+            <soap:operation soapAction="urn:getAllRoles" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listKeyspacesOfCurrentUser">
+            <soap:operation soapAction="urn:listKeyspacesOfCurrentUser" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="clearResourcePermissions">
+            <soap:operation soapAction="urn:clearResourcePermissions" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getTokenRange">
+            <soap:operation soapAction="urn:getTokenRange" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addKeyspace">
+            <soap:operation soapAction="urn:addKeyspace" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="CassandraKeyspaceAdminSoap12Binding" type="ns:CassandraKeyspaceAdminPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getKeyspaceofCurrentUser">
+            <soap12:operation soapAction="urn:getKeyspaceofCurrentUser" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap12:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getResourcePermissionsOfRoles">
+            <soap12:operation soapAction="urn:getResourcePermissionsOfRoles" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap12:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateColumnFamily">
+            <soap12:operation soapAction="urn:updateColumnFamily" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap12:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listColumnFamiliesOfCurrentUser">
+            <soap12:operation soapAction="urn:listColumnFamiliesOfCurrentUser" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap12:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addColumnFamily">
+            <soap12:operation soapAction="urn:addColumnFamily" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap12:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getColumnFamilyOfCurrentUser">
+            <soap12:operation soapAction="urn:getColumnFamilyOfCurrentUser" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap12:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="authorizeRolesForResource">
+            <soap12:operation soapAction="urn:authorizeRolesForResource" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap12:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteColumnFamily">
+            <soap12:operation soapAction="urn:deleteColumnFamily" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap12:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updatedKeyspace">
+            <soap12:operation soapAction="urn:updatedKeyspace" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap12:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteKeyspace">
+            <soap12:operation soapAction="urn:deleteKeyspace" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap12:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listKeyspaces">
+            <soap12:operation soapAction="urn:listKeyspaces" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap12:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getClusterName">
+            <soap12:operation soapAction="urn:getClusterName" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap12:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllRoles">
+            <soap12:operation soapAction="urn:getAllRoles" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap12:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listKeyspacesOfCurrentUser">
+            <soap12:operation soapAction="urn:listKeyspacesOfCurrentUser" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap12:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="clearResourcePermissions">
+            <soap12:operation soapAction="urn:clearResourcePermissions" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap12:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getTokenRange">
+            <soap12:operation soapAction="urn:getTokenRange" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap12:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addKeyspace">
+            <soap12:operation soapAction="urn:addKeyspace" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="CassandraKeyspaceAdminCassandraServerManagementException">
+                <soap12:fault use="literal" name="CassandraKeyspaceAdminCassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="CassandraKeyspaceAdminHttpBinding" type="ns:CassandraKeyspaceAdminPortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="getKeyspaceofCurrentUser">
+            <http:operation location="getKeyspaceofCurrentUser"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getResourcePermissionsOfRoles">
+            <http:operation location="getResourcePermissionsOfRoles"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateColumnFamily">
+            <http:operation location="updateColumnFamily"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="listColumnFamiliesOfCurrentUser">
+            <http:operation location="listColumnFamiliesOfCurrentUser"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addColumnFamily">
+            <http:operation location="addColumnFamily"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getColumnFamilyOfCurrentUser">
+            <http:operation location="getColumnFamilyOfCurrentUser"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="authorizeRolesForResource">
+            <http:operation location="authorizeRolesForResource"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteColumnFamily">
+            <http:operation location="deleteColumnFamily"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updatedKeyspace">
+            <http:operation location="updatedKeyspace"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="deleteKeyspace">
+            <http:operation location="deleteKeyspace"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listKeyspaces">
+            <http:operation location="listKeyspaces"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getClusterName">
+            <http:operation location="getClusterName"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAllRoles">
+            <http:operation location="getAllRoles"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listKeyspacesOfCurrentUser">
+            <http:operation location="listKeyspacesOfCurrentUser"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="clearResourcePermissions">
+            <http:operation location="clearResourcePermissions"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getTokenRange">
+            <http:operation location="getTokenRange"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addKeyspace">
+            <http:operation location="addKeyspace"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="CassandraKeyspaceAdmin">
+        <wsdl:port name="CassandraKeyspaceAdminHttpSoap11Endpoint" binding="ns:CassandraKeyspaceAdminSoap11Binding">
+            <soap:address location="http://localhost:8080/axis2/services/CassandraKeyspaceAdmin"/>
+        </wsdl:port>
+        <wsdl:port name="CassandraKeyspaceAdminHttpSoap12Endpoint" binding="ns:CassandraKeyspaceAdminSoap12Binding">
+            <soap12:address location="http://localhost:8080/axis2/services/CassandraKeyspaceAdmin"/>
+        </wsdl:port>
+        <wsdl:port name="CassandraKeyspaceAdminHttpEndpoint" binding="ns:CassandraKeyspaceAdminHttpBinding">
+            <http:address location="http://localhost:8080/axis2/services/CassandraKeyspaceAdmin"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

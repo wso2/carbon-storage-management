@@ -1,0 +1,55 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<component xmlns="http://products.wso2.org/carbon">
+    <!-- cassandra mgt menu configuration -->
+    <menus>
+        <menu>
+            <id>cassandra_explorer_menu</id>
+            <i18n-key>cassandra.explorer</i18n-key>
+            <i18n-bundle>org.wso2.carbon.cassandra.explorer.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>tools_menu</parent-menu>
+            <link>#</link>
+            <region>region5</region>
+            <order>30</order>
+            <style-class>tools</style-class>
+            <icon>../cassandraexplorer/images/explorer.png</icon>
+        </menu>
+        <menu>
+            <id>cassandra_explorer_connect_menu</id>
+            <i18n-key>cassandra.explorer.connect</i18n-key>
+            <i18n-bundle>org.wso2.carbon.cassandra.explorer.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>cassandra_explorer_menu</parent-menu>
+            <link>../cassandraexplorer/cassandra_connect.jsp</link>
+            <region>region5</region>
+            <order>35</order>
+            <style-class>tools</style-class>
+            <icon>../cassandraexplorer/images/connect.png</icon>
+        </menu>
+        <menu>
+            <id>cassandra_explorer_list_keyspaces_menu</id>
+            <i18n-key>cassandra.explorer.explore</i18n-key>
+            <i18n-bundle>org.wso2.carbon.cassandra.explorer.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>cassandra_explorer_menu</parent-menu>
+            <link>../cassandraexplorer/cassandra_keyspaces.jsp</link>
+            <region>region5</region>
+            <order>40</order>
+            <style-class>tools</style-class>
+            <icon>../cassandraexplorer/images/keyspaces_list.png</icon>
+        </menu>
+    </menus>
+</component>

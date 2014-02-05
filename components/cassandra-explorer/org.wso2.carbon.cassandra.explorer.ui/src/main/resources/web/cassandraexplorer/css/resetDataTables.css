@@ -1,0 +1,53 @@
+table.dataTable {
+    border-left: solid 1px #cccccc;
+    border-top: solid 1px #cccccc;
+    border-collapse: collapse;
+}
+
+table.dataTable th {
+    color: #333;
+    font-size: 11px;
+    text-align: left;
+    padding: 6px 5px !important;
+
+    border-right: solid 1px #cccccc;
+    border-bottom: solid 1px #cccccc;
+
+    color: #111111;
+    font-family: "Lucida Grande","Lucida Sans","Microsoft Sans Serif","Lucida Sans Unicode","Verdana","Sans-serif","trebuchet ms" !important;
+	background:transparent url("../../admin/images/table-header.gif") repeat-x left bottom !important; 
+}
+
+table.dataTable td {
+    border-right: solid 1px #cccccc;
+    border-bottom: solid 1px #cccccc;
+    margin: 0px;
+    padding: 5px !important;
+
+    color: #111111;
+    font-family: "Lucida Grande","Lucida Sans","Microsoft Sans Serif","Lucida Sans Unicode","Verdana","Sans-serif","trebuchet ms" !important;
+
+}
+/*table.dataTable tr:nth-child(even) {background: #EDEDED}
+table.dataTable tr:nth-child(odd) {background: #FFF}*/
+tr.odd td.sorting_1 {
+    background-color: #EDEDED;
+}
+tr.odd td.sorting_1 {
+    background-color: #ffffff;
+}
+.dataTables_length{
+    padding:10px 0 !important;
+}
+.dataTables_filter{
+    padding:10px 0 !important;
+}
+.dataTables_info{
+    padding:10px 0 !important;
+}
+.dataTables_paginate{
+    padding:10px 0 !important;
+}
+tr.odd td{
+	background-color: #EFECF5;
+}

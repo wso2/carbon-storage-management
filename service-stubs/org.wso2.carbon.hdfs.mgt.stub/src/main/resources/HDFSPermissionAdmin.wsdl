@@ -1,0 +1,329 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://mgt.hdfs.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax21="http://mgt.hdfs.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://mgt.hdfs.carbon.wso2.org">
+    <wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://mgt.hdfs.carbon.wso2.org/xsd">
+            <xs:complexType name="HDFSServerManagementException">
+                <xs:sequence/>
+            </xs:complexType>
+            <xs:complexType name="HDFSPermissionBean">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="rolePermissions" nillable="true" type="ax21:HDFSPermissionEntry"/>
+                    <xs:element minOccurs="0" name="userHomeFolder" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="HDFSPermissionEntry">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="executeAllow" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="readAllow" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="writeAllow" type="xs:boolean"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax22="http://mgt.hdfs.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://mgt.hdfs.carbon.wso2.org">
+            <xs:import namespace="http://mgt.hdfs.carbon.wso2.org/xsd"/>
+            <xs:element name="HDFSPermissionAdminHDFSServerManagementException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="HDFSServerManagementException" nillable="true" type="ax21:HDFSServerManagementException"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateRole">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="user" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="permission" nillable="true" type="ax21:HDFSPermissionBean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateRoleResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getTenantUsers">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getTenantUsersResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getHDFSRolesWithPermissions">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getHDFSRolesWithPermissionsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax21:HDFSPermissionBean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteRole">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="user" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteRoleResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addRole">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="user" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="permission" nillable="true" type="ax21:HDFSPermissionBean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addRoleResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="deleteRoleRequest">
+        <wsdl:part name="parameters" element="ns:deleteRole"/>
+    </wsdl:message>
+    <wsdl:message name="deleteRoleResponse">
+        <wsdl:part name="parameters" element="ns:deleteRoleResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getHDFSRolesWithPermissionsRequest">
+        <wsdl:part name="parameters" element="ns:getHDFSRolesWithPermissions"/>
+    </wsdl:message>
+    <wsdl:message name="getHDFSRolesWithPermissionsResponse">
+        <wsdl:part name="parameters" element="ns:getHDFSRolesWithPermissionsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="updateRoleRequest">
+        <wsdl:part name="parameters" element="ns:updateRole"/>
+    </wsdl:message>
+    <wsdl:message name="updateRoleResponse">
+        <wsdl:part name="parameters" element="ns:updateRoleResponse"/>
+    </wsdl:message>
+    <wsdl:message name="HDFSPermissionAdminHDFSServerManagementException">
+        <wsdl:part name="parameters" element="ns:HDFSPermissionAdminHDFSServerManagementException"/>
+    </wsdl:message>
+    <wsdl:message name="addRoleRequest">
+        <wsdl:part name="parameters" element="ns:addRole"/>
+    </wsdl:message>
+    <wsdl:message name="addRoleResponse">
+        <wsdl:part name="parameters" element="ns:addRoleResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getTenantUsersRequest">
+        <wsdl:part name="parameters" element="ns:getTenantUsers"/>
+    </wsdl:message>
+    <wsdl:message name="getTenantUsersResponse">
+        <wsdl:part name="parameters" element="ns:getTenantUsersResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="HDFSPermissionAdminPortType">
+        <wsdl:operation name="deleteRole">
+            <wsdl:input message="ns:deleteRoleRequest" wsaw:Action="urn:deleteRole"/>
+            <wsdl:output message="ns:deleteRoleResponse" wsaw:Action="urn:deleteRoleResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getHDFSRolesWithPermissions">
+            <wsdl:input message="ns:getHDFSRolesWithPermissionsRequest" wsaw:Action="urn:getHDFSRolesWithPermissions"/>
+            <wsdl:output message="ns:getHDFSRolesWithPermissionsResponse" wsaw:Action="urn:getHDFSRolesWithPermissionsResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateRole">
+            <wsdl:input message="ns:updateRoleRequest" wsaw:Action="urn:updateRole"/>
+            <wsdl:output message="ns:updateRoleResponse" wsaw:Action="urn:updateRoleResponse"/>
+            <wsdl:fault message="ns:HDFSPermissionAdminHDFSServerManagementException" name="HDFSPermissionAdminHDFSServerManagementException" wsaw:Action="urn:updateRoleHDFSPermissionAdminHDFSServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="addRole">
+            <wsdl:input message="ns:addRoleRequest" wsaw:Action="urn:addRole"/>
+            <wsdl:output message="ns:addRoleResponse" wsaw:Action="urn:addRoleResponse"/>
+            <wsdl:fault message="ns:HDFSPermissionAdminHDFSServerManagementException" name="HDFSPermissionAdminHDFSServerManagementException" wsaw:Action="urn:addRoleHDFSPermissionAdminHDFSServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getTenantUsers">
+            <wsdl:input message="ns:getTenantUsersRequest" wsaw:Action="urn:getTenantUsers"/>
+            <wsdl:output message="ns:getTenantUsersResponse" wsaw:Action="urn:getTenantUsersResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="HDFSPermissionAdminSoap11Binding" type="ns:HDFSPermissionAdminPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="deleteRole">
+            <soap:operation soapAction="urn:deleteRole" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getHDFSRolesWithPermissions">
+            <soap:operation soapAction="urn:getHDFSRolesWithPermissions" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateRole">
+            <soap:operation soapAction="urn:updateRole" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="HDFSPermissionAdminHDFSServerManagementException">
+                <soap:fault use="literal" name="HDFSPermissionAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addRole">
+            <soap:operation soapAction="urn:addRole" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="HDFSPermissionAdminHDFSServerManagementException">
+                <soap:fault use="literal" name="HDFSPermissionAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getTenantUsers">
+            <soap:operation soapAction="urn:getTenantUsers" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="HDFSPermissionAdminSoap12Binding" type="ns:HDFSPermissionAdminPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="deleteRole">
+            <soap12:operation soapAction="urn:deleteRole" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getHDFSRolesWithPermissions">
+            <soap12:operation soapAction="urn:getHDFSRolesWithPermissions" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateRole">
+            <soap12:operation soapAction="urn:updateRole" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="HDFSPermissionAdminHDFSServerManagementException">
+                <soap12:fault use="literal" name="HDFSPermissionAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addRole">
+            <soap12:operation soapAction="urn:addRole" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="HDFSPermissionAdminHDFSServerManagementException">
+                <soap12:fault use="literal" name="HDFSPermissionAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getTenantUsers">
+            <soap12:operation soapAction="urn:getTenantUsers" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="HDFSPermissionAdminHttpBinding" type="ns:HDFSPermissionAdminPortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="deleteRole">
+            <http:operation location="deleteRole"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getHDFSRolesWithPermissions">
+            <http:operation location="getHDFSRolesWithPermissions"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateRole">
+            <http:operation location="updateRole"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addRole">
+            <http:operation location="addRole"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getTenantUsers">
+            <http:operation location="getTenantUsers"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="HDFSPermissionAdmin">
+        <wsdl:port name="HDFSPermissionAdminHttpSoap11Endpoint" binding="ns:HDFSPermissionAdminSoap11Binding">
+            <soap:address location="http://localhost:8080/axis2/services/HDFSPermissionAdmin"/>
+        </wsdl:port>
+        <wsdl:port name="HDFSPermissionAdminHttpSoap12Endpoint" binding="ns:HDFSPermissionAdminSoap12Binding">
+            <soap12:address location="http://localhost:8080/axis2/services/HDFSPermissionAdmin"/>
+        </wsdl:port>
+        <wsdl:port name="HDFSPermissionAdminHttpEndpoint" binding="ns:HDFSPermissionAdminHttpBinding">
+            <http:address location="http://localhost:8080/axis2/services/HDFSPermissionAdmin"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

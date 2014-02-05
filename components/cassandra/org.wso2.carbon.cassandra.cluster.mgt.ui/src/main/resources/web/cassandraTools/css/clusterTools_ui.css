@@ -1,0 +1,36 @@
+a.keyspace-operations-icon-link
+{
+    background: url(../images/keyspace.png) no-repeat left top;
+    padding-left: 20px;
+    line-height: 17px;
+    height: 17px;
+    float: left;
+    position: relative;
+    margin-left: 10px;
+    margin-top: 5px;
+    margin-bottom: 3px;
+    white-space: nowrap;
+}
+a.keyspace-stats-icon-link
+{
+    background: url(../images/keyspace.png) no-repeat left top;
+    padding-left: 20px;
+    line-height: 17px;
+    height: 17px;
+    float: left;
+    position: relative;
+    margin-left: 10px;
+    margin-top: 5px;
+    margin-bottom: 3px;
+    white-space: nowrap;
+}
+td.OperationRow
+{
+    background: #F5F5F6 url("../images/operation_row.gif");
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+a.disabled {
+    color: grey;
+}

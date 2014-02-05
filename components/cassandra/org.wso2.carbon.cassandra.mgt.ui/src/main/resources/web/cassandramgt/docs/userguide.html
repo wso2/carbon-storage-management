@@ -1,0 +1,132 @@
+<!--
+  ~ Copyright 2011 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <title>Cassandra - User Guide</title>
+    <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all"/>
+    <link href="../css/image.css" rel="stylesheet" type="text/css" media="all"/>
+</head>
+<body>
+<h1>Cassandra - User Guide</h1>
+<p> WSO2 Carbon Cassandra feature provides Apache Cassandra based highly scalable second-generation
+    distributed database. Cassandra supports Column Family based data model. </p>
+
+<p>WSO2 Carbon Cassandra helps user to create and manage NoSQL data stores with authentication and
+   authorization. Cassandra component uses Carbon User Manager as the user base. </p>
+
+<p>Cassandra feature comes with a management user interface. Management interface allows user to
+   manage Keyspaces, Column Families and Columns.</p>
+
+<p>This documentation mainly focuses on how the WSO2 Management Console can be used to easily create
+   and maintain Keyspaces, Column Families and Columns. To get an in-depth knowledge of various Cassandra
+   and NoSQL specific terminology refer to the <a href="http://io.typepad.com/glossary.html" target="_blank">
+   Cassandra Glossary</a>.</p>
+
+<h2>Manage Keyspaces</h2>
+
+<p>Keyspace management allows user to list available key spaces. User can share, edit and delete
+   Keyspaces using interface.</p>
+
+<h4>Add keyspace</h4>
+<pre>
+    Home-> Manage-> Cassandra Keyspaces-> Add
+</pre>
+
+<img src="../images/addKeyspace.png" alt="Add a keyspace"   class="center"/>
+<p>Using this window user can be add a new keyspace into the cluster.</p>
+<h4>List Keyspaces</h4>
+<pre>
+    Home-> Manage-> Cassandra Keyspaces-> List
+</pre>
+<img src="../images/listKeyspaces.png" alt="List keyspaces"    class="center"/>
+<P>User can be see list of keyspaces belongs to that particular user.</P>
+
+<h4>Edit Keyspace</h4>
+
+<img src="../images/editKeyspace.png" alt="List keyspaces"   class="center"/>
+<p>User can alter replication factor and replica replacement strategy.</p>
+
+<h4>Set Permissions</h4>
+<pre> 
+    Manage -> Cassandra Keyspaces -> List
+</pre>
+<p>Here, you can see the following page which allows you to manage root level permissions for each role.</p>
+
+<img src="../images/setPermissions.png" alt="Set Permissions"   class="center"/>
+
+<p>Permissions can be set for each keyspace and column family using ?Set Permission? link in the Actions column of each Keyspace/Column Family.</p>
+
+<h4>Delete Keyspace</h4>
+
+<img src="../images/deleteKeyspace.png" alt="Delete keyspaces"   class="center"/>
+
+<p>User can delete Keyspace after the confirmation.</p>
+
+<h2>Manage Column Family</h2>
+
+<p>User can get Column Family details by click on the Keyspace name</p>
+<pre>
+    Home-> Manage-> Cassandra Keyspaces-> List-> Keyspace
+</pre>
+
+<img src="../images/columnFamily.png" alt="List keyspaces"   class="center"/>
+
+<p>In the Column Family summery page user can list all the Column Families related to the Keyspace.
+   Cassandra
+   endpoint URL listed in summery page. User has to give Cassandra endpoint URL (IP:PORT) and the
+ username and password in the connection string.</p>
+
+<h4>Add Column Family</h4>
+
+<p>User can add more columns to the keyspace by clicking Add a New Column Family link.</p>
+<img src="../images/addColumnFamily.png" alt="Add column family"
+       class="center"/>
+
+<h4>Edit Column Family</h4>
+<img src="../images/editColumnFamily.png" alt="Edit column family"
+      class="center"/>
+<p>Column Family Edit allows user to modify Name, Replication Factor and Replica Placement Strategy
+    of a Column Family.</p>
+
+<h4>Delete Column Family</h4>
+
+<p>User can delete Column Family after the confirmation.</p>
+<img src="../images/deleteColumnFamily.png" alt="Delete column family"   class="center"/>
+
+<h2>Manage Columns</h2>
+
+<p>User can list Column Family summery and manage Columns in Column Family page.</p>
+<h3>List Column</h3>
+<pre>
+    Home-> Manage-> Cassandra Keyspaces-> List-> Keyspace-> Column Family
+</pre>
+<img src="../images/column.png" alt="Column family details"   class="center"/>
+<h4>Add Column</h4>
+
+<p>Add new Column option allows user to add a Column to Column Family and set a Index Column and the
+   validation class. In Cassandra Index Column use to create a second index.</p>
+<img src="../images/addColumn.png" alt="Add column"   class="center"/>
+<h4>Delete Column</h4>
+
+<p>User can delete a Column after the confirmation.</p>
+<img src="../images/deleteColumn.png" alt="Delete column"   class="center"/>
+</body>
+</html>
+

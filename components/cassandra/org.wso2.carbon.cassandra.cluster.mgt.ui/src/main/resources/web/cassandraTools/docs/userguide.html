@@ -1,0 +1,214 @@
+<!--
+  ~ Copyright 2011 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <title>Cassandra Node Tools - User Guide</title>
+    <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all"/>
+    <link href="css/image.css" rel="stylesheet" type="text/css" media="all"/>
+</head>
+<body>
+<h1>Cassandra Tools - User Guide</h1>
+<p>
+    Cassandra Tools feature enable user to easily manage  a cassandra cluster.This feature provides user to perform the full set of functions in Cassandra Node Tools API.This feature fully implement using web services.Exposing the JMX to external world is a security vulnerability,because of that this feature implemented using web services.
+    User can perform all the operations in Cassandra Node Tools by simple clicks in user interface.Which is more user friendly.
+</p>
+<h2>Interface</h2>
+<P>Feature contains of two interfaces.Interfaces named as "Cassandra Operations" and "Cassandra Stats".</P>
+<img src="images/interface.png" alt="interface overview"   class="center"/>
+<p align="center"><b>Figure 1:Listed location in Carbon side menu</b></p>
+<h2>Cassandra Operations</h2>
+<p>This contains the all the cluster level,keyspace level and column family level operations such as backup,flush,scrub,shutting down RPC and Gossip servers and etc..</p>
+<img src="images/operations.png" alt="Operation view"   class="center"/>
+<p align="center"><b>Figure 2:Cassandra Tools Operation</b></p>
+<h2>Cassandra Stats</h2>
+<p>This shows the all the stats and information available in the cluster.Cluster wide,keyspace level and column family level stats such as gossip info,column family histograms and etc.. is listed under this interfaces.</p>
+<img src="images/stats.png" alt="Stats view"   class="center"/>
+<p align="center"><b>Figure 3:Cassandra Tools Stats</b></p>
+<h2>Node operations interface</h2>
+<p>Under the node operations user can be perform node wide operations available in Cassandra Node Tools.</p>
+<img src="images/nodeOperations.png" alt="Node operation view"   class="center"/>
+<p align="center"><b>Figure 4:Cassandra Tools Node Operation</b></p>
+<h3>Node level operation set</h3>
+
+<ol>
+    <li>General</li>
+    <ul>
+        <li>Decommission</li>
+        <p>Decommission node cause to remove the node from the cluster.</p>
+        <li>Move</li>
+        <p>Move node used to change the node currant token to the new token.This is important in load balancing of the cluster.</p>
+        <img src="images/move.png" alt="Move node"   class="center"/>
+        <p align="center"><b>Figure 5:Move node</b></p>
+        <li>Drain</li>
+        <p>Drain node used to flush the whole node and this cause to stop accepting write request to that node.</p>
+        <li>Perform GC</li>
+        <p>Activate Garbage collector of the node.</p>
+        <li>Join Ring</li>
+        <p>Triggers the specified node to join the ring. This assumes that the node was started with -Dcassandra.join_ring=false so that it did not join the ring upon startup.</p>
+    </ul>
+    <li>BackUp</li>
+    <ul>
+        <li>Take Snapshot</li>
+        <p>This enable user to backup data in the node.</p>
+        <img src="images/takeSnapshot.png" alt="Take snapshot"   class="center"/>
+        <p align="center"><b>Figure 6:Take snapshot</b></p>
+        <li>Clear Snapshot</li>
+        <p>User can clear the backup if needed.</p>
+        <img src="images/clearSnapshot.png" alt="Clear snapshot"   class="center"/>
+        <p align="center"><b>Figure 7:Clear snapshot</b></p>
+        <li>Enable Incremental Backup</li>
+        <p>Enable incremental backup use to backup data after when user already taken a backup.This function not fully backup all the data in the node,it used to write data to the exist backup when there are additional data comes to the backup after it taken.  </p>
+    </ul>
+    <li>Server</li>
+    <ul>
+        <li>Stop RPC</li>
+        <p>User can shutdown and start the RPC server of the node.</p>
+        <li>Stop Gossip</li>
+        <P>User can shutdown and start the Gossip server of the node.</P>
+    </ul>
+    <li>Other</li>
+    <ul>
+        <li>Remove Token</li>
+        <p>Using this operation user can remove a token in the cluster.Addition to it force remove completion operation listed under this operation while user can see the currant token removal status.</p>
+        <li>Stop Compaction</li>
+        <p>User can stop any of listed permitted compaction under this operation.</p>
+        <img src="images/stopCompaction.png" alt="Stop compaction"   class="center"/>
+        <p align="center"><b>Figure 8:Stop compaction</b></p>
+        <li>Rebuild</li>
+        <p>User can specify a available data center for rebuild.</p>
+        <img src="images/rebuild.png" alt="Rebuild"   class="center"/>
+        <p align="center"><b>Figure 9:Rebuild</b></p>
+        <li>Set Compaction Throughput</li>
+        <P>User can set the compaction throughput for the node.</P>
+        <img src="images/setCompactionThroughput.png" alt="Set compaction  throughput"   class="center"/>
+        <p align="center"><b>Figure 10:Set compaction threshold</b></p>
+        <li>Set Stream Throughput</li>
+        <p>User can set the stream throughput of the node.</p>
+    </ul>
+</ol>
+
+<h2>Keyspace Operations</h2>
+<P>List of operations available for keyspaces are listed in this view</P>
+<img src="images/keyspaceOperations.png" alt="Node operation view"   class="center"/>
+<p align="center"><b>Figure 11:Keyspace operations</b></p>
+<h3>Keyspace level operation set</h3>
+<ul>
+    <li>Flush</li>
+    <p>Flushes memtables (in memory) to SSTables (on disk), which also enables CommitLog segments to be deleted.</p>
+    <li>Compact</li>
+    <p>This operation trigger major compaction in all column families in the keyspace.This operation will compact multiple SS tables into single SS table.</p>
+    <li>Scrub</li>
+    <p>Scrub will rebuild sstables with correct bloom filters, with no data lost. Note that nodetool scrub will snapshot your data files before rebuilding.</p>
+    <li>Cleanup</li>
+    <p>This operation triggers cassandra to cleanup the keys which are not further belong to the node.</p>
+    <li>UpgradeSSTables</li>
+    <p>Scrub does rebuild your sstables, it will also discard data it deems broken and create a snapshot, which you have to remove manually. If you just wish to rebuild your sstables without all that jazz, then best thing is to use upgradesstables". This is useful e.g. when you are upgrading your server, or changing compression options.</p>
+    <li>Repair</li>
+    <p>Compared replica for each key responsible for the node and all replicas are updated to the newest available version.</p>
+    <li>Take Snapshot</li>
+    <p>Backup the keyspace data.</p>
+    <li>Clear snapshot</li>
+    <p>Clear the backup of a keyspace.</p>
+</ul>
+<h2>Column Family Operations</h2>
+<p>List of operations available for column families will be listed in view</p>
+<img src="images/columnFamilyOperations.png" alt="Column family operations view"   class="center"/>
+<p align="center"><b>Figure 12:Column family operations</b></p>
+<h3>Column family level operation set</h3>
+<ul>
+    <li>Flush</li>
+
+    <li>Compact</li>
+    <li>Scrub</li>
+    <li>Cleanup</li>
+    <li>UpgradeSSTables</li>
+    <li>Repair</li>
+    <p><b>Note:All above operations are same as describe in keyspace operations and user can select multiple column families to perform operations.</b></p>
+    <li>Take Snapshot</li>
+    <p>Backup the column family data data.</p>
+    <li>Rebuild</li>
+    <p>Rebuild the column family.</p>
+    <li>Rebuild with index</li>
+    <p>Rebuild column family by specifying indexes.</p>
+    <img src="images/rebuildWithIndexes.png" alt="Rebuild with indexes"   class="center"/>
+    <p align="center"><b>Figure 13:Rebuild with indexes</b></p>
+    <li>Refresh</li>
+    <p>Refresh column family</p>
+    <li>Set compaction thresholds</li>
+    <p>Set compaction thresholds for the column family.</p>
+    <img src="images/setCompactionThresholds.png" alt="Set compaction thresholds"   class="center"/>
+    <p align="center"><b>Figure 14:Set compaction thresholds</b></p>
+</ul>
+<h2>Node Stats</h2>
+<p>This shows the stats available for node range</p>
+<img src="images/nodeStats.png" alt="Node level stats"   class="center"/>
+<p align="center"><b>Figure 15:Node stats</b></p>
+<h3>Node level stats set</h3>
+<ul>
+    <li>Node Info</li>
+    <p>Outputs node information including the token, load info (on disk storage), generation number (times started), uptime in seconds, and heap memory usage.</p>
+    <img src="images/nodeInfo.png" alt="Node Info"   class="center"/>
+    <p align="center"><b>Figure 16:Node info</b></p>
+    <li>CF Stats</li>
+    <p>This outputs the column family information.such as read count,write count,read latency and etc..</p>
+    <img src="images/cfstats.png" alt="CF stats"   class="center"/>
+    <p align="center"><b>Figure 17:CF stats</b></p>
+    <li>Version</li>
+    <p>Outputs the cassandra version.</p>
+    <li>Thread Pool Stats</li>
+    <p>Outputs the thread pool stats available for the node.</p>
+    <li>Compaction Stats</li>
+    <p>Outputs the compaction stats of the node.</p>
+    <li>Gossip Info</li>
+    <p>Outputs the gossip info of the node.</p>
+    <li>Network Stats</li>
+    <p>Outputs the network stats of the selected host.</p>
+    <li>Range Key</li>
+    <P>Range key available for the node.</P>
+</ul>
+<h2>Keyspace Stats</h2>
+<p>This interface listed the available for stats in keyspace range.</p>
+<img src="images/keyspaceStats.png" alt="Keyspace Stats"   class="center"/>
+<p align="center"><b>Figure 18:Keyspace stats</b></p>
+<h3>Keyspace level stat set</h3>
+<ul>
+    <li>Describe ring</li>
+    <p>Information about keyspace in the ring.</p>
+    <li>Ownership</li>
+    <p>Load distributed in the keyspace across the cluster.</p>
+</ul>
+<h3>Column Family Stats</h3>
+<p>All the stats which is available in the column family level can be access through this interface.</p>
+<img src="images/columnFamilyStats.png" alt="Column Family Stats"   class="center"/>
+<p align="center"><b>Figure 19:Column family stats</b></p>
+<h3>Column family level stats set</h3>
+<ul>
+    <li>Histograms</li>
+    <p>Shows the column family histograms.</p>
+    <li>Endpoints</li>
+    <p>Shows endpoint of the column family for a given key.</p>
+    <li>SSTables</li>
+    <p>Shows SSTables of the column family for a given key.</p>
+    <li>Compaction Thresholds</li>
+    <p>Shows the compaction thresholds for the column family.</p>
+</ul>
+</body>
+</html>
+

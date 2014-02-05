@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>cassandra-search-feature</artifactId>
+        <groupId>org.wso2.carbon</groupId>
+        <version>4.3.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>org.wso2.carbon.cassandra.search.server.feature</artifactId>
+    <packaging>pom</packaging>
+    <name>WSO2 Carbon - Cassandra Search Server Feature</name>
+    <version>4.3.0-SNAPSHOT</version>
+    <url>http://wso2.org</url>
+    <description>This feature contains the bundles required for Search Cassandra Data
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.cassandra.search.mgt</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.databridge.commons</artifactId>
+            <version>4.3.0-SNAPSHOT</version>
+        </dependency>
+
+        <!--Hector-->
+        <dependency>
+            <groupId>org.hectorclient.wso2</groupId>
+            <artifactId>hector-core</artifactId>
+            <version>1.1.4.wso2v1</version>
+        </dependency>
+        <dependency>
+            <groupId>libthrift.wso2</groupId>
+            <artifactId>libthrift</artifactId>
+            <version>${libthrift.patch.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.perf4j.wso2</groupId>
+            <artifactId>perf4j</artifactId>
+            <version>${perf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.cliffc.high_scale_lib.wso2</groupId>
+            <artifactId>high-scale-lib</artifactId>
+            <version>${highscale.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>13.0.1</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.wso2.maven</groupId>
+                <artifactId>carbon-p2-plugin</artifactId>
+                <version>${carbon.p2.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>4-p2-feature-generation</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>p2-feature-gen</goal>
+                        </goals>
+                        <configuration>
+                            <id>org.wso2.carbon.cassandra.search.server</id>
+                            <propertiesFile>../../../etc/feature.properties</propertiesFile>
+                            <adviceFile>
+                                <properties>
+                                    <propertyDef>org.wso2.carbon.p2.category.type:server</propertyDef>
+                                    <propertyDef>org.eclipse.equinox.p2.type.group:false</propertyDef>
+                                </properties>
+                            </adviceFile>
+                            <bundles>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.search.mgt:${project.version}</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.databridge.commons:4.3.0-SNAPSHOT</bundleDef>
+                                <bundleDef>libthrift.wso2:libthrift</bundleDef>
+                                <bundleDef>org.perf4j.wso2:perf4j</bundleDef>
+                                <bundleDef>org.cliffc.high_scale_lib.wso2:high-scale-lib</bundleDef>
+                                <bundleDef>org.slf4j:slf4j-api</bundleDef>
+                                <bundleDef>org.slf4j:slf4j-log4j12</bundleDef>
+                                <bundleDef>org.hectorclient.wso2:hector-core</bundleDef>
+
+                                <bundleDef>com.google.guava:guava</bundleDef>
+
+                            </bundles>
+                            <importFeatures>
+                                <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
+                            </importFeatures>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <properties>
+        <libthrift.patch.version>0.7.0.wso2v2</libthrift.patch.version>
+    </properties>
+</project>

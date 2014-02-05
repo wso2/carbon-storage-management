@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>rss-manager</artifactId>
+        <version>4.3.0-SNAPSHOT</version>
+	<relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.wso2.carbon</groupId>
+    <artifactId>org.wso2.carbon.rssmanager.ui</artifactId>
+    <packaging>bundle</packaging>
+    <name>WSO2 Carbon - RSS Manager UI</name>
+    <version>4.3.0-SNAPSHOT</version>
+    <description>WSO2 Carbon - RSS Manager UI</description>
+    <url>http://wso2.org</url>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Name>${project.artifactId}</Bundle-Name>
+                        <Bundle-Version>${project.version}</Bundle-Version>
+                        <Export-Package>
+                            org.wso2.carbon.rssmanager.ui.*,
+     
+                            org.wso2.carbon.rssmanager.core.dto.*
+                        </Export-Package>
+                        <Import-Package>
+                            javax.servlet.*;version="${imp.pkg.version.javax.servlet}",
+                            javax.xml.namespace.*;version="0.0.0",
+                            *;resolution:=optional,
+                            !org.wso2.carbon.rssmanager.ui.i18n,
+                            org.wso2.carbon.rssmanager.ui.*,
+                            org.wso2.carbon.dbconsole.ui.*,
+                            org.wso2.carbon.rssmanager.ui.stub.*,
+                            org.wso2.carbon.rssmanager.core.dto.*
+                        </Import-Package>
+                        <Carbon-Component>UIBundle</Carbon-Component>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ui</artifactId>
+            <version>${carbon.platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2.wso2</groupId>
+            <artifactId>axis2</artifactId>
+            <version>${orbit.version.axis2}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.rssmanager.stub</artifactId>
+            <version>4.3.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.rssmanager.common</artifactId>
+            <version>${carbon.platform.version}</version>
+        </dependency>
+    </dependencies>
+
+    <properties>
+       </properties>
+
+</project>

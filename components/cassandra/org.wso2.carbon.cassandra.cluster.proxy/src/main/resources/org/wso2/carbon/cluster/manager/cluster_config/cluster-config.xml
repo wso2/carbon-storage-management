@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<cluster>
+    <configuration>
+        <cluster_authentication>
+            <username>admin</username>
+            <password>admin</password>
+        </cluster_authentication>
+        <nodes>
+            <node>
+                <host>127.0.0.1</host>
+                <backend_url>local://services/</backend_url>
+            </node>
+        </nodes>
+    </configuration>
+</cluster>

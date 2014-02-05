@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all"/>
+    <title>Cassandra Explorer - User Guide</title></head>
+
+<body>
+<h1>Cassandra Explorer- User Guide</h1>
+<br/><br/>
+<h2>Introduction</h2>
+<br/>
+
+<p> WSO2 Carbon Cassandra Explore feature provides a convenient way to explore data resides in
+    Cassandra Database with a user friendly GUI. A user can use this tool to view rows and also to
+    explore columns in it.</p>
+
+<p>
+    Cassandra Explorer provides a comprehensive search to explore your data quickly in a Cassandra
+    Cluster.
+</p>
+
+<h2>Connect to a cluster</h2>
+<pre>
+Home&gt; Manage&gt; Cassandra Explorer&gt; Connect to Cluster
+</pre>
+<p>
+    First you need to connect to a cluster to explore data. Click on the <b>connect to Cluster</b>
+    on management menu. please provide following details to connect and click connect button.<br/>
+    <br/>
+    <b>connection url (required) :</b> connection url of the Cassandra cluster with ip and port.
+    eg: localhost:9160 , 10.8.99.101:9161
+    <br/><br/>
+    <b>username (optional) :</b> username of the Cassandra cluster.
+    <br/><br/>
+    <b>password (optional) :</b> password of the Cassandra cluster.
+    <br/><br/>
+    <b>Maximum Result Count :</b> Maximum results retrieved from Cassandra cluster. default value is 1000
+    <br/>
+</p>
+<img src="images/connect.png" alt="Connect to cluster" class="center"/>
+<br/><br/><br/>
+<p align="center"><b>Figure 1: Connect to a Cassandra Cluster</b></p>
+
+<h2>Explore a cluster</h2>
+<pre>Home&gt; Manage&gt; Cassandra Explorer&gt; Explore Cluster</pre>
+<p>
+    After connecting to a cluster click on Explore cluster to list available keyspaces to select.
+    you can click on a keyspace to explore from the collapsible list.
+</p>
+
+<img src="images/explore-cluster.png" alt="Explore cluster" class="center"/>
+<br/><br/> <br/>
+<p align="center"><b>Figure 2: Explore a connected Cluster</b></p>
+
+
+<h2> Explore rows</h2>
+<p>
+    when you click on a Column family in Keyspace listing it will navigate to page which displays
+    rows
+    in the column family. In this page you can search for rows with a given name.<br/> You can navigate
+    easily
+    through full numbered pagination.
+</p>
+
+<img src="images/row-view.png" alt="Row view" class="center"/>
+<br/><br/><br/>
+<p align="center"><b>Figure 3: Explore rows of a selected Column Family</b></p>
+
+
+<h2> Explore columns</h2>
+<p>
+    When you click on view more in the row listing you will navigate to comprehensive column
+    explorer
+    which facilitate to search column data across the row.
+</p>
+<img src="images/column-view.png" alt="Column view " class="center"/>
+<br/><br/><br/>
+<p align="center"><b>Figure 4: Explore columns of a row</b></p>
+</body>
+</html>

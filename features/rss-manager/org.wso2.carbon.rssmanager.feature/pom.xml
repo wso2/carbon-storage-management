@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>rss-manager-feature</artifactId>
+        <groupId>org.wso2.carbon</groupId>
+        <version>4.3.0-SNAPSHOT</version>
+	<relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.wso2.carbon</groupId>
+    <version>4.3.0-SNAPSHOT</version>
+    <artifactId>org.wso2.carbon.rssmanager.feature</artifactId>
+    <name>RSS Manager Feature</name>
+    <packaging>pom</packaging>
+    <url>http://wso2.org</url>
+    <description>This Feature Contains The Frond End And Back End Bundles Required For RSS Manager</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.rssmanager.server.feature</artifactId>
+            <version>${carbon.platform.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.rssmanager.ui.feature</artifactId>
+            <version>${carbon.platform.version}</version>
+            <type>zip</type>
+        </dependency>
+		<dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.rssmanager.data.mgt.feature</artifactId>
+            <version>${carbon.platform.version}</version>
+            <type>zip</type>
+        </dependency>
+    </dependencies>
+
+     <build>
+      <plugins>
+            <plugin>
+                <groupId>org.wso2.maven</groupId>
+                <artifactId>carbon-p2-plugin</artifactId>
+                <version>${carbon.p2.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>p2-feature-generation</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>p2-feature-gen</goal>
+                        </goals>
+                        <configuration>
+                            <id>org.wso2.carbon.rssmanager</id>
+                            <propertiesFile>../../../etc/feature.properties</propertiesFile>
+                            <adviceFile>
+                                <properties>
+                                    <propertyDef>org.eclipse.equinox.p2.type.group:true</propertyDef>
+                                </properties>
+                            </adviceFile>
+                            <importFeatures>
+                               <importFeatureDef>org.wso2.carbon.transaction.manager:4.3.0-SNAPSHOT</importFeatureDef>
+			    </importFeatures>
+                            <includedFeatures>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.rssmanager.server.feature:${carbon.platform.version}</includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.rssmanager.ui.feature:${carbon.platform.version}</includedFeatureDef>								
+				<includedFeatureDef>org.wso2.carbon:org.wso2.carbon.rssmanager.data.mgt.feature:${carbon.platform.version}</includedFeatureDef>
+                            </includedFeatures>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+   <properties>
+       </properties>
+
+</project>

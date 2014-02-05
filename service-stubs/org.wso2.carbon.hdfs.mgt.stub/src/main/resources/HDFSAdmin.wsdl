@@ -1,0 +1,756 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://mgt.hdfs.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax21="http://mgt.hdfs.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://mgt.hdfs.carbon.wso2.org">
+    <wsdl:documentation>HDFSAdmin</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://mgt.hdfs.carbon.wso2.org/xsd">
+            <xs:complexType name="HDFSServerManagementException">
+                <xs:sequence/>
+            </xs:complexType>
+            <xs:complexType name="FolderInformation">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="folder" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="folderPath" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="group" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="owner" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="permissions" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax22="http://mgt.hdfs.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://mgt.hdfs.carbon.wso2.org">
+            <xs:import namespace="http://mgt.hdfs.carbon.wso2.org/xsd"/>
+            <xs:element name="HDFSAdminHDFSServerManagementException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="HDFSServerManagementException" nillable="true" type="ax21:HDFSServerManagementException"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="setPermission">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="fsPath" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="fsPermission" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="setOwner">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="fsPath" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="owner" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="setGroup">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="fsPath" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="group" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="renameFolder">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="srcPath" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="dstPath" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="renameFolderResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="renameFile">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="srcPath" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="dstPath" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="renameFileResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="moveFile">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="srcPath" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="dstPath" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="moveFileResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="makeDirectory">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="folderPath" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="makeDirectoryResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPermission">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="fsPath" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPermissionResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getHTTPSession">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getHTTPSessionResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:anyType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getCurrentUserFSObjects">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="fsObjectPath" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getCurrentUserFSObjectsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax21:FolderInformation"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteFolder">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="folderPath" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteFolderResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteFile">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="filePath" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteFileResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="copy">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="srcPath" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="dstPath" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="closeHDFSInstance">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="setPermissionRequest">
+        <wsdl:part name="parameters" element="ns:setPermission"/>
+    </wsdl:message>
+    <wsdl:message name="HDFSAdminHDFSServerManagementException">
+        <wsdl:part name="parameters" element="ns:HDFSAdminHDFSServerManagementException"/>
+    </wsdl:message>
+    <wsdl:message name="setGroupRequest">
+        <wsdl:part name="parameters" element="ns:setGroup"/>
+    </wsdl:message>
+    <wsdl:message name="moveFileRequest">
+        <wsdl:part name="parameters" element="ns:moveFile"/>
+    </wsdl:message>
+    <wsdl:message name="moveFileResponse">
+        <wsdl:part name="parameters" element="ns:moveFileResponse"/>
+    </wsdl:message>
+    <wsdl:message name="renameFileRequest">
+        <wsdl:part name="parameters" element="ns:renameFile"/>
+    </wsdl:message>
+    <wsdl:message name="renameFileResponse">
+        <wsdl:part name="parameters" element="ns:renameFileResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getPermissionRequest">
+        <wsdl:part name="parameters" element="ns:getPermission"/>
+    </wsdl:message>
+    <wsdl:message name="getPermissionResponse">
+        <wsdl:part name="parameters" element="ns:getPermissionResponse"/>
+    </wsdl:message>
+    <wsdl:message name="copyRequest">
+        <wsdl:part name="parameters" element="ns:copy"/>
+    </wsdl:message>
+    <wsdl:message name="makeDirectoryRequest">
+        <wsdl:part name="parameters" element="ns:makeDirectory"/>
+    </wsdl:message>
+    <wsdl:message name="makeDirectoryResponse">
+        <wsdl:part name="parameters" element="ns:makeDirectoryResponse"/>
+    </wsdl:message>
+    <wsdl:message name="renameFolderRequest">
+        <wsdl:part name="parameters" element="ns:renameFolder"/>
+    </wsdl:message>
+    <wsdl:message name="renameFolderResponse">
+        <wsdl:part name="parameters" element="ns:renameFolderResponse"/>
+    </wsdl:message>
+    <wsdl:message name="deleteFileRequest">
+        <wsdl:part name="parameters" element="ns:deleteFile"/>
+    </wsdl:message>
+    <wsdl:message name="deleteFileResponse">
+        <wsdl:part name="parameters" element="ns:deleteFileResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getCurrentUserFSObjectsRequest">
+        <wsdl:part name="parameters" element="ns:getCurrentUserFSObjects"/>
+    </wsdl:message>
+    <wsdl:message name="getCurrentUserFSObjectsResponse">
+        <wsdl:part name="parameters" element="ns:getCurrentUserFSObjectsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getHTTPSessionRequest">
+        <wsdl:part name="parameters" element="ns:getHTTPSession"/>
+    </wsdl:message>
+    <wsdl:message name="getHTTPSessionResponse">
+        <wsdl:part name="parameters" element="ns:getHTTPSessionResponse"/>
+    </wsdl:message>
+    <wsdl:message name="closeHDFSInstanceRequest">
+        <wsdl:part name="parameters" element="ns:closeHDFSInstance"/>
+    </wsdl:message>
+    <wsdl:message name="deleteFolderRequest">
+        <wsdl:part name="parameters" element="ns:deleteFolder"/>
+    </wsdl:message>
+    <wsdl:message name="deleteFolderResponse">
+        <wsdl:part name="parameters" element="ns:deleteFolderResponse"/>
+    </wsdl:message>
+    <wsdl:message name="setOwnerRequest">
+        <wsdl:part name="parameters" element="ns:setOwner"/>
+    </wsdl:message>
+    <wsdl:portType name="HDFSAdminPortType">
+        <wsdl:operation name="setPermission">
+            <wsdl:input message="ns:setPermissionRequest" wsaw:Action="urn:setPermission"/>
+            <wsdl:fault message="ns:HDFSAdminHDFSServerManagementException" name="HDFSAdminHDFSServerManagementException" wsaw:Action="urn:setPermissionHDFSAdminHDFSServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="setGroup">
+            <wsdl:input message="ns:setGroupRequest" wsaw:Action="urn:setGroup"/>
+            <wsdl:fault message="ns:HDFSAdminHDFSServerManagementException" name="HDFSAdminHDFSServerManagementException" wsaw:Action="urn:setGroupHDFSAdminHDFSServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="moveFile">
+            <wsdl:input message="ns:moveFileRequest" wsaw:Action="urn:moveFile"/>
+            <wsdl:output message="ns:moveFileResponse" wsaw:Action="urn:moveFileResponse"/>
+            <wsdl:fault message="ns:HDFSAdminHDFSServerManagementException" name="HDFSAdminHDFSServerManagementException" wsaw:Action="urn:moveFileHDFSAdminHDFSServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="renameFile">
+            <wsdl:input message="ns:renameFileRequest" wsaw:Action="urn:renameFile"/>
+            <wsdl:output message="ns:renameFileResponse" wsaw:Action="urn:renameFileResponse"/>
+            <wsdl:fault message="ns:HDFSAdminHDFSServerManagementException" name="HDFSAdminHDFSServerManagementException" wsaw:Action="urn:renameFileHDFSAdminHDFSServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getPermission">
+            <wsdl:input message="ns:getPermissionRequest" wsaw:Action="urn:getPermission"/>
+            <wsdl:output message="ns:getPermissionResponse" wsaw:Action="urn:getPermissionResponse"/>
+            <wsdl:fault message="ns:HDFSAdminHDFSServerManagementException" name="HDFSAdminHDFSServerManagementException" wsaw:Action="urn:getPermissionHDFSAdminHDFSServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="copy">
+            <wsdl:input message="ns:copyRequest" wsaw:Action="urn:copy"/>
+            <wsdl:fault message="ns:HDFSAdminHDFSServerManagementException" name="HDFSAdminHDFSServerManagementException" wsaw:Action="urn:copyHDFSAdminHDFSServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="makeDirectory">
+            <wsdl:input message="ns:makeDirectoryRequest" wsaw:Action="urn:makeDirectory"/>
+            <wsdl:output message="ns:makeDirectoryResponse" wsaw:Action="urn:makeDirectoryResponse"/>
+            <wsdl:fault message="ns:HDFSAdminHDFSServerManagementException" name="HDFSAdminHDFSServerManagementException" wsaw:Action="urn:makeDirectoryHDFSAdminHDFSServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="renameFolder">
+            <wsdl:input message="ns:renameFolderRequest" wsaw:Action="urn:renameFolder"/>
+            <wsdl:output message="ns:renameFolderResponse" wsaw:Action="urn:renameFolderResponse"/>
+            <wsdl:fault message="ns:HDFSAdminHDFSServerManagementException" name="HDFSAdminHDFSServerManagementException" wsaw:Action="urn:renameFolderHDFSAdminHDFSServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="deleteFile">
+            <wsdl:input message="ns:deleteFileRequest" wsaw:Action="urn:deleteFile"/>
+            <wsdl:output message="ns:deleteFileResponse" wsaw:Action="urn:deleteFileResponse"/>
+            <wsdl:fault message="ns:HDFSAdminHDFSServerManagementException" name="HDFSAdminHDFSServerManagementException" wsaw:Action="urn:deleteFileHDFSAdminHDFSServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getCurrentUserFSObjects">
+            <wsdl:input message="ns:getCurrentUserFSObjectsRequest" wsaw:Action="urn:getCurrentUserFSObjects"/>
+            <wsdl:output message="ns:getCurrentUserFSObjectsResponse" wsaw:Action="urn:getCurrentUserFSObjectsResponse"/>
+            <wsdl:fault message="ns:HDFSAdminHDFSServerManagementException" name="HDFSAdminHDFSServerManagementException" wsaw:Action="urn:getCurrentUserFSObjectsHDFSAdminHDFSServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getHTTPSession">
+            <wsdl:input message="ns:getHTTPSessionRequest" wsaw:Action="urn:getHTTPSession"/>
+            <wsdl:output message="ns:getHTTPSessionResponse" wsaw:Action="urn:getHTTPSessionResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="closeHDFSInstance">
+            <wsdl:input message="ns:closeHDFSInstanceRequest" wsaw:Action="urn:closeHDFSInstance"/>
+        </wsdl:operation>
+        <wsdl:operation name="deleteFolder">
+            <wsdl:input message="ns:deleteFolderRequest" wsaw:Action="urn:deleteFolder"/>
+            <wsdl:output message="ns:deleteFolderResponse" wsaw:Action="urn:deleteFolderResponse"/>
+            <wsdl:fault message="ns:HDFSAdminHDFSServerManagementException" name="HDFSAdminHDFSServerManagementException" wsaw:Action="urn:deleteFolderHDFSAdminHDFSServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="setOwner">
+            <wsdl:input message="ns:setOwnerRequest" wsaw:Action="urn:setOwner"/>
+            <wsdl:fault message="ns:HDFSAdminHDFSServerManagementException" name="HDFSAdminHDFSServerManagementException" wsaw:Action="urn:setOwnerHDFSAdminHDFSServerManagementException"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="HDFSAdminSoap11Binding" type="ns:HDFSAdminPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="setPermission">
+            <soap:operation soapAction="urn:setPermission" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="setGroup">
+            <soap:operation soapAction="urn:setGroup" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="renameFile">
+            <soap:operation soapAction="urn:renameFile" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="moveFile">
+            <soap:operation soapAction="urn:moveFile" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getPermission">
+            <soap:operation soapAction="urn:getPermission" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteFile">
+            <soap:operation soapAction="urn:deleteFile" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="makeDirectory">
+            <soap:operation soapAction="urn:makeDirectory" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="copy">
+            <soap:operation soapAction="urn:copy" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="renameFolder">
+            <soap:operation soapAction="urn:renameFolder" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getCurrentUserFSObjects">
+            <soap:operation soapAction="urn:getCurrentUserFSObjects" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getHTTPSession">
+            <soap:operation soapAction="urn:getHTTPSession" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="closeHDFSInstance">
+            <soap:operation soapAction="urn:closeHDFSInstance" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="setOwner">
+            <soap:operation soapAction="urn:setOwner" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteFolder">
+            <soap:operation soapAction="urn:deleteFolder" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="HDFSAdminSoap12Binding" type="ns:HDFSAdminPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="setPermission">
+            <soap12:operation soapAction="urn:setPermission" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap12:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="setGroup">
+            <soap12:operation soapAction="urn:setGroup" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap12:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="renameFile">
+            <soap12:operation soapAction="urn:renameFile" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap12:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="moveFile">
+            <soap12:operation soapAction="urn:moveFile" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap12:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getPermission">
+            <soap12:operation soapAction="urn:getPermission" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap12:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteFile">
+            <soap12:operation soapAction="urn:deleteFile" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap12:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="makeDirectory">
+            <soap12:operation soapAction="urn:makeDirectory" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap12:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="copy">
+            <soap12:operation soapAction="urn:copy" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap12:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="renameFolder">
+            <soap12:operation soapAction="urn:renameFolder" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap12:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getCurrentUserFSObjects">
+            <soap12:operation soapAction="urn:getCurrentUserFSObjects" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap12:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getHTTPSession">
+            <soap12:operation soapAction="urn:getHTTPSession" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="closeHDFSInstance">
+            <soap12:operation soapAction="urn:closeHDFSInstance" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="setOwner">
+            <soap12:operation soapAction="urn:setOwner" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap12:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteFolder">
+            <soap12:operation soapAction="urn:deleteFolder" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="HDFSAdminHDFSServerManagementException">
+                <soap12:fault use="literal" name="HDFSAdminHDFSServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="HDFSAdminHttpBinding" type="ns:HDFSAdminPortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="setPermission">
+            <http:operation location="setPermission"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="setGroup">
+            <http:operation location="setGroup"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="renameFile">
+            <http:operation location="renameFile"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="moveFile">
+            <http:operation location="moveFile"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getPermission">
+            <http:operation location="getPermission"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteFile">
+            <http:operation location="deleteFile"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="makeDirectory">
+            <http:operation location="makeDirectory"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="copy">
+            <http:operation location="copy"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="renameFolder">
+            <http:operation location="renameFolder"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getCurrentUserFSObjects">
+            <http:operation location="getCurrentUserFSObjects"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getHTTPSession">
+            <http:operation location="getHTTPSession"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="closeHDFSInstance">
+            <http:operation location="closeHDFSInstance"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="setOwner">
+            <http:operation location="setOwner"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="deleteFolder">
+            <http:operation location="deleteFolder"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="HDFSAdmin">
+        <wsdl:port name="HDFSAdminHttpSoap11Endpoint" binding="ns:HDFSAdminSoap11Binding">
+            <soap:address location="http://localhost:8080/axis2/services/HDFSAdmin"/>
+        </wsdl:port>
+        <wsdl:port name="HDFSAdminHttpSoap12Endpoint" binding="ns:HDFSAdminSoap12Binding">
+            <soap12:address location="http://localhost:8080/axis2/services/HDFSAdmin"/>
+        </wsdl:port>
+        <wsdl:port name="HDFSAdminHttpEndpoint" binding="ns:HDFSAdminHttpBinding">
+            <http:address location="http://localhost:8080/axis2/services/HDFSAdmin"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

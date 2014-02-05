@@ -1,0 +1,1298 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax29="http://exception.mgt.cluster.cassandra.carbon.wso2.org/xsd" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://service.mgt.cluster.cassandra.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax211="http://data.mgt.cluster.cassandra.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.mgt.cluster.cassandra.carbon.wso2.org">
+<wsdl:documentation>ClusterStatsAdmin</wsdl:documentation>
+<wsdl:types>
+<xs:schema xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax212="http://data.mgt.cluster.cassandra.carbon.wso2.org/xsd" xmlns:ax210="http://exception.mgt.cluster.cassandra.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+<xs:import namespace="http://exception.mgt.cluster.cassandra.carbon.wso2.org/xsd"/>
+<xs:import namespace="http://data.mgt.cluster.cassandra.carbon.wso2.org/xsd"/>
+<xs:element name="ClusterStatsAdminClusterDataAdminException">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="ClusterDataAdminException" nillable="true" type="ax29:ClusterDataAdminException"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getVersion">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="getVersionResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getTpstats">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="getTpstatsResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" nillable="true" type="ax212:ThreadPoolInfo"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getTokenRemovalStatus">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="getTokenRemovalStatusResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getSingleColumnFamilyStats">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getSingleColumnFamilyStatsResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" nillable="true" type="ax212:ColumnFamilyInformation"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getSSTables">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="key" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getSSTablesResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getRing">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getRingResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax212:ClusterRingInformation"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getRangekeysample">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="getRangekeysampleResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getNetstat">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="host" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getNetstatResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" nillable="true" type="ax212:ClusterNetstat"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getKeyspaces">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="getKeyspacesResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getInfo">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="getInfoResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" nillable="true" type="ax212:NodeInformation"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getGossipInfo">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="getGossipInfoResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getEndpoints">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="key" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getEndpointsResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getDescribeRing">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getDescribeRingResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" nillable="true" type="ax212:DescribeRingProperties"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getCompactionThresholds">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getCompactionThresholdsResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="xs:int"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getCompactionStats">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="getCompactionStatsResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" nillable="true" type="ax212:CompactionStats"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getColumnFamilyStatsForKeyspace">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getColumnFamilyStatsForKeyspaceResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" nillable="true" type="ax212:KeyspaceInfo"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getColumnFamilyStats">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="getColumnFamilyStatsResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax212:KeyspaceInfo"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getColumnFamilyHistograms">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getColumnFamilyHistogramsResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax212:ColumnFamilyHistograms"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getColumnFamiliesForKeyspace">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getColumnFamiliesForKeyspaceResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+</xs:schema>
+<xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://data.mgt.cluster.cassandra.carbon.wso2.org/xsd">
+<xs:complexType name="ThreadPoolInfo">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="threadPoolDroppedProperties" nillable="true" type="ax211:ThreadPoolDroppedProperties"/>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="threadPoolProperties" nillable="true" type="ax211:ThreadPoolProperties"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ThreadPoolDroppedProperties">
+<xs:sequence>
+<xs:element minOccurs="0" name="droppedCount" type="xs:int"/>
+<xs:element minOccurs="0" name="propertyName" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ThreadPoolProperties">
+<xs:sequence>
+<xs:element minOccurs="0" name="active" type="xs:int"/>
+<xs:element minOccurs="0" name="allTimeBlocked" type="xs:int"/>
+<xs:element minOccurs="0" name="blocked" type="xs:int"/>
+<xs:element minOccurs="0" name="completed" type="xs:long"/>
+<xs:element minOccurs="0" name="pending" type="xs:long"/>
+<xs:element minOccurs="0" name="threadPoolPropertyName" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ColumnFamilyInformation">
+<xs:sequence>
+<xs:element minOccurs="0" name="SSTableCount" type="xs:int"/>
+<xs:element minOccurs="0" name="bloomFilterFalsePostives" type="xs:long"/>
+<xs:element minOccurs="0" name="bloomFilterFalseRatio" type="xs:double"/>
+<xs:element minOccurs="0" name="bloomFilterSpaceUsed" type="xs:long"/>
+<xs:element minOccurs="0" name="columnFamilyName" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="compactedRowMaximumSize" type="xs:long"/>
+<xs:element minOccurs="0" name="compactedRowMeanSize" type="xs:long"/>
+<xs:element minOccurs="0" name="compactedRowMinimumSize" type="xs:long"/>
+<xs:element minOccurs="0" name="liveDiskSpaceUsed" type="xs:long"/>
+<xs:element minOccurs="0" name="memtableColumnsCount" type="xs:long"/>
+<xs:element minOccurs="0" name="memtableDataSize" type="xs:long"/>
+<xs:element minOccurs="0" name="memtableSwitchCount" type="xs:int"/>
+<xs:element minOccurs="0" name="numberOfKeys" type="xs:long"/>
+<xs:element minOccurs="0" name="pendingTasks" type="xs:int"/>
+<xs:element minOccurs="0" name="readCount" type="xs:long"/>
+<xs:element minOccurs="0" name="readLatency" type="xs:double"/>
+<xs:element minOccurs="0" name="totalDiskSpaceUsed" type="xs:long"/>
+<xs:element minOccurs="0" name="writeCount" type="xs:long"/>
+<xs:element minOccurs="0" name="writeLatency" type="xs:double"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ClusterRingInformation">
+<xs:sequence>
+<xs:element minOccurs="0" name="address" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="dataCenter" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="effectiveOwnership" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="endPoint" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="load" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="rack" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="state" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="token" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ClusterNetstat">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="netstatProperties" nillable="true" type="ax211:NetstatProperties"/>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="netstatReceivingStreamingProperties" nillable="true" type="ax211:NetstatStreamingProperties"/>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="netstatResponseStreamingProperties" nillable="true" type="ax211:NetstatStreamingProperties"/>
+<xs:element minOccurs="0" name="operationMode" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="NetstatProperties">
+<xs:sequence>
+<xs:element minOccurs="0" name="active" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="completed" type="xs:int"/>
+<xs:element minOccurs="0" name="pending" type="xs:int"/>
+<xs:element minOccurs="0" name="poolName" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="NetstatStreamingProperties">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="fileName" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="host" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="streamType" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="NodeInformation">
+<xs:sequence>
+<xs:element minOccurs="0" name="dataCenter" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="exceptions" type="xs:int"/>
+<xs:element minOccurs="0" name="generationNo" type="xs:int"/>
+<xs:element minOccurs="0" name="gossipState" type="xs:boolean"/>
+<xs:element minOccurs="0" name="heapMemory" nillable="true" type="ax211:HeapMemory"/>
+<xs:element minOccurs="0" name="keyCacheProperties" nillable="true" type="ax211:CacheProperties"/>
+<xs:element minOccurs="0" name="load" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="rack" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="rowCacheProperties" nillable="true" type="ax211:CacheProperties"/>
+<xs:element minOccurs="0" name="thriftState" type="xs:boolean"/>
+<xs:element minOccurs="0" name="token" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="uptime" type="xs:long"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="HeapMemory">
+<xs:sequence>
+<xs:element minOccurs="0" name="maxMemory" type="xs:double"/>
+<xs:element minOccurs="0" name="useMemory" type="xs:double"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="CacheProperties">
+<xs:sequence>
+<xs:element minOccurs="0" name="cacheCapacity" type="xs:long"/>
+<xs:element minOccurs="0" name="cacheHits" type="xs:long"/>
+<xs:element minOccurs="0" name="cacheRecentHitRate" type="xs:double"/>
+<xs:element minOccurs="0" name="cacheRequests" type="xs:long"/>
+<xs:element minOccurs="0" name="cacheSavePeriodInSeconds" type="xs:long"/>
+<xs:element minOccurs="0" name="cacheSize" type="xs:long"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="DescribeRingProperties">
+<xs:sequence>
+<xs:element minOccurs="0" name="schemaVersion" nillable="true" type="xs:string"/>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="tokenRange" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="CompactionStats">
+<xs:sequence>
+<xs:element minOccurs="0" name="activeCompactionRemainingTime" nillable="true" type="xs:string"/>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="compactionProperties" nillable="true" type="ax211:CompactionProperties"/>
+<xs:element minOccurs="0" name="pendingTasks" type="xs:int"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="CompactionProperties">
+<xs:sequence>
+<xs:element minOccurs="0" name="bytesCompacted" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="bytesTotal" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="columFamily" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="compactionType" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="progress" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="KeyspaceInfo">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="columnFamilyInformations" nillable="true" type="ax211:ColumnFamilyInformation"/>
+<xs:element minOccurs="0" name="keyspaceName" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="tablePendingTasks" type="xs:int"/>
+<xs:element minOccurs="0" name="tableReadCount" type="xs:long"/>
+<xs:element minOccurs="0" name="tableReadLatency" type="xs:double"/>
+<xs:element minOccurs="0" name="tableTotalReadTime" type="xs:double"/>
+<xs:element minOccurs="0" name="tableTotalWriteTime" type="xs:double"/>
+<xs:element minOccurs="0" name="tableWriteCount" type="xs:long"/>
+<xs:element minOccurs="0" name="tableWriteLatency" type="xs:double"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ColumnFamilyHistograms">
+<xs:sequence>
+<xs:element minOccurs="0" name="SSTables" type="xs:long"/>
+<xs:element minOccurs="0" name="columnCount" type="xs:long"/>
+<xs:element minOccurs="0" name="offset" type="xs:long"/>
+<xs:element minOccurs="0" name="readLatency" type="xs:long"/>
+<xs:element minOccurs="0" name="rowSize" type="xs:long"/>
+<xs:element minOccurs="0" name="writeLatency" type="xs:long"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>
+<xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://exception.mgt.cluster.cassandra.carbon.wso2.org/xsd">
+<xs:complexType name="ClusterDataAdminException">
+<xs:sequence/>
+</xs:complexType>
+</xs:schema>
+</wsdl:types>
+<wsdl:message name="getNetstatRequest">
+<wsdl:part name="parameters" element="ns1:getNetstat"/>
+</wsdl:message>
+<wsdl:message name="getNetstatResponse">
+<wsdl:part name="parameters" element="ns1:getNetstatResponse"/>
+</wsdl:message>
+<wsdl:message name="ClusterStatsAdminClusterDataAdminException">
+<wsdl:part name="parameters" element="ns1:ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:message>
+<wsdl:message name="getRangekeysampleRequest">
+<wsdl:part name="parameters" element="ns1:getRangekeysample"/>
+</wsdl:message>
+<wsdl:message name="getRangekeysampleResponse">
+<wsdl:part name="parameters" element="ns1:getRangekeysampleResponse"/>
+</wsdl:message>
+<wsdl:message name="getCompactionThresholdsRequest">
+<wsdl:part name="parameters" element="ns1:getCompactionThresholds"/>
+</wsdl:message>
+<wsdl:message name="getCompactionThresholdsResponse">
+<wsdl:part name="parameters" element="ns1:getCompactionThresholdsResponse"/>
+</wsdl:message>
+<wsdl:message name="getTokenRemovalStatusRequest">
+<wsdl:part name="parameters" element="ns1:getTokenRemovalStatus"/>
+</wsdl:message>
+<wsdl:message name="getTokenRemovalStatusResponse">
+<wsdl:part name="parameters" element="ns1:getTokenRemovalStatusResponse"/>
+</wsdl:message>
+<wsdl:message name="getRingRequest">
+<wsdl:part name="parameters" element="ns1:getRing"/>
+</wsdl:message>
+<wsdl:message name="getRingResponse">
+<wsdl:part name="parameters" element="ns1:getRingResponse"/>
+</wsdl:message>
+<wsdl:message name="getColumnFamilyStatsForKeyspaceRequest">
+<wsdl:part name="parameters" element="ns1:getColumnFamilyStatsForKeyspace"/>
+</wsdl:message>
+<wsdl:message name="getColumnFamilyStatsForKeyspaceResponse">
+<wsdl:part name="parameters" element="ns1:getColumnFamilyStatsForKeyspaceResponse"/>
+</wsdl:message>
+<wsdl:message name="getEndpointsRequest">
+<wsdl:part name="parameters" element="ns1:getEndpoints"/>
+</wsdl:message>
+<wsdl:message name="getEndpointsResponse">
+<wsdl:part name="parameters" element="ns1:getEndpointsResponse"/>
+</wsdl:message>
+<wsdl:message name="getCompactionStatsRequest">
+<wsdl:part name="parameters" element="ns1:getCompactionStats"/>
+</wsdl:message>
+<wsdl:message name="getCompactionStatsResponse">
+<wsdl:part name="parameters" element="ns1:getCompactionStatsResponse"/>
+</wsdl:message>
+<wsdl:message name="getTpstatsRequest">
+<wsdl:part name="parameters" element="ns1:getTpstats"/>
+</wsdl:message>
+<wsdl:message name="getTpstatsResponse">
+<wsdl:part name="parameters" element="ns1:getTpstatsResponse"/>
+</wsdl:message>
+<wsdl:message name="getVersionRequest">
+<wsdl:part name="parameters" element="ns1:getVersion"/>
+</wsdl:message>
+<wsdl:message name="getVersionResponse">
+<wsdl:part name="parameters" element="ns1:getVersionResponse"/>
+</wsdl:message>
+<wsdl:message name="getColumnFamiliesForKeyspaceRequest">
+<wsdl:part name="parameters" element="ns1:getColumnFamiliesForKeyspace"/>
+</wsdl:message>
+<wsdl:message name="getColumnFamiliesForKeyspaceResponse">
+<wsdl:part name="parameters" element="ns1:getColumnFamiliesForKeyspaceResponse"/>
+</wsdl:message>
+<wsdl:message name="getKeyspacesRequest">
+<wsdl:part name="parameters" element="ns1:getKeyspaces"/>
+</wsdl:message>
+<wsdl:message name="getKeyspacesResponse">
+<wsdl:part name="parameters" element="ns1:getKeyspacesResponse"/>
+</wsdl:message>
+<wsdl:message name="getSSTablesRequest">
+<wsdl:part name="parameters" element="ns1:getSSTables"/>
+</wsdl:message>
+<wsdl:message name="getSSTablesResponse">
+<wsdl:part name="parameters" element="ns1:getSSTablesResponse"/>
+</wsdl:message>
+<wsdl:message name="getGossipInfoRequest">
+<wsdl:part name="parameters" element="ns1:getGossipInfo"/>
+</wsdl:message>
+<wsdl:message name="getGossipInfoResponse">
+<wsdl:part name="parameters" element="ns1:getGossipInfoResponse"/>
+</wsdl:message>
+<wsdl:message name="getInfoRequest">
+<wsdl:part name="parameters" element="ns1:getInfo"/>
+</wsdl:message>
+<wsdl:message name="getInfoResponse">
+<wsdl:part name="parameters" element="ns1:getInfoResponse"/>
+</wsdl:message>
+<wsdl:message name="getDescribeRingRequest">
+<wsdl:part name="parameters" element="ns1:getDescribeRing"/>
+</wsdl:message>
+<wsdl:message name="getDescribeRingResponse">
+<wsdl:part name="parameters" element="ns1:getDescribeRingResponse"/>
+</wsdl:message>
+<wsdl:message name="getSingleColumnFamilyStatsRequest">
+<wsdl:part name="parameters" element="ns1:getSingleColumnFamilyStats"/>
+</wsdl:message>
+<wsdl:message name="getSingleColumnFamilyStatsResponse">
+<wsdl:part name="parameters" element="ns1:getSingleColumnFamilyStatsResponse"/>
+</wsdl:message>
+<wsdl:message name="getColumnFamilyHistogramsRequest">
+<wsdl:part name="parameters" element="ns1:getColumnFamilyHistograms"/>
+</wsdl:message>
+<wsdl:message name="getColumnFamilyHistogramsResponse">
+<wsdl:part name="parameters" element="ns1:getColumnFamilyHistogramsResponse"/>
+</wsdl:message>
+<wsdl:message name="getColumnFamilyStatsRequest">
+<wsdl:part name="parameters" element="ns1:getColumnFamilyStats"/>
+</wsdl:message>
+<wsdl:message name="getColumnFamilyStatsResponse">
+<wsdl:part name="parameters" element="ns1:getColumnFamilyStatsResponse"/>
+</wsdl:message>
+<wsdl:portType name="ClusterStatsAdminPortType">
+<wsdl:operation name="getNetstat">
+<wsdl:input message="tns:getNetstatRequest" wsaw:Action="urn:getNetstat"/>
+<wsdl:output message="tns:getNetstatResponse" wsaw:Action="urn:getNetstatResponse"/>
+<wsdl:fault message="tns:ClusterStatsAdminClusterDataAdminException" name="ClusterStatsAdminClusterDataAdminException" wsaw:Action="urn:getNetstatClusterStatsAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getRangekeysample">
+<wsdl:input message="tns:getRangekeysampleRequest" wsaw:Action="urn:getRangekeysample"/>
+<wsdl:output message="tns:getRangekeysampleResponse" wsaw:Action="urn:getRangekeysampleResponse"/>
+<wsdl:fault message="tns:ClusterStatsAdminClusterDataAdminException" name="ClusterStatsAdminClusterDataAdminException" wsaw:Action="urn:getRangekeysampleClusterStatsAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getCompactionThresholds">
+<wsdl:input message="tns:getCompactionThresholdsRequest" wsaw:Action="urn:getCompactionThresholds"/>
+<wsdl:output message="tns:getCompactionThresholdsResponse" wsaw:Action="urn:getCompactionThresholdsResponse"/>
+<wsdl:fault message="tns:ClusterStatsAdminClusterDataAdminException" name="ClusterStatsAdminClusterDataAdminException" wsaw:Action="urn:getCompactionThresholdsClusterStatsAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getTokenRemovalStatus">
+<wsdl:input message="tns:getTokenRemovalStatusRequest" wsaw:Action="urn:getTokenRemovalStatus"/>
+<wsdl:output message="tns:getTokenRemovalStatusResponse" wsaw:Action="urn:getTokenRemovalStatusResponse"/>
+<wsdl:fault message="tns:ClusterStatsAdminClusterDataAdminException" name="ClusterStatsAdminClusterDataAdminException" wsaw:Action="urn:getTokenRemovalStatusClusterStatsAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getRing">
+<wsdl:input message="tns:getRingRequest" wsaw:Action="urn:getRing"/>
+<wsdl:output message="tns:getRingResponse" wsaw:Action="urn:getRingResponse"/>
+<wsdl:fault message="tns:ClusterStatsAdminClusterDataAdminException" name="ClusterStatsAdminClusterDataAdminException" wsaw:Action="urn:getRingClusterStatsAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getColumnFamilyStatsForKeyspace">
+<wsdl:input message="tns:getColumnFamilyStatsForKeyspaceRequest" wsaw:Action="urn:getColumnFamilyStatsForKeyspace"/>
+<wsdl:output message="tns:getColumnFamilyStatsForKeyspaceResponse" wsaw:Action="urn:getColumnFamilyStatsForKeyspaceResponse"/>
+<wsdl:fault message="tns:ClusterStatsAdminClusterDataAdminException" name="ClusterStatsAdminClusterDataAdminException" wsaw:Action="urn:getColumnFamilyStatsForKeyspaceClusterStatsAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getEndpoints">
+<wsdl:input message="tns:getEndpointsRequest" wsaw:Action="urn:getEndpoints"/>
+<wsdl:output message="tns:getEndpointsResponse" wsaw:Action="urn:getEndpointsResponse"/>
+<wsdl:fault message="tns:ClusterStatsAdminClusterDataAdminException" name="ClusterStatsAdminClusterDataAdminException" wsaw:Action="urn:getEndpointsClusterStatsAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getCompactionStats">
+<wsdl:input message="tns:getCompactionStatsRequest" wsaw:Action="urn:getCompactionStats"/>
+<wsdl:output message="tns:getCompactionStatsResponse" wsaw:Action="urn:getCompactionStatsResponse"/>
+<wsdl:fault message="tns:ClusterStatsAdminClusterDataAdminException" name="ClusterStatsAdminClusterDataAdminException" wsaw:Action="urn:getCompactionStatsClusterStatsAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getTpstats">
+<wsdl:input message="tns:getTpstatsRequest" wsaw:Action="urn:getTpstats"/>
+<wsdl:output message="tns:getTpstatsResponse" wsaw:Action="urn:getTpstatsResponse"/>
+<wsdl:fault message="tns:ClusterStatsAdminClusterDataAdminException" name="ClusterStatsAdminClusterDataAdminException" wsaw:Action="urn:getTpstatsClusterStatsAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getVersion">
+<wsdl:input message="tns:getVersionRequest" wsaw:Action="urn:getVersion"/>
+<wsdl:output message="tns:getVersionResponse" wsaw:Action="urn:getVersionResponse"/>
+<wsdl:fault message="tns:ClusterStatsAdminClusterDataAdminException" name="ClusterStatsAdminClusterDataAdminException" wsaw:Action="urn:getVersionClusterStatsAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getColumnFamiliesForKeyspace">
+<wsdl:input message="tns:getColumnFamiliesForKeyspaceRequest" wsaw:Action="urn:getColumnFamiliesForKeyspace"/>
+<wsdl:output message="tns:getColumnFamiliesForKeyspaceResponse" wsaw:Action="urn:getColumnFamiliesForKeyspaceResponse"/>
+<wsdl:fault message="tns:ClusterStatsAdminClusterDataAdminException" name="ClusterStatsAdminClusterDataAdminException" wsaw:Action="urn:getColumnFamiliesForKeyspaceClusterStatsAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getKeyspaces">
+<wsdl:input message="tns:getKeyspacesRequest" wsaw:Action="urn:getKeyspaces"/>
+<wsdl:output message="tns:getKeyspacesResponse" wsaw:Action="urn:getKeyspacesResponse"/>
+<wsdl:fault message="tns:ClusterStatsAdminClusterDataAdminException" name="ClusterStatsAdminClusterDataAdminException" wsaw:Action="urn:getKeyspacesClusterStatsAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getSSTables">
+<wsdl:input message="tns:getSSTablesRequest" wsaw:Action="urn:getSSTables"/>
+<wsdl:output message="tns:getSSTablesResponse" wsaw:Action="urn:getSSTablesResponse"/>
+<wsdl:fault message="tns:ClusterStatsAdminClusterDataAdminException" name="ClusterStatsAdminClusterDataAdminException" wsaw:Action="urn:getSSTablesClusterStatsAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getGossipInfo">
+<wsdl:input message="tns:getGossipInfoRequest" wsaw:Action="urn:getGossipInfo"/>
+<wsdl:output message="tns:getGossipInfoResponse" wsaw:Action="urn:getGossipInfoResponse"/>
+<wsdl:fault message="tns:ClusterStatsAdminClusterDataAdminException" name="ClusterStatsAdminClusterDataAdminException" wsaw:Action="urn:getGossipInfoClusterStatsAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getInfo">
+<wsdl:input message="tns:getInfoRequest" wsaw:Action="urn:getInfo"/>
+<wsdl:output message="tns:getInfoResponse" wsaw:Action="urn:getInfoResponse"/>
+<wsdl:fault message="tns:ClusterStatsAdminClusterDataAdminException" name="ClusterStatsAdminClusterDataAdminException" wsaw:Action="urn:getInfoClusterStatsAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getDescribeRing">
+<wsdl:input message="tns:getDescribeRingRequest" wsaw:Action="urn:getDescribeRing"/>
+<wsdl:output message="tns:getDescribeRingResponse" wsaw:Action="urn:getDescribeRingResponse"/>
+<wsdl:fault message="tns:ClusterStatsAdminClusterDataAdminException" name="ClusterStatsAdminClusterDataAdminException" wsaw:Action="urn:getDescribeRingClusterStatsAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getSingleColumnFamilyStats">
+<wsdl:input message="tns:getSingleColumnFamilyStatsRequest" wsaw:Action="urn:getSingleColumnFamilyStats"/>
+<wsdl:output message="tns:getSingleColumnFamilyStatsResponse" wsaw:Action="urn:getSingleColumnFamilyStatsResponse"/>
+<wsdl:fault message="tns:ClusterStatsAdminClusterDataAdminException" name="ClusterStatsAdminClusterDataAdminException" wsaw:Action="urn:getSingleColumnFamilyStatsClusterStatsAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getColumnFamilyHistograms">
+<wsdl:input message="tns:getColumnFamilyHistogramsRequest" wsaw:Action="urn:getColumnFamilyHistograms"/>
+<wsdl:output message="tns:getColumnFamilyHistogramsResponse" wsaw:Action="urn:getColumnFamilyHistogramsResponse"/>
+<wsdl:fault message="tns:ClusterStatsAdminClusterDataAdminException" name="ClusterStatsAdminClusterDataAdminException" wsaw:Action="urn:getColumnFamilyHistogramsClusterStatsAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getColumnFamilyStats">
+<wsdl:input message="tns:getColumnFamilyStatsRequest" wsaw:Action="urn:getColumnFamilyStats"/>
+<wsdl:output message="tns:getColumnFamilyStatsResponse" wsaw:Action="urn:getColumnFamilyStatsResponse"/>
+<wsdl:fault message="tns:ClusterStatsAdminClusterDataAdminException" name="ClusterStatsAdminClusterDataAdminException" wsaw:Action="urn:getColumnFamilyStatsClusterStatsAdminClusterDataAdminException"/>
+</wsdl:operation>
+</wsdl:portType>
+<wsdl:binding name="ClusterStatsAdminSoap11Binding" type="tns:ClusterStatsAdminPortType">
+<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+<wsdl:operation name="getRangekeysample">
+<soap:operation soapAction="urn:getRangekeysample" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getNetstat">
+<soap:operation soapAction="urn:getNetstat" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getCompactionThresholds">
+<soap:operation soapAction="urn:getCompactionThresholds" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getTokenRemovalStatus">
+<soap:operation soapAction="urn:getTokenRemovalStatus" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getRing">
+<soap:operation soapAction="urn:getRing" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getColumnFamilyStatsForKeyspace">
+<soap:operation soapAction="urn:getColumnFamilyStatsForKeyspace" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getEndpoints">
+<soap:operation soapAction="urn:getEndpoints" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getCompactionStats">
+<soap:operation soapAction="urn:getCompactionStats" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getTpstats">
+<soap:operation soapAction="urn:getTpstats" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getVersion">
+<soap:operation soapAction="urn:getVersion" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getColumnFamiliesForKeyspace">
+<soap:operation soapAction="urn:getColumnFamiliesForKeyspace" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getKeyspaces">
+<soap:operation soapAction="urn:getKeyspaces" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getSSTables">
+<soap:operation soapAction="urn:getSSTables" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getGossipInfo">
+<soap:operation soapAction="urn:getGossipInfo" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getInfo">
+<soap:operation soapAction="urn:getInfo" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getSingleColumnFamilyStats">
+<soap:operation soapAction="urn:getSingleColumnFamilyStats" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getDescribeRing">
+<soap:operation soapAction="urn:getDescribeRing" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getColumnFamilyStats">
+<soap:operation soapAction="urn:getColumnFamilyStats" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getColumnFamilyHistograms">
+<soap:operation soapAction="urn:getColumnFamilyHistograms" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:binding name="ClusterStatsAdminSoap12Binding" type="tns:ClusterStatsAdminPortType">
+<soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+<wsdl:operation name="getRangekeysample">
+<soap12:operation soapAction="urn:getRangekeysample" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getNetstat">
+<soap12:operation soapAction="urn:getNetstat" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getCompactionThresholds">
+<soap12:operation soapAction="urn:getCompactionThresholds" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getTokenRemovalStatus">
+<soap12:operation soapAction="urn:getTokenRemovalStatus" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getRing">
+<soap12:operation soapAction="urn:getRing" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getColumnFamilyStatsForKeyspace">
+<soap12:operation soapAction="urn:getColumnFamilyStatsForKeyspace" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getEndpoints">
+<soap12:operation soapAction="urn:getEndpoints" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getCompactionStats">
+<soap12:operation soapAction="urn:getCompactionStats" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getTpstats">
+<soap12:operation soapAction="urn:getTpstats" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getVersion">
+<soap12:operation soapAction="urn:getVersion" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getColumnFamiliesForKeyspace">
+<soap12:operation soapAction="urn:getColumnFamiliesForKeyspace" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getKeyspaces">
+<soap12:operation soapAction="urn:getKeyspaces" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getSSTables">
+<soap12:operation soapAction="urn:getSSTables" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getGossipInfo">
+<soap12:operation soapAction="urn:getGossipInfo" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getInfo">
+<soap12:operation soapAction="urn:getInfo" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getSingleColumnFamilyStats">
+<soap12:operation soapAction="urn:getSingleColumnFamilyStats" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getDescribeRing">
+<soap12:operation soapAction="urn:getDescribeRing" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getColumnFamilyStats">
+<soap12:operation soapAction="urn:getColumnFamilyStats" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getColumnFamilyHistograms">
+<soap12:operation soapAction="urn:getColumnFamilyHistograms" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterStatsAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterStatsAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:binding name="ClusterStatsAdminHttpBinding" type="tns:ClusterStatsAdminPortType">
+<http:binding verb="POST"/>
+<wsdl:operation name="getRangekeysample">
+<http:operation location="getRangekeysample"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getNetstat">
+<http:operation location="getNetstat"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getCompactionThresholds">
+<http:operation location="getCompactionThresholds"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getTokenRemovalStatus">
+<http:operation location="getTokenRemovalStatus"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getRing">
+<http:operation location="getRing"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getColumnFamilyStatsForKeyspace">
+<http:operation location="getColumnFamilyStatsForKeyspace"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getEndpoints">
+<http:operation location="getEndpoints"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getCompactionStats">
+<http:operation location="getCompactionStats"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getTpstats">
+<http:operation location="getTpstats"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getVersion">
+<http:operation location="getVersion"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getColumnFamiliesForKeyspace">
+<http:operation location="getColumnFamiliesForKeyspace"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getKeyspaces">
+<http:operation location="getKeyspaces"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getSSTables">
+<http:operation location="getSSTables"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getGossipInfo">
+<http:operation location="getGossipInfo"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getInfo">
+<http:operation location="getInfo"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getSingleColumnFamilyStats">
+<http:operation location="getSingleColumnFamilyStats"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getDescribeRing">
+<http:operation location="getDescribeRing"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getColumnFamilyStats">
+<http:operation location="getColumnFamilyStats"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getColumnFamilyHistograms">
+<http:operation location="getColumnFamilyHistograms"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:service name="ClusterStatsAdmin">
+<wsdl:port name="ClusterStatsAdminHttpsSoap11Endpoint" binding="tns:ClusterStatsAdminSoap11Binding">
+<soap:address location="https://192.168.1.2:9443/services/ClusterStatsAdmin.ClusterStatsAdminHttpsSoap11Endpoint/"/>
+</wsdl:port>
+<wsdl:port name="ClusterStatsAdminHttpsSoap12Endpoint" binding="tns:ClusterStatsAdminSoap12Binding">
+<soap12:address location="https://192.168.1.2:9443/services/ClusterStatsAdmin.ClusterStatsAdminHttpsSoap12Endpoint/"/>
+</wsdl:port>
+<wsdl:port name="ClusterStatsAdminHttpsEndpoint" binding="tns:ClusterStatsAdminHttpBinding">
+<http:address location="https://192.168.1.2:9443/services/ClusterStatsAdmin.ClusterStatsAdminHttpsEndpoint/"/>
+</wsdl:port>
+</wsdl:service>
+</wsdl:definitions>

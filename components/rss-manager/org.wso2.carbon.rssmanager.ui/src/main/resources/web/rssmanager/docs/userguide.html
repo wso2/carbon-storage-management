@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+ ~ Copyright (c) 2013, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all"/>
+    <title>Data Services - User Guide</title></head>
+
+
+<body>
+
+<h1>RSS Manager</h1>
+
+<h2>Content</h2>
+
+<div class="toc">
+    <ul>
+        <li><a href="#Introduction">Introduction</a></li>
+        <li><a href="#addInstance">Add a sample Database Server Instance</a></li>
+        <li><a href="#addDatabase">Create a database inside the added Database Server Instance</a>
+        </li>
+        <li><a href="#addUser">Add a database user</a></li>
+        <li><a href="#exploreDatabase">Explore your database</a></li>
+    </ul>
+</div>
+<h2 id="Introduction">Introduction</h2>
+
+<p>RSS Manager is a mechanism that provides its users with an easy to use management console
+    to manipulate all their data related to applications running on a particular domain.
+</p>
+
+<h2 id="addInstance">Add a sample Database Server Instance</h2>
+
+<p style="text-align:justify;">In order to add your own RDS instances to the system, you can use the "Database Server
+    Instance" option which can be located under the "Configure" menu of the management console.
+    You can fill up the fields depending on your preference and add your RDS instance to the
+    system to be used as a data store for the applications running under your tenant domain.
+</p>
+<p><img style="border: 1px solid black; width: 600px;" src="images/add_server_instance.png" alt="Add databser server instance ui"/></p>
+
+<h2 id="addDatabase">Create a database inside the added Database Server Instance</h2>
+
+<p style="text-align:justify;">The first step in the process of consuming WSO2 Relational Storage Service is to create a
+    database for your application in the WSO2 RSS storage space. As the figure below depicts,
+    the WSO2_RSS option together with the set of your own RDS instances that are configured to be used to
+    manipulate your application data, will be listed out in the select box which carries the label
+    "Database Server Instance Name". There you can either use WSO2 Relational Storage Service or
+    your own RDS instances to create and consume your database. Once you select your preferred storage
+    solution, you can then proceed with the creation of your database. The user is given the ability
+    to specify a preferred name for the database under "Database Name". Once you click on the create
+    button after fulfilling the aforementioned requirements, you will be able to create the database
+    of your own choice to store the application data manipulated within your own domain.sole
+    to manipulate all their data related to applications running on a particular domain.
+</p>
+<p><img style="border: 1px solid black; width: 600px;" src="images/create_db_rss.png" alt="Creating databases in RSS"/></p>
+
+<p><img style="border: 1px solid black; width: 600px;" src="images/list_out_dbs.png" alt="Listing out already created databases"/> </p>
+
+<h2 id="addUser">Add a database user</h2>
+
+<p style="text-align:justify;">In this step, the users are given control over coming up with their own permission schemes that
+    will be granted to their database users later. As the figure below shows, it's simply a matter
+    of selecting the permission just by clicking on the check boxes associated with a particular
+    database permission which helps you avoid tedious tasks such as writing lengthy SQL queries and
+    executing them to grant database privileges for a particular database user.</p>
+
+<p><img style="border: 1px solid black; width: 600px;" src="images/add_priv_group.png" alt="Create a database privilege group"/></p>
+
+<p><img style="border: 1px solid black; width: 600px;" src="images/list_out_priv_groups.png"
+     alt="Listing out already created database privilege groups"/></p>
+
+<p style="text-align:justify;">
+    The "Add new user" user interface allows you to specify a name and a password of your choice for
+    a particular user. It also lists down the prvilege groups that you created under step 1 so that
+    you can select the appropriate permission scheme which is intended to grant the database user.
+    Once you successfully fulfill the above requirements and click the save button which can be
+    located at the bottom of the image, a database user will be created to be used in the data
+    manipulative tasks carried out in your tenant domain.
+</p>
+<p><img style="border: 1px solid black; width: 600px;" src="images/add_user.png" alt="Adding new database users"/></p>
+
+<p><img style="border: 1px solid black; width: 600px;" src="images/list_out_users.png" alt="Listing out already created database users"/></p>
+
+<h2 id="exploreDatabase">Explore your database</h2>
+
+<p style="text-align:justify;">Having successfully created a database and attached a database user, you now need to configure
+    your database so that it suits your own requirements. This task is also made quite simple with
+    the database explorer that we've integrated into the database management user interface by which
+    you can execute your desired SQL schemas to configure the database the way you prefer. To get
+    you redirected to the database explorer, click on the "Explore Database" option listed under the
+    "Actions" category in the "Database Users" page.
+</p>
+<p><img style="border: 1px solid black; width: 600px;" src="images/configure_db.png" alt="Configure your database using the database explorer"/></p>
+
+</body>
+</html>

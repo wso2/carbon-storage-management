@@ -1,0 +1,2454 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ax27="http://data.mgt.cluster.cassandra.carbon.wso2.org/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:ax25="http://exception.mgt.cluster.cassandra.carbon.wso2.org/xsd" xmlns:tns="http://service.mgt.cluster.cassandra.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.mgt.cluster.cassandra.carbon.wso2.org">
+<wsdl:documentation>ClusterOperationAdmin</wsdl:documentation>
+<wsdl:types>
+<xs:schema xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax28="http://data.mgt.cluster.cassandra.carbon.wso2.org/xsd" xmlns:ax26="http://exception.mgt.cluster.cassandra.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+<xs:import namespace="http://exception.mgt.cluster.cassandra.carbon.wso2.org/xsd"/>
+<xs:import namespace="http://data.mgt.cluster.cassandra.carbon.wso2.org/xsd"/>
+<xs:element name="ClusterOperationAdminClusterDataAdminException">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="ClusterDataAdminException" nillable="true" type="ax25:ClusterDataAdminException"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="upgradeSSTablesInKeyspace">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="upgradeSSTablesInKeyspaceResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="upgradeSSTablesColumnFamilies">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="columnFamilies" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="upgradeSSTablesColumnFamiliesResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="takeSnapshotOfNode">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="snapShotName" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="takeSnapshotOfKeyspace">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="snapShotName" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="takeSnapshotOfColumnFamily">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="snapShotName" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="stopRPCServer">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="stopGossipServer">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="stopCompaction">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="type" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="startRPCServer">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="startGossipServer">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="setStreamThroughputMbPerSec">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="value" type="xs:int"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="setRowCacheCapacity">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="rowCacheCapacity" type="xs:int"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="setKeyCacheCapacity">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyCacheCapacity" type="xs:int"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="setIncrementalBackUpStatus">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="status" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="setCompactionThroughputMbPerSec">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="value" type="xs:int"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="setCompactionThresholds">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="minThresholds" type="xs:int"/>
+<xs:element minOccurs="0" name="maxThresholds" type="xs:int"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="scrubKeyspace">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="scrubKeyspaceResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="scrubColumnFamilies">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="columnFamilies" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="scrubColumnFamiliesResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="resetLocalSchema">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="resetLocalSchemaResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="repairKeyspace">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="repairKeyspaceResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="repairColumnFamilies">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="columnFamilies" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="repairColumnFamiliesResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="removeToken">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="token" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="refresh">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="rebuildColumnFamilyWithIndex">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="index" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="rebuildColumnFamily">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="rebuild">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="dataCenter" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="performGC">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="moveNode">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="newToken" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="joinCluster">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="joinClusterResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="isRPCRunning">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="isRPCRunningResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="isJoined">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="isJoinedResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="isGossipServerEnable">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="isGossipServerEnableResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="invalidateRowCache">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="invalidateRowCacheResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="invalidateKeyCache">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="invalidateKeyCacheResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getSnapshots">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="getSnapshotsResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getRemovalStatus">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="getRemovalStatusResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getNodeInitialInfo">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="getNodeInitialInfoResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" nillable="true" type="ax27:NodeInitialInfo"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getKeyspaceInitialInfo">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="getKeyspaceInitialInfoResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" nillable="true" type="ax27:KeyspaceInitialInfo"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getIncrementalBackUpStatus">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="getIncrementalBackUpStatusResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="forceRemoveCompletion">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="flushKeyspace">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="flushKeyspaceResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="flushColumnFamilies">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="columnFamilies" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="flushColumnFamiliesResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="drainNode">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="drainNodeResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="decommissionNode">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="decommissionNodeResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="compactKeyspace">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="compactKeyspaceResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="compactColumnFamilies">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="columnFamilies" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="compactColumnFamiliesResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="clearSnapshotOfNode">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="snapShotName" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="clearSnapshotOfKeyspace">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="snapShotName" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="cleanUpKeyspace">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="cleanUpKeyspaceResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="cleanUpColumnFamilies">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="columnFamilies" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="cleanUpColumnFamiliesResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+</xs:schema>
+<xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://data.mgt.cluster.cassandra.carbon.wso2.org/xsd">
+<xs:complexType name="NodeInitialInfo">
+<xs:sequence>
+<xs:element minOccurs="0" name="RPCEnable" type="xs:boolean"/>
+<xs:element minOccurs="0" name="gossipEnable" type="xs:boolean"/>
+<xs:element minOccurs="0" name="incrementalBackupEnable" type="xs:boolean"/>
+<xs:element minOccurs="0" name="join" type="xs:boolean"/>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="snapshotNames" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="token" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="KeyspaceInitialInfo">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="keyspaces" nillable="true" type="xs:string"/>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="snapshotNames" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>
+<xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://exception.mgt.cluster.cassandra.carbon.wso2.org/xsd">
+<xs:complexType name="ClusterDataAdminException">
+<xs:sequence/>
+</xs:complexType>
+</xs:schema>
+</wsdl:types>
+<wsdl:message name="clearSnapshotOfNodeRequest">
+<wsdl:part name="parameters" element="ns1:clearSnapshotOfNode"/>
+</wsdl:message>
+<wsdl:message name="ClusterOperationAdminClusterDataAdminException">
+<wsdl:part name="parameters" element="ns1:ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:message>
+<wsdl:message name="rebuildColumnFamilyWithIndexRequest">
+<wsdl:part name="parameters" element="ns1:rebuildColumnFamilyWithIndex"/>
+</wsdl:message>
+<wsdl:message name="setRowCacheCapacityRequest">
+<wsdl:part name="parameters" element="ns1:setRowCacheCapacity"/>
+</wsdl:message>
+<wsdl:message name="scrubColumnFamiliesRequest">
+<wsdl:part name="parameters" element="ns1:scrubColumnFamilies"/>
+</wsdl:message>
+<wsdl:message name="scrubColumnFamiliesResponse">
+<wsdl:part name="parameters" element="ns1:scrubColumnFamiliesResponse"/>
+</wsdl:message>
+<wsdl:message name="upgradeSSTablesInKeyspaceRequest">
+<wsdl:part name="parameters" element="ns1:upgradeSSTablesInKeyspace"/>
+</wsdl:message>
+<wsdl:message name="upgradeSSTablesInKeyspaceResponse">
+<wsdl:part name="parameters" element="ns1:upgradeSSTablesInKeyspaceResponse"/>
+</wsdl:message>
+<wsdl:message name="isJoinedRequest">
+<wsdl:part name="parameters" element="ns1:isJoined"/>
+</wsdl:message>
+<wsdl:message name="isJoinedResponse">
+<wsdl:part name="parameters" element="ns1:isJoinedResponse"/>
+</wsdl:message>
+<wsdl:message name="stopGossipServerRequest">
+<wsdl:part name="parameters" element="ns1:stopGossipServer"/>
+</wsdl:message>
+<wsdl:message name="takeSnapshotOfColumnFamilyRequest">
+<wsdl:part name="parameters" element="ns1:takeSnapshotOfColumnFamily"/>
+</wsdl:message>
+<wsdl:message name="getSnapshotsRequest">
+<wsdl:part name="parameters" element="ns1:getSnapshots"/>
+</wsdl:message>
+<wsdl:message name="getSnapshotsResponse">
+<wsdl:part name="parameters" element="ns1:getSnapshotsResponse"/>
+</wsdl:message>
+<wsdl:message name="takeSnapshotOfKeyspaceRequest">
+<wsdl:part name="parameters" element="ns1:takeSnapshotOfKeyspace"/>
+</wsdl:message>
+<wsdl:message name="upgradeSSTablesColumnFamiliesRequest">
+<wsdl:part name="parameters" element="ns1:upgradeSSTablesColumnFamilies"/>
+</wsdl:message>
+<wsdl:message name="upgradeSSTablesColumnFamiliesResponse">
+<wsdl:part name="parameters" element="ns1:upgradeSSTablesColumnFamiliesResponse"/>
+</wsdl:message>
+<wsdl:message name="getIncrementalBackUpStatusRequest">
+<wsdl:part name="parameters" element="ns1:getIncrementalBackUpStatus"/>
+</wsdl:message>
+<wsdl:message name="getIncrementalBackUpStatusResponse">
+<wsdl:part name="parameters" element="ns1:getIncrementalBackUpStatusResponse"/>
+</wsdl:message>
+<wsdl:message name="repairColumnFamiliesRequest">
+<wsdl:part name="parameters" element="ns1:repairColumnFamilies"/>
+</wsdl:message>
+<wsdl:message name="repairColumnFamiliesResponse">
+<wsdl:part name="parameters" element="ns1:repairColumnFamiliesResponse"/>
+</wsdl:message>
+<wsdl:message name="setIncrementalBackUpStatusRequest">
+<wsdl:part name="parameters" element="ns1:setIncrementalBackUpStatus"/>
+</wsdl:message>
+<wsdl:message name="repairKeyspaceRequest">
+<wsdl:part name="parameters" element="ns1:repairKeyspace"/>
+</wsdl:message>
+<wsdl:message name="repairKeyspaceResponse">
+<wsdl:part name="parameters" element="ns1:repairKeyspaceResponse"/>
+</wsdl:message>
+<wsdl:message name="flushColumnFamiliesRequest">
+<wsdl:part name="parameters" element="ns1:flushColumnFamilies"/>
+</wsdl:message>
+<wsdl:message name="flushColumnFamiliesResponse">
+<wsdl:part name="parameters" element="ns1:flushColumnFamiliesResponse"/>
+</wsdl:message>
+<wsdl:message name="rebuildColumnFamilyRequest">
+<wsdl:part name="parameters" element="ns1:rebuildColumnFamily"/>
+</wsdl:message>
+<wsdl:message name="setStreamThroughputMbPerSecRequest">
+<wsdl:part name="parameters" element="ns1:setStreamThroughputMbPerSec"/>
+</wsdl:message>
+<wsdl:message name="setCompactionThroughputMbPerSecRequest">
+<wsdl:part name="parameters" element="ns1:setCompactionThroughputMbPerSec"/>
+</wsdl:message>
+<wsdl:message name="stopRPCServerRequest">
+<wsdl:part name="parameters" element="ns1:stopRPCServer"/>
+</wsdl:message>
+<wsdl:message name="compactColumnFamiliesRequest">
+<wsdl:part name="parameters" element="ns1:compactColumnFamilies"/>
+</wsdl:message>
+<wsdl:message name="compactColumnFamiliesResponse">
+<wsdl:part name="parameters" element="ns1:compactColumnFamiliesResponse"/>
+</wsdl:message>
+<wsdl:message name="decommissionNodeRequest">
+<wsdl:part name="parameters" element="ns1:decommissionNode"/>
+</wsdl:message>
+<wsdl:message name="decommissionNodeResponse">
+<wsdl:part name="parameters" element="ns1:decommissionNodeResponse"/>
+</wsdl:message>
+<wsdl:message name="compactKeyspaceRequest">
+<wsdl:part name="parameters" element="ns1:compactKeyspace"/>
+</wsdl:message>
+<wsdl:message name="compactKeyspaceResponse">
+<wsdl:part name="parameters" element="ns1:compactKeyspaceResponse"/>
+</wsdl:message>
+<wsdl:message name="isGossipServerEnableRequest">
+<wsdl:part name="parameters" element="ns1:isGossipServerEnable"/>
+</wsdl:message>
+<wsdl:message name="isGossipServerEnableResponse">
+<wsdl:part name="parameters" element="ns1:isGossipServerEnableResponse"/>
+</wsdl:message>
+<wsdl:message name="isRPCRunningRequest">
+<wsdl:part name="parameters" element="ns1:isRPCRunning"/>
+</wsdl:message>
+<wsdl:message name="isRPCRunningResponse">
+<wsdl:part name="parameters" element="ns1:isRPCRunningResponse"/>
+</wsdl:message>
+<wsdl:message name="setCompactionThresholdsRequest">
+<wsdl:part name="parameters" element="ns1:setCompactionThresholds"/>
+</wsdl:message>
+<wsdl:message name="refreshRequest">
+<wsdl:part name="parameters" element="ns1:refresh"/>
+</wsdl:message>
+<wsdl:message name="invalidateKeyCacheRequest">
+<wsdl:part name="parameters" element="ns1:invalidateKeyCache"/>
+</wsdl:message>
+<wsdl:message name="invalidateKeyCacheResponse">
+<wsdl:part name="parameters" element="ns1:invalidateKeyCacheResponse"/>
+</wsdl:message>
+<wsdl:message name="setKeyCacheCapacityRequest">
+<wsdl:part name="parameters" element="ns1:setKeyCacheCapacity"/>
+</wsdl:message>
+<wsdl:message name="forceRemoveCompletionRequest">
+<wsdl:part name="parameters" element="ns1:forceRemoveCompletion"/>
+</wsdl:message>
+<wsdl:message name="performGCRequest">
+<wsdl:part name="parameters" element="ns1:performGC"/>
+</wsdl:message>
+<wsdl:message name="resetLocalSchemaRequest">
+<wsdl:part name="parameters" element="ns1:resetLocalSchema"/>
+</wsdl:message>
+<wsdl:message name="resetLocalSchemaResponse">
+<wsdl:part name="parameters" element="ns1:resetLocalSchemaResponse"/>
+</wsdl:message>
+<wsdl:message name="getRemovalStatusRequest">
+<wsdl:part name="parameters" element="ns1:getRemovalStatus"/>
+</wsdl:message>
+<wsdl:message name="getRemovalStatusResponse">
+<wsdl:part name="parameters" element="ns1:getRemovalStatusResponse"/>
+</wsdl:message>
+<wsdl:message name="rebuildRequest">
+<wsdl:part name="parameters" element="ns1:rebuild"/>
+</wsdl:message>
+<wsdl:message name="clearSnapshotOfKeyspaceRequest">
+<wsdl:part name="parameters" element="ns1:clearSnapshotOfKeyspace"/>
+</wsdl:message>
+<wsdl:message name="startRPCServerRequest">
+<wsdl:part name="parameters" element="ns1:startRPCServer"/>
+</wsdl:message>
+<wsdl:message name="getKeyspaceInitialInfoRequest">
+<wsdl:part name="parameters" element="ns1:getKeyspaceInitialInfo"/>
+</wsdl:message>
+<wsdl:message name="getKeyspaceInitialInfoResponse">
+<wsdl:part name="parameters" element="ns1:getKeyspaceInitialInfoResponse"/>
+</wsdl:message>
+<wsdl:message name="cleanUpKeyspaceRequest">
+<wsdl:part name="parameters" element="ns1:cleanUpKeyspace"/>
+</wsdl:message>
+<wsdl:message name="cleanUpKeyspaceResponse">
+<wsdl:part name="parameters" element="ns1:cleanUpKeyspaceResponse"/>
+</wsdl:message>
+<wsdl:message name="stopCompactionRequest">
+<wsdl:part name="parameters" element="ns1:stopCompaction"/>
+</wsdl:message>
+<wsdl:message name="invalidateRowCacheRequest">
+<wsdl:part name="parameters" element="ns1:invalidateRowCache"/>
+</wsdl:message>
+<wsdl:message name="invalidateRowCacheResponse">
+<wsdl:part name="parameters" element="ns1:invalidateRowCacheResponse"/>
+</wsdl:message>
+<wsdl:message name="removeTokenRequest">
+<wsdl:part name="parameters" element="ns1:removeToken"/>
+</wsdl:message>
+<wsdl:message name="drainNodeRequest">
+<wsdl:part name="parameters" element="ns1:drainNode"/>
+</wsdl:message>
+<wsdl:message name="drainNodeResponse">
+<wsdl:part name="parameters" element="ns1:drainNodeResponse"/>
+</wsdl:message>
+<wsdl:message name="takeSnapshotOfNodeRequest">
+<wsdl:part name="parameters" element="ns1:takeSnapshotOfNode"/>
+</wsdl:message>
+<wsdl:message name="scrubKeyspaceRequest">
+<wsdl:part name="parameters" element="ns1:scrubKeyspace"/>
+</wsdl:message>
+<wsdl:message name="scrubKeyspaceResponse">
+<wsdl:part name="parameters" element="ns1:scrubKeyspaceResponse"/>
+</wsdl:message>
+<wsdl:message name="startGossipServerRequest">
+<wsdl:part name="parameters" element="ns1:startGossipServer"/>
+</wsdl:message>
+<wsdl:message name="getNodeInitialInfoRequest">
+<wsdl:part name="parameters" element="ns1:getNodeInitialInfo"/>
+</wsdl:message>
+<wsdl:message name="getNodeInitialInfoResponse">
+<wsdl:part name="parameters" element="ns1:getNodeInitialInfoResponse"/>
+</wsdl:message>
+<wsdl:message name="cleanUpColumnFamiliesRequest">
+<wsdl:part name="parameters" element="ns1:cleanUpColumnFamilies"/>
+</wsdl:message>
+<wsdl:message name="cleanUpColumnFamiliesResponse">
+<wsdl:part name="parameters" element="ns1:cleanUpColumnFamiliesResponse"/>
+</wsdl:message>
+<wsdl:message name="joinClusterRequest">
+<wsdl:part name="parameters" element="ns1:joinCluster"/>
+</wsdl:message>
+<wsdl:message name="joinClusterResponse">
+<wsdl:part name="parameters" element="ns1:joinClusterResponse"/>
+</wsdl:message>
+<wsdl:message name="moveNodeRequest">
+<wsdl:part name="parameters" element="ns1:moveNode"/>
+</wsdl:message>
+<wsdl:message name="flushKeyspaceRequest">
+<wsdl:part name="parameters" element="ns1:flushKeyspace"/>
+</wsdl:message>
+<wsdl:message name="flushKeyspaceResponse">
+<wsdl:part name="parameters" element="ns1:flushKeyspaceResponse"/>
+</wsdl:message>
+<wsdl:portType name="ClusterOperationAdminPortType">
+<wsdl:operation name="clearSnapshotOfNode">
+<wsdl:input message="tns:clearSnapshotOfNodeRequest" wsaw:Action="urn:clearSnapshotOfNode"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:clearSnapshotOfNodeClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="rebuildColumnFamilyWithIndex">
+<wsdl:input message="tns:rebuildColumnFamilyWithIndexRequest" wsaw:Action="urn:rebuildColumnFamilyWithIndex"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:rebuildColumnFamilyWithIndexClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="setRowCacheCapacity">
+<wsdl:input message="tns:setRowCacheCapacityRequest" wsaw:Action="urn:setRowCacheCapacity"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:setRowCacheCapacityClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="scrubColumnFamilies">
+<wsdl:input message="tns:scrubColumnFamiliesRequest" wsaw:Action="urn:scrubColumnFamilies"/>
+<wsdl:output message="tns:scrubColumnFamiliesResponse" wsaw:Action="urn:scrubColumnFamiliesResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:scrubColumnFamiliesClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="upgradeSSTablesInKeyspace">
+<wsdl:input message="tns:upgradeSSTablesInKeyspaceRequest" wsaw:Action="urn:upgradeSSTablesInKeyspace"/>
+<wsdl:output message="tns:upgradeSSTablesInKeyspaceResponse" wsaw:Action="urn:upgradeSSTablesInKeyspaceResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:upgradeSSTablesInKeyspaceClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="isJoined">
+<wsdl:input message="tns:isJoinedRequest" wsaw:Action="urn:isJoined"/>
+<wsdl:output message="tns:isJoinedResponse" wsaw:Action="urn:isJoinedResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:isJoinedClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="stopGossipServer">
+<wsdl:input message="tns:stopGossipServerRequest" wsaw:Action="urn:stopGossipServer"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:stopGossipServerClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="takeSnapshotOfColumnFamily">
+<wsdl:input message="tns:takeSnapshotOfColumnFamilyRequest" wsaw:Action="urn:takeSnapshotOfColumnFamily"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:takeSnapshotOfColumnFamilyClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getSnapshots">
+<wsdl:input message="tns:getSnapshotsRequest" wsaw:Action="urn:getSnapshots"/>
+<wsdl:output message="tns:getSnapshotsResponse" wsaw:Action="urn:getSnapshotsResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:getSnapshotsClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="takeSnapshotOfKeyspace">
+<wsdl:input message="tns:takeSnapshotOfKeyspaceRequest" wsaw:Action="urn:takeSnapshotOfKeyspace"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:takeSnapshotOfKeyspaceClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="upgradeSSTablesColumnFamilies">
+<wsdl:input message="tns:upgradeSSTablesColumnFamiliesRequest" wsaw:Action="urn:upgradeSSTablesColumnFamilies"/>
+<wsdl:output message="tns:upgradeSSTablesColumnFamiliesResponse" wsaw:Action="urn:upgradeSSTablesColumnFamiliesResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:upgradeSSTablesColumnFamiliesClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getIncrementalBackUpStatus">
+<wsdl:input message="tns:getIncrementalBackUpStatusRequest" wsaw:Action="urn:getIncrementalBackUpStatus"/>
+<wsdl:output message="tns:getIncrementalBackUpStatusResponse" wsaw:Action="urn:getIncrementalBackUpStatusResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:getIncrementalBackUpStatusClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="repairColumnFamilies">
+<wsdl:input message="tns:repairColumnFamiliesRequest" wsaw:Action="urn:repairColumnFamilies"/>
+<wsdl:output message="tns:repairColumnFamiliesResponse" wsaw:Action="urn:repairColumnFamiliesResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:repairColumnFamiliesClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="setIncrementalBackUpStatus">
+<wsdl:input message="tns:setIncrementalBackUpStatusRequest" wsaw:Action="urn:setIncrementalBackUpStatus"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:setIncrementalBackUpStatusClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="repairKeyspace">
+<wsdl:input message="tns:repairKeyspaceRequest" wsaw:Action="urn:repairKeyspace"/>
+<wsdl:output message="tns:repairKeyspaceResponse" wsaw:Action="urn:repairKeyspaceResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:repairKeyspaceClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="flushColumnFamilies">
+<wsdl:input message="tns:flushColumnFamiliesRequest" wsaw:Action="urn:flushColumnFamilies"/>
+<wsdl:output message="tns:flushColumnFamiliesResponse" wsaw:Action="urn:flushColumnFamiliesResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:flushColumnFamiliesClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="rebuildColumnFamily">
+<wsdl:input message="tns:rebuildColumnFamilyRequest" wsaw:Action="urn:rebuildColumnFamily"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:rebuildColumnFamilyClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="setStreamThroughputMbPerSec">
+<wsdl:input message="tns:setStreamThroughputMbPerSecRequest" wsaw:Action="urn:setStreamThroughputMbPerSec"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:setStreamThroughputMbPerSecClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="setCompactionThroughputMbPerSec">
+<wsdl:input message="tns:setCompactionThroughputMbPerSecRequest" wsaw:Action="urn:setCompactionThroughputMbPerSec"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:setCompactionThroughputMbPerSecClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="stopRPCServer">
+<wsdl:input message="tns:stopRPCServerRequest" wsaw:Action="urn:stopRPCServer"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:stopRPCServerClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="compactColumnFamilies">
+<wsdl:input message="tns:compactColumnFamiliesRequest" wsaw:Action="urn:compactColumnFamilies"/>
+<wsdl:output message="tns:compactColumnFamiliesResponse" wsaw:Action="urn:compactColumnFamiliesResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:compactColumnFamiliesClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="decommissionNode">
+<wsdl:input message="tns:decommissionNodeRequest" wsaw:Action="urn:decommissionNode"/>
+<wsdl:output message="tns:decommissionNodeResponse" wsaw:Action="urn:decommissionNodeResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:decommissionNodeClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="compactKeyspace">
+<wsdl:input message="tns:compactKeyspaceRequest" wsaw:Action="urn:compactKeyspace"/>
+<wsdl:output message="tns:compactKeyspaceResponse" wsaw:Action="urn:compactKeyspaceResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:compactKeyspaceClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="isGossipServerEnable">
+<wsdl:input message="tns:isGossipServerEnableRequest" wsaw:Action="urn:isGossipServerEnable"/>
+<wsdl:output message="tns:isGossipServerEnableResponse" wsaw:Action="urn:isGossipServerEnableResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:isGossipServerEnableClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="isRPCRunning">
+<wsdl:input message="tns:isRPCRunningRequest" wsaw:Action="urn:isRPCRunning"/>
+<wsdl:output message="tns:isRPCRunningResponse" wsaw:Action="urn:isRPCRunningResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:isRPCRunningClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="setCompactionThresholds">
+<wsdl:input message="tns:setCompactionThresholdsRequest" wsaw:Action="urn:setCompactionThresholds"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:setCompactionThresholdsClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="refresh">
+<wsdl:input message="tns:refreshRequest" wsaw:Action="urn:refresh"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:refreshClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="invalidateKeyCache">
+<wsdl:input message="tns:invalidateKeyCacheRequest" wsaw:Action="urn:invalidateKeyCache"/>
+<wsdl:output message="tns:invalidateKeyCacheResponse" wsaw:Action="urn:invalidateKeyCacheResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:invalidateKeyCacheClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="setKeyCacheCapacity">
+<wsdl:input message="tns:setKeyCacheCapacityRequest" wsaw:Action="urn:setKeyCacheCapacity"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:setKeyCacheCapacityClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="forceRemoveCompletion">
+<wsdl:input message="tns:forceRemoveCompletionRequest" wsaw:Action="urn:forceRemoveCompletion"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:forceRemoveCompletionClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="performGC">
+<wsdl:input message="tns:performGCRequest" wsaw:Action="urn:performGC"/>
+</wsdl:operation>
+<wsdl:operation name="resetLocalSchema">
+<wsdl:input message="tns:resetLocalSchemaRequest" wsaw:Action="urn:resetLocalSchema"/>
+<wsdl:output message="tns:resetLocalSchemaResponse" wsaw:Action="urn:resetLocalSchemaResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:resetLocalSchemaClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getRemovalStatus">
+<wsdl:input message="tns:getRemovalStatusRequest" wsaw:Action="urn:getRemovalStatus"/>
+<wsdl:output message="tns:getRemovalStatusResponse" wsaw:Action="urn:getRemovalStatusResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:getRemovalStatusClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="rebuild">
+<wsdl:input message="tns:rebuildRequest" wsaw:Action="urn:rebuild"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:rebuildClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="clearSnapshotOfKeyspace">
+<wsdl:input message="tns:clearSnapshotOfKeyspaceRequest" wsaw:Action="urn:clearSnapshotOfKeyspace"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:clearSnapshotOfKeyspaceClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="startRPCServer">
+<wsdl:input message="tns:startRPCServerRequest" wsaw:Action="urn:startRPCServer"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:startRPCServerClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getKeyspaceInitialInfo">
+<wsdl:input message="tns:getKeyspaceInitialInfoRequest" wsaw:Action="urn:getKeyspaceInitialInfo"/>
+<wsdl:output message="tns:getKeyspaceInitialInfoResponse" wsaw:Action="urn:getKeyspaceInitialInfoResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:getKeyspaceInitialInfoClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="cleanUpKeyspace">
+<wsdl:input message="tns:cleanUpKeyspaceRequest" wsaw:Action="urn:cleanUpKeyspace"/>
+<wsdl:output message="tns:cleanUpKeyspaceResponse" wsaw:Action="urn:cleanUpKeyspaceResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:cleanUpKeyspaceClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="stopCompaction">
+<wsdl:input message="tns:stopCompactionRequest" wsaw:Action="urn:stopCompaction"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:stopCompactionClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="invalidateRowCache">
+<wsdl:input message="tns:invalidateRowCacheRequest" wsaw:Action="urn:invalidateRowCache"/>
+<wsdl:output message="tns:invalidateRowCacheResponse" wsaw:Action="urn:invalidateRowCacheResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:invalidateRowCacheClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="removeToken">
+<wsdl:input message="tns:removeTokenRequest" wsaw:Action="urn:removeToken"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:removeTokenClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="drainNode">
+<wsdl:input message="tns:drainNodeRequest" wsaw:Action="urn:drainNode"/>
+<wsdl:output message="tns:drainNodeResponse" wsaw:Action="urn:drainNodeResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:drainNodeClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="takeSnapshotOfNode">
+<wsdl:input message="tns:takeSnapshotOfNodeRequest" wsaw:Action="urn:takeSnapshotOfNode"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:takeSnapshotOfNodeClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="scrubKeyspace">
+<wsdl:input message="tns:scrubKeyspaceRequest" wsaw:Action="urn:scrubKeyspace"/>
+<wsdl:output message="tns:scrubKeyspaceResponse" wsaw:Action="urn:scrubKeyspaceResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:scrubKeyspaceClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="startGossipServer">
+<wsdl:input message="tns:startGossipServerRequest" wsaw:Action="urn:startGossipServer"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:startGossipServerClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getNodeInitialInfo">
+<wsdl:input message="tns:getNodeInitialInfoRequest" wsaw:Action="urn:getNodeInitialInfo"/>
+<wsdl:output message="tns:getNodeInitialInfoResponse" wsaw:Action="urn:getNodeInitialInfoResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:getNodeInitialInfoClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="cleanUpColumnFamilies">
+<wsdl:input message="tns:cleanUpColumnFamiliesRequest" wsaw:Action="urn:cleanUpColumnFamilies"/>
+<wsdl:output message="tns:cleanUpColumnFamiliesResponse" wsaw:Action="urn:cleanUpColumnFamiliesResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:cleanUpColumnFamiliesClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="joinCluster">
+<wsdl:input message="tns:joinClusterRequest" wsaw:Action="urn:joinCluster"/>
+<wsdl:output message="tns:joinClusterResponse" wsaw:Action="urn:joinClusterResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:joinClusterClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="moveNode">
+<wsdl:input message="tns:moveNodeRequest" wsaw:Action="urn:moveNode"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:moveNodeClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="flushKeyspace">
+<wsdl:input message="tns:flushKeyspaceRequest" wsaw:Action="urn:flushKeyspace"/>
+<wsdl:output message="tns:flushKeyspaceResponse" wsaw:Action="urn:flushKeyspaceResponse"/>
+<wsdl:fault message="tns:ClusterOperationAdminClusterDataAdminException" name="ClusterOperationAdminClusterDataAdminException" wsaw:Action="urn:flushKeyspaceClusterOperationAdminClusterDataAdminException"/>
+</wsdl:operation>
+</wsdl:portType>
+<wsdl:binding name="ClusterOperationAdminSoap11Binding" type="tns:ClusterOperationAdminPortType">
+<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+<wsdl:operation name="clearSnapshotOfNode">
+<soap:operation soapAction="urn:clearSnapshotOfNode" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="rebuildColumnFamilyWithIndex">
+<soap:operation soapAction="urn:rebuildColumnFamilyWithIndex" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="setRowCacheCapacity">
+<soap:operation soapAction="urn:setRowCacheCapacity" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="scrubColumnFamilies">
+<soap:operation soapAction="urn:scrubColumnFamilies" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="upgradeSSTablesInKeyspace">
+<soap:operation soapAction="urn:upgradeSSTablesInKeyspace" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="stopGossipServer">
+<soap:operation soapAction="urn:stopGossipServer" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="isJoined">
+<soap:operation soapAction="urn:isJoined" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="takeSnapshotOfColumnFamily">
+<soap:operation soapAction="urn:takeSnapshotOfColumnFamily" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getSnapshots">
+<soap:operation soapAction="urn:getSnapshots" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="takeSnapshotOfKeyspace">
+<soap:operation soapAction="urn:takeSnapshotOfKeyspace" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="upgradeSSTablesColumnFamilies">
+<soap:operation soapAction="urn:upgradeSSTablesColumnFamilies" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getIncrementalBackUpStatus">
+<soap:operation soapAction="urn:getIncrementalBackUpStatus" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="repairColumnFamilies">
+<soap:operation soapAction="urn:repairColumnFamilies" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="setIncrementalBackUpStatus">
+<soap:operation soapAction="urn:setIncrementalBackUpStatus" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="repairKeyspace">
+<soap:operation soapAction="urn:repairKeyspace" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="flushColumnFamilies">
+<soap:operation soapAction="urn:flushColumnFamilies" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="setStreamThroughputMbPerSec">
+<soap:operation soapAction="urn:setStreamThroughputMbPerSec" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="rebuildColumnFamily">
+<soap:operation soapAction="urn:rebuildColumnFamily" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="stopRPCServer">
+<soap:operation soapAction="urn:stopRPCServer" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="setCompactionThroughputMbPerSec">
+<soap:operation soapAction="urn:setCompactionThroughputMbPerSec" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="decommissionNode">
+<soap:operation soapAction="urn:decommissionNode" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="compactColumnFamilies">
+<soap:operation soapAction="urn:compactColumnFamilies" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="refresh">
+<soap:operation soapAction="urn:refresh" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="compactKeyspace">
+<soap:operation soapAction="urn:compactKeyspace" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="setKeyCacheCapacity">
+<soap:operation soapAction="urn:setKeyCacheCapacity" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="invalidateKeyCache">
+<soap:operation soapAction="urn:invalidateKeyCache" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="isGossipServerEnable">
+<soap:operation soapAction="urn:isGossipServerEnable" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="isRPCRunning">
+<soap:operation soapAction="urn:isRPCRunning" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="setCompactionThresholds">
+<soap:operation soapAction="urn:setCompactionThresholds" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="forceRemoveCompletion">
+<soap:operation soapAction="urn:forceRemoveCompletion" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="resetLocalSchema">
+<soap:operation soapAction="urn:resetLocalSchema" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="performGC">
+<soap:operation soapAction="urn:performGC" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="getRemovalStatus">
+<soap:operation soapAction="urn:getRemovalStatus" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="rebuild">
+<soap:operation soapAction="urn:rebuild" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="startRPCServer">
+<soap:operation soapAction="urn:startRPCServer" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="clearSnapshotOfKeyspace">
+<soap:operation soapAction="urn:clearSnapshotOfKeyspace" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="invalidateRowCache">
+<soap:operation soapAction="urn:invalidateRowCache" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="stopCompaction">
+<soap:operation soapAction="urn:stopCompaction" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="cleanUpKeyspace">
+<soap:operation soapAction="urn:cleanUpKeyspace" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getKeyspaceInitialInfo">
+<soap:operation soapAction="urn:getKeyspaceInitialInfo" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="removeToken">
+<soap:operation soapAction="urn:removeToken" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="drainNode">
+<soap:operation soapAction="urn:drainNode" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="takeSnapshotOfNode">
+<soap:operation soapAction="urn:takeSnapshotOfNode" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="startGossipServer">
+<soap:operation soapAction="urn:startGossipServer" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="scrubKeyspace">
+<soap:operation soapAction="urn:scrubKeyspace" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getNodeInitialInfo">
+<soap:operation soapAction="urn:getNodeInitialInfo" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="cleanUpColumnFamilies">
+<soap:operation soapAction="urn:cleanUpColumnFamilies" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="joinCluster">
+<soap:operation soapAction="urn:joinCluster" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="moveNode">
+<soap:operation soapAction="urn:moveNode" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="flushKeyspace">
+<soap:operation soapAction="urn:flushKeyspace" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:binding name="ClusterOperationAdminSoap12Binding" type="tns:ClusterOperationAdminPortType">
+<soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+<wsdl:operation name="clearSnapshotOfNode">
+<soap12:operation soapAction="urn:clearSnapshotOfNode" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="rebuildColumnFamilyWithIndex">
+<soap12:operation soapAction="urn:rebuildColumnFamilyWithIndex" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="setRowCacheCapacity">
+<soap12:operation soapAction="urn:setRowCacheCapacity" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="scrubColumnFamilies">
+<soap12:operation soapAction="urn:scrubColumnFamilies" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="upgradeSSTablesInKeyspace">
+<soap12:operation soapAction="urn:upgradeSSTablesInKeyspace" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="stopGossipServer">
+<soap12:operation soapAction="urn:stopGossipServer" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="isJoined">
+<soap12:operation soapAction="urn:isJoined" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="takeSnapshotOfColumnFamily">
+<soap12:operation soapAction="urn:takeSnapshotOfColumnFamily" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getSnapshots">
+<soap12:operation soapAction="urn:getSnapshots" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="takeSnapshotOfKeyspace">
+<soap12:operation soapAction="urn:takeSnapshotOfKeyspace" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="upgradeSSTablesColumnFamilies">
+<soap12:operation soapAction="urn:upgradeSSTablesColumnFamilies" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getIncrementalBackUpStatus">
+<soap12:operation soapAction="urn:getIncrementalBackUpStatus" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="repairColumnFamilies">
+<soap12:operation soapAction="urn:repairColumnFamilies" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="setIncrementalBackUpStatus">
+<soap12:operation soapAction="urn:setIncrementalBackUpStatus" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="repairKeyspace">
+<soap12:operation soapAction="urn:repairKeyspace" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="flushColumnFamilies">
+<soap12:operation soapAction="urn:flushColumnFamilies" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="setStreamThroughputMbPerSec">
+<soap12:operation soapAction="urn:setStreamThroughputMbPerSec" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="rebuildColumnFamily">
+<soap12:operation soapAction="urn:rebuildColumnFamily" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="stopRPCServer">
+<soap12:operation soapAction="urn:stopRPCServer" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="setCompactionThroughputMbPerSec">
+<soap12:operation soapAction="urn:setCompactionThroughputMbPerSec" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="decommissionNode">
+<soap12:operation soapAction="urn:decommissionNode" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="compactColumnFamilies">
+<soap12:operation soapAction="urn:compactColumnFamilies" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="refresh">
+<soap12:operation soapAction="urn:refresh" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="compactKeyspace">
+<soap12:operation soapAction="urn:compactKeyspace" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="setKeyCacheCapacity">
+<soap12:operation soapAction="urn:setKeyCacheCapacity" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="invalidateKeyCache">
+<soap12:operation soapAction="urn:invalidateKeyCache" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="isGossipServerEnable">
+<soap12:operation soapAction="urn:isGossipServerEnable" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="isRPCRunning">
+<soap12:operation soapAction="urn:isRPCRunning" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="setCompactionThresholds">
+<soap12:operation soapAction="urn:setCompactionThresholds" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="forceRemoveCompletion">
+<soap12:operation soapAction="urn:forceRemoveCompletion" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="resetLocalSchema">
+<soap12:operation soapAction="urn:resetLocalSchema" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="performGC">
+<soap12:operation soapAction="urn:performGC" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="getRemovalStatus">
+<soap12:operation soapAction="urn:getRemovalStatus" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="rebuild">
+<soap12:operation soapAction="urn:rebuild" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="startRPCServer">
+<soap12:operation soapAction="urn:startRPCServer" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="clearSnapshotOfKeyspace">
+<soap12:operation soapAction="urn:clearSnapshotOfKeyspace" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="invalidateRowCache">
+<soap12:operation soapAction="urn:invalidateRowCache" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="stopCompaction">
+<soap12:operation soapAction="urn:stopCompaction" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="cleanUpKeyspace">
+<soap12:operation soapAction="urn:cleanUpKeyspace" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getKeyspaceInitialInfo">
+<soap12:operation soapAction="urn:getKeyspaceInitialInfo" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="removeToken">
+<soap12:operation soapAction="urn:removeToken" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="drainNode">
+<soap12:operation soapAction="urn:drainNode" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="takeSnapshotOfNode">
+<soap12:operation soapAction="urn:takeSnapshotOfNode" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="startGossipServer">
+<soap12:operation soapAction="urn:startGossipServer" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="scrubKeyspace">
+<soap12:operation soapAction="urn:scrubKeyspace" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getNodeInitialInfo">
+<soap12:operation soapAction="urn:getNodeInitialInfo" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="cleanUpColumnFamilies">
+<soap12:operation soapAction="urn:cleanUpColumnFamilies" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="joinCluster">
+<soap12:operation soapAction="urn:joinCluster" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="moveNode">
+<soap12:operation soapAction="urn:moveNode" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="flushKeyspace">
+<soap12:operation soapAction="urn:flushKeyspace" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="ClusterOperationAdminClusterDataAdminException">
+<soap12:fault use="literal" name="ClusterOperationAdminClusterDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:binding name="ClusterOperationAdminHttpBinding" type="tns:ClusterOperationAdminPortType">
+<http:binding verb="POST"/>
+<wsdl:operation name="clearSnapshotOfNode">
+<http:operation location="clearSnapshotOfNode"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="rebuildColumnFamilyWithIndex">
+<http:operation location="rebuildColumnFamilyWithIndex"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="setRowCacheCapacity">
+<http:operation location="setRowCacheCapacity"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="scrubColumnFamilies">
+<http:operation location="scrubColumnFamilies"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="upgradeSSTablesInKeyspace">
+<http:operation location="upgradeSSTablesInKeyspace"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="stopGossipServer">
+<http:operation location="stopGossipServer"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="isJoined">
+<http:operation location="isJoined"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="takeSnapshotOfColumnFamily">
+<http:operation location="takeSnapshotOfColumnFamily"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="getSnapshots">
+<http:operation location="getSnapshots"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="takeSnapshotOfKeyspace">
+<http:operation location="takeSnapshotOfKeyspace"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="upgradeSSTablesColumnFamilies">
+<http:operation location="upgradeSSTablesColumnFamilies"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getIncrementalBackUpStatus">
+<http:operation location="getIncrementalBackUpStatus"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="repairColumnFamilies">
+<http:operation location="repairColumnFamilies"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="setIncrementalBackUpStatus">
+<http:operation location="setIncrementalBackUpStatus"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="repairKeyspace">
+<http:operation location="repairKeyspace"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="flushColumnFamilies">
+<http:operation location="flushColumnFamilies"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="setStreamThroughputMbPerSec">
+<http:operation location="setStreamThroughputMbPerSec"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="rebuildColumnFamily">
+<http:operation location="rebuildColumnFamily"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="stopRPCServer">
+<http:operation location="stopRPCServer"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="setCompactionThroughputMbPerSec">
+<http:operation location="setCompactionThroughputMbPerSec"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="decommissionNode">
+<http:operation location="decommissionNode"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="compactColumnFamilies">
+<http:operation location="compactColumnFamilies"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="refresh">
+<http:operation location="refresh"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="compactKeyspace">
+<http:operation location="compactKeyspace"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="setKeyCacheCapacity">
+<http:operation location="setKeyCacheCapacity"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="invalidateKeyCache">
+<http:operation location="invalidateKeyCache"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="isGossipServerEnable">
+<http:operation location="isGossipServerEnable"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="isRPCRunning">
+<http:operation location="isRPCRunning"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="setCompactionThresholds">
+<http:operation location="setCompactionThresholds"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="forceRemoveCompletion">
+<http:operation location="forceRemoveCompletion"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="resetLocalSchema">
+<http:operation location="resetLocalSchema"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="performGC">
+<http:operation location="performGC"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="getRemovalStatus">
+<http:operation location="getRemovalStatus"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="rebuild">
+<http:operation location="rebuild"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="startRPCServer">
+<http:operation location="startRPCServer"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="clearSnapshotOfKeyspace">
+<http:operation location="clearSnapshotOfKeyspace"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="invalidateRowCache">
+<http:operation location="invalidateRowCache"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="stopCompaction">
+<http:operation location="stopCompaction"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="cleanUpKeyspace">
+<http:operation location="cleanUpKeyspace"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getKeyspaceInitialInfo">
+<http:operation location="getKeyspaceInitialInfo"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="removeToken">
+<http:operation location="removeToken"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="drainNode">
+<http:operation location="drainNode"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="takeSnapshotOfNode">
+<http:operation location="takeSnapshotOfNode"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="startGossipServer">
+<http:operation location="startGossipServer"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="scrubKeyspace">
+<http:operation location="scrubKeyspace"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getNodeInitialInfo">
+<http:operation location="getNodeInitialInfo"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="cleanUpColumnFamilies">
+<http:operation location="cleanUpColumnFamilies"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="joinCluster">
+<http:operation location="joinCluster"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="moveNode">
+<http:operation location="moveNode"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="flushKeyspace">
+<http:operation location="flushKeyspace"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:service name="ClusterOperationAdmin">
+<wsdl:port name="ClusterOperationAdminHttpsSoap11Endpoint" binding="tns:ClusterOperationAdminSoap11Binding">
+<soap:address location="https://10.100.3.183:9443/services/ClusterOperationAdmin.ClusterOperationAdminHttpsSoap11Endpoint/"/>
+</wsdl:port>
+<wsdl:port name="ClusterOperationAdminHttpsSoap12Endpoint" binding="tns:ClusterOperationAdminSoap12Binding">
+<soap12:address location="https://10.100.3.183:9443/services/ClusterOperationAdmin.ClusterOperationAdminHttpsSoap12Endpoint/"/>
+</wsdl:port>
+<wsdl:port name="ClusterOperationAdminHttpsEndpoint" binding="tns:ClusterOperationAdminHttpBinding">
+<http:address location="https://10.100.3.183:9443/services/ClusterOperationAdmin.ClusterOperationAdminHttpsEndpoint/"/>
+</wsdl:port>
+</wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<cluster>
+    <configuration>
+        <nodeId>1</nodeId>
+        <monitoringEnable>false</monitoringEnable>
+        <bamSecureUrl>ssl://localhost:7711</bamSecureUrl>
+        <bamReceiverUrl>tcp://localhost:7611</bamReceiverUrl>
+        <cronExpression>0/40 * * ? * *</cronExpression>
+	<dataCollectors>10</dataCollectors>
+        <bamAuthentiacation>
+            <username>admin</username>
+            <password>admin</password>
+        </bamAuthentiacation>
+	<dataCollectors>10</dataCollectors>
+    </configuration>
+</cluster>

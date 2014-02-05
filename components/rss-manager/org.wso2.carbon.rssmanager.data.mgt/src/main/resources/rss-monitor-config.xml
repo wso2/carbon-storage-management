@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<cluster>
+    <configuration>
+        <node_id>1</node_id>
+        <monitoring_enable>true</monitoring_enable>
+        <bam_secure_url>ssl://localhost:7711</bam_secure_url>
+        <bam_receiver_url>tcp://localhost:7611</bam_receiver_url>
+        <cron_expression>0/40 * * ? * *</cron_expression>
+        <bam_authentiacation>
+            <username>admin</username>
+            <password>admin</password>
+        </bam_authentiacation>
+    </configuration>
+</cluster>
