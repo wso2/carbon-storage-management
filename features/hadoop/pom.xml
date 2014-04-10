@@ -32,8 +32,8 @@
     <name>WSO2 Carbon - Hadoop Feature Aggregator Module</name>
     <url>http://wso2.org</url>
     <modules>
-    	<module>hdfs</module>
-	<module>mapred</module>
+    	<!--<module>hdfs</module>-->
+	    <module>mapred</module>
     </modules>
     <properties>
         <wso2carbon.version.hadoop>${wso2carbon.version}</wso2carbon.version.hadoop>
