@@ -45,6 +45,11 @@ public class TenantCreationListener implements TenantMgtListener {
     }
 
     @Override
+    public void onTenantDelete(int i) {
+
+    }
+
+    @Override
     public void onTenantRename(int i, String s, String s2) throws StratosException {
         // Do nothing
     }

@@ -156,8 +156,8 @@
 	</dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.stratos.common.feature</artifactId>
-            <version>${stratos.common.feature.version}</version>
+            <artifactId>org.wso2.carbon.tenant.common.feature</artifactId>
+            <version>${org.wso2.carbon.tenant.common.feature.version}</version>
 	    <type>zip</type>
         </dependency>
     </dependencies>
@@ -239,7 +239,7 @@
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.stratos.common:${stratos.common.feature.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.tenant.common.feature:${org.wso2.carbon.tenant.common.feature.version}</importFeatureDef>
                             </importFeatures>
 
                         </configuration>
@@ -269,7 +269,7 @@
     </build>
 
     <properties>
-	<stratos.common.feature.version>2.2.1</stratos.common.feature.version>
+	<org.wso2.carbon.tenant.common.feature.version>4.3.0-SNAPSHOT</org.wso2.carbon.tenant.common.feature.version>
     </properties>
 
 </project>
