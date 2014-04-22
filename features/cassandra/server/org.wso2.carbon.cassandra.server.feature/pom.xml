@@ -239,7 +239,7 @@
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.tenant.common.feature:${org.wso2.carbon.tenant.common.feature.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.tenant.common:${org.wso2.carbon.tenant.common.feature.version}</importFeatureDef>
                             </importFeatures>
 
                         </configuration>
