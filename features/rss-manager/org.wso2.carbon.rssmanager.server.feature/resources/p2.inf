@@ -1,0 +1,6 @@
+instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.rssmanager.server_${feature.version}/conf/rss-config.xml,target:${installFolder}/../../conf/etc/rss-config.xml,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.rssmanager.server_${feature.version}/conf/persistence.xml,target:${installFolder}/../../conf/etc/persistence.xml,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../features/org.wso2.carbon.rssmanager.server_${feature.version}/conf); \
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.rssmanager.server_${feature.version}/dbscripts/rss-manager/,target:${installFolder}/../../../dbscripts/rss-manager/,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../features/org.wso2.carbon.rssmanager.server_${feature.version}/dbscripts);
