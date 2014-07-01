@@ -32,7 +32,7 @@
     <name>WSO2 Carbon - Hadoop Feature Aggregator Module</name>
     <url>http://wso2.org</url>
     <modules>
-    	<!--<module>hdfs</module>-->
+    	<module>hdfs</module>
 	    <module>mapred</module>
     </modules>
     <properties>

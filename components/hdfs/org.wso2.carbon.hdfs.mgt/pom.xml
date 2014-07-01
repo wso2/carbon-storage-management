@@ -158,6 +158,6 @@
     </dependencies>
     
         <properties>
-        <org.wso2.carbon.tenant.common.version>4.3.0.SNAPSHOT</org.wso2.carbon.tenant.common.version>
+        <org.wso2.carbon.tenant.common.version>4.3.0-SNAPSHOT</org.wso2.carbon.tenant.common.version>
     </properties>
 </project>

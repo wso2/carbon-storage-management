@@ -93,9 +93,8 @@
     <modules>
         <module>org.wso2.carbon.hdfs.namenode</module>
         <module>org.wso2.carbon.hdfs.datanode</module>
-	<module>org.wso2.carbon.hdfs.mgt</module>
-
-	<module>org.wso2.carbon.hdfs.dataaccess</module>
+	    <module>org.wso2.carbon.hdfs.mgt</module>
+        <module>org.wso2.carbon.hdfs.dataaccess</module>
         <module>org.wso2.carbon.hdfs.mgt.ui</module>
     </modules>
 
