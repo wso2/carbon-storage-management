@@ -37,6 +37,8 @@
         <module>org.wso2.carbon.cassandra.mgt.stub</module>
         <module>org.wso2.carbon.hdfs.mgt.stub</module>
         <module>org.wso2.carbon.rssmanager.stub</module>
+        <module>org.wso2.carbon.mapred.mgt.stub</module>
+        <module>org.wso2.carbon.identity.authenticator.krb5.stub</module>
     </modules>
 
     <build>
