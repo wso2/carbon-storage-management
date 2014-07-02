@@ -64,10 +64,14 @@ public class RSSInstanceDSWrapper {
 
     private DataSource initDataSource() {
         org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration config = new RDBMSConfiguration();
-        config.setUrl(getRssInstance().getDataSourceConfig().getRdbmsConfiguration().getUrl());
+        /*config.setUrl(getRssInstance().getDataSourceConfig().getRdbmsConfiguration().getUrl());
         config.setUsername(getRssInstance().getDataSourceConfig().getRdbmsConfiguration().getUsername());
         config.setPassword(getRssInstance().getDataSourceConfig().getRdbmsConfiguration().getPassword());
-        config.setDriverClassName(getRssInstance().getDataSourceConfig().getRdbmsConfiguration().getDriverClassName());
+        config.setDriverClassName(getRssInstance().getDataSourceConfig().getRdbmsConfiguration().getDriverClassName());*/
+        config.setUrl(getRssInstance().getServerURL());
+        config.setUsername(getRssInstance().getAdminUserName());
+        config.setPassword(getRssInstance().getAdminPassword());
+        config.setDriverClassName(getRssInstance().getDriverClassName());
         config.setTestOnBorrow(true);
         config.setJdbcInterceptors("org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer;org.wso2.carbon.ndatasource.rdbms.ConnectionRollbackOnReturnInterceptor");
         return RSSManagerUtil.createDataSource(config);
@@ -90,7 +94,7 @@ public class RSSInstanceDSWrapper {
         return dataSource;
     }
 
-    private DataSource getDataSource(String dbName) {
+    public DataSource getDataSource(String dbName) {
     	DataSource dbDataSource = null;
     	if(!dbDSMap.contains(dbName)){
     		synchronized(dbDSMap){
@@ -126,28 +130,18 @@ public class RSSInstanceDSWrapper {
 
     	private DataSource initDataSource(String dbName) {
             org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration config = new RDBMSConfiguration();
-            config.setUrl(createDBURL(dbName, getRssInstance().getDataSourceConfig().getRdbmsConfiguration().getUrl()));
+/*            config.setUrl(createDBURL(dbName, getRssInstance().getDataSourceConfig().getRdbmsConfiguration().getUrl()));
             config.setUsername(getRssInstance().getDataSourceConfig().getRdbmsConfiguration().getUsername());
-            config.setPassword(getRssInstance().getDataSourceConfig().getRdbmsConfiguration().getPassword());
-            config.setDriverClassName(getRssInstance().getDataSourceConfig().getRdbmsConfiguration().getDriverClassName());
+            config.setPassword(getRssInstance().getDataSourceConfig().getRdbmsConfiguration().getPassword());*/
+            config.setUrl(RSSManagerUtil.createDBURL(dbName, getRssInstance().getServerURL()));
+            config.setUsername(getRssInstance().getAdminUserName());
+            config.setPassword(getRssInstance().getAdminPassword());
+            config.setDriverClassName(getRssInstance().getDriverClassName());
             config.setTestOnBorrow(true);
             config.setJdbcInterceptors("org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer;org.wso2.carbon.ndatasource.rdbms.ConnectionRollbackOnReturnInterceptor");
             return RSSManagerUtil.createDataSource(config);
         }
 
-    	private String createDBURL(String dbName, String url){
-    		StringBuilder dbURL = new StringBuilder();
-    		String trimedURL = url.trim();
-    		dbURL.append(trimedURL);
-    		boolean endWithSlash = trimedURL.endsWith("/");
-    		if(endWithSlash){
-    			dbURL.append(dbName);
-    		}else{
-    			dbURL.append("/").append(dbName.trim());
-    		}
-
-    		return dbURL.toString();
-    	}
 
 		public String getDbName() {
 			return dbName;

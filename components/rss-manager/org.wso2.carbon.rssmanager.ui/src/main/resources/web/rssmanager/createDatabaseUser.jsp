@@ -25,7 +25,6 @@
 <%@ page import="org.wso2.carbon.rssmanager.core.dto.xsd.RSSInstanceInfo" %>
 <%@ page import="org.wso2.carbon.utils.multitenancy.MultitenantConstants" %>
 <%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerHelper" %>
-<%@ page import="org.apache.axiom.om.util.Base64" %>
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
@@ -125,7 +124,7 @@
                         <td><fmt:message key="rss.manager.permissions.username"/><font
                                 color='red'>*</font></td>
                         <td><input type="text" id="username" name="username" value="<%=username%>"/><font
-                                color='black'><%=(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantDomain)) ? "" : "_" + Base64.encode(RSSManagerHelper.intToByteArray(tenantDomain.hashCode()))%>
+                                color='black'><%=(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantDomain)) ? "" : "_" + RSSManagerHelper.getDatabaseUserPostfix()%>
                         </font>
                         </td>
                     </tr>
