@@ -2,6 +2,7 @@ package org.wso2.carbon.rssmanager.core.jpa.persistence.dao;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -20,11 +21,15 @@ public abstract class AbstractEntityDAO<K, E extends AbstractEntity<K, E>> imple
 	protected final String entityName;
 	protected final EntityType entityType;
 	protected final Class<K> entityKeyClass;
+	protected final Class<E> entityClass;
 	private EntityManager em;
 
 	public List<E> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+		List<E> allEntities =  em.createQuery("Select a from "+ entityName + " a ",entityClass).getResultList();
+		if(allEntities == null || allEntities.isEmpty()){
+			allEntities = Collections.EMPTY_LIST;
+		}
+		return allEntities;
 	}
 
 	Type tryGetSuperclassGenericTypeParam(Object obj, int index) {
@@ -49,11 +54,13 @@ public abstract class AbstractEntityDAO<K, E extends AbstractEntity<K, E>> imple
 		Type parameterizedType = tryGetSuperclassGenericTypeParam(this, 1);
 		if (parameterizedType != null) {
 			Class<E> clazz = (Class<E>) parameterizedType;
+			entityClass = clazz;
 			entityName = clazz.getName();
 			entityType = EntityType.valueOf(clazz.getSimpleName());
 
 		} else {
 			Class clazz = getClass().getSuperclass();
+			entityClass = clazz;
 			entityName = clazz.getCanonicalName();
 			entityType = EntityType.valueOf(clazz.getSimpleName());
 		}

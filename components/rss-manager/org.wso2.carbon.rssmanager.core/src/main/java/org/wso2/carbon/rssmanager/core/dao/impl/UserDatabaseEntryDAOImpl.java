@@ -65,12 +65,15 @@ public class UserDatabaseEntryDAOImpl extends AbstractEntityDAO<Integer, UserDat
     	query.executeUpdate();
     }
 
-    public UserDatabaseEntry getUserDatabaseEntry(String environmentName, UserDatabaseEntry entry,
+    public UserDatabaseEntry getUserDatabaseEntry(Integer envId, Integer instanceId, UserDatabaseEntry entry,
                                                   int tenantId) throws RSSDAOException {
     	
-    	Query query = getEntityManager().getJpaUtil().getJPAEntityManager().createQuery("select ue from UserDatabaseEntry ue left join fetch ue.userPrivileges  where ue.databaseUser.username = :username and ue.database.name = :name ");
+    	Query query = getEntityManager().getJpaUtil().getJPAEntityManager().createQuery("select ue from UserDatabaseEntry ue left join fetch ue.userPrivileges  "
+    			+ " where ue.databaseUser.username = :username and ue.databaseUser.environmentId = :envId and ue.database.name = :name and ue.database.rssInstance.id = :insId");
     	query.setParameter("username", entry.getUsername());
     	query.setParameter("name", entry.getDatabaseName());
+    	query.setParameter("envId", envId);
+    	query.setParameter("insId", instanceId);
     	List<UserDatabaseEntry> result = query.getResultList();
     	UserDatabaseEntry entity = null;
     	if(result != null && !result.isEmpty()){

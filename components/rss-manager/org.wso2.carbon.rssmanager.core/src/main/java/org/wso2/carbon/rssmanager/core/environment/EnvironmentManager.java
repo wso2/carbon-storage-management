@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -61,7 +62,7 @@ public class EnvironmentManager {
 	private Environment[] environments;
 	private String[] environmentNames;
 	private EntityManager entityManager;
-	private EnvironmentManagementDAO environmentDAO;
+	private EnvironmentManagementDAO envManagementDAO;
 	private static final Log log = LogFactory.getLog(EnvironmentManager.class);
 
 	public EnvironmentManager(Environment[] environments) {
@@ -304,15 +305,24 @@ public class EnvironmentManager {
 		this.entityManager = new EntityManager(rssTxManager, dataSource,
 		                                       new JPAManagerUtil(PersistenceManager.getEMF(unitName)));
 
-		this.environmentDAO = EnvironmentManagementDAOFactory.getEnvironmentManagementDAO(null, entityManager);
+		this.envManagementDAO = EnvironmentManagementDAOFactory.getEnvironmentManagementDAO(null, entityManager);
 
 		for (Environment environment : this.getEnvironments()) {
-			this.addEnvironment(environment);
-			RSSManagerAdaptor rmAdaptor = RSSManagerAdaptorFactory.getRSSManagerAdaptor(rssProvider,
-			                                                                            environment,
+			this.addEnvironment(environment);			
+			
+		}
+		
+		Set<Environment> allEnv = this.envManagementDAO.getEnvironmentDAO().getAllEnvironments();
+		for(Environment environment : allEnv){
+			Set<RSSInstance> servers = environment.getRssInstanceEntities();
+			environment.setRSSInstances( servers == null ? null : servers.toArray(new RSSInstance[servers.size()]));
+			RSSManagerAdaptor rmAdaptor = RSSManagerAdaptorFactory.getRSSManagerAdaptor(rssProvider, environment,
 			                                                                            repository);
 			environment.init(rmAdaptor);
 		}
+		environments = allEnv.toArray(new Environment[allEnv.size()]);	
+		this.closeJPASession();
+		
 	}
 
 	public void addEnvironment(Environment environment) throws RSSManagerException {
@@ -327,7 +337,7 @@ public class EnvironmentManager {
 			boolean isEvnExist = (managedEnv == null ? false : true);
 			RSSInstance[] instances = instanceDAO.getSystemRSSInstances(environment.getName(), tenantId);
 
-			Map<String, RSSInstance> rssInstancesMap = new HashMap<String, RSSInstance>();
+			Map<String, RSSInstance> rssInstancesMapFromConfig = new HashMap<String, RSSInstance>();
 			for (RSSInstance rssInstance : environment.getRSSInstances()) {
 				rssInstance.setServerURL(rssInstance.getDataSourceConfig().getRdbmsConfiguration().getUrl());
 				rssInstance.setAdminPassword(rssInstance.getDataSourceConfig().getRdbmsConfiguration()
@@ -335,28 +345,11 @@ public class EnvironmentManager {
 				rssInstance.setAdminUserName(rssInstance.getDataSourceConfig().getRdbmsConfiguration()
 				                                        .getUsername());
 				rssInstance.setTenantId((long) tenantId);
-				rssInstancesMap.put(rssInstance.getName(), rssInstance);
+				rssInstance.setDriverClassName(rssInstance.getDataSourceConfig().getRdbmsConfiguration().getDriverClassName());
+				rssInstancesMapFromConfig.put(rssInstance.getName(), rssInstance);
 			}
 
-			Map<String, RSSInstance> serverMap = new HashMap<String, RSSInstance>();
-			for (RSSInstance inst : rssInstancesMap.values()) {
-				// Checks if the rss instance is one of wso2's rss instance's or
-				// if it is a
-				// user defined instance. Throws an error if it is neither.
-				if (RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equals(inst.getInstanceType()) || RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED.equals(inst.getInstanceType())) {
-					RSSInstance serverEntity = this.getEnvironmentDAOMgr()
-					                               .getRSSInstanceDAO()
-					                               .getRSSInstance(environment.getName(), inst.getName(),
-					                                               tenantId);
-					if (serverEntity != null) {
-						serverMap.put((environment.getName() + inst.getName() + tenantId), serverEntity);
-					}
-				} else {
-					throw new RSSManagerException(
-					                              "The instance type '" + inst.getInstanceType() + "' is invalid.");
-				}
-			}
-
+			Map<String, RSSInstance> rssInstanceMapFromDB = new HashMap<String, RSSInstance>();
 			this.closeJPASession();
 
 			inTx = this.getEntityManager().beginTransaction();
@@ -368,84 +361,50 @@ public class EnvironmentManager {
 				environment = envDAO.merge(managedEnv);
 			}
 
-			Set<RSSInstance> serverEntities = environment.getRssInstanceEntities();
-			Map<String, RSSInstance> serverEntityMap = new HashMap<String, RSSInstance>();
-			if (serverEntities != null && !serverEntities.isEmpty()) {
-				for (RSSInstance in : serverEntities) {
-					serverEntityMap.put(in.getName() + in.getEnvironment().getId() + in.getTenantId()
-					                                                                   .intValue(), in);
-				}
-			}
 
-			for (RSSInstance tmpInst : instances) {
-				RSSInstance reloadedRssInst = rssInstancesMap.get(tmpInst.getName());
-				RSSInstance prevKey = rssInstancesMap.remove(tmpInst.getName());
-				if (prevKey == null) {
-					log.warn("Configuration corresponding to RSS instance named '" + tmpInst.getName() + "' is missing in the rss-config.xml");
-					continue;
-				}
-				reloadedRssInst.setEnvironment(environment);
-				String key = reloadedRssInst.getName() + reloadedRssInst.getEnvironment().getId() + tenantId;
-				if (serverEntityMap.containsKey(key)) {
-					RSSInstance managedServer = serverEntityMap.get(key);
-
-					managedServer.setServerCategory(reloadedRssInst.getServerCategory());
-					managedServer.setInstanceType(reloadedRssInst.getInstanceType());
-					managedServer.setTenantId((long) tenantId);
-					/*
-					 * this.getEnvironmentDAOMgr().getRSSInstanceDAO()
-					 * .updateRSSInstance(environment.getName(), managedServer,
-					 * tenantId);
-					 */
-					// managedServer.setEnvironment(environment);
-					rssInstances.add(managedServer);
+			//By doing this it will not ignore dynamically added new instances, which are not in rss-config.xml
+			for (RSSInstance instanceFromDB : instances) {	
+				if (RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equals(instanceFromDB.getInstanceType()) || 
+						RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED.equals(instanceFromDB.getInstanceType())) {
+					
 				} else {
-					/*
-					 * this.getEnvironmentDAOMgr().getRSSInstanceDAO()
-					 * .updateRSSInstance(environment.getName(),
-					 * reloadedRssInst, tenantId);
-					 */
-					reloadedRssInst.setEnvironment(environment);
-					rssInstances.add(reloadedRssInst);
+					throw new RSSManagerException("The instance type '" + instanceFromDB.getInstanceType() + "' is invalid.");
+				}
+				
+				String key = instanceFromDB.getName();
+				RSSInstance instanceFromBoth = rssInstancesMapFromConfig.get(key);
+				instanceFromDB.setTenantId((long) tenantId);
+				instanceFromDB.setEnvironment(environment);
+				if(instanceFromBoth != null){
+					instanceFromBoth.setId(instanceFromDB.getId());
+					rssInstances.add(instanceFromBoth);
+				}else{
+					rssInstanceMapFromDB.put((environment.getName() + instanceFromDB.getName() + tenantId), instanceFromDB);
+					rssInstances.add(instanceFromDB);
 				}
 
 			}
 
-			Iterator<Entry<String, RSSInstance>> iterServer = rssInstancesMap.entrySet().iterator();
+			//By doing this it will not ignore new instances added to rss-config.xml but not in RSS DB
+			Iterator<Entry<String, RSSInstance>> iterServer = rssInstancesMapFromConfig
+					.entrySet().iterator();
 			while (iterServer.hasNext()) {
 				Entry<String, RSSInstance> serverEntry = iterServer.next();
 				RSSInstance inst = serverEntry.getValue();
-				// Checks if the rss instance is one of wso2's rss instance's or
-				// if it is a
-				// user defined instance. Throws an error if it is neither.
-				if (RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equals(inst.getInstanceType()) || RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED.equals(inst.getInstanceType())) {
-					if (!serverMap.containsKey((environment.getName() + inst.getName() + tenantId))) {
-						inst.setEnvironment(environment);
-						String key = inst.getName() + inst.getEnvironment().getId() + tenantId;
-						if (serverEntityMap.containsKey(key)) {
-							RSSInstance managedServer = serverEntityMap.get(key);
-							/*
-							 * this.getEnvironmentDAOMgr().getRSSInstanceDAO()
-							 * .addRSSInstanceIfNotExist(environment.getName(),
-							 * managedServer, tenantId);
-							 */
-							// managedServer.setEnvironment(environment);
-							rssInstances.add(managedServer);
-						} else {
-							/*
-							 * this.getEnvironmentDAOMgr().getRSSInstanceDAO()
-							 * .addRSSInstance(environment.getName(), inst,
-							 * tenantId);
-							 */
-							rssInstances.add(inst);
-						}
-
-					}
-
+				if (RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equals(inst.getInstanceType()) || 
+						RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED.equals(inst.getInstanceType())) {
+					
 				} else {
-					throw new RSSManagerException(
-					                              "The instance type '" + inst.getInstanceType() + "' is invalid.");
+					throw new RSSManagerException("The instance type '" + inst.getInstanceType() + "' is invalid.");
 				}
+				
+				String key = (environment.getName() + inst.getName() + tenantId);
+				if (!rssInstanceMapFromDB.containsKey(key)) {
+					inst.setTenantId((long) tenantId);
+					inst.setEnvironment(environment);
+					rssInstances.add(inst);					
+				}
+
 			}
 
 			if (!isEvnExist) {
@@ -700,7 +659,7 @@ public class EnvironmentManager {
 	}
 
 	private EnvironmentManagementDAO getEnvironmentDAOMgr() {
-		return environmentDAO;
+		return envManagementDAO;
 	}
 
 	public Environment[] getEnvironments() {

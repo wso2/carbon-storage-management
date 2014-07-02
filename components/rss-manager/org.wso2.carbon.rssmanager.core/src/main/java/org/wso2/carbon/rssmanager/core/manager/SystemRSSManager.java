@@ -480,11 +480,16 @@ public abstract class SystemRSSManager extends AbstractRSSManager {
 
         final int tenantId = RSSManagerUtil.getTenantId();
         UserDatabaseEntryDAO dao = this.getRSSDAO().getUserDatabaseEntryDAO();
-        UserDatabaseEntry userDBEntry = dao.getUserDatabaseEntry(getEnvironmentName(), entry, tenantId);
+        UserDatabaseEntry userDBEntry = dao.getUserDatabaseEntry(getEnvironment().getId(),rssInstance.getId(), entry, tenantId);
+        if(userDBEntry == null){
+        	String msg = "Database '" + entry.getDatabaseName() + "' does not attached User "+ entry.getUsername();
+        	throw new EntityNotFoundException(msg);
+        }
         this.closeJPASession();
         /* Initiating the distributed transaction */
         boolean inTx = getEntityManager().beginTransaction();
         isInTx.set(inTx);
+        
        /* 
         
         this.getRSSDAO().getUserDatabaseEntryDAO().removeUserDatabaseEntriesByUser(userDBEntry.getId());*/

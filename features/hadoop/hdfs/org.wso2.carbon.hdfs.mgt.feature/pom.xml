@@ -43,7 +43,7 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.tenant.common.feature</artifactId>
-            <version>${org.wso2.carbon.tenant.common.version}</version>
+            <version>${org.wso2.carbon.tenant.common.feature.version}</version>
             <type>zip</type>
         </dependency>
         <!--<dependency>-->
@@ -87,7 +87,7 @@
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
-				<importFeatureDef>org.wso2.carbon.tenant.common:${org.wso2.carbon.tenant.common.version}</importFeatureDef>
+				<importFeatureDef>org.wso2.carbon.tenant.common:${org.wso2.carbon.tenant.common.feature.version}</importFeatureDef>
                             </importFeatures>
                             <!--<includedFeatures>-->
                                 <!--<includedFeatureDef>org.wso2.carbon:org.wso2.carbon.hdfs.dataaccess.feature:${project.version}</includedFeatureDef>-->
@@ -100,7 +100,7 @@
     </build>
 
     <properties>
-        <org.wso2.carbon.tenant.common.feature.version>4.3.0.SNAPSHOT</org.wso2.carbon.tenant.common.feature.version>
+        <org.wso2.carbon.tenant.common.feature.version>4.3.0-SNAPSHOT</org.wso2.carbon.tenant.common.feature.version>
     </properties>
 
 </project>

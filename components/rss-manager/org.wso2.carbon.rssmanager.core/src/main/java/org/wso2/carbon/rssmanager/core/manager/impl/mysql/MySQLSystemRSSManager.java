@@ -90,7 +90,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
 
             conn = this.getConnection(rssInstance.getName());
             conn.setAutoCommit(false);
-            String sql = "CREATE DATABASE " + qualifiedDatabaseName;
+            String sql = "CREATE DATABASE `" + qualifiedDatabaseName + "`";
             stmt = conn.prepareStatement(sql);
 
 
@@ -146,7 +146,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
 
             conn = getConnection(rssInstance.getName());
             conn.setAutoCommit(false);
-            String sql = "DROP DATABASE " + databaseName;
+            String sql = "DROP DATABASE `" + databaseName+"`";
             stmt = conn.prepareStatement(sql);
             /* delete from mysql.db */
             delStmt = deletePreparedStatement(conn, databaseName);
@@ -189,6 +189,17 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
         }
     }
 
+    /**
+     * The method creates a SQL create user query which is MYSQL compliant
+     * @param qualifiedUsername  The tenant qualified username of the form username[tenant post fix]
+     * @param password The password of the provided user
+     * @return An SQL create query which is compatible with MYSQL
+     */
+    private String createSqlQuery(String qualifiedUsername,String password){
+        String query="CREATE USER '"+qualifiedUsername+"'@'%' IDENTIFIED BY '"+password+"'";
+        return query;
+    }
+
     public DatabaseUser addDatabaseUser(DatabaseUser user) throws RSSManagerException {
         AtomicBoolean isInTx = new AtomicBoolean(false);
         Connection conn = null;
@@ -217,8 +228,9 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
                     conn = getConnection(rssInstance.getName());
                     conn.setAutoCommit(false);
 
-                    String sql = "CREATE USER " + qualifiedUsername + "@'%' IDENTIFIED BY '" +
-                            user.getPassword() + "'";
+                    //String sql = "CREATE USER " + qualifiedUsername + "@'%' IDENTIFIED BY '" +
+                    //        user.getPassword() + "'";
+                    String sql=createSqlQuery(qualifiedUsername,user.getPassword());
                     stmt = conn.prepareStatement(sql);
                     
     						/*

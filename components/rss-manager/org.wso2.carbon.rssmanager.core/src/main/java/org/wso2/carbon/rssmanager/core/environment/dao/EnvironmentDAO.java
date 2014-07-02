@@ -37,5 +37,7 @@ public interface EnvironmentDAO extends EntityBaseDAO<Integer, Environment>{
     Environment getEnvironment(String environmentName) throws RSSManagerException;
     
     Set<Environment> getEnvironments(Set<String> names)throws RSSManagerException;
+    
+    Set<Environment> getAllEnvironments()throws RSSManagerException;
 
 }

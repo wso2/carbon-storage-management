@@ -13,12 +13,13 @@
 	<module>components/cassandra</module>
         <module>components/cassandra-explorer</module>
         <module>components/cassandra-search</module>
-        <!--<module>components/hdfs</module>-->
+        <module>components/mapred</module>
+        <module>components/hdfs</module>
         <module>components/rss-manager</module>
 	    <module>features/cassandra</module>
         <module>features/cassandra-explorer</module>
         <module>features/cassandra-search</module>
-        <!--<module>features/hadoop</module>-->
+        <module>features/hadoop</module>
         <module>features/rss-manager</module>
     </modules>
     
@@ -58,7 +59,95 @@
 	    </releases>
 	</repository>
     </repositories>
-    
+
+    <build>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>2.1</version>
+            </extension>
+        </extensions>
+
+        <plugins>
+            <plugin>
+                <groupId>org.jvnet.maven.incrementalbuild</groupId>
+                <artifactId>incremental-build-plugin</artifactId>
+                <version>1.3</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>incremental-build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.1</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-scr-plugin</artifactId>
+                    <version>1.7.2</version>
+                    <executions>
+                        <execution>
+                            <id>generate-scr-scrdescriptor</id>
+                            <goals>
+                                <goal>scr</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>2.3.5</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <obrRepository>NONE</obrRepository>
+                        <!--<instructions>
+                          <_include>-osgi.bnd</_include>
+                        </instructions>-->
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>2.1.2</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>2.2-beta-2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>2.4</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+   
     <pluginRepositories>
 	<pluginRepository>
 	    <id>wso2.releases</id>
@@ -732,16 +821,16 @@
 		<artifactId>xml-apis</artifactId>
 		<version>${xml-apis.version}</version>
 	    </dependency>
-	    <dependency>
-		<groupId>org.mortbay.jetty</groupId>
-		<artifactId>jetty</artifactId>
-		<version>${jetty.version}</version>
-	    </dependency>
-	    <dependency>
-		<groupId>org.mortbay.jetty</groupId>
-		<artifactId>jetty-util</artifactId>
-		<version>${jetty.version}</version>
-	    </dependency>
+        <dependency>
+        <groupId>org.mortbay.wso2</groupId>
+        <artifactId>jetty</artifactId>
+        <version>${jetty.version}</version>
+        </dependency>
+        <dependency>
+         <groupId>org.mortbay.jetty.wso2</groupId>
+         <artifactId>jetty-util</artifactId>
+        <version>${jetty-util.version}</version>
+        </dependency>
 	    <dependency>
 		<groupId>org.apache.ws.commons.schema</groupId>
 		<artifactId>XmlSchema</artifactId>
@@ -965,7 +1054,8 @@
 	<javamail.version>1.4</javamail.version>
 	<wss4j.version>1.5.11.wso2v1</wss4j.version>
 	<wsdl4j.wso2.version>1.6.2.wso2v2</wsdl4j.wso2.version>
-	<jetty.version>6.1.5</jetty.version>
+    <jetty.version>6.1.26.wso2v1</jetty.version>
+    <jetty-util.version>6.1.26.wso2v1</jetty-util.version>
 	<xml-apis.version>1.3.04</xml-apis.version>
 	<jaxen.version>1.1.1</jaxen.version>
 	<woodstox.version>3.2.9</woodstox.version>
