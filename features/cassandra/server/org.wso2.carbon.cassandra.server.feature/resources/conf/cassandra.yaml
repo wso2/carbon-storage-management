@@ -249,7 +249,7 @@ seed_provider:
 # it is most effective under light to moderate load, or read-heavy
 # workloads; under truly massive write load, it will often be too
 # little, too late.
-flush_largest_memtables_at: 0.75
+flush_largest_memtables_at: 0.45
 
 # emergency pressure valve #2: the first time heap usage after a full
 # (CMS) garbage collection is above this fraction of the max,
