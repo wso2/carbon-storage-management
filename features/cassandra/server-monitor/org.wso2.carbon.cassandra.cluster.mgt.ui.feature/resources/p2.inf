@@ -1,0 +1,2 @@
+instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.cassandra.mgt.ui_${feature.version}/conf/cassandra-endpoint.xml,target:${installFolder}/../../conf/etc/cassandra-endpoint.xml,overwrite:true);

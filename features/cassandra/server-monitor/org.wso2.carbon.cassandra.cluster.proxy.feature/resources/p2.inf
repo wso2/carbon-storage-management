@@ -1,0 +1,2 @@
+instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.cassandra.cluster.proxy_${feature.version}/conf/cluster-config.xml,target:${installFolder}/../../conf/etc/cluster-config.xml,overwrite:true);
