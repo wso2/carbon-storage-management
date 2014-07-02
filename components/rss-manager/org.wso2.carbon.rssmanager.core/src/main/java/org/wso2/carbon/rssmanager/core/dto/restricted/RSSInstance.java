@@ -89,6 +89,9 @@ public class RSSInstance extends AbstractEntity<Integer, RSSInstance>{
     @Column(name="TENANT_ID")
     private Long tenantId;
     
+    @Column(name="DRIVER_CLASS")
+    private String driverClassName;
+    
     @ManyToOne(cascade={CascadeType.PERSIST,CascadeType.REFRESH,CascadeType.MERGE}, fetch=FetchType.EAGER)
     @JoinColumn(name = "ENVIRONMENT_ID", nullable = false)
     private Environment environment;
@@ -96,8 +99,6 @@ public class RSSInstance extends AbstractEntity<Integer, RSSInstance>{
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "rssInstance", 
             orphanRemoval = true)
     private List<Database> databases;
-
-    private DataSource dataSource;
 
     @Transient
     private String environmentName;
@@ -232,6 +233,16 @@ public class RSSInstance extends AbstractEntity<Integer, RSSInstance>{
 
 	public void setVersion(Long version) {
 		this.version = version;
+	}
+	
+	
+
+	public String getDriverClassName() {
+		return driverClassName;
+	}
+
+	public void setDriverClassName(String driverClassName) {
+		this.driverClassName = driverClassName;
 	}
 
 	@Override

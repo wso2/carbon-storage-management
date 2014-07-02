@@ -128,8 +128,6 @@
     <properties>
         <hadoop-core.version>0.20.203.1.wso2v2</hadoop-core.version>
         <jackson.version>1.0.1.wso2v1</jackson.version>
-        <jetty.version>6.1.26.wso2v1</jetty.version>
-        <jetty-util.version>6.1.26.wso2v1</jetty-util.version>
         <json.version>2.0.0.wso2v1</json.version>
         <slf4j.version>1.5.10.wso2v1</slf4j.version>
         <commons-configuration.version>1.6.0.wso2v1</commons-configuration.version>

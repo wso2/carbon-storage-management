@@ -1,0 +1,239 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://krb5.authenticator.identity.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax292="http://common.core.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://krb5.authenticator.identity.carbon.wso2.org"> 
+    <wsdl:documentation>Krb5Authenticator</wsdl:documentation> 
+    <wsdl:types> 
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://common.core.carbon.wso2.org/xsd"> 
+            <xs:complexType name="AuthenticationException"> 
+                <xs:sequence /> 
+            </xs:complexType> 
+        </xs:schema> 
+        <xs:schema xmlns:ax293="http://common.core.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://krb5.authenticator.identity.carbon.wso2.org"> 
+            <xs:import namespace="http://common.core.carbon.wso2.org/xsd" /> 
+            <xs:element name="Krb5AuthenticatorAuthenticationException"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="AuthenticationException" nillable="true" type="ax292:AuthenticationException" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="logout"> 
+                <xs:complexType> 
+                    <xs:sequence /> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="loginWithoutRememberMeOption"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="username" nillable="true" type="xs:string" /> 
+                        <xs:element minOccurs="0" name="password" nillable="true" type="xs:string" /> 
+                        <xs:element minOccurs="0" name="remoteAddress" nillable="true" type="xs:string" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="loginWithoutRememberMeOptionResponse"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="getPriority"> 
+                <xs:complexType> 
+                    <xs:sequence /> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="getPriorityResponse"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="return" type="xs:int" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="getAuthenticatorName"> 
+                <xs:complexType> 
+                    <xs:sequence /> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="getAuthenticatorNameResponse"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+        </xs:schema> 
+    </wsdl:types> 
+    <wsdl:message name="logoutRequest"> 
+        <wsdl:part name="parameters" element="ns:logout" /> 
+    </wsdl:message> 
+    <wsdl:message name="Krb5AuthenticatorAuthenticationException"> 
+        <wsdl:part name="parameters" element="ns:Krb5AuthenticatorAuthenticationException" /> 
+    </wsdl:message> 
+    <wsdl:message name="loginWithoutRememberMeOptionRequest"> 
+        <wsdl:part name="parameters" element="ns:loginWithoutRememberMeOption" /> 
+    </wsdl:message> 
+    <wsdl:message name="loginWithoutRememberMeOptionResponse"> 
+        <wsdl:part name="parameters" element="ns:loginWithoutRememberMeOptionResponse" /> 
+    </wsdl:message> 
+    <wsdl:message name="getAuthenticatorNameRequest"> 
+        <wsdl:part name="parameters" element="ns:getAuthenticatorName" /> 
+    </wsdl:message> 
+    <wsdl:message name="getAuthenticatorNameResponse"> 
+        <wsdl:part name="parameters" element="ns:getAuthenticatorNameResponse" /> 
+    </wsdl:message> 
+    <wsdl:message name="getPriorityRequest"> 
+        <wsdl:part name="parameters" element="ns:getPriority" /> 
+    </wsdl:message> 
+    <wsdl:message name="getPriorityResponse"> 
+        <wsdl:part name="parameters" element="ns:getPriorityResponse" /> 
+    </wsdl:message> 
+    <wsdl:portType name="Krb5AuthenticatorPortType"> 
+        <wsdl:operation name="logout"> 
+            <wsdl:input message="ns:logoutRequest" wsaw:Action="urn:logout" /> 
+            <wsdl:fault message="ns:Krb5AuthenticatorAuthenticationException" name="Krb5AuthenticatorAuthenticationException" wsaw:Action="urn:logoutKrb5AuthenticatorAuthenticationException" /> 
+        </wsdl:operation> 
+        <wsdl:operation name="loginWithoutRememberMeOption"> 
+            <wsdl:input message="ns:loginWithoutRememberMeOptionRequest" wsaw:Action="urn:loginWithoutRememberMeOption" /> 
+            <wsdl:output message="ns:loginWithoutRememberMeOptionResponse" wsaw:Action="urn:loginWithoutRememberMeOptionResponse" /> 
+            <wsdl:fault message="ns:Krb5AuthenticatorAuthenticationException" name="Krb5AuthenticatorAuthenticationException" wsaw:Action="urn:loginWithoutRememberMeOptionKrb5AuthenticatorAuthenticationException" /> 
+        </wsdl:operation> 
+        <wsdl:operation name="getAuthenticatorName"> 
+            <wsdl:input message="ns:getAuthenticatorNameRequest" wsaw:Action="urn:getAuthenticatorName" /> 
+            <wsdl:output message="ns:getAuthenticatorNameResponse" wsaw:Action="urn:getAuthenticatorNameResponse" /> 
+        </wsdl:operation> 
+        <wsdl:operation name="getPriority"> 
+            <wsdl:input message="ns:getPriorityRequest" wsaw:Action="urn:getPriority" /> 
+            <wsdl:output message="ns:getPriorityResponse" wsaw:Action="urn:getPriorityResponse" /> 
+        </wsdl:operation> 
+    </wsdl:portType> 
+    <wsdl:binding name="Krb5AuthenticatorSoap11Binding" type="ns:Krb5AuthenticatorPortType"> 
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" /> 
+        <wsdl:operation name="logout"> 
+            <soap:operation soapAction="urn:logout" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:fault name="Krb5AuthenticatorAuthenticationException"> 
+                <soap:fault use="literal" name="Krb5AuthenticatorAuthenticationException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="loginWithoutRememberMeOption"> 
+            <soap:operation soapAction="urn:loginWithoutRememberMeOption" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="Krb5AuthenticatorAuthenticationException"> 
+                <soap:fault use="literal" name="Krb5AuthenticatorAuthenticationException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="getAuthenticatorName"> 
+            <soap:operation soapAction="urn:getAuthenticatorName" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap:body use="literal" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="getPriority"> 
+            <soap:operation soapAction="urn:getPriority" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap:body use="literal" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+    </wsdl:binding> 
+    <wsdl:binding name="Krb5AuthenticatorSoap12Binding" type="ns:Krb5AuthenticatorPortType"> 
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" /> 
+        <wsdl:operation name="logout"> 
+            <soap12:operation soapAction="urn:logout" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:fault name="Krb5AuthenticatorAuthenticationException"> 
+                <soap12:fault use="literal" name="Krb5AuthenticatorAuthenticationException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="loginWithoutRememberMeOption"> 
+            <soap12:operation soapAction="urn:loginWithoutRememberMeOption" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap12:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="Krb5AuthenticatorAuthenticationException"> 
+                <soap12:fault use="literal" name="Krb5AuthenticatorAuthenticationException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="getAuthenticatorName"> 
+            <soap12:operation soapAction="urn:getAuthenticatorName" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap12:body use="literal" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="getPriority"> 
+            <soap12:operation soapAction="urn:getPriority" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap12:body use="literal" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+    </wsdl:binding> 
+    <wsdl:binding name="Krb5AuthenticatorHttpBinding" type="ns:Krb5AuthenticatorPortType"> 
+        <http:binding verb="POST" /> 
+        <wsdl:operation name="logout"> 
+            <http:operation location="logout" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+        </wsdl:operation> 
+        <wsdl:operation name="loginWithoutRememberMeOption"> 
+            <http:operation location="loginWithoutRememberMeOption" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="getAuthenticatorName"> 
+            <http:operation location="getAuthenticatorName" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="getPriority"> 
+            <http:operation location="getPriority" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+    </wsdl:binding> 
+    <wsdl:service name="Krb5Authenticator"> 
+        <wsdl:port name="Krb5AuthenticatorHttpsSoap11Endpoint" binding="ns:Krb5AuthenticatorSoap11Binding"> 
+            <soap:address location="https://localhost:9443/services/Krb5Authenticator.Krb5AuthenticatorHttpsSoap11Endpoint/" /> 
+        </wsdl:port> 
+        <wsdl:port name="Krb5AuthenticatorHttpsSoap12Endpoint" binding="ns:Krb5AuthenticatorSoap12Binding"> 
+            <soap12:address location="https://localhost:9443/services/Krb5Authenticator.Krb5AuthenticatorHttpsSoap12Endpoint/" /> 
+        </wsdl:port> 
+        <wsdl:port name="Krb5AuthenticatorHttpsEndpoint" binding="ns:Krb5AuthenticatorHttpBinding"> 
+            <http:address location="https://localhost:9443/services/Krb5Authenticator.Krb5AuthenticatorHttpsEndpoint/" /> 
+        </wsdl:port> 
+    </wsdl:service> 
+</wsdl:definitions>

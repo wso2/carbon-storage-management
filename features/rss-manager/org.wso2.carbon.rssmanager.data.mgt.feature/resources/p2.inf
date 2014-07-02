@@ -1,0 +1,5 @@
+instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.rssmanager.data.mgt_${feature.version}/conf/rss-monitor-config.xml,target:${installFolder}/../../conf/etc/rss-monitor-config.xml,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../features/org.wso2.carbon.rssmanager.data.mgt_${feature.version}/conf); \
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.rssmanager.data.mgt_${feature.version}/dbscripts/rss-monitor/,target:${installFolder}/../../../dbscripts/rss-monitor/,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../features/org.wso2.carbon.rssmanager.data.mgt_${feature.version}/dbscripts);

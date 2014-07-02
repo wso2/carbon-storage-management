@@ -101,6 +101,20 @@ public class EnvironmentDAOImpl extends AbstractEntityDAO<Integer, Environment> 
     	
     	return environments;
     }
+    
+    @Override
+    public Set<Environment> getAllEnvironments()throws RSSManagerException{
+    	Set<Environment> environments = new HashSet<Environment>();
+    	
+    	Query query = this.getEntityManager().getJpaUtil().getJPAEntityManager().createQuery(" SELECT en FROM Environment en left join fetch en.rssInstanceEntities  ");
+		
+		List<Environment> result = query.getResultList();
+		if(result != null){
+			environments.addAll(result);
+		}	
+    	
+    	return environments;
+    }
 
     
 

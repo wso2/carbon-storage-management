@@ -18,6 +18,7 @@
  */
 package org.wso2.carbon.rssmanager.common;
 
+import org.wso2.carbon.context.CarbonContext;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -191,6 +192,11 @@ public class RSSManagerHelper {
         return b;
     }
 
+    public static String getDatabaseUserPostfix() {
+        String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
+        byte[] bytes = RSSManagerHelper.intToByteArray(tenantDomain.hashCode());
+        return org.apache.commons.codec.binary.Base64.encodeBase64URLSafeString(bytes);
+    }
     public static String processDomainName(String domainName) {
         if (domainName == null || "".equals(domainName)) {
             return domainName;

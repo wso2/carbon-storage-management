@@ -46,7 +46,7 @@ public interface UserDatabaseEntryDAO extends EntityBaseDAO<Integer, UserDatabas
                                          String username, String type,
                                          int tenantId) throws RSSDAOException;*/
 
-    UserDatabaseEntry getUserDatabaseEntry(String environmentName, UserDatabaseEntry entry,
+    UserDatabaseEntry getUserDatabaseEntry(Integer envId, Integer instanceId, UserDatabaseEntry entry,
                                            int tenantId) throws RSSDAOException;
 
     UserDatabaseEntry[] getUserDatabaseEntries(String environmentName, UserDatabaseEntry entries,
