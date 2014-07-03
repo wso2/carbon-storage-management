@@ -57,7 +57,7 @@
             <dependency>
                 <groupId>org.apache.cassandra.wso2</groupId>
                 <artifactId>apache-cassandra</artifactId>
-                <version>${cassandra.version}</version>
+                <version>${wso2.cassandra.version}</version>
             </dependency>
 
             <!--Hector-->
