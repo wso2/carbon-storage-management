@@ -162,7 +162,7 @@
 <properties>
 <wso2carbon.version.cassandra>${wso2carbon.version}</wso2carbon.version.cassandra>
 <wso2carbon.version.cassandra.explorer>${wso2carbon.version}</wso2carbon.version.cassandra.explorer>
-<cassandra.version>1.1.0.wso2v1</cassandra.version>
+<cassandra.version>1.2.13.wso2v3</cassandra.version>
 <hector-core.version>1.1-0</hector-core.version>
 <libthrift.version>0.7.wso2v1</libthrift.version>
 <perf4j.version>0.9.12.wso2v1</perf4j.version>
