@@ -28,6 +28,7 @@ public final class CassandraServerConstants {
         public static final int CASSANDRA_RPC_PORT = 9160;
         public static final int CASSANDRA_STORAGE_PORT = 7000;
         public static final int CASSANDRA_SSL_STORAGE_PORT = 7001;
+        public static final int CASSANDRA_NATIVE_TRANSPORT_PORT = 9042;
     }
 
 }
