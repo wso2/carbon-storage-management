@@ -200,6 +200,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
         return query;
     }
 
+
     public DatabaseUser addDatabaseUser(DatabaseUser user) throws RSSManagerException {
         AtomicBoolean isInTx = new AtomicBoolean(false);
         Connection conn = null;

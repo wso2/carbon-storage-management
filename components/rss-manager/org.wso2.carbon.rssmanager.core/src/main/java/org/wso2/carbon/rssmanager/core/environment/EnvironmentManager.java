@@ -78,6 +78,10 @@ public class EnvironmentManager {
 		dao.overrideJPASession(getEntityManager().getJpaUtil().getJPAEntityManager());
 	}
 	
+	protected void joinTransaction(){
+		getEntityManager().getJpaUtil().getJPAEntityManager().joinTransaction();
+	}
+	
 	private Environment validateEnvironment(String envName, EnvironmentDAO dao) throws RSSManagerException {
 		if(envName == null || envName.trim().length() == 0 ){
 			throw new RSSManagerException(" Environment name is null ");
@@ -96,12 +100,13 @@ public class EnvironmentManager {
 			
 			EnvironmentDAO envDao = this.getEnvironmentDAOMgr().getEnvironmentDAO();
 			Environment env = validateEnvironment(environmentName,envDao);
-			closeJPASession();
+			//closeJPASession();
 
 			inTx = this.getEntityManager().beginTransaction();
-			overrideJPASession(envDao);
+			//overrideJPASession(envDao);
+			joinTransaction();
 
-			env = envDao.merge(env);
+			//env = envDao.merge(env);
 			envDao.remove(env);
 			if (inTx) {
 				this.getEntityManager().endJPATransaction();
@@ -162,11 +167,12 @@ public class EnvironmentManager {
 			
 			RSSInstanceDAO dao = this.getEnvironmentDAOMgr().getRSSInstanceDAO();
 			RSSInstance entity = dao.getRSSInstance(environmentName, rssInstanceName, tenantId);
-			closeJPASession();
+			//closeJPASession();
 
 			inTx = getEntityManager().beginTransaction();
-			overrideJPASession(dao);
-			entity = dao.merge(entity);
+			//overrideJPASession(dao);
+			joinTransaction();
+			//entity = dao.merge(entity);
 			dao.remove(entity);
 			if (inTx) {
 				this.getEntityManager().endJPATransaction();
@@ -206,11 +212,11 @@ public class EnvironmentManager {
 			entity.setDbmsType(rssInstance.getInstanceType());
 			entity.setEnvironment(env);
 
-			closeJPASession();
+			//closeJPASession();
 
 			inTx = this.getEntityManager().beginTransaction();
-			overrideJPASession(dao);
-
+			//overrideJPASession(dao);
+			joinTransaction();
 			dao.saveOrUpdate(entity);
 			if (inTx) {
 				this.getEntityManager().endJPATransaction();
@@ -350,15 +356,15 @@ public class EnvironmentManager {
 			}
 
 			Map<String, RSSInstance> rssInstanceMapFromDB = new HashMap<String, RSSInstance>();
-			this.closeJPASession();
+			//this.closeJPASession();
 
 			inTx = this.getEntityManager().beginTransaction();
-			overrideJPASession(envDAO);
-			overrideJPASession(instanceDAO);
+			joinTransaction();
 			if (!isEvnExist) {
 				envDAO.insert(environment);
+				managedEnv = environment;
 			} else {
-				environment = envDAO.merge(managedEnv);
+
 			}
 
 
@@ -373,15 +379,14 @@ public class EnvironmentManager {
 				
 				String key = instanceFromDB.getName();
 				RSSInstance instanceFromBoth = rssInstancesMapFromConfig.get(key);
-				instanceFromDB.setTenantId((long) tenantId);
-				instanceFromDB.setEnvironment(environment);
+				instanceFromBoth.setTenantId((long) tenantId);
+				instanceFromBoth.setEnvironment(managedEnv);
 				if(instanceFromBoth != null){
-					instanceFromBoth.setId(instanceFromDB.getId());
-					rssInstances.add(instanceFromBoth);
-				}else{
-					rssInstanceMapFromDB.put((environment.getName() + instanceFromDB.getName() + tenantId), instanceFromDB);
-					rssInstances.add(instanceFromDB);
+					//TODO apply changes
+					
 				}
+				rssInstanceMapFromDB.put((managedEnv.getName() + instanceFromDB.getName() + tenantId), instanceFromDB);
+				rssInstances.add(instanceFromDB);
 
 			}
 
@@ -398,25 +403,25 @@ public class EnvironmentManager {
 					throw new RSSManagerException("The instance type '" + inst.getInstanceType() + "' is invalid.");
 				}
 				
-				String key = (environment.getName() + inst.getName() + tenantId);
+				String key = (managedEnv.getName() + inst.getName() + tenantId);
 				if (!rssInstanceMapFromDB.containsKey(key)) {
 					inst.setTenantId((long) tenantId);
-					inst.setEnvironment(environment);
+					inst.setEnvironment(managedEnv);
 					rssInstances.add(inst);					
 				}
 
 			}
 
 			if (!isEvnExist) {
-				environment.setRssInstanceEntities(rssInstances);
-				envDAO.merge(environment);
+				managedEnv.setRssInstanceEntities(rssInstances);
+				envDAO.merge(managedEnv);
 			} else {
 
 				for (RSSInstance entity : rssInstances) {
 					if (entity.getId() == null) {
-						entity.setEnvironment(environment);
+						entity.setEnvironment(managedEnv);
 						instanceDAO.insert(entity);
-						environment.getRssInstanceEntities().add(entity);
+						managedEnv.getRssInstanceEntities().add(entity);
 
 					} else {
 						instanceDAO.merge(entity);
@@ -429,7 +434,7 @@ public class EnvironmentManager {
 			if (inTx) {
 				this.getEntityManager().endJPATransaction();
 			}
-		} catch (RSSDAOException e) {
+		} catch (Exception e) {
 			if (inTx) {
 				this.getEntityManager().rollbackJPATransaction();
 			}
@@ -472,11 +477,12 @@ public class EnvironmentManager {
 			DatabasePrivilegeTemplate template = dao.getDatabasePrivilegesTemplate(environmentName,
 			                                                                       templateName, tenantId);
 
-			this.closeJPASession();
+			//this.closeJPASession();
 
 			inTx = getEntityManager().beginTransaction();
-			this.overrideJPASession(dao);
-			template = dao.merge(template);
+			//this.overrideJPASession(dao);
+			joinTransaction();
+			//template = dao.merge(template);
 			this.getEnvironmentDAOMgr().getDatabasePrivilegeTemplateEntryDAO().remove(template.getEntry());
 			template.setEntry(null);
 			dao.remove(template);
@@ -555,9 +561,10 @@ public class EnvironmentManager {
 
 			EnvironmentDAO envDao = this.getEnvironmentDAOMgr().getEnvironmentDAO();
 			Environment env = validateEnvironment(environmentName,envDao);
-			closeJPASession();
+			//closeJPASession();
 
 			inTx = getEntityManager().beginTransaction();
+			joinTransaction();
 			template.setEnvironment(env);
 			template.setTenantId(tenantId);
 			DatabasePrivilegeTemplateEntry entry = new DatabasePrivilegeTemplateEntry();
@@ -611,21 +618,23 @@ public class EnvironmentManager {
 			if(entity == null){
 				throw new RSSManagerException(" Template doesn't exist : "+template.getName());
 			}
-			template.setEnvironment(entity.getEnvironment());
+			/*template.setEnvironment(entity.getEnvironment());
 			template.setId(entity.getId());
-			template.setTenantId(tenantId);
+			template.setTenantId(tenantId);*/
 			DatabasePrivilegeSet privilegeSet = template.getPrivileges();
 			RSSManagerUtil.createDatabasePrivilegeTemplateEntry(privilegeSet, entity.getEntry());
-			template.setEntry(entity.getEntry() == null ? null : entity.getEntry());
+			/*template.setEntry(entity.getEntry());
 			if (entity.getEntry() != null)
-				entity.getEntry().setPrivilegeTemplate(template);
+				entity.getEntry().setPrivilegeTemplate(template);*/
 
-			closeJPASession();
+			//closeJPASession();
 
 			inTx = getEntityManager().beginTransaction();
 
-			overrideJPASession(dao);
-			dao.saveOrUpdate(template);
+			//overrideJPASession(dao);
+			joinTransaction();
+			dao.saveOrUpdate(entity);
+			this.getEnvironmentDAOMgr().getDatabasePrivilegeTemplateEntryDAO().merge(entity.getEntry());
 
 			if (inTx) {
 				this.getEntityManager().endJPATransaction();

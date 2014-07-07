@@ -87,12 +87,12 @@ public class RSSConfigurationManager {
 			Unmarshaller unmarshaller = ctx.createUnmarshaller();
 			this.currentRSSConfig = (RSSConfig) unmarshaller.unmarshal(doc);
 			
-			//TODO
+			/*//TODO
 			String rssProvider = currentRSSConfig.getRSSProvider();
 			String h2Type = RSSDAOFactory.RDBMSType.H2.name().toUpperCase();
 			if(h2Type.equalsIgnoreCase(rssProvider)){
 				return;
-			}
+			}*/
 			
 			PersistenceManager.createEMF(jpaConfigXMLPatch, currentRSSConfig);
 

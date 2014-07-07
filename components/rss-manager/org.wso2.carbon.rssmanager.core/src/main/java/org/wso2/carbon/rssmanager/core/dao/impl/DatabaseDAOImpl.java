@@ -89,7 +89,7 @@ public class DatabaseDAOImpl extends AbstractEntityDAO<Integer, Database> implem
 			                  .getJPAEntityManager()
 			                  .createQuery(" SELECT db FROM Database db  join  db.rssInstance si WHERE db.name = :name AND db.tenantId = :dTenantId AND db.type = :type  AND " + " si.tenantId = :tenantId AND si.environment.name = :evname");
 			query.setParameter("name", databaseName);
-			query.setParameter("tenantId", MultitenantConstants.SUPER_TENANT_ID);
+			query.setParameter("tenantId", (long)MultitenantConstants.SUPER_TENANT_ID);
 			query.setParameter("evname", environmentName);
 			query.setParameter("dTenantId", tenantId);
 			query.setParameter("type", RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
@@ -107,7 +107,7 @@ public class DatabaseDAOImpl extends AbstractEntityDAO<Integer, Database> implem
 			                  .getJPAEntityManager()
 			                  .createQuery(" SELECT db FROM Database db  join  db.rssInstance si WHERE db.name = :name AND db.tenantId = :dTenantId AND db.type = :type AND si.name = :instanceName  AND " + " si.tenantId = :tenantId AND si.environment.name = :evname");
 			query.setParameter("name", databaseName);
-			query.setParameter("tenantId", MultitenantConstants.SUPER_TENANT_ID);
+			query.setParameter("tenantId", (long)MultitenantConstants.SUPER_TENANT_ID);
 			query.setParameter("evname", environmentName);
 			query.setParameter("instanceName", rssInstanceName);
 			query.setParameter("dTenantId", tenantId);
@@ -136,7 +136,7 @@ public class DatabaseDAOImpl extends AbstractEntityDAO<Integer, Database> implem
 		                  		" WHERE db.name = :name AND db.tenantId = :dTenantId AND db.rssInstance.name = :instanceName  AND  " +
 		                  " db.rssInstance.tenantId = :tenantId AND db.rssInstance.environment.name = :evname");
 		query.setParameter("name", databaseName);
-		query.setParameter("tenantId", MultitenantConstants.SUPER_TENANT_ID);
+		query.setParameter("tenantId", (long)MultitenantConstants.SUPER_TENANT_ID);
 		query.setParameter("evname", environmentName);
 		query.setParameter("instanceName", rssInstanceName);
 		query.setParameter("dTenantId", tenantId);
@@ -175,7 +175,7 @@ public class DatabaseDAOImpl extends AbstractEntityDAO<Integer, Database> implem
 		                  .createQuery(" SELECT db FROM Database db  join  db.rssInstance si WHERE db.tenantId = :dTenantId  AND  si.environment.name = :evname");
 
 		query.setParameter("evname", environmentName);
-		query.setParameter("dTenantId", tenantId);
+		query.setParameter("dTenantId", (long)tenantId);
 
 		List<Database> result = query.getResultList();
 		Database[] databases = null;

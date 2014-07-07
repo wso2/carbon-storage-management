@@ -32,6 +32,7 @@ import javax.transaction.NotSupportedException;
 import javax.transaction.Synchronization;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
 import javax.transaction.xa.XAResource;
 
@@ -78,6 +79,17 @@ public class EntityManager {
 		}
 		return txObj;
 	}
+	
+	private static TransactionManager getTransactionManager(){
+		TransactionManager txManager = null;
+		try {
+			txManager = InitialContext.doLookup(RSSManagerConstants.STANDARD_TRANSACTION_MANAGER_JNDI_NAME);
+		} catch (NamingException e) {
+			String msg = " Could not obtain UserTransaction ";
+			log.error(msg);
+		}
+		return txManager;
+	}
 
     /**
      * This is used to keep the enlisted XADatasource objects
@@ -116,7 +128,8 @@ public class EntityManager {
         }
 
         if (activeNestedTransactions.get() == 0) {
-           // this.getRSSTransactionManager().begin();
+           //this.getRSSTransactionManager().begin();
+        	
         	UserTransaction utx = transactions.get();
         	if(utx == null){
         		utx = getUserTransaction();
@@ -127,6 +140,7 @@ public class EntityManager {
         	}
         	try {
 	            utx.begin();
+        		//getTransactionManager().begin();
             } catch (Exception e) {
             	throw new RSSManagerException(e);
             }
@@ -134,7 +148,39 @@ public class EntityManager {
         activeNestedTransactions.set(activeNestedTransactions.get() + 1);
         return true;
     }
+    
+    
+        public synchronized boolean getAndSetTransaction()throws RSSManagerException{
+        	if (activeNestedTransactions.get() == 0) {
+                // this.getRSSTransactionManager().begin();
+             	UserTransaction utx = transactions.get();
+             	if(utx == null){
+             		utx = getUserTransaction();
+             		if(utx == null){
+             			throw new RSSManagerException(" Can't obtain UserTransaction ");
+             		}
+             		transactions.set(utx);
+             	}
+             	
+             }
+             activeNestedTransactions.set(activeNestedTransactions.get() + 1);
+             return true;
+        }
         
+        public synchronized boolean beginTransactionOnly() throws RSSManagerException {
+            if (log.isDebugEnabled()) {
+                log.debug("beginTransaction()");
+            }
+
+            UserTransaction utx = transactions.get();
+            try {
+	            utx.begin();
+            } catch (Exception e) {
+            	throw new RSSManagerException(e);
+            }
+         	
+            return true;
+        }
 
 
     public synchronized void endTransaction() throws RSSManagerException {
@@ -158,7 +204,7 @@ public class EntityManager {
         activeNestedTransactions.set(activeNestedTransactions.get() - 1);
         /* commit all only if we are at the outer most transaction */
         if (activeNestedTransactions.get() == 0) {
-        	final javax.persistence.EntityManager em = jpaUtil.getJPAEntityManager();
+        	//final javax.persistence.EntityManager em = jpaUtil.getJPAEntityManager();
         	try{
         		/*this.getRSSTransactionManager().getTransactionManager().getTransaction().registerSynchronization(new Synchronization() {
  				    // OpenJPA allows cross-transaction entity managers, which we don't want
@@ -175,13 +221,15 @@ public class EntityManager {
  				    
  				});*/
         		transactions.get().commit();  
+        		transactions.remove();
+        		//getTransactionManager().commit();
         		 
             } catch (Exception e) {
             	throw new RSSManagerException(e);				
 			}finally{
 				jpaUtil.closeEnitityManager();
 			}
-            this.getRSSTransactionManager().commit();
+            //this.getRSSTransactionManager().commit();
         } else if (activeNestedTransactions.get() < 0) {
             activeNestedTransactions.set(0);
         }
