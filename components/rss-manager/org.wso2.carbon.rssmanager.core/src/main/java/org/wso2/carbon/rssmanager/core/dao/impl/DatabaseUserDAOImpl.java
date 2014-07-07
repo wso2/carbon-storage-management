@@ -107,7 +107,7 @@ public class DatabaseUserDAOImpl extends AbstractEntityDAO<Integer, DatabaseUser
         Query query = this.getEntityManager().getJpaUtil().getJPAEntityManager().createQuery(" SELECT us FROM DatabaseUser us  join  us.instances si WHERE us.username = :username AND us.tenantId = :uTenantId AND si.name = :instanceName  AND " + ""
                 + " si.tenantId = :tenantId AND si.environment.name = :evname");
         query.setParameter("username", username);
-        query.setParameter("tenantId", MultitenantConstants.SUPER_TENANT_ID);
+        query.setParameter("tenantId", (long)MultitenantConstants.SUPER_TENANT_ID);
         query.setParameter("evname", environmentName);
         query.setParameter("instanceName", rssInstanceName);
         query.setParameter("uTenantId", tenantId);
@@ -125,7 +125,7 @@ public class DatabaseUserDAOImpl extends AbstractEntityDAO<Integer, DatabaseUser
         Query query = this.getEntityManager().getJpaUtil().getJPAEntityManager().createQuery(" SELECT us FROM DatabaseUser us  join  us.instances si WHERE us.username = :username AND us.tenantId = :uTenantId  AND " + ""
                 + " si.tenantId = :tenantId AND si.environment.name = :evname");
         query.setParameter("username", username);
-        query.setParameter("tenantId", MultitenantConstants.SUPER_TENANT_ID);
+        query.setParameter("tenantId", (long)MultitenantConstants.SUPER_TENANT_ID);
         query.setParameter("evname", environmentName);
         query.setParameter("uTenantId", tenantId);
 
@@ -163,7 +163,7 @@ public class DatabaseUserDAOImpl extends AbstractEntityDAO<Integer, DatabaseUser
                 " SELECT us FROM DatabaseUser us  join  us.instances si, Database db  join  db.userDatabaseEntries ue WHERE  us.tenantId = :uTenantId AND si.name = :instanceName  AND " + ""
                         + " si.tenantId = :tenantId AND si.environment.name = :evname AND ue.databaseUser.id = us.id AND db.name = :dbName");
 
-        query.setParameter("tenantId", MultitenantConstants.SUPER_TENANT_ID);
+        query.setParameter("tenantId", (long)MultitenantConstants.SUPER_TENANT_ID);
         query.setParameter("evname", environmentName);
         query.setParameter("instanceName", rssInstanceName);
         query.setParameter("uTenantId", tenantId);
@@ -223,10 +223,10 @@ public class DatabaseUserDAOImpl extends AbstractEntityDAO<Integer, DatabaseUser
         Query query = this.getEntityManager()
                 .getJpaUtil()
                 .getJPAEntityManager()
-                .createQuery(" SELECT us FROM DatabaseUser us  join  us.instances si, Database db  left join fetch db.userDatabaseEntries WHERE  us.tenantId = :uTenantId AND si.name = :instanceName  AND "  +
+                .createQuery(" SELECT us FROM DatabaseUser us  join  us.instances si, Database db  left join  db.userDatabaseEntries ue WHERE  us.tenantId = :uTenantId AND si.name = :instanceName  AND "  +
                 " si.tenantId = :tenantId AND si.environment.name = :evname  ");
 
-        query.setParameter("tenantId", MultitenantConstants.SUPER_TENANT_ID);
+        query.setParameter("tenantId", (long)MultitenantConstants.SUPER_TENANT_ID);
         query.setParameter("evname", environmentName);
         query.setParameter("instanceName", rssInstanceName);
         query.setParameter("uTenantId", tenantId);

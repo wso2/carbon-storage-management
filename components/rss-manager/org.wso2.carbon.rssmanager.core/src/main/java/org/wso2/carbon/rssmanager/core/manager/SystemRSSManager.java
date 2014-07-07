@@ -137,7 +137,7 @@ public abstract class SystemRSSManager extends AbstractRSSManager {
                     e.getMessage();
             handleException(msg, e);
         } finally {
-            closeJPASession();
+            //closeJPASession();
         }
         return user;
     }
@@ -178,7 +178,7 @@ public abstract class SystemRSSManager extends AbstractRSSManager {
                     e.getMessage();
             handleException(msg, e);
         } finally {
-            closeJPASession();
+            //closeJPASession();
         }
         return database;
     }
@@ -408,28 +408,30 @@ public abstract class SystemRSSManager extends AbstractRSSManager {
         Database database =
                 dao.getDatabase(getEnvironmentName(), rssInstanceName, databaseName, tenantId);
 
-        this.closeJPASession();
+        //this.closeJPASession();
 
         boolean inTx = getEntityManager().beginTransaction();
         isInTx.set(inTx);
 
-        overrideJPASession(dao);
-        database = dao.merge(database);
+        //overrideJPASession(dao);
+        joinTransaction();
+        //database = dao.merge(database);
         if (database.getUserDatabaseEntries() != null &&
                 !database.getUserDatabaseEntries().isEmpty()) {
             for (UserDatabaseEntry entry : database.getUserDatabaseEntries()) {
             	UserDatabasePrivilege privileges = entry.getUserPrivileges();
                 if (privileges != null ) {
-                    this.getRSSDAO().getUserPrivilegesDAO().remove(privileges);
-                    entry.setUserPrivileges(null);
+                   // this.getRSSDAO().getUserPrivilegesDAO().remove(privileges);
+                    //entry.setUserPrivileges(null);
                 }
-                entry.setUserPrivileges(null);
-                this.getRSSDAO().getUserDatabaseEntryDAO().remove(entry);
+                //entry.setUserPrivileges(null);
+               // this.getRSSDAO().getUserDatabaseEntryDAO().remove(entry);
             }
         }
-
-		/*this.getRSSDAO().getUserDatabaseEntryDAO().removeUserDatabaseEntriesByDatabase(database.getId());*/
-        database.setUserDatabaseEntries(null);
+        
+        this.getRSSDAO().getUserPrivilegesDAO().removeUserDatabasePrivilegeEntriesByDatabase(rssInstance, database.getName(), tenantId);
+		this.getRSSDAO().getUserDatabaseEntryDAO().removeUserDatabaseEntriesByDatabase(database.getId());
+        //database.setUserDatabaseEntries(null);
         this.getRSSDAO().getDatabaseDAO().removeDatabase(database);
 
     }
@@ -451,14 +453,15 @@ public abstract class SystemRSSManager extends AbstractRSSManager {
         	String msg = "Database user '" + user.getName() + "' already attached to a Database ";
             throw new EntityAlreadyExistsException(msg);
         }
-        this.closeJPASession();
+        //this.closeJPASession();
 		/* Initiating the transaction */
         boolean inTx = this.getEntityManager().beginTransaction();
         isInTx.set(inTx);
 
 		/*this.getRSSDAO().getUserPrivilegesDAO()
 		    .removeDatabasePrivileges(getEnvironmentName(), username, tenantId);*/
-        overrideJPASession(dao);
+        //overrideJPASession(dao);
+        joinTransaction();
         user = (DatabaseUser) dao.merge(user);
         this.getRSSDAO().getDatabaseUserDAO().removeDatabaseUser(user);
 
@@ -485,7 +488,7 @@ public abstract class SystemRSSManager extends AbstractRSSManager {
         	String msg = "Database '" + entry.getDatabaseName() + "' does not attached User "+ entry.getUsername();
         	throw new EntityNotFoundException(msg);
         }
-        this.closeJPASession();
+        //this.closeJPASession();
         /* Initiating the distributed transaction */
         boolean inTx = getEntityManager().beginTransaction();
         isInTx.set(inTx);
@@ -493,13 +496,16 @@ public abstract class SystemRSSManager extends AbstractRSSManager {
        /* 
         
         this.getRSSDAO().getUserDatabaseEntryDAO().removeUserDatabaseEntriesByUser(userDBEntry.getId());*/
-        overrideJPASession(dao);
-        userDBEntry = (UserDatabaseEntry) dao.merge(userDBEntry);
+        //overrideJPASession(dao);
+        joinTransaction();
+        //userDBEntry = (UserDatabaseEntry) dao.merge(userDBEntry);
         if (userDBEntry.getUserPrivileges() != null) {
             this.getRSSDAO().getUserPrivilegesDAO().remove(userDBEntry.getUserPrivileges());
+            userDBEntry.setUserPrivileges(null);
         }
 
         dao.remove(userDBEntry);
+        database.getUserDatabaseEntries().remove(userDBEntry);
         return rssInstance;
     }
 
@@ -510,10 +516,15 @@ public abstract class SystemRSSManager extends AbstractRSSManager {
         RSSInstanceDAO instanceDAO = (RSSInstanceDAO) EntityType.RSSInstance.getEntityDAO(getEntityManager());
         RSSInstance serverEntity = instanceDAO.getRSSInstance(getEnvironmentName(), rssInstance.getName(), MultitenantConstants.SUPER_TENANT_ID);
 
-        closeJPASession();
+       //closeJPASession();
 
         boolean inTx = getEntityManager().beginTransaction();
+       	//boolean inTx = getEntityManager().getAndSetTransaction();
         isInTx.set(inTx);
+        //instanceDAO.overrideJPASession(getEntityManager().getJpaUtil().getJPAEntityManager());
+        //getEntityManager().beginTransactionOnly();
+        joinTransaction();
+        serverEntity = instanceDAO.merge(serverEntity);
         database.setName(qualifiedDatabaseName);
         database.setRssInstanceName(rssInstance.getName());
         String databaseUrl = RSSManagerUtil.composeDatabaseUrl(rssInstance, qualifiedDatabaseName);
@@ -525,6 +536,7 @@ public abstract class SystemRSSManager extends AbstractRSSManager {
         database.setRssInstance(serverEntity);
         database.setTenantId(tenantId);
         this.getRSSDAO().getDatabaseDAO().insert(database);
+        //getEntityManager().getJpaUtil().getJPAEntityManager().flush();
         return database;
 
     }
@@ -565,7 +577,7 @@ public abstract class SystemRSSManager extends AbstractRSSManager {
         closeJPASession();
 
 		/* Initiating the distributed transaction */
-        user.setInstances(new ArrayList(servers));
+        user.setInstances(servers);
         boolean inTx = getEntityManager().beginTransaction();
         isInTx.set(inTx);
         final int tenantId = RSSManagerUtil.getTenantId();
@@ -613,10 +625,10 @@ public abstract class SystemRSSManager extends AbstractRSSManager {
 
         inTx = getEntityManager().beginTransaction();
         isInTx.set(inTx);
-
+        joinTransaction();
         UserDatabasePrivilege privilegeEntity = new UserDatabasePrivilege();
         RSSManagerUtil.createDatabasePrivilege(privileges, privilegeEntity);
-
+        
         //ntry.setUserPrivileges(null);
         entry.setUserPrivileges(privilegeEntity);
         privilegeEntity.setUserDatabaseEntry(entry);

@@ -31,6 +31,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
@@ -309,6 +310,7 @@ public final class RSSManagerUtil {
         return serverUrl;
     }
 
+
     public static synchronized void cleanupResources(ResultSet rs, PreparedStatement stmt,
                                                      Connection conn) {
         if (rs != null) {
@@ -414,6 +416,7 @@ public final class RSSManagerUtil {
 		return dbURL.toString();
 	}
     
+    
     /**create Info DTOs from entities**/
     
     public static void createRSSInstanceInfo(RSSInstanceInfo info, RSSInstance entity){
@@ -453,7 +456,7 @@ public final class RSSManagerUtil {
     	}
     	info.setName(entity.getName());
     	info.setPassword(entity.getPassword());
-    	List<RSSInstance> instances = entity.getInstances();
+    	Set<RSSInstance> instances = entity.getInstances();
     	if(instances != null && !instances.isEmpty()){
     		String instanceName = instances.iterator().next().getName();
     		if(RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equalsIgnoreCase(entity.getType())){

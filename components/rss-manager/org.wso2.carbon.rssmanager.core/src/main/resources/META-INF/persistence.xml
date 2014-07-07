@@ -4,9 +4,8 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 	version="2.0">
 	<persistence-unit name="sample" transaction-type="JTA">
-		<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
-		<jta-data-source>java:/DefaultDS</jta-data-source>
-		<non-jta-data-source>java:/NonManaged</non-jta-data-source>
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<jta-data-source>MetadataRepoDS</jta-data-source>
 		<class>org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate</class>
 		<class>org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry</class>
 		<class>org.wso2.carbon.rssmanager.core.dto.common.UserDatabasePrivilege</class>
@@ -17,7 +16,7 @@
 		<class>org.wso2.carbon.rssmanager.core.environment.Environment</class>
 
 		<!-- <class>org.jpa.generic.persistence.Merchant</class> -->
-		<properties>
+		<!-- <properties>
 			<property name="openjpa.jdbc.DBDictionary" value="batchLimit=25" />
 			<property name="openjpa.jdbc.UpdateManager" value="operation-order" />
 			<property name="openjpa.Log" value="SQL=TRACE" />
@@ -33,6 +32,6 @@
 			<property name="openjpa.ConnectionFactoryMode" value="managed" />
 			<property name="openjpa.TransactionMode" value="managed" />
 
-		</properties>
+		</properties> -->
 	</persistence-unit>
 </persistence> 

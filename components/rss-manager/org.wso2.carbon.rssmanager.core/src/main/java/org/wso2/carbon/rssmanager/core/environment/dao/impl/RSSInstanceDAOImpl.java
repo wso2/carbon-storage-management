@@ -76,7 +76,7 @@ public class RSSInstanceDAOImpl extends AbstractEntityDAO<Integer, RSSInstance> 
                 .getJPAEntityManager()
                 .createQuery(" DELETE FROM RSSInstance ri  join  ri.environment  WHERE ri.name = :name AND ri.tenantId = :tenantId AND ri.environment.name = :evname");
         query.setParameter("name", name);
-        query.setParameter("tenantId", tenantId);
+        query.setParameter("tenantId", (long)tenantId);
         query.setParameter("evname", environmentName);
 
         query.executeUpdate();
@@ -217,7 +217,7 @@ public class RSSInstanceDAOImpl extends AbstractEntityDAO<Integer, RSSInstance> 
     public RSSInstance getRSSInstance(String environmentName, String instanceName, int tenantId) {
         Query query = this.getEntityManager().getJpaUtil().getJPAEntityManager().createQuery(" SELECT ri FROM RSSInstance ri  join  ri.environment en WHERE ri.name = :name AND ri.tenantId = :tenantId AND en.name = :evname");
         query.setParameter("name", instanceName);
-        query.setParameter("tenantId", tenantId);
+        query.setParameter("tenantId", (long)tenantId);
         query.setParameter("evname", environmentName);
 
         RSSInstance instance = null;
@@ -231,7 +231,7 @@ public class RSSInstanceDAOImpl extends AbstractEntityDAO<Integer, RSSInstance> 
 
     public RSSInstance[] getRSSInstances(String environmentName, int tenantId) {
         Query query = this.getEntityManager().getJpaUtil().getJPAEntityManager().createQuery(" SELECT ri FROM RSSInstance ri  join  ri.environment en WHERE  ri.tenantId = :tenantId AND en.name = :evname");
-        query.setParameter("tenantId", tenantId);
+        query.setParameter("tenantId", (long)tenantId);
         query.setParameter("evname", environmentName);
 
         RSSInstance[] instances = new RSSInstance[0];
@@ -245,7 +245,7 @@ public class RSSInstanceDAOImpl extends AbstractEntityDAO<Integer, RSSInstance> 
 
     public RSSInstance[] getSystemRSSInstances(String environmentName, int tenantId) {
         Query query = this.getEntityManager().getJpaUtil().getJPAEntityManager().createQuery(" SELECT ri FROM RSSInstance ri  join  ri.environment en WHERE ri.instanceType = :instanceType AND ri.tenantId = :tenantId AND en.name = :evname");
-        query.setParameter("tenantId", MultitenantConstants.SUPER_TENANT_ID);
+        query.setParameter("tenantId", (long)MultitenantConstants.SUPER_TENANT_ID);
         query.setParameter("evname", environmentName);
         query.setParameter("instanceType", RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
 
@@ -260,7 +260,7 @@ public class RSSInstanceDAOImpl extends AbstractEntityDAO<Integer, RSSInstance> 
     
     public RSSInstance[] getUserDefinedRSSInstances(String environmentName, int tenantId) {
         Query query = this.getEntityManager().getJpaUtil().getJPAEntityManager().createQuery(" SELECT ri FROM RSSInstance ri  join  ri.environment en WHERE ri.instanceType = :instanceType AND ri.tenantId = :tenantId AND en.name = :evname");
-        query.setParameter("tenantId", tenantId);
+        query.setParameter("tenantId", (long)tenantId);
         query.setParameter("evname", environmentName);
         query.setParameter("instanceType", RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
 
