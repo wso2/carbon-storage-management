@@ -8,7 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Version;
@@ -32,7 +32,7 @@ public class UserDatabasePrivilege extends AbstractEntity<Integer, UserDatabaseP
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "USER_DATABASE_PRIVILEGE_TABLE_GEN")
     private Integer id;
 
-    @ManyToOne(cascade = {CascadeType.DETACH}, fetch = FetchType.EAGER)
+    @OneToOne(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @JoinColumn(name = "USER_DATABASE_ENTRY_ID", nullable = false)
     private UserDatabaseEntry userDatabaseEntry;
 

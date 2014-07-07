@@ -20,6 +20,7 @@
 package org.wso2.carbon.rssmanager.core.dto.restricted;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -89,7 +90,7 @@ public class DatabaseUser extends AbstractEntity<Integer, DatabaseUser>{
     @ManyToMany( cascade={CascadeType.PERSIST,CascadeType.REFRESH,CascadeType.MERGE}, fetch=FetchType.EAGER)
     @OrderBy("name ASC")
     @JoinTable(name = "RM_USER_INSTANCE_ENTRY", joinColumns = { @JoinColumn(name = "DATABASE_USER_ID") }, inverseJoinColumns = { @JoinColumn(name = "RSS_INSTANCE_ID") })
-    private List<RSSInstance> instances;
+    private Set<RSSInstance> instances;
 
 	public DatabaseUser(String name, String password, String rssInstanceName, String type) {
 		this.username = name;
@@ -177,11 +178,11 @@ public class DatabaseUser extends AbstractEntity<Integer, DatabaseUser>{
 		this.userDatabaseEntries = userDatabaseEntries;
 	}
 
-	public List<RSSInstance> getInstances() {
+	public Set<RSSInstance> getInstances() {
 		return instances;
 	}
 
-	public void setInstances(List<RSSInstance> instances) {
+	public void setInstances(Set<RSSInstance> instances) {
 		this.instances = instances;
 	}
 	

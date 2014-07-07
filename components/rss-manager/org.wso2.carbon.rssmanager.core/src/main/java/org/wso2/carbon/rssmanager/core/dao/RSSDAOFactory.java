@@ -29,6 +29,7 @@ import org.wso2.carbon.rssmanager.core.config.datasource.JNDILookupDefinition;
 import org.wso2.carbon.rssmanager.core.config.datasource.RDBMSConfig;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dao.impl.AbstractRSSDAO;
+import org.wso2.carbon.rssmanager.core.dao.impl.h2.H2RSSDAOImpl;
 import org.wso2.carbon.rssmanager.core.dao.impl.mysql.MySQLRSSDAOImpl;
 import org.wso2.carbon.rssmanager.core.dao.impl.oracle.OracleRSSDAOImpl;
 import org.wso2.carbon.rssmanager.core.dao.impl.postgres.PostgresRSSDAOImpl;
@@ -66,6 +67,9 @@ public class RSSDAOFactory {
             case POSTGRES:
                 rssDAO = new PostgresRSSDAOImpl(entityManager);
                 break;
+            case H2:
+            	rssDAO = new H2RSSDAOImpl(entityManager);
+            	break;
             case UNKNOWN:
                 throw new IllegalArgumentException("Unsupported RSS DAO type '" + type +
                         "' provided");

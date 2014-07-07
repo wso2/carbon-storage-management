@@ -83,6 +83,10 @@ public abstract class AbstractRSSManager implements RSSManager {
     protected void closeJPASession() {
         getEntityManager().getJpaUtil().closeEnitityManager();
     }
+    
+    protected void joinTransaction(){
+		getEntityManager().getJpaUtil().getJPAEntityManager().joinTransaction();
+	}
 
     protected void overrideJPASession(EntityBaseDAO dao) {
         dao.overrideJPASession(getEntityManager().getJpaUtil().getJPAEntityManager());
@@ -149,7 +153,7 @@ public abstract class AbstractRSSManager implements RSSManager {
         }
         return dsWrapper.getConnection(dbName);
     }
-    
+        
     protected DataSource getDataSource(String rssInstanceName,
                                        String dbName) throws RSSManagerException {
     	 RSSInstanceDSWrapper dsWrapper =

@@ -52,10 +52,10 @@ public class MySQLUserPrivilegesDAOImpl extends
 		                  .createQuery(" DELETE FROM UserDatabasePrivilege pr join  pr.userDatabaseEntry pe WHERE pe.databaseUser.username = :username AND pe.databaseUser = :uTenantId AND pe.databaseUser.instances.id = :instanceId  AND " +
 		                  " pe.databaseUser.instances.tenantId = :tenantId AND pe.databaseUser.instances.environment.name = :evname  ");
 
-		query.setParameter("tenantId", tenantId);
+		query.setParameter("tenantId", (long)tenantId);
 		query.setParameter("evname", environmentName);
 		query.setParameter("instanceId", rssInsanceId);
-		query.setParameter("uTenantId", tenantId);
+		query.setParameter("uTenantId", (long)tenantId);
 		query.setParameter("username", username);
 		
 		query.executeUpdate();
@@ -67,9 +67,9 @@ public class MySQLUserPrivilegesDAOImpl extends
 		                  .createQuery(" DELETE FROM UserDatabasePrivilege pr join  pr.userDatabaseEntry pe WHERE pe.databaseUser.username = :username AND pe.databaseUser = :uTenantId  AND " +
 		                  " pe.databaseUser.instances.tenantId = :tenantId AND pe.databaseUser.instances.environment.name = :evname  ");
 
-		query.setParameter("tenantId", tenantId);
+		query.setParameter("tenantId", (long)tenantId);
 		query.setParameter("evname", environmentName);
-		query.setParameter("uTenantId", tenantId);
+		query.setParameter("uTenantId", (long)tenantId);
 		query.setParameter("username", username);
 		
 		query.executeUpdate();
@@ -93,7 +93,7 @@ public class MySQLUserPrivilegesDAOImpl extends
 		                 +" AND si.tenantId = :tenantId AND si.environment.name = :evname ) "
 		                	);
 
-		query.setParameter("tenantId", MultitenantConstants.SUPER_TENANT_ID);
+		query.setParameter("tenantId", (long)MultitenantConstants.SUPER_TENANT_ID);
 		query.setParameter("evname", environmentName);
 		query.setParameter("instanceName", rssInstanceName);
 		query.setParameter("uTenantId", tenantId);
@@ -118,11 +118,11 @@ public class MySQLUserPrivilegesDAOImpl extends
 		Query query = this.getEntityManager()
 		                  .getJpaUtil()
 		                  .getJPAEntityManager()
-		                  .createQuery(" DELETE FROM UserDatabasePrivilege pr join  pr.userDatabaseEntry pe WHERE pe.database.name = :dbName AND pe.database.tenantId = :dTenantId AND pe.database.rssInstance.id = :instanceId  ");
+		                  .createQuery(" DELETE FROM UserDatabasePrivilege pe WHERE pe.userDatabaseEntry.database.name = :dbName AND pe.userDatabaseEntry.database.tenantId = :dTenantId AND pe.userDatabaseEntry.database.rssInstance.id = :instanceId  ");
 
-		query.setParameter("tenantId", tenantId);
+		//query.setParameter("tenantId", (long)tenantId);
 		query.setParameter("instanceId", rssInstance.getId());
-		query.setParameter("dTenantId", tenantId);
+		query.setParameter("dTenantId", (long)tenantId);
 		query.setParameter("dbName", dbName);
 
 		query.executeUpdate();

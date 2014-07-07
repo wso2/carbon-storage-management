@@ -159,7 +159,7 @@ public class PersistenceManager {
 				}
 				addProperty(jpaProp, JPAProperty.PROVIDER, element,false);
 				//addProperty(jpaProp, JPAProperty.JTA_DATA_SOURCE, element,false);
-				addSameTypeList(jpaProp, JPAProperty.ENTITY, element);
+				//addSameTypeList(jpaProp, JPAProperty.ENTITY, element);
 				addPropertyList(jpaProp, JPAProperty.PROPERTIES, element);
 				persistenceUnits.put(persistentUnitName, jpaProp);
 				
@@ -184,6 +184,7 @@ public class PersistenceManager {
 				Map<String, Object> entryMap = entry.getValue();
 				entryMap.put(JPAProperty.JTA_DATA_SOURCE.getExpression(), dataSourceName);
 				EntityManagerFactory emf = Persistence.createEntityManagerFactory(unitName, entryMap);
+				//EntityManagerFactory emf = HibernateUtil.getEntityManagerFactory(unitName, entryMap);
 				addEMF(unitName, emf);
 				System.out.println(entry.getValue().toString());
 				Map<String, Object> pprops = emf.getProperties();

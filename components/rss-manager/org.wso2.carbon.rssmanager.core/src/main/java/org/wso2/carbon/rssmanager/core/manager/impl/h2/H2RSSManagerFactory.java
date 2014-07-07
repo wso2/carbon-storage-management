@@ -36,7 +36,7 @@ public class H2RSSManagerFactory extends AbstractRSSManagerFactory {
     }
 
     public UserDefinedRSSManager getUserDefinedRSSManager() {
-        return null;
+        return new H2UserDefinedRSSManager(getEnvironment(), getConfig());
     }
     
 }

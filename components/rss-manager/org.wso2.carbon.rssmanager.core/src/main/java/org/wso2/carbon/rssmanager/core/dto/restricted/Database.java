@@ -20,6 +20,7 @@
 package org.wso2.carbon.rssmanager.core.dto.restricted;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -81,7 +82,7 @@ public class Database extends AbstractEntity<Integer, Database>{
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "database", 
             orphanRemoval = true, fetch=FetchType.EAGER)
-    private List<UserDatabaseEntry> userDatabaseEntries; 
+    private Set<UserDatabaseEntry> userDatabaseEntries; 
 
     public Database(int id, String name, String rssInstanceName, String url, String type) {
         this.id = id;
@@ -143,11 +144,11 @@ public class Database extends AbstractEntity<Integer, Database>{
 		this.tenantId = tenantId;
 	}
 
-	public List<UserDatabaseEntry> getUserDatabaseEntries() {
+	public Set<UserDatabaseEntry> getUserDatabaseEntries() {
 		return userDatabaseEntries;
 	}
 
-	public void setUserDatabaseEntries(List<UserDatabaseEntry> userDatabaseEntries) {
+	public void setUserDatabaseEntries(Set<UserDatabaseEntry> userDatabaseEntries) {
 		this.userDatabaseEntries = userDatabaseEntries;
 	}
 
