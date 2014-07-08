@@ -150,7 +150,7 @@ public class H2SystemRSSManager extends SystemRSSManager {
             removeDatabase(isInTx, rssInstance.getName(), databaseName, rssInstance);
             
             conn = this.getConnection(rssInstance.getName(), databaseName);
-            String dropDB = "DROP ALL OBJECTS";
+            String dropDB = "DROP ALL OBJECTS DELETE FILES";
             dropDBStmt = conn.prepareStatement(dropDB);
             dropDBStmt.execute();
 
@@ -321,6 +321,7 @@ public class H2SystemRSSManager extends SystemRSSManager {
     	AtomicBoolean isInTx = new AtomicBoolean(false);
         Connection conn = null;
         PreparedStatement stmt = null;
+        PreparedStatement dropTableStmt = null;
 
         try {
 
@@ -336,6 +337,10 @@ public class H2SystemRSSManager extends SystemRSSManager {
           * DROP, ALTER operations within a JTA transaction since those operations are committed
           * implicitly */
             stmt.execute();
+            
+            String dropTable = "DROP TABLE IF EXISTS "+entry.getDatabaseName()+"_"+entry.getUsername();
+            dropTableStmt = conn.prepareStatement(dropTable);
+            dropTableStmt.execute();
 
             /* Committing the transaction */
             if (isInTx.get()) {

@@ -70,7 +70,7 @@ public class UserDatabaseEntry extends AbstractEntity<Integer, UserDatabaseEntry
 	@Transient
     private Integer databaseId;
 	
-	@ManyToOne(cascade={CascadeType.ALL}, fetch=FetchType.EAGER)
+	@ManyToOne(cascade={CascadeType.PERSIST,CascadeType.REFRESH,CascadeType.MERGE}, fetch=FetchType.EAGER)
     @JoinColumn(name = "DATABASE_ID", nullable = false)
     private Database database;
 	
