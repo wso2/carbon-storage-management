@@ -379,10 +379,11 @@ public class EnvironmentManager {
 				
 				String key = instanceFromDB.getName();
 				RSSInstance instanceFromBoth = rssInstancesMapFromConfig.get(key);
-				instanceFromBoth.setTenantId((long) tenantId);
-				instanceFromBoth.setEnvironment(managedEnv);
+				
 				if(instanceFromBoth != null){
-					//TODO apply changes
+					instanceFromBoth.setTenantId((long) tenantId);
+					instanceFromBoth.setEnvironment(managedEnv);
+					RSSManagerUtil.applyInstanceChanges(instanceFromDB, instanceFromBoth);
 					
 				}
 				rssInstanceMapFromDB.put((managedEnv.getName() + instanceFromDB.getName() + tenantId), instanceFromDB);
@@ -444,6 +445,7 @@ public class EnvironmentManager {
 			this.closeJPASession();
 		}
 	}
+	
 
 	public void handleException(String msg, Exception e) throws RSSManagerException {
 		log.error(msg, e);

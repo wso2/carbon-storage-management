@@ -288,7 +288,8 @@ public final class RSSManagerUtil {
     private static String createDatabaseUrl(String dbName, String dbType, String serverUrl){
         if(serverUrl != null && ! serverUrl.isEmpty()){
             String databaseUrl;
-            if(RSSManagerConstants.RSSManagerProviderTypes.RM_PROVIDER_TYPE_MYSQL.equals(dbType) || RSSManagerConstants.RSSManagerProviderTypes.RM_PROVIDER_TYPE_POSTGRES.equals(dbType)){
+            if(RSSManagerConstants.RSSManagerProviderTypes.RM_PROVIDER_TYPE_MYSQL.equals(dbType) || RSSManagerConstants.RSSManagerProviderTypes.RM_PROVIDER_TYPE_POSTGRES.equals(dbType)
+            		|| RSSManagerConstants.RSSManagerProviderTypes.RM_PROVIDER_TYPE_H2.equals(dbType)){
                 if (serverUrl.contains("?")) {
                     databaseUrl = serverUrl.substring(0, serverUrl.lastIndexOf("?")).concat("/"+dbName+"?").concat(serverUrl.substring(serverUrl.lastIndexOf("?") + 1));
                 } else if (serverUrl.endsWith("/")) {
@@ -416,6 +417,35 @@ public final class RSSManagerUtil {
 		return dbURL.toString();
 	}
     
+    public static void applyInstanceChanges(RSSInstance instanceFromDB, RSSInstance instanceFromConfig){
+		if(!instanceFromDB.getServerURL().equalsIgnoreCase(instanceFromConfig.getServerURL())){
+			instanceFromDB.setServerURL(instanceFromConfig.getServerURL());		
+		}
+		
+		if(!instanceFromDB.getAdminPassword().equalsIgnoreCase(instanceFromConfig.getAdminPassword())){
+			instanceFromDB.setAdminPassword(instanceFromConfig.getAdminPassword());
+		}
+		
+		if(!instanceFromDB.getAdminUserName().equalsIgnoreCase(instanceFromConfig.getAdminUserName())){
+			instanceFromDB.setAdminUserName(instanceFromConfig.getAdminUserName());
+		}
+		
+		if(!instanceFromDB.getDbmsType().equalsIgnoreCase(instanceFromConfig.getDbmsType())){
+			instanceFromDB.setDbmsType(instanceFromConfig.getDbmsType());
+		}
+		
+		if(!instanceFromDB.getDriverClassName().equalsIgnoreCase(instanceFromConfig.getDriverClassName())){
+			instanceFromDB.setDriverClassName(instanceFromConfig.getDriverClassName());
+		}
+		
+		if(!instanceFromDB.getInstanceType().equalsIgnoreCase(instanceFromConfig.getInstanceType())){
+			instanceFromDB.setInstanceType(instanceFromConfig.getInstanceType());
+		}
+		
+		if(!instanceFromDB.getServerCategory().equalsIgnoreCase(instanceFromConfig.getServerCategory())){
+			instanceFromDB.setServerCategory(instanceFromConfig.getServerCategory());
+		}
+	}
     
     /**create Info DTOs from entities**/
     
