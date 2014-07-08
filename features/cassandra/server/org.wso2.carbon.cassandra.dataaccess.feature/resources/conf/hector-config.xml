@@ -20,7 +20,7 @@
 
 		<!-- Node list of Cassandra cluster should be specified as a comma separated list
 	     	eg. <Nodes>192.168.0.2:9160,192.168.0.3:9160,192.168.0.4:9160</Nodes>	-->
-        	<Nodes>localhost:9160</Nodes>
+        	<Nodes externalCassandra="false">localhost:9160</Nodes>
 
 		<!-- Set 'false' to enable autodiscovery of nodes on the ring at startup 
 	     	and at intervals (i.e. delay property) thereafter -->
