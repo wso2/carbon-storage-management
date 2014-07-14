@@ -21,6 +21,7 @@ package org.wso2.carbon.cassandra.dataaccess;
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.xml.namespace.QName;
 
@@ -74,12 +75,22 @@ public class ClusterConfigurationFactory {
 
             OMElement nodesElement = cluster.getFirstChildWithName(new QName("Nodes"));
             if (nodesElement != null) {
+                Boolean externalCassandra=Boolean.parseBoolean(nodesElement.getAttributeValue(new QName("externalCassandra")).trim());
                 String nodesString = nodesElement.getText();
                 if (nodesString != null && !"".endsWith(nodesString.trim())) {
-                    clusterConfiguration.setNodesString(nodesString.trim());
-                    String nodes[] = nodesString.split(",");
-                    for (String node : nodes) {
-                        clusterConfiguration.addNode(node);
+                    if(externalCassandra) {
+                        clusterConfiguration.setNodesString(nodesString.trim());
+                        String nodes[] = nodesString.split(",");
+                        for (String node : nodes) {
+                            clusterConfiguration.addNode(node);
+                        }
+                    } else {
+                        String host=nodesString.split(":")[0];
+                        int port=Integer.parseInt(nodesString.split(":")[1].trim());
+                        port=port+getPortOffset();
+                        String newNodeString=host+":"+port;
+                        clusterConfiguration.setNodesString(newNodeString.trim());
+                        clusterConfiguration.addNode(newNodeString.trim());
                     }
                 }
             }
@@ -105,5 +116,15 @@ public class ClusterConfigurationFactory {
         }
 
         return clusterConfiguration;
+    }
+
+    /**
+     * Read Carbon Server port offset
+     * @return offset number
+     */
+    private static int getPortOffset() {
+        String portOffset = System.getProperty("portOffset",
+                CarbonUtils.getServerConfiguration().getFirstProperty("Ports.Offset"));
+        return Integer.parseInt(portOffset);
     }
 }
