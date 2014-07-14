@@ -3,7 +3,8 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 	version="2.0">
 	<persistence-unit name="sample" transaction-type="JTA">
-		<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
+		<!--provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider-->
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 
 		<class>org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate</class>
 		<class>org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry</class>
@@ -15,7 +16,20 @@
 		<class>org.wso2.carbon.rssmanager.core.environment.Environment</class>
 
 		<properties>
-			<property name="openjpa.ConnectionFactoryMode" value="managed" />
+			
+			<property name="eclipselink.transaction.join-existing" value="true" />
+			<property name="eclipselink.target-server" value="com.atomikos.eclipselink.platform.AtomikosPlatform" />
+			<property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
+			 <property name="eclipselink.logging.level.sql" value="FINE"/>
+ 			<property name="eclipselink.logging.parameters" value="true"/>
+			<property name="eclipselink.target-database" value="org.eclipse.persistence.platform.database.HSQLPlatform"/>
+			<property name="eclipselink.jdbc.batch-writing" value="JDBC"/>
+
+
+
+
+
+			<!--property name="openjpa.ConnectionFactoryMode" value="managed" />
 			<property name="openjpa.TransactionMode" value="managed" />
 			<property name="openjpa.ManagedRuntime"	value="jndi(TransactionManagerName=java:comp/TransactionManager)" />
 			<property name="openjpa.ConnectionDriverName" value="org.h2.jdbcx.JdbcDataSource" />
@@ -31,7 +45,7 @@
 			<property name="openjpa.QueryCompilationCache" value="all"/>
                         <property name="openjpa.OrphanedKeyAction" value="exception"/>
                         <property name="openjpa.InverseManager" value="true"/>
-                        <property name="openjpa.FlushBeforeQueries" value="false"/>
+                        <property name="openjpa.FlushBeforeQueries" value="false"/-->
 			<!--property name="openjpa.AutoClear" value="all"/>
 			<property name="openjpa.jdbc.TransactionIsolation" value="repeatable-read"/>
 			<property name="openjpa.BrokerImpl" value="non-finalizing" />
