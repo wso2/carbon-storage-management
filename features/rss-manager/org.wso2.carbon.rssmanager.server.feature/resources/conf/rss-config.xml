@@ -35,23 +35,24 @@
   	<!-- 'SYSTEM' instances are predefined constant server instances to be used by users,
        	the other type is User Defined RSS instances, which are defined by individual tenants -->
         <Environments>
-            <Environment>
+	   <Environment>
                 <Name>DEFAULT</Name>
+                <DbmsType>H2</DbmsType>
                 <RSSInstances>
-                    <!--RSSInstance>
+                    <RSSInstance>
                         <Name>WSO2RSS1</Name>
                         <InstanceType>SYSTEM</InstanceType>
-                        <DbmsType>MYSQL</DbmsType>
+                        <DbmsType>H2</DbmsType>
                         <ServerCategory>LOCAL</ServerCategory>
                         <DataSourceConfiguration>
-			    <Definition>
-                                <Url>jdbc:mysql://localhost:3306</Url>
+                            <Definition>
+                                <Url>jdbc:h2:repository/database</Url>
                                 <Username>root</Username>
                                 <Password>root</Password>
-                                <DriverClassName>com.mysql.jdbc.Driver</DriverClassName>
+                                <DriverClassName>org.h2.Driver</DriverClassName>
                             </Definition>
-		        </DataSourceConfiguration>
-                    </RSSInstance-->
+                        </DataSourceConfiguration>
+                    </RSSInstance>
                 </RSSInstances>
              </Environment>
         </Environments>
