@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.xml.namespace.QName;
+import java.util.Iterator;
 
 /**
  * A factory method to create a <code>ClusterConfiguration</code> instance from the XML configuration
@@ -73,12 +74,26 @@ public class ClusterConfigurationFactory {
                 }
             }
 
+            /**
+             * If externalCassandra attribute is not set in the hector configuration, it will assign default value as true
+             *
+             */
             OMElement nodesElement = cluster.getFirstChildWithName(new QName("Nodes"));
             if (nodesElement != null) {
-                Boolean externalCassandra=Boolean.parseBoolean(nodesElement.getAttributeValue(new QName("externalCassandra")).trim());
+                Boolean isExternalCassandra=false;
+                Iterator iterator=nodesElement.getAllAttributes();
+                String externalCassandra="";
+                while (iterator.hasNext()) {
+                    externalCassandra=nodesElement.getAttributeValue(new QName("externalCassandra"));
+                }
+                if(externalCassandra!=null && !"".equals(externalCassandra)) {
+                    isExternalCassandra=Boolean.parseBoolean(externalCassandra.trim());
+                } else {
+                    isExternalCassandra=true;
+                }
                 String nodesString = nodesElement.getText();
                 if (nodesString != null && !"".endsWith(nodesString.trim())) {
-                    if(externalCassandra) {
+                    if(isExternalCassandra) {
                         clusterConfiguration.setNodesString(nodesString.trim());
                         String nodes[] = nodesString.split(",");
                         for (String node : nodes) {
