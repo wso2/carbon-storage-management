@@ -20,7 +20,6 @@
 package org.wso2.carbon.rssmanager.core.manager;
 
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
-import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate;
 import org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry;
 import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
@@ -69,8 +68,6 @@ public interface RSSManager {
     DatabasePrivilegeSet getUserDatabasePrivileges(String rssInstanceName, String databaseName,
                                                    String username) throws RSSManagerException;
 
-    Database[] getDatabasesRestricted() throws RSSManagerException;
-
-    boolean deleteTenantRSSData() throws RSSManagerException;
+    DatabaseUser editDatabaseUser(String environmentName,DatabaseUser databaseUser) throws RSSManagerException;
 
 }

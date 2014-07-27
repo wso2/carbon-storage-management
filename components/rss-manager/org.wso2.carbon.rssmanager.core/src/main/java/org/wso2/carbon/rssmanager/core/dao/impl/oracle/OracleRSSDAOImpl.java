@@ -34,5 +34,4 @@ public class OracleRSSDAOImpl extends AbstractRSSDAO {
     public UserPrivilegesDAO getUserPrivilegesDAO() {
         return new MySQLUserPrivilegesDAOImpl(this.getEntityManager());
     }
-    
 }

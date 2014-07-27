@@ -33,6 +33,7 @@
     String flag = request.getParameter("flag");
     String rssInstanceName = request.getParameter("rssInstanceName");
     String envName = request.getParameter("envName");
+    String instanceType = request.getParameter("instanceType");
 
     RSSManagerClient client;
     String msg;
@@ -59,7 +60,7 @@
             DatabaseInfo db = new DatabaseInfo();
             db.setName(databaseName);
             db.setRssInstanceName(rssInstanceName);
-
+            db.setType(instanceType.trim());
             client.createDatabase(envName, db);
 
             PrintWriter pw = response.getWriter();
@@ -76,8 +77,7 @@
         }
     } else if ("drop".equals(flag)) {
         try {
-            client.dropDatabase(envName,rssInstanceName, databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
-
+            client.dropDatabase(envName,rssInstanceName, databaseName, instanceType.trim());
             PrintWriter pw = response.getWriter();
             msg = "Database '" + databaseName + "' has been successfully dropped";
             xml = "<Response><Message>" + msg + "</Message><Environment>" + envName + "</Environment></Response>" ;

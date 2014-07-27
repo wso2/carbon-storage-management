@@ -21,8 +21,6 @@ package org.wso2.carbon.rssmanager.core.dao;
 
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
-import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate;
-import org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry;
 import org.wso2.carbon.rssmanager.core.dto.common.UserDatabasePrivilege;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
@@ -41,21 +39,11 @@ public interface UserPrivilegesDAO extends EntityBaseDAO<Integer, UserDatabasePr
     
     void removeDatabasePrivileges(String environmentName, String username,
                                   int tenantId) throws RSSDAOException;
-
-   /* public DatabasePrivilegeSet getUserDatabasePrivileges(String environmentName,
-                                                          int rssInstanceId,
-                                                          String databaseName, String username,
-                                                          int tenantId) throws RSSDAOException;*/
     
     public UserDatabasePrivilege getUserDatabasePrivileges(String environmentName, String rssInstanceName,
                                                            String databaseName, String username,
                                                            int tenantId) throws RSSDAOException;    
     void addUserDatabasePrivileges(UserDatabasePrivilege entity) throws RSSDAOException;
-
-    /*@Deprecated
-    public void addUserDatabasePrivileges(String environmentName, int id,
-                                          DatabasePrivilegeSet privileges,
-                                          int tenantId) throws RSSDAOException;*/
 
     public void removeUserDatabasePrivilegeEntriesByDatabase(RSSInstance rssInstance, String dbName,
                                                              int tenantId) throws RSSDAOException;

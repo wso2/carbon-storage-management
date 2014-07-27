@@ -30,24 +30,19 @@ public interface DatabaseUserDAO extends EntityBaseDAO<Integer, DatabaseUser>{
     void addDatabaseUser(String environmentName, RSSInstance rssInstance, DatabaseUser user,
                          int tenantId) throws RSSDAOException;
 	
-	void addDatabaseUser(DatabaseUser user, int tenantId) throws RSSDAOException;
+	void addDatabaseUser(DatabaseUser user) throws RSSDAOException;
 
     void removeDatabaseUser(DatabaseUser user) throws RSSDAOException;
-    
-    @Deprecated
-    void removeDatabaseUser(String environmentName, String rssInstanceName, String username,
-                            int tenantId) throws RSSDAOException;
 
-    boolean isDatabaseUserExist(String environmentName, String rssInstanceName, String username,
-                                int tenantId) throws RSSDAOException;
-
+    boolean isDatabaseUserExist(String environmentName, String username,
+                                int tenantId,String instanceType) throws RSSDAOException;
     DatabaseUser getDatabaseUser(String environmentName, String rssInstanceName, String username,
-                                 int tenantId) throws RSSDAOException;
+                                 int tenantId,String instanceType) throws RSSDAOException;
     
     DatabaseUser getDatabaseUser(String environmentName,
-                                 String username, int tenantId) throws RSSDAOException;
+                                 String username, int tenantId, String instanceType) throws RSSDAOException;
 
-    DatabaseUser[] getDatabaseUsers(String environmentName, int tenantId, String databaseUserType) throws RSSDAOException;
+    DatabaseUser[] getDatabaseUsers(String environmentName, int tenantId, String instanceType) throws RSSDAOException;
 
     DatabaseUser[] getDatabaseUsersByRSSInstance(String environmentName, String rssInstanceName,
                                                  int tenantId) throws RSSDAOException;
@@ -55,15 +50,7 @@ public interface DatabaseUserDAO extends EntityBaseDAO<Integer, DatabaseUser>{
     DatabaseUser[] getDatabaseUsersByDatabase(String environmentName, String rssInstanceName,
                                               String database, int tenantId) throws RSSDAOException;
 
-    DatabaseUser[] getAssignedDatabaseUsers(String environmentName, String rssInstanceName,
-                                            String databaseName, int tenantId) throws RSSDAOException;
-
-    DatabaseUser[] getAvailableDatabaseUsers(String environmentName, String rssInstanceName,
-                                             String databaseName, int tenantId) throws RSSDAOException;
-
-    String resolveRSSInstanceByUser(String environmentName, String rssInstanceName,
+    String resolveRSSInstanceByUser(String environmentName,
                                     String rssInstanceType, String username,
                                     int tenantId) throws RSSDAOException;
-
-
 }
