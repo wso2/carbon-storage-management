@@ -22,6 +22,9 @@
 					<password encrypted="true">admin</password>
 					<port>9042</port>
 					<maxConnections>100</maxConnections>
+					<!-- default cluster, modes: Cluster, Session ; if Session need to provide kespace as well-->
+					<mode>Cluster</mode>
+					<keyspace></keyspace>
 
 					<hosts>
 						<host>192.1.1.0</host>

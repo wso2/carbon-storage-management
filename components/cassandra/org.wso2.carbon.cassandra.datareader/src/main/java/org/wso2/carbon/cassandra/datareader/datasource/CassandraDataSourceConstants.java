@@ -24,6 +24,8 @@ public class CassandraDataSourceConstants {
 	public static final  long delayMs = 200l;
 	public static final  long  baseDelayMs = 200l;
 	public static final  long  maxDelayMs = 200l;
+	public static final String CLUSTER_MODE = "Cluster";
+	public static final String SESSION_MODE = "Session";
 	
 	public enum RetryPolicy{
 		DefaultRetryPolicy,DowngradingConsistencyRetryPolicy,FallthroughRetryPolicy, LoggingRetryPolicy;
