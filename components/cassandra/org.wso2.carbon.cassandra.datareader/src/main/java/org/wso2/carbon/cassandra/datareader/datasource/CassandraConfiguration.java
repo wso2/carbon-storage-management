@@ -59,6 +59,10 @@ public class CassandraConfiguration {
 	private String retryPolicy;
 	
 	private Boolean jmxDisabled;
+	
+	private String mode;
+	
+	private String keysapce;
 
 	public PoolingOptions getPoolOptions() {
 		return poolOptions;
@@ -263,6 +267,23 @@ public class CassandraConfiguration {
 
 	public void setJmxDisabled(Boolean jmxDisabled) {
 		this.jmxDisabled = jmxDisabled;
+	}
+	
+
+	public String getMode() {
+		return mode;
+	}
+
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
+
+	public String getKeysapce() {
+		return keysapce;
+	}
+
+	public void setKeysapce(String keysapce) {
+		this.keysapce = keysapce;
 	}
 
 	// ------------------Pooling Options------------------------

@@ -67,7 +67,11 @@ public class CassandraDataSourceReader implements DataSourceReader {
 			boolean isDataSourceFactoryReference) throws DataSourceException {
 		try {
 			CassandraConfiguration config = loadConfig(xmlConfiguration);
-			return config;
+			Cluster cluster = createCluster(config);
+			if(CassandraDataSourceConstants.SESSION_MODE.equalsIgnoreCase(config.getMode()) && (config.getKeysapce() != null && config.getKeysapce().trim().length() > 0)){
+				return cluster.connect(config.getKeysapce());
+			}
+			return cluster;
 		} catch (Exception ex) {
 			throw new DataSourceException(ex);
 		}
