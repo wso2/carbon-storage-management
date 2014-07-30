@@ -36,7 +36,7 @@ public class CassandraConfiguration {
 
 	private String clusterName;
 
-	private Integer port;
+	private Integer port = 0;
 
 	private List<String> hosts;
 
@@ -48,17 +48,17 @@ public class CassandraConfiguration {
 
 	private LoadBalancingPolicyOptions loadBalancePolicy;
 
-	private Integer maxConnections;
+	private Integer maxConnections = 1;
 
-	private Integer concurrency;
+	private Integer concurrency = 1;
 
-	private Boolean async;
+	private Boolean async = false;
 
 	private String compression;
 
 	private String retryPolicy;
 	
-	private Boolean jmxDisabled;
+	private Boolean jmxDisabled = false;
 	
 	private String mode;
 	
