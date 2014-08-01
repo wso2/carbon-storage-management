@@ -85,6 +85,7 @@ public class ClusterConfigurationFactory {
                 String externalCassandra="";
                 while (iterator.hasNext()) {
                     externalCassandra=nodesElement.getAttributeValue(new QName("externalCassandra"));
+                    iterator.next();
                 }
                 if(externalCassandra!=null && !"".equals(externalCassandra)) {
                     isExternalCassandra=Boolean.parseBoolean(externalCassandra.trim());
