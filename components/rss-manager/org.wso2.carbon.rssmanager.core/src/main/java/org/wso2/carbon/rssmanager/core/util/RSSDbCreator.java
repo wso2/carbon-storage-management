@@ -40,7 +40,6 @@ public class RSSDbCreator extends DatabaseCreator {
 	        if (log.isDebugEnabled()) {
 	            log.debug("Loading database script from :" + scriptName);
 	        }
-	        String carbonHome = System.getProperty("carbon.home");
 	        return dbDir.replaceFirst("DBTYPE", databaseType)  + scriptName;
     	
     }
