@@ -19,6 +19,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <%@ page import="org.wso2.carbon.cassandra.mgt.stub.ks.xsd.KeyspaceInformation" %>
+<%@ page import="org.wso2.carbon.cassandra.mgt.ui.CassandraKeyspaceAdminClient" %>
 <%@ page import="org.wso2.carbon.cassandra.mgt.ui.CassandraAdminClientConstants" %>
 <%@ page import="org.wso2.carbon.cassandra.mgt.ui.CassandraAdminClientHelper" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
@@ -26,10 +27,32 @@
 
 <%
     response.setHeader("Cache-Control", "no-cache");
-
+    String envName = (String) session.getAttribute("envName");
     String keyspace = request.getParameter("name");
+    String[] environments = null;
     if (keyspace == null) {
         keyspace = "";
+    }
+    try{
+        CassandraKeyspaceAdminClient cassandraKeyspaceAdminClient =
+            new CassandraKeyspaceAdminClient(config.getServletContext(), session);
+
+        if(envName == null){
+            envName = "DEFAULT";
+        }
+        session.setAttribute("envName", envName);
+        environments = (String[]) session.getAttribute("environments");
+        if(environments == null){
+            environments = cassandraKeyspaceAdminClient.getAllEnvironments();
+            session.setAttribute("environments", environments);
+        }
+    } catch (Exception e) {
+        CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
+        session.setAttribute(CarbonUIMessage.ID, uiMsg); %>
+<script type="text/javascript">
+window.location.href = "../admin/error.jsp";
+</script>
+<%
     }
 
     String mode = request.getParameter("mode");
@@ -94,6 +117,30 @@
             <% } %>
         </h2>
         <div id="workArea">
+            <div>
+                <fmt:message key="cassandra.environment.name"/>
+                <select id="envCombo" name="envCombo" onchange="onComboChange(this)">
+                <%
+                    if (envName == null) {
+                        envName = environments[0];
+                    }
+                    for (String env : environments) {
+                        if(env == null) continue;
+                        if (env.equals(envName.trim())) {
+                            %>
+                            <option id="<%=env%>" value="<%=env%>" selected="selected"><%=env%>
+                            </option>
+                            <%
+                        } else {
+                            %>
+                            <option id="<%=env%>" value="<%=env%>"><%=env%>
+                            </option>
+                            <%
+                        }
+                    }
+                %>
+                </select><br><br>
+            </div>
             <table class="styledLeft noBorders" cellspacing="0" cellpadding="0" border="0">
                 <tbody>
                 <tr>
@@ -243,4 +290,10 @@
             </table>
         </div>
     </div>
+            <script type="text/javascript">
+                function onComboChange(combo) {
+                    var opt = combo.options[combo.selectedIndex].value;
+                    window.location = 'add_edit_keyspace.jsp?envName=' + opt;
+                }
+            </script>
 </fmt:bundle>

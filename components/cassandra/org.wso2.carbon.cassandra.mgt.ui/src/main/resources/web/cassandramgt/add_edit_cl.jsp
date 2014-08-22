@@ -36,6 +36,7 @@
     String mode = request.getParameter("mode");
     boolean isEditMode = "edit".equals(mode);
     String index = request.getParameter("index");
+    String envName = (String) session.getAttribute("envName");
     if (index == null) {
         index = "";
     }

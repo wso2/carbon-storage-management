@@ -27,11 +27,12 @@
 
 <%
     String keyspaceName = request.getParameter("keyspaceName");
+    String envName = (String) session.getAttribute("envName");
 
     try {
         CassandraKeyspaceAdminClient cassandraKeyspaceAdminClient = new CassandraKeyspaceAdminClient(config.getServletContext(), session);
         String path = CassandraAdminClientConstants.CASSANDRA_RESOURCE_ROOT + "/" +
-            (String) session.getAttribute("envName") + "/" + keyspaceName;
+            envName + "/" + keyspaceName;
         String[] allowedRolesCreate = new String[0];
         String[] allowedRolesAlter = new String[0];
         String[] allowedRolesDrop = new String[0];
