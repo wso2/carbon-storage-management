@@ -54,7 +54,7 @@ public final class CassandraAdminClientConstants {
     public final static String CURRENT_CF = "CurrentCF";
     public final static String CURRENT_KEYSPACE = "CurrentKeyspace";
     public final static String CURRENT_CLS = "CurrentCLS";
-    public final static String CASSANDRA_RESOURCE_ROOT = AuthUtils.RESOURCE_PATH_PREFIX + File.separator + "data";
+    public final static String CASSANDRA_RESOURCE_ROOT = AuthUtils.RESOURCE_PATH_PREFIX;
     public final static int DEFAULT_GCGRACE = 864000;
     public final static int DEFAULT_MIN_COMPACTION_THRESHOLD = 4;
     public final static int DEFAULT_MAX_COMPACTION_THRESHOLD = 32;

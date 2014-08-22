@@ -400,7 +400,7 @@ public class CassandraAdminClientHelper {
         if (keyspaceInformation == null) {
             CassandraKeyspaceAdminClient cassandraKeyspaceAdminClient =
                     new CassandraKeyspaceAdminClient(servletContext, session);
-            keyspaceInformation = cassandraKeyspaceAdminClient.getKeyspaceOfCurrentUser(keyspace);
+            keyspaceInformation = cassandraKeyspaceAdminClient.getKeyspaceOfCurrentUser((String) session.getAttribute("envName"), keyspace);
             session.setAttribute(CassandraAdminClientConstants.CURRENT_KEYSPACE, keyspaceInformation);
         }
         return keyspaceInformation;
@@ -410,7 +410,7 @@ public class CassandraAdminClientHelper {
                                         HttpSession session) throws Exception {
         CassandraKeyspaceAdminClient cassandraKeyspaceAdminClient =
                 new CassandraKeyspaceAdminClient(servletContext, session);
-        return cassandraKeyspaceAdminClient.getClusterName();
+        return cassandraKeyspaceAdminClient.getClusterName((String) session.getAttribute("envName"));
     }
 
     /**

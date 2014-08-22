@@ -53,6 +53,7 @@
     String[] allowedRolesSelect = new String[0];
     String[] allowedRolesModify = new String[0];
     String[] allowedRolesAuthorize = new String[0];
+    String envName = (String) session.getAttribute("envName");
     AuthorizedRolesInformation[] rolePermissions = new AuthorizedRolesInformation[0];
     if (keyspace != null && !"".equals(keyspace.trim())) {
         keyspace = keyspace.trim();
@@ -64,10 +65,10 @@
                                                                                     session, keyspace);
             CassandraKeyspaceAdminClient cassandraKeyspaceAdminClient =
                     new CassandraKeyspaceAdminClient(config.getServletContext(), session);
-            tokenRangeInformations = cassandraKeyspaceAdminClient.getTokenRange(keyspace);
-            clusterName = cassandraKeyspaceAdminClient.getClusterName();
+            tokenRangeInformations = cassandraKeyspaceAdminClient.getTokenRange(envName, keyspace);
+            clusterName = cassandraKeyspaceAdminClient.getClusterName(envName);
             userRoles = cassandraKeyspaceAdminClient.getAllRoles();
-            String resourcePath = CassandraAdminClientConstants.CASSANDRA_RESOURCE_ROOT + "/" + keyspace;
+            String resourcePath = CassandraAdminClientConstants.CASSANDRA_RESOURCE_ROOT + "/" + envName + "/" + keyspace;
             rolePermissions = cassandraKeyspaceAdminClient.getResourcePermissionsOfRoles(resourcePath);
             if(rolePermissions == null){
                 if(setPermissions != null){
@@ -113,7 +114,7 @@
     List endPoints = CassandraAdminClientHelper.getCassandraEndPointList();
 %>
 <div id="middle">
-    <h2><fmt:message key="cassandra.keyspace.dashboard"/> (<%=keyspace%>) </h2>
+    <h2><fmt:message key="cassandra.keyspace.dashboard"/> (<%=envName%> > <%=keyspace%>) </h2>
 
     <div id="workArea">
 
