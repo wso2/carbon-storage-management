@@ -18,10 +18,6 @@
 
 package org.wso2.carbon.rssmanager.core.manager.adaptor;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
@@ -34,12 +30,12 @@ import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 import org.wso2.carbon.rssmanager.core.environment.Environment;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
-import org.wso2.carbon.rssmanager.core.manager.RSSManager;
-import org.wso2.carbon.rssmanager.core.manager.RSSManagerFactory;
-import org.wso2.carbon.rssmanager.core.manager.RSSManagerFactoryLoader;
-import org.wso2.carbon.rssmanager.core.manager.SystemRSSManager;
-import org.wso2.carbon.rssmanager.core.manager.UserDefinedRSSManager;
+import org.wso2.carbon.rssmanager.core.manager.*;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class RSSManagerAdaptorImpl implements RSSManagerAdaptor {
 
@@ -125,7 +121,7 @@ public class RSSManagerAdaptorImpl implements RSSManagerAdaptor {
 
 	public Database getDatabase(String rssInstanceName, String databaseName, String type)
 	                                                                                     throws RSSManagerException {
-		return this.resolveRM(type).getDatabase(rssInstanceName, databaseName);
+		return this.resolveRM(type).getDatabase(type, databaseName);
 	}
 
 	public DatabaseUser[] getAttachedUsers(String rssInstanceName, String databaseName, String type)
@@ -171,5 +167,9 @@ public class RSSManagerAdaptorImpl implements RSSManagerAdaptor {
 	                                                                                        throws RSSManagerException {
 		return this.resolveRM(type).isDatabaseUserExist(rssInstanceName, username);
 	}
+
+    public DatabaseUser editDatabaseUser(String environmentName,DatabaseUser databaseUser) throws RSSManagerException {
+        return this.resolveRM(databaseUser.getType()).editDatabaseUser(environmentName, databaseUser);
+    }
 
 }

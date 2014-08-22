@@ -1,19 +1,5 @@
 package org.wso2.carbon.rssmanager.core.jpa.persistence.internal;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.spi.PersistenceUnitTransactionType;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -21,6 +7,15 @@ import org.w3c.dom.NodeList;
 import org.wso2.carbon.rssmanager.core.config.RSSConfig;
 import org.wso2.carbon.rssmanager.core.jpa.persistence.util.XMLDOMUtil;
 import org.xml.sax.SAXException;
+
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.spi.PersistenceUnitTransactionType;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 			

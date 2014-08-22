@@ -29,12 +29,4 @@ public interface DatabasePrivilegeTemplateEntryDAO extends EntityBaseDAO<Integer
     void addPrivilegeTemplateEntries(String environmentName,
                                      int templateId, DatabasePrivilegeSet privileges,
                                      int tenantId) throws RSSDAOException;
-
-    /*void updatePrivilegeTemplateEntries(String environmentName,
-                                        String templateName, DatabasePrivilegeSet privileges,
-                                        int tenantId) throws RSSDAOException;*/
-
-    /*void removePrivilegeTemplateEntries(String environmentName, String templateName,
-                                        int tenantId) throws RSSDAOException;*/
-
 }

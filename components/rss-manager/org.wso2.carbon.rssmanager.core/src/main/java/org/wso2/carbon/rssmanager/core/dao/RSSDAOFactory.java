@@ -17,11 +17,6 @@
  */
 package org.wso2.carbon.rssmanager.core.dao;
 
-import java.util.Hashtable;
-import java.util.List;
-
-import javax.sql.DataSource;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.core.config.datasource.DataSourceConfig;
@@ -35,15 +30,18 @@ import org.wso2.carbon.rssmanager.core.dao.impl.oracle.OracleRSSDAOImpl;
 import org.wso2.carbon.rssmanager.core.dao.impl.postgres.PostgresRSSDAOImpl;
 import org.wso2.carbon.rssmanager.core.dao.impl.sqlserver.SQLServerRSSDAOImpl;
 import org.wso2.carbon.rssmanager.core.dao.util.EntityManager;
-import org.wso2.carbon.rssmanager.core.manager.RSSManager;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
+
+import javax.sql.DataSource;
+import java.util.Hashtable;
+import java.util.List;
 
 /**
  * DAO factory class for creating RSS DAO objects.
  */
 public class RSSDAOFactory {
 
-    private static final Log log = LogFactory.getLog(RSSManager.class);
+    private static final Log log = LogFactory.getLog(RSSDAOFactory.class);
 
     public enum RDBMSType {
         MYSQL, ORACLE, SQLSERVER, POSTGRES, H2, UNKNOWN

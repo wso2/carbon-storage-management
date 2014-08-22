@@ -46,7 +46,8 @@
 			String rssInstanceName = request.getParameter("rssInstanceName");
             String databaseName = request.getParameter("databaseName");
             String envName = request.getParameter("envName");
-            
+            String instanceType = request.getParameter("instanceType");
+
             String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
             ConfigurationContext configContext = (ConfigurationContext) config.getServletContext().
                     getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
@@ -55,11 +56,12 @@
             rssInstanceName = (rssInstanceName != null) ? rssInstanceName : (String) session.getAttribute("rssInstanceName");
             databaseName = (databaseName != null) ? databaseName : (String) session.getAttribute("databaseName");
             envName = (envName != null) ? envName : (String) session.getAttribute("envName");
+            instanceType = (instanceType != null) ? instanceType : (String) session.getAttribute("instanceType");
 
 
             try {
                 client = new RSSManagerClient(cookie, backendServerURL, configContext, request.getLocale());
-                database = client.getDatabase(envName,rssInstanceName, databaseName,RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+                database = client.getDatabase(envName,rssInstanceName, databaseName,instanceType);
             } catch (Exception e) {
                 CarbonUIMessage.sendCarbonUIMessage(e.getMessage(),
                         CarbonUIMessage.ERROR, request, e);
@@ -73,7 +75,7 @@
                             try {
                                 DatabaseUserInfo[] users =
                                         client.getUsersAttachedToDatabase(envName,rssInstanceName,
-                                                databaseName,RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+                                                databaseName,instanceType);
                                 if (users != null && users.length > 0) {
                     %>
                     <thead>
@@ -91,24 +93,22 @@
                         <td id="<%=user.getName()%>"><%=user.getName()%>
                         </td>
                         <td>
-                           <%--<% if(enableDbConsole = true){%>--%>
                             <a class="icon-link"
                                style="background-image: url(../rssmanager/images/db-exp.png);"
                                onclick="submitExploreForm('<%=user.getName()%>', '<%=(database != null) ? database.getUrl() : ""%>','<%=(database != null) ? RSSManagerHelper.getDatabaseDriver(database.getUrl()) : ""%>')"
                                href="#"><fmt:message key="rss.manager.explore.database"/>
                             </a>
-                            <%--<% }%>--%>
                             <a class="icon-link"
                                style="background-image:url(../rssmanager/images/data-sources-icon.gif);"
                                onclick="createDataSource('<%=database.getRssInstanceName()%>','<%=databaseName%>', '<%=user.getName()%>', '<%=envName%>')"
                                href="#"><fmt:message key="rss.manager.create.datasource"/></a>
                             <a class="icon-link"
                                style="background-image:url(../admin/images/edit.gif);"
-                               href="javascript:submitEditForm('<%=database.getRssInstanceName()%>','<%=database.getName()%>','<%=user.getName()%>', '<%=envName%>')">
+                               href="javascript:submitEditForm('<%=database.getRssInstanceName()%>','<%=database.getName()%>','<%=user.getName()%>', '<%=instanceType%>')">
                                 <fmt:message key="rss.manager.edit.user"/></a>
                             <a class="icon-link"
                                style="background-image:url(../admin/images/delete.gif);"
-                               onclick="detachDatabaseUser('<%=database.getRssInstanceName()%>', '<%=databaseName%>', '<%=user.getName()%>', '<%=envName%>'); return false;"
+                               onclick="detachDatabaseUser('<%=database.getRssInstanceName()%>', '<%=databaseName%>', '<%=user.getName()%>', '<%=envName%>', '<%=instanceType%>'); return false;"
                                href="#"><fmt:message
                                     key="rss.manager.detach.database.user"/></a>
                         </td>
@@ -135,15 +135,16 @@
                 <div id="connectionStatusDiv" style="display: none;"></div>
                 <a class="icon-link"
                    style="background-image:url(../admin/images/add.gif);"
-                   href="javascript:submitAttachForm('<%=rssInstanceName%>','<%=databaseName%>')">
+                   href="javascript:submitAttachForm('<%=rssInstanceName%>','<%=databaseName%>', '<%=instanceType%>')">
                     <fmt:message key="rss.manager.attach.database.user"/></a>
 
                 <div style="clear:both;"></div>
             </form>
             <script type="text/javascript">
-                function submitAttachForm(rssInstanceName, databaseName) {
+                function submitAttachForm(rssInstanceName, databaseName, instanceType) {
                     document.getElementById('rssInstanceName1').value = rssInstanceName;
                     document.getElementById('databaseName').value = databaseName;
+                    document.getElementById('instanceType').value = instanceType;
                     document.getElementById('addForm').submit();
                 }
             </script>
@@ -151,21 +152,24 @@
                 <input type="hidden" id="rssInstanceName1" name="rssInstanceName"/>
                 <input type="hidden" id="databaseName" name="databaseName"/>
                 <input type="hidden" id="envName1" name="envName" value="<%=envName%>"/>
+                <input type="hidden" id="instanceType" name="instanceType"/>
             </form>
             <script type="text/javascript">
-                function submitEditForm(rssInstanceName, databaseName, username, envName) {
+                function submitEditForm(rssInstanceName, databaseName, username, instanceType) {
                     document.getElementById('rssInstanceName').value = rssInstanceName;
                     document.getElementById('databaseName1').value = databaseName;
                     document.getElementById('username').value = username;
+                    document.getElementById('instanceType1').value = instanceType;
                     // document.getElementById('envName').value = envName;
                     document.getElementById('flag').value = 'edit';
                     document.getElementById('editForm').submit();
                 }
             </script>
-            <form action="editDatabaseUser.jsp" method="post" id="editForm">
+            <form action="editDatabaseUserPrivileges.jsp" method="post" id="editForm">
                 <input id="rssInstanceName" name="rssInstanceName" type="hidden"/>
                 <input id="databaseName1" name="databaseName" type="hidden"/>
                 <input id="username" name="username" type="hidden"/>
+                <input id="instanceType1" name="instanceType" type="hidden"/>
                 <input id="envName2" name="envName" type="hidden" value='<%=envName%>'/>
                 <input id="flag" name="flag" type="hidden"/>
             </form>

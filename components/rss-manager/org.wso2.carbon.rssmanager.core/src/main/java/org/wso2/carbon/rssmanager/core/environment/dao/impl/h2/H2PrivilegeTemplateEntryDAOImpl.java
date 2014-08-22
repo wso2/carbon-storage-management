@@ -32,18 +32,4 @@ public abstract class H2PrivilegeTemplateEntryDAOImpl implements DatabasePrivile
                                             int tenantId) throws RSSDAOException {
         
     }
-
-   /* @Override
-    public void updatePrivilegeTemplateEntries(String environmentName, String templateName,
-                                               DatabasePrivilegeSet privileges,
-                                               int tenantId) throws RSSDAOException {
-        
-    }
-
-    @Override
-    public void removePrivilegeTemplateEntries(String environmentName, String templateName,
-                                               int tenantId) throws RSSDAOException {
-        
-    }*/
-    
 }

@@ -25,6 +25,7 @@
 <%@ page import="org.wso2.carbon.rssmanager.core.dto.xsd.RSSInstanceInfo" %>
 <%@ page import="org.wso2.carbon.utils.multitenancy.MultitenantConstants" %>
 <%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerHelper" %>
+<%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerConstants" %>
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
@@ -39,6 +40,7 @@
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String envName = request.getParameter("envName");
+        String instanceType = request.getParameter("instanceType");
         username = (username == null) ? "" : username;
         password = (password == null) ? "" : password;
 
@@ -51,15 +53,21 @@
                 getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
         String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
         String tenantDomain = (String) session.getAttribute(MultitenantConstants.TENANT_DOMAIN);
-        String[] environments = (String[]) session.getAttribute("environments");
+        String[] environments=new String[1];
 
         
         try {
             client = new RSSManagerClient(cookie, backendServerURL, configContext, request.getLocale());
             rssInstances = client.getRSSInstanceList(envName);
-            systemRSSInstanceCount = client.getSystemRSSInstanceCount(envName);
+            environments=client.getRSSEnvironmentNames();
         } catch (Exception e) {
             CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
+        }
+        if (envName == null) {
+            envName = environments[0];
+        }
+        if(instanceType==null || instanceType.isEmpty()) {
+            instanceType= RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM;
         }
     %>
 
@@ -101,30 +109,53 @@
                     </tr>
                     <tr>
                         <td class="leftCol-med"><fmt:message
-                                key="rss.manager.instance.name"/><font
+                                key="rss.manager.rss.instance.type"/><font
                                 color='red'>*</font></td>
-                        <td><select id="rssInstances"
-                                    name="rssInstances">
-                           <%
-                                if (rssInstances.length > 0) {
-                                    for (RSSInstanceInfo rssIns : rssInstances) {
-                                        if (rssIns != null) {
-                            %>
-                            <option id="<%=rssIns.getName()%>"
-                                    value="<%=rssIns.getName()%>"><%=rssIns.getName()%>
+                        <td><select id="instanceTypes"
+                                    name="instanceTypes"  onchange="onInstanceTypeChange(this)">
+                            <option value="<%=RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM%>"
+                                    <%if(RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equalsIgnoreCase(instanceType)){%> selected
+                            <%}%>><%=RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM%>
                             </option>
-                            <%
-                                        }
-                                    }
-                                }
-                            %>
+                            <option value="<%=RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED%>"
+                                    <%if(RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED.equalsIgnoreCase(instanceType)){%> selected
+                                    <%}%>
+                                    ><%=RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED%>
+                            </option>
                         </select></td>
                     </tr>
+                    <%
+                        if(RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED.equalsIgnoreCase(instanceType)){
+                    %>
+                    <tr>
+                        <td class="leftCol-med">
+                                <fmt:message key="rss.manager.instance.name"/><font
+                                color='red'>*</font>
+                        <td>
+                            <select id="rssInstances" name="rssInstances">
+                                <option value="">
+                                </option>
+                                <%
+                                    for (RSSInstanceInfo rssInstanceInfo : rssInstances) {
+                                        if (rssInstanceInfo.getName() != null &&
+                                                RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED.equalsIgnoreCase(rssInstanceInfo.getInstanceType())) {
+                                %>
+                                <option id="<%=rssInstanceInfo.getName()%>" value="<%=rssInstanceInfo.getName()%>">
+                                    <%=rssInstanceInfo.getName()%>
+                                </option>
+                                <%}}%>
+                            </select>
+                        </td>
+                    </tr>
+                    <%}%>
                     <tr>
                         <td><fmt:message key="rss.manager.permissions.username"/><font
                                 color='red'>*</font></td>
                         <td><input type="text" id="username" name="username" value="<%=username%>"/><font
-                                color='black'><%=(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantDomain)) ? "" : "_" + RSSManagerHelper.getDatabaseUserPostfix()%>
+                                color='black'>
+                            <%if(!RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED.equalsIgnoreCase(instanceType)){%>
+                            <%=(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantDomain)) ? "" : "_" + RSSManagerHelper.getDatabaseUserPostfix()%>
+                            <%}%>
                         </font>
                         </td>
                     </tr>
@@ -162,6 +193,10 @@
                 function onComboChange(envCombo) {
                     var opt = envCombo.options[envCombo.selectedIndex].value;
                     window.location = 'createDatabaseUser.jsp?envName=' + opt;
+                }
+                function onInstanceTypeChange(combo) {
+                    var opt = combo.options[combo.selectedIndex].value;
+                    window.location = 'createDatabaseUser.jsp?envName=<%=envName%>&instanceType='+opt;
                 }
             </script>
             <form action="databaseUsers.jsp?region=region1&item=database_users_submenu"

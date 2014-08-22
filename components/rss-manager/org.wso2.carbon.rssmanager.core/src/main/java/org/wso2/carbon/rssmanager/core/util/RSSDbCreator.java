@@ -1,10 +1,10 @@
 package org.wso2.carbon.rssmanager.core.util;
 
-import javax.sql.DataSource;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.utils.dbcreator.DatabaseCreator;
+
+import javax.sql.DataSource;
 
 public class RSSDbCreator extends DatabaseCreator {
 

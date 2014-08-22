@@ -19,22 +19,10 @@
 
 package org.wso2.carbon.rssmanager.core.config;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-import javax.sql.DataSource;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.tools.ant.taskdefs.Sleep;
 import org.w3c.dom.Document;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
-import org.wso2.carbon.rssmanager.core.config.datasource.DataSourceConfig;
-import org.wso2.carbon.rssmanager.core.config.datasource.RDBMSConfig;
 import org.wso2.carbon.rssmanager.core.dao.RSSDAOFactory;
 import org.wso2.carbon.rssmanager.core.environment.EnvironmentManager;
 import org.wso2.carbon.rssmanager.core.environment.EnvironmentManagerFactory;
@@ -44,7 +32,11 @@ import org.wso2.carbon.rssmanager.core.manager.adaptor.EnvironmentAdaptor;
 import org.wso2.carbon.rssmanager.core.util.RSSDbCreator;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.utils.dbcreator.DatabaseCreator;
+
+import javax.sql.DataSource;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import java.io.File;
 
 public class RSSConfigurationManager {
 
@@ -62,17 +54,6 @@ public class RSSConfigurationManager {
     public static RSSConfigurationManager getInstance() {
         return rssConfigManager;
     }
-
-//    public EnvironmentManager getEnvironmentManager() {
-//        if (environmentManager == null) {
-//            /* The synchronize block is added to prevent a concurrent thread trying to access the
-//            environment manager while it is being initialized. */
-//            synchronized (this) {
-//                return environmentManager;
-//            }
-//        }
-//        return environmentManager;
-//    }
 
     public EnvironmentAdaptor getRSSManagerEnvironmentAdaptor() {
         if (adaptor == null) {
@@ -107,9 +88,6 @@ public class RSSConfigurationManager {
         	String setup = System.getProperty("setup");
         	if(setup!=null){
         	log.info("Setup option specified");
-        	String[] setupArgs = setup.split(",");
-        	String dbtype = setupArgs[0].toLowerCase();
-        	
             RSSDbCreator dbCreator = new RSSDbCreator(dataSource);
             dbCreator.dbDir = rssSetupSql;
         	log.info("Creating Meta Data tables");
@@ -117,14 +95,6 @@ public class RSSConfigurationManager {
         	
             
         	}
-        	
-       
-			/*//TODO
-			String rssProvider = currentRSSConfig.getRSSProvider();
-			String h2Type = RSSDAOFactory.RDBMSType.H2.name().toUpperCase();
-			if(h2Type.equalsIgnoreCase(rssProvider)){
-				return;
-			}*/
 
         	PersistenceManager.createEMF(jpaConfigXMLPatch, currentRSSConfig);
 

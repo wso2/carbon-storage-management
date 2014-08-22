@@ -29,19 +29,5 @@ public abstract class PostgresPrivilegeTemplateEntryDAOImpl implements DatabaseP
     public void addPrivilegeTemplateEntries(String environmentName, int templateId,
                                             DatabasePrivilegeSet privileges,
                                             int tenantId) throws RSSDAOException {
-        
     }
-
-    /*@Override
-    public void updatePrivilegeTemplateEntries(String environmentName, String templateName,
-                                               DatabasePrivilegeSet privileges,
-                                               int tenantId) throws RSSDAOException {
-
-    }
-
-    @Override
-    public void removePrivilegeTemplateEntries(String environmentName, String templateName,
-                                               int tenantId) throws RSSDAOException {
-
-    }*/
 }

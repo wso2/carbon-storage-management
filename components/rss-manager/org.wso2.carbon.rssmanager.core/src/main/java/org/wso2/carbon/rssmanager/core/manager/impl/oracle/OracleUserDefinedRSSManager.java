@@ -21,7 +21,6 @@ package org.wso2.carbon.rssmanager.core.manager.impl.oracle;
 
 import org.wso2.carbon.rssmanager.core.config.RSSManagementRepository;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
-import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate;
 import org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry;
 import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
@@ -45,6 +44,11 @@ public class OracleUserDefinedRSSManager extends UserDefinedRSSManager {
     public void removeDatabase(String rssInstanceName,
                                String databaseName) throws RSSManagerException {
         
+    }
+
+    @Override
+    public boolean isDatabaseExist(String rssInstanceName, String databaseName) throws RSSManagerException {
+        return false;
     }
 
     @Override
@@ -82,9 +86,18 @@ public class OracleUserDefinedRSSManager extends UserDefinedRSSManager {
     }
 
     @Override
+    public boolean isDatabaseUserExist(String rssInstanceName, String username) throws RSSManagerException {
+        return false;
+    }
+
+    @Override
     public void updateDatabaseUserPrivileges(DatabasePrivilegeSet privileges, DatabaseUser user,
                                              String databaseName) throws RSSManagerException {
         
     }
 
+    @Override
+    public DatabaseUser editDatabaseUser(String environmentName, DatabaseUser databaseUser) {
+        return null;
+    }
 }
