@@ -45,6 +45,7 @@
     response.setHeader("Cache-Control", "no-cache");
     String keyspace = request.getParameter("name");
     String setPermissions = request.getParameter("setPermissions");
+    String envName = (String) session.getAttribute("envName");
     String clusterName = null;
     String[] userRoles = new String[0];
     String[] allowedRolesCreate = new String[0];
@@ -53,7 +54,6 @@
     String[] allowedRolesSelect = new String[0];
     String[] allowedRolesModify = new String[0];
     String[] allowedRolesAuthorize = new String[0];
-    String envName = (String) session.getAttribute("envName");
     AuthorizedRolesInformation[] rolePermissions = new AuthorizedRolesInformation[0];
     if (keyspace != null && !"".equals(keyspace.trim())) {
         keyspace = keyspace.trim();

@@ -24,6 +24,7 @@
 <%
     NodeInformation[] nodes = null;
     String nodeTableDisplay = "display:none;";
+    String envName = (String) session.getAttribute("envName");
     try {
         CassandraClusterAdminClient cassandraClusterAdminClient = new CassandraClusterAdminClient(config.getServletContext(), session);
         nodes = cassandraClusterAdminClient.listNodes();
