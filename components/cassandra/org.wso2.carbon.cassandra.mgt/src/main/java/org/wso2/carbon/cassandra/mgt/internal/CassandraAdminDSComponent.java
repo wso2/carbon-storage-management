@@ -22,6 +22,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.cassandra.dataaccess.DataAccessService;
+import org.wso2.carbon.cassandra.mgt.CassandraServerManagementException;
+import org.wso2.carbon.cassandra.mgt.environment.EnvironmentManager;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.ConfigurationContextService;
 import org.wso2.carbon.base.api.ServerConfigurationService;
@@ -44,9 +46,15 @@ public class CassandraAdminDSComponent {
 
     private static Log log = LogFactory.getLog(CassandraAdminDSComponent.class);
 
-    protected void activate(ComponentContext componentContext) {
+    protected void activate(ComponentContext componentContext) throws CassandraServerManagementException {
         if (log.isDebugEnabled()) {
             log.debug("Cassandra Admin bundle is activated.");
+        }
+        EnvironmentManager environmentManager = new EnvironmentManager();
+        environmentManager.initEnvironments();
+        CassandraAdminDataHolder.getInstance().setEnvironmentManager(environmentManager);
+        if (log.isDebugEnabled()) {
+            log.debug("Cassandra Environments are initialized.");
         }
     }
 

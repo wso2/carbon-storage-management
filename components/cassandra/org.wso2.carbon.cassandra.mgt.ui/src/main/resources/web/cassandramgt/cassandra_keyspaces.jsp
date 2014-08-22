@@ -33,16 +33,33 @@
     String[] allowedRolesSelect = new String[0];
     String[] allowedRolesModify = new String[0];
     String[] allowedRolesAuthorize = new String[0];
+    String[] environments = null;
+    String envName = null;
     AuthorizedRolesInformation[] rolePermissions = new AuthorizedRolesInformation[0];
     try {
         session.removeAttribute(CassandraAdminClientConstants.CURRENT_KEYSPACE);
         CassandraKeyspaceAdminClient cassandraKeyspaceAdminClient = new CassandraKeyspaceAdminClient(config.getServletContext(), session);
-        ksNames = cassandraKeyspaceAdminClient.listKeyspacesOfCurrentUSer();
+
+        envName = request.getParameter("envName");
+        if(envName == null){
+            envName = (String) session.getAttribute("envName");
+            if(envName == null){
+                envName = "DEFAULT";
+            }
+        }
+        session.setAttribute("envName", envName);
+        environments = (String[]) session.getAttribute("environments");
+        if(environments == null){
+            environments = cassandraKeyspaceAdminClient.getAllEnvironments();
+            session.setAttribute("environments", environments);
+        }
+
+        ksNames = cassandraKeyspaceAdminClient.listKeyspacesOfCurrentUSer(envName);
         if (ksNames != null && ksNames.length > 0) {
             ksTableDisplay = "";
         }
         userRoles = cassandraKeyspaceAdminClient.getAllRoles();
-        String resourcePath = CassandraAdminClientConstants.CASSANDRA_RESOURCE_ROOT;
+        String resourcePath = CassandraAdminClientConstants.CASSANDRA_RESOURCE_ROOT + "/" + envName;
         rolePermissions = cassandraKeyspaceAdminClient.getResourcePermissionsOfRoles(resourcePath);
         if(rolePermissions == null){
             rolePermissions = new AuthorizedRolesInformation[0];
@@ -92,6 +109,30 @@
             <h2><fmt:message key="cassandra.keyspaces.msg"/></h2>
         </h2>
         <div id="workArea">
+            <div>
+                <fmt:message key="cassandra.environment.name"/>
+                <select id="envCombo" name="envCombo" onchange="onComboChange(this)">
+                <%
+                    if (envName == null) {
+                        envName = environments[0];
+                    }
+                    for (String env : environments) {
+                        if(env == null) continue;
+                        if (env.equals(envName.trim())) {
+                            %>
+                            <option id="<%=env%>" value="<%=env%>" selected="selected"><%=env%>
+                            </option>
+                            <%
+                        } else {
+                            %>
+                            <option id="<%=env%>" value="<%=env%>"><%=env%>
+                            </option>
+                            <%
+                        }
+                    }
+                %>
+                </select><br><br>
+            </div>
             <%
             if(ksNames == null || ksNames.length == 0){
             %>
@@ -284,4 +325,10 @@
         %>
         </div>
     </div>
+        <script type="text/javascript">
+            function onComboChange(combo) {
+                var opt = combo.options[combo.selectedIndex].value;
+                window.location = 'cassandra_keyspaces.jsp?envName=' + opt;
+            }
+        </script>
 </fmt:bundle>
