@@ -19,26 +19,11 @@
 
 package org.wso2.carbon.rssmanager.core.dto.restricted;
 
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Transient;
-import javax.persistence.Version;
-
 import org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry;
 import org.wso2.carbon.rssmanager.core.jpa.persistence.entity.AbstractEntity;
+
+import javax.persistence.*;
+import java.util.Set;
 
 /**
  * Class to represent a Database Instance created by an RSS Server.
@@ -73,7 +58,7 @@ public class Database extends AbstractEntity<Integer, Database>{
     @Transient
     private String rssInstanceName;
     
-    @ManyToOne(cascade={CascadeType.PERSIST,CascadeType.REFRESH}, fetch=FetchType.EAGER)
+    @ManyToOne(cascade={CascadeType.REFRESH}, fetch=FetchType.EAGER)
     @JoinColumn(name = "RSS_INSTANCE_ID", nullable = false)
     private RSSInstance rssInstance;
     
@@ -167,8 +152,4 @@ public class Database extends AbstractEntity<Integer, Database>{
 	public void setVersion(Long version) {
 		this.version = version;
 	}
-    
-	
-    
-
 }

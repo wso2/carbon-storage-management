@@ -77,6 +77,18 @@
             <icon>../rssmanager/images/databases.png</icon>
             <require-permission>/permission/admin/manage/rssmanager/databases</require-permission>
         </menu>
+        <menu>
+            <id>rss_instances_submenu</id>
+            <i18n-key>rss.manager.instances.submenu.text</i18n-key>
+            <i18n-bundle>org.wso2.carbon.rssmanager.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>rss_manager_menu</parent-menu>
+            <link>../rssmanager/rssInstances.jsp</link>
+            <region>region1</region>
+            <order>14</order>
+            <style-class>home</style-class>
+            <icon>../rssmanager/images/instance-icon.png</icon>
+            <require-permission>/permission/admin/manage/rssmanager/rssInstances</require-permission>
+        </menu>
     </menus>
 </component>
 

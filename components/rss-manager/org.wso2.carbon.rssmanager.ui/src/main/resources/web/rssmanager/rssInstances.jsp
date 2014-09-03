@@ -26,7 +26,6 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="org.wso2.carbon.utils.multitenancy.MultitenantConstants" %>
-<%@ page import="java.util.List" %>
 
 <fmt:bundle basename="org.wso2.carbon.rssmanager.ui.i18n.Resources">
     <carbon:breadcrumb
@@ -57,9 +56,7 @@
         RSSInstanceInfo[] rssInstances;
         if (client != null) {
             try {
-            	//TODO properly set RSS environment name
-                String envName = request.getParameter("envName");
-                rssInstances = client.getRSSInstanceList(envName);
+                    rssInstances=client.getRSSInstanceList();
     %>
     <div id="middle">
         <h2><fmt:message key="rss.manager.instances"/></h2>
@@ -71,7 +68,8 @@
                     <thead>
                     <tr>
                         <th width="20%"><fmt:message key="rss.manager.instance.name"/></th>
-                        <th width="20%"><fmt:message key="rss.manager.tenant.domain"/></th>
+                        <th width="20%"><fmt:message key="rss.environment.name"/></th>
+                        <th width="20%"><fmt:message key="rss.manager.instance.type"/></th>
                         <th width="20%"><fmt:message key="rss.manager.server.category"/></th>
                         <th width="60%"><fmt:message key="rss.manager.actions"/></th>
                     </tr>
@@ -85,66 +83,24 @@
                     <tr id="tr_<%=rssInstanceName%>">
                         <td id="td_<%=rssInstanceName%>"><%=rssInstanceName%>
                         </td>
-                        <td><%=rssInstance.getInstanceType()%>
+                        <td id="td_<%=rssInstance.getEnvironmentName()%>"><%=rssInstance.getEnvironmentName()%>
                         </td>
-                        <td><%=rssInstance.getServerCategory()%>
+                        <td id="td_<%=rssInstance.getInstanceType()%>"><%=rssInstance.getInstanceType()%>
                         </td>
-                        <%
-                            if ("carbon.super".equals(tenantDomain)) {
-                                if (!RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED.equals(
-                                        rssInstance.getInstanceType()) ||
-                                        RSSManagerConstants.WSO2_LOCAL_RDS_INSTANCE_TYPE.equals(
-                                                rssInstance.getInstanceType())) {
-
-                        %>
+                        <td id="td_<%=rssInstance.getServerCategory()%>"><%=rssInstance.getServerCategory()%>
+                        </td>
                         <td>
                             <a class="icon-link"
                                style="background-image:url(../admin/images/edit.gif);"
-                               onclick="dispatchEditRSSInstanceRequest('<%=rssInstance.getName()%>')"><fmt:message
+                               onclick="dispatchEditRSSInstanceRequest('<%=rssInstance.getName()%>','<%=rssInstance.getEnvironmentName()%>','<%=rssInstance.getInstanceType()%>')"><fmt:message
                                     key="rss.manager.edit.instance"/></a>
                             <a class="icon-link"
                                style="background-image:url(../admin/images/delete.gif);"
                                href="#"
-                               onclick="dispatchDropRSSInstanceRequest('<%=rssInstance.getName()%>');"><fmt:message
+                               onclick="dispatchDropRSSInstanceRequest('<%=rssInstance.getName()%>','<%=rssInstance.getEnvironmentName()%>','<%=rssInstance.getInstanceType()%>');"><fmt:message
                                     key="rss.manager.drop.instance"/></a>
                         </td>
-                    </tr>
                     <%
-                    } else if (RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equals(rssInstance.getInstanceType())) {
-                    %>
-                    <tr>
-                        <td>
-                            <a class="icon-link"
-                               style="background-image:url(../admin/images/edit.gif);"
-                               onclick="dispatchEditRSSInstanceRequest('<%=rssInstance.getName()%>')"><fmt:message
-                                    key="rss.manager.edit.instance"/></a>
-                            <a class="icon-link"
-                               style="background-image:url(../admin/images/delete.gif);"
-                               href="#"
-                               onclick="dispatchDropRSSInstanceRequest('<%=rssInstance.getName()%>');"><fmt:message
-                                    key="rss.manager.drop.instance"/></a>
-                        </td>
-                    </tr>
-                    <%
-                        }
-                    } else {
-                        if (!RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equals(
-                                rssInstance.getInstanceType())) {
-                    %>
-                    <td>
-                        <a class="icon-link"
-                           style="background-image:url(../admin/images/edit.gif);"
-                           onclick="dispatchEditRSSInstanceRequest('<%=rssInstance.getName()%>')"><fmt:message
-                                key="rss.manager.edit.instance"/></a>
-                        <a class="icon-link"
-                           style="background-image:url(../admin/images/delete.gif);"
-                           href="#"
-                           onclick="dispatchDropRSSInstanceRequest('<%=rssInstance.getName()%>');"><fmt:message
-                                key="rss.manager.drop.instance"/></a>
-                    </td>
-                    <%
-                                    }
-                                }
                             }
                         }
                     } else {
@@ -162,7 +118,7 @@
                     %>
                     <div id="connectionStatusDiv" style="display: none;"></div>
                     <tr>
-                        <td colspan="4">
+                        <td colspan="5">
                             <a class="icon-link"
                                style="background-image:url(../admin/images/add.gif);"
                                href="createRSSInstance.jsp"><fmt:message
@@ -174,13 +130,17 @@
                 </table>
             </form>
             <script type="text/javascript">
-                function dispatchEditRSSInstanceRequest(rssInstanceName) {
+                function dispatchEditRSSInstanceRequest(rssInstanceName,environment,type) {
                     document.getElementById('rssInstanceName').value = rssInstanceName;
+                    document.getElementById('rssEnvironment').value = environment;
+                    document.getElementById('rssType').value = type;
                     document.getElementById('editForm').submit();
                 }
             </script>
             <form action="editRSSInstance.jsp" method="post" id="editForm">
                 <input id="rssInstanceName" name="rssInstanceName" type="hidden"/>
+                <input id="rssEnvironment" name="rssEnvironment" type="hidden"/>
+                <input id="rssType" name="rssType" type="hidden"/>
             </form>
         </div>
     </div>

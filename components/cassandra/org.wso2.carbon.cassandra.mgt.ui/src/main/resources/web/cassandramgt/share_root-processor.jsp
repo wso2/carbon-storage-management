@@ -28,7 +28,7 @@
 <%
     try {
         CassandraKeyspaceAdminClient cassandraKeyspaceAdminClient = new CassandraKeyspaceAdminClient(config.getServletContext(), session);
-        String path = CassandraAdminClientConstants.CASSANDRA_RESOURCE_ROOT;
+        String path = CassandraAdminClientConstants.CASSANDRA_RESOURCE_ROOT + "/" + (String) session.getAttribute("envName");
         String[] allowedRolesCreate = new String[0];
         String[] allowedRolesAlter = new String[0];
         String[] allowedRolesDrop = new String[0];

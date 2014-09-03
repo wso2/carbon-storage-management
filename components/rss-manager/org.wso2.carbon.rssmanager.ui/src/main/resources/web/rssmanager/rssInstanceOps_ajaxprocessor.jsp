@@ -25,7 +25,6 @@
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="java.io.PrintWriter" %>
 <%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerHelper" %>
-<%@ page import="org.wso2.carbon.utils.multitenancy.MultitenantConstants" %>
 <%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerConstants" %>
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -40,10 +39,11 @@
     String password = request.getParameter("password");
     password = (password != null) ? password : "";
     String flag = request.getParameter("flag");
-    String serverCategory = request.getParameter("serverCategory");
+    String serverEnvironment=request.getParameter("serverEnvironment");
+    String databaseDriverClass=request.getParameter("databaseDriverClass");
+    String instanceType=request.getParameter("instancetype");
     String dbmsType;
     RSSManagerClient client;
-    String tenantDomain = (String) session.getAttribute(MultitenantConstants.TENANT_DOMAIN);
 
     String backendServerUrl = CarbonUIUtil.getServerURL(
             getServletConfig().getServletContext(), session);
@@ -62,21 +62,15 @@
             rssIns.setPassword(password);
             dbmsType = RSSManagerHelper.getDatabasePrefix(serverUrl);
             rssIns.setDbmsType(dbmsType.toUpperCase());
-            if (tenantDomain == null) {
-                if (RSSManagerConstants.WSO2_LOCAL_RDS_INSTANCE_TYPE.equals(
-                        serverCategory.toUpperCase())) {
-                    rssIns.setInstanceType(RSSManagerConstants.WSO2_LOCAL_RDS_INSTANCE_TYPE);
-                } else {
-                    rssIns.setInstanceType(RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
-                }
+            rssIns.setEnvironmentName(serverEnvironment);
+            rssIns.setDriverClass(databaseDriverClass);
+            if(instanceType!=null && !instanceType.isEmpty()) {
+                rssIns.setInstanceType(instanceType);
             } else {
                 rssIns.setInstanceType(RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
             }
-            rssIns.setServerCategory(serverCategory.toUpperCase());
-
-           
-            //TODO properly set RSS environment name
-            String envName = request.getParameter("envName");
+            rssIns.setServerCategory(RSSManagerConstants.LOCAL);
+            client.createRSSInstance(rssIns.getEnvironmentName(), rssIns);
             response.setContentType("text/xml; charset=UTF-8");
             // Set standard HTTP/1.1 no-cache headers.
             response.setHeader("Cache-Control",
@@ -100,7 +94,8 @@
             
             //TODO properly set RSS environment name
             String envName = request.getParameter("envName");
-            client.dropRSSInstance(envName,rssInstanceName,RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            instanceType = request.getParameter("instanceType");
+            client.dropRSSInstance(envName,rssInstanceName,instanceType);
             response.setContentType("text/xml; charset=UTF-8");
             // Set standard HTTP/1.1 no-cache headers.
             response.setHeader("Cache-Control",
@@ -127,24 +122,17 @@
             rssIns.setServerURL(serverUrl);
             rssIns.setUsername(username);
             rssIns.setPassword(password);
+            rssIns.setEnvironmentName(serverEnvironment);
             dbmsType = RSSManagerHelper.getDatabasePrefix(serverUrl);
             rssIns.setDbmsType(dbmsType.toUpperCase());
-            rssIns.setServerCategory(serverCategory.toUpperCase());
-            if (tenantDomain == null) {
-                if (RSSManagerConstants.WSO2_LOCAL_RDS_INSTANCE_TYPE.equals(
-                        serverCategory.toUpperCase())) {
-                    rssIns.setInstanceType(RSSManagerConstants.WSO2_LOCAL_RDS_INSTANCE_TYPE);
-                } else {
-                    rssIns.setInstanceType(RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
-                }
+            rssIns.setServerCategory(RSSManagerConstants.LOCAL);
+            if(instanceType!=null) {
+                rssIns.setInstanceType(instanceType);
             } else {
                 rssIns.setInstanceType(RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
             }
 
-           
-            //TODO properly set RSS environment name
-            String envName = request.getParameter("envName");
-            client.editRSSInstance(envName, rssIns);
+            client.editRSSInstance(rssIns.getEnvironmentName(), rssIns);
             response.setContentType("text/xml; charset=UTF-8");
             // Set standard HTTP/1.1 no-cache headers.
             response.setHeader("Cache-Control",

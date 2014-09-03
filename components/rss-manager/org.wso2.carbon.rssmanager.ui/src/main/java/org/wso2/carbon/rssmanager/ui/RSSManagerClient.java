@@ -17,10 +17,6 @@
  */
 package org.wso2.carbon.rssmanager.ui;
 
-import java.rmi.RemoteException;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
@@ -28,14 +24,14 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.rssmanager.core.dto.xsd.DatabaseInfo;
-import org.wso2.carbon.rssmanager.core.dto.xsd.DatabasePrivilegeSetInfo;
-import org.wso2.carbon.rssmanager.core.dto.xsd.DatabasePrivilegeTemplateInfo;
-import org.wso2.carbon.rssmanager.core.dto.xsd.DatabaseUserInfo;
-import org.wso2.carbon.rssmanager.core.dto.xsd.RSSInstanceInfo;
-import org.wso2.carbon.rssmanager.core.dto.xsd.UserDatabaseEntryInfo;
+import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
+import org.wso2.carbon.rssmanager.core.dto.xsd.*;
 import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSManagerExceptionException;
 import org.wso2.carbon.rssmanager.ui.stub.RSSAdminStub;
+
+import java.rmi.RemoteException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class RSSManagerClient {
 
@@ -46,6 +42,7 @@ public class RSSManagerClient {
 	private static final String BUNDLE = "org.wso2.carbon.rssmanager.ui.i18n.Resources";
 
 	private static final Log log = LogFactory.getLog(RSSManagerClient.class);
+    private static final String DEFAULT_PROVIDER = "H2";
 
 	public RSSManagerClient(String cookie, String backendServerUrl, ConfigurationContext configurationContext,
 	                        Locale locale) {
@@ -178,6 +175,41 @@ public class RSSManagerClient {
 		return rssInstances;
 	}
 
+    public String getRSSProvider() throws AxisFault {
+        try {
+            return stub.getRSSProvider();
+        } catch (Exception e) {
+            handleException(bundle.getString("rss.manager.failed.to.retrieve.RSS.provider") + " : " + e.getMessage(),
+                    e);
+        }
+        return DEFAULT_PROVIDER;
+    }
+
+    public DatabaseUserInfo editDatabaseUser(String environmentName, DatabaseUserInfo databaseUserInfo) throws AxisFault {
+        DatabaseUserInfo databaseUser = null;
+        try {
+            databaseUser = stub.editDatabaseUser(environmentName,databaseUserInfo);
+        } catch (Exception e) {
+            handleException(bundle.getString("rss.manager.failed.to.edit.database.user") + "username"+ databaseUser.getUsername()
+                            + ":" + e.getMessage(),
+                    e);
+        }
+        return databaseUser;
+    }
+
+    public RSSInstanceInfo[] getRSSInstanceList() throws AxisFault {
+        RSSInstanceInfo[] rssInstances = new RSSInstanceInfo[0];
+        try {
+            rssInstances = stub.getRSSInstancesList();
+            if (rssInstances == null) {
+                return new RSSInstanceInfo[0];
+            }
+        } catch (Exception e) {
+            handleException(bundle.getString("rss.manager.failed.to.retrieve.RSS.instance.list") + " : " + e.getMessage(),
+                    e);
+        }
+        return rssInstances;
+    }
 	public void createRSSInstance(String environmentName, RSSInstanceInfo rssInstance) throws AxisFault {
 		try {
 			stub.addRSSInstance(environmentName, rssInstance);

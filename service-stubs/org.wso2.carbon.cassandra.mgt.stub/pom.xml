@@ -101,10 +101,11 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
-                        <Private-Package>
-                        </Private-Package>
+                        <Import-Package>
+			 	!org.wso2.carbon.cassandra.mgt.stub.*,
+                        </Import-Package>
                         <Export-Package>
-                            org.wso2.carbon.cassandra.mgt.stub.*;version="${carbon.platform.package.export.version}",
+                            org.wso2.carbon.cassandra.mgt.stub.*;version="4.3.0.SNAPSHOT",
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>

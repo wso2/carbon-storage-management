@@ -18,24 +18,10 @@
 
 package org.wso2.carbon.rssmanager.core.manager.adaptor;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.wso2.carbon.ndatasource.common.DataSourceException;
 import org.wso2.carbon.ndatasource.core.DataSourceMetaInfo;
-import org.wso2.carbon.rssmanager.core.dto.DatabaseInfo;
-import org.wso2.carbon.rssmanager.core.dto.DatabasePrivilegeSetInfo;
-import org.wso2.carbon.rssmanager.core.dto.DatabasePrivilegeTemplateInfo;
-import org.wso2.carbon.rssmanager.core.dto.DatabaseUserInfo;
-import org.wso2.carbon.rssmanager.core.dto.MySQLPrivilegeSetInfo;
-import org.wso2.carbon.rssmanager.core.dto.RSSInstanceInfo;
-import org.wso2.carbon.rssmanager.core.dto.UserDatabaseEntryInfo;
-import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
-import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate;
-import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplateEntry;
-import org.wso2.carbon.rssmanager.core.dto.common.MySQLPrivilegeSet;
-import org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry;
+import org.wso2.carbon.rssmanager.core.dto.*;
+import org.wso2.carbon.rssmanager.core.dto.common.*;
 import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
@@ -45,6 +31,10 @@ import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.RSSManagerDataHolder;
 import org.wso2.carbon.rssmanager.core.service.RSSManagerService;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class EnvironmentAdaptor implements RSSManagerService {
 
@@ -58,20 +48,24 @@ public class EnvironmentAdaptor implements RSSManagerService {
 	                                                                               throws RSSManagerException {
 		RSSInstance entity = new RSSInstance();
 		RSSManagerUtil.createRSSInstance(rssInstance, entity);
-		this.getEnvironmentManager().addRSSInstance(entity);
+		entity= this.getEnvironmentManager().addRSSInstance(entity);
+        environmentManager.getEnvironment(rssInstance.getEnvironmentName()).getDSWrapperRepository().addRSSInstanceDSWrapper(entity);
 	}
 
 	public void removeRSSInstance(String environmentName, String rssInstanceName, String type)
 	                                                                                          throws RSSManagerException {
 		this.getEnvironmentManager().removeRSSInstance(environmentName, rssInstanceName);
-	}
+        environmentManager.getEnvironment(environmentName).getDSWrapperRepository().removeRSSInstanceDSWrapper(rssInstanceName);
+    }
 
 	public void updateRSSInstance(String environmentName, RSSInstanceInfo rssInstance)
 	                                                                                  throws RSSManagerException {
 		RSSInstance entity = new RSSInstance();
 		RSSManagerUtil.createRSSInstance(rssInstance, entity);
 		this.getEnvironmentManager().updateRSSInstance(environmentName, entity);
-	}
+        environmentManager.getEnvironment(environmentName).getDSWrapperRepository().removeRSSInstanceDSWrapper(rssInstance.getName());
+        environmentManager.getEnvironment(rssInstance.getEnvironmentName()).getDSWrapperRepository().addRSSInstanceDSWrapper(entity);
+    }
 
 	public RSSInstanceInfo getRSSInstance(String environmentName, String rssInstanceName, String type)
 	                                                                                                  throws RSSManagerException {
@@ -92,6 +86,18 @@ public class EnvironmentAdaptor implements RSSManagerService {
 		}
 		return infoList.toArray(new RSSInstanceInfo[infoList.size()]);
 	}
+
+    public RSSInstanceInfo[] getRSSInstancesList() throws RSSManagerException {
+        RSSInstance[] entities = this.getEnvironmentManager().getRSSInstancesList();
+        List<RSSInstance> entityList = Arrays.asList(entities);
+        List<RSSInstanceInfo> infoList = new ArrayList<RSSInstanceInfo>();
+        for (RSSInstance entity : entityList) {
+            RSSInstanceInfo info = new RSSInstanceInfo();
+            RSSManagerUtil.createRSSInstanceInfo(info, entity);
+            infoList.add(info);
+        }
+        return infoList.toArray(new RSSInstanceInfo[infoList.size()]);
+    }
 
 	public DatabaseInfo addDatabase(String environmentName, DatabaseInfo database) throws RSSManagerException {
 		Database entity = new Database();
@@ -369,5 +375,19 @@ public class EnvironmentAdaptor implements RSSManagerService {
 	public String[] getEnvironments() throws RSSManagerException {
 		return this.getEnvironmentManager().getEnvironmentNames();
 	}
+
+    @Override
+    public DatabaseUserInfo editDatabaseUser(String environment, DatabaseUserInfo databaseUserInfo) throws RSSManagerException {
+        DatabaseUser entity = new DatabaseUser();
+        RSSManagerUtil.createDatabaseUser(databaseUserInfo, entity);
+        entity = this.getRSSManagerAdaptor(environment).editDatabaseUser(environment,entity);
+        RSSManagerUtil.createDatabaseUserInfo(databaseUserInfo, entity);
+        return databaseUserInfo;
+    }
+
+    @Override
+    public String getRSSProvider() {
+        return null;
+    }
 
 }

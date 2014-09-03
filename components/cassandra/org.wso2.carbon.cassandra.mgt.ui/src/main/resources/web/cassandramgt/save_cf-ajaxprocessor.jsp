@@ -23,6 +23,7 @@
     String validationClass = request.getParameter("validationclass");
     String keyValidationClass = request.getParameter("keyvalidationclass");
     String id = request.getParameter("id");
+    String envName = (String) session.getAttribute("envName");
 
     JSONObject backendStatus = new JSONObject();
     boolean isColumnFamilyExist = false;

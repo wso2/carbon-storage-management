@@ -1,14 +1,13 @@
 package org.wso2.carbon.rssmanager.core.jpa.persistence.dao;
 
+import org.wso2.carbon.rssmanager.core.jpa.persistence.entity.AbstractEntity;
+import org.wso2.carbon.rssmanager.core.jpa.persistence.entity.EntityType;
+
+import javax.persistence.EntityManager;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
-
-import javax.persistence.EntityManager;
-
-import org.wso2.carbon.rssmanager.core.jpa.persistence.entity.AbstractEntity;
-import org.wso2.carbon.rssmanager.core.jpa.persistence.entity.EntityType;
 
 /**
  * @param <K>

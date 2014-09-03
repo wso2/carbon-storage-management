@@ -26,6 +26,7 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.cassandra.mgt.environment.xsd.Environment;
 import org.wso2.carbon.cassandra.mgt.stub.ks.CassandraKeyspaceAdminStub;
 import org.wso2.carbon.cassandra.mgt.stub.ks.xsd.AuthorizedRolesInformation;
 import org.wso2.carbon.cassandra.mgt.stub.ks.xsd.ColumnFamilyInformation;
@@ -82,9 +83,9 @@ public class CassandraKeyspaceAdminClient {
      * @throws CassandraAdminClientException
      */
 
-    public String getClusterName() throws CassandraAdminClientException {
+    public String getClusterName(String envName) throws CassandraAdminClientException {
         try {
-            return cassandraAdminStub.getClusterName();
+            return cassandraAdminStub.getClusterName(envName);
         } catch (Exception e) {
             throw new CassandraAdminClientException("Error retrieving Cluster Name !", e, log);
         }
@@ -100,10 +101,10 @@ public class CassandraKeyspaceAdminClient {
      * @throws CassandraAdminClientException For errors during locating   kepspaces
      */
 
-    public String[] lisKeyspaces(String clusterName, String username, String password)
+    public String[] lisKeyspaces(String envName, String clusterName, String username, String password)
             throws CassandraAdminClientException {
         try {
-            return cassandraAdminStub.listKeyspaces(clusterName, username, password);
+            return cassandraAdminStub.listKeyspaces(envName, clusterName, username, password);
         } catch (Exception e) {
             throw new CassandraAdminClientException("Error retrieving keyspace names !", e, log);
         }
@@ -115,9 +116,9 @@ public class CassandraKeyspaceAdminClient {
      * @return A <code>String</code> array representing the names of keyspaces
      * @throws CassandraAdminClientException For errors during locating  kepspaces
      */
-    public String[] listKeyspacesOfCurrentUSer() throws CassandraAdminClientException {
+    public String[] listKeyspacesOfCurrentUSer(String envName) throws CassandraAdminClientException {
         try {
-            return cassandraAdminStub.listKeyspacesOfCurrentUser();
+            return cassandraAdminStub.listKeyspacesOfCurrentUser(envName);
         } catch (Exception e) {
             throw new CassandraAdminClientException("Error retrieving keyspace names !", e, log);
         }
@@ -130,11 +131,11 @@ public class CassandraKeyspaceAdminClient {
      * @return A <code>String</code> array representing the names of CFs
      * @throws CassandraAdminClientException For errors during locating CFs
      */
-    public String[] listColumnFamiliesOfCurrentUser(String keyspaceName)
+    public String[] listColumnFamiliesOfCurrentUser(String envName, String keyspaceName)
             throws CassandraAdminClientException {
         validateKeyspace(keyspaceName);
         try {
-            return cassandraAdminStub.listColumnFamiliesOfCurrentUser(keyspaceName);
+            return cassandraAdminStub.listColumnFamiliesOfCurrentUser(envName, keyspaceName);
         } catch (Exception e) {
             throw new CassandraAdminClientException("Error retrieving CF names !", e, log);
         }
@@ -148,13 +149,13 @@ public class CassandraKeyspaceAdminClient {
      * @return An instance of <code>ColumnFamilyInformation </code>
      * @throws CassandraAdminClientException For errors during locating the CF
      */
-    public ColumnFamilyInformation getColumnFamilyInformationOfCurrentUser(String keyspaceName,
+    public ColumnFamilyInformation getColumnFamilyInformationOfCurrentUser(String envName, String keyspaceName,
                                                                            String cfName)
             throws CassandraAdminClientException {
         validateKeyspace(keyspaceName);
         validateCF(cfName);
         try {
-            return cassandraAdminStub.getColumnFamilyOfCurrentUser(keyspaceName, cfName);
+            return cassandraAdminStub.getColumnFamilyOfCurrentUser(envName, keyspaceName, cfName);
         } catch (Exception e) {
             throw new CassandraAdminClientException("Error retrieving the CF for the name " + cfName, e, log);
         }
@@ -197,11 +198,11 @@ public class CassandraKeyspaceAdminClient {
      * @return A <code>KeyspaceInformation</code> representing the meta-data of a keyspace
      * @throws CassandraAdminClientException For errors during locating keyspace
      */
-    public KeyspaceInformation getKeyspaceOfCurrentUser(String keyspaceName)
+    public KeyspaceInformation getKeyspaceOfCurrentUser(String envName, String keyspaceName)
             throws CassandraAdminClientException {
         validateKeyspace(keyspaceName);
         try {
-            return cassandraAdminStub.getKeyspaceofCurrentUser(keyspaceName);
+            return cassandraAdminStub.getKeyspaceofCurrentUser(envName, keyspaceName);
         } catch (Exception e) {
             throw new CassandraAdminClientException("Error retrieving keyspace !", e, log);
         }
@@ -213,11 +214,11 @@ public class CassandraKeyspaceAdminClient {
      * @param keyspaceInformation keyspace information
      * @throws CassandraAdminClientException For errors during adding a keyspace
      */
-    public void addKeyspace(KeyspaceInformation keyspaceInformation, HttpSession session)
+    public void addKeyspace(String envName, KeyspaceInformation keyspaceInformation, HttpSession session)
             throws CassandraAdminClientException {
         validateKeyspaceInformation(keyspaceInformation);
         try {
-            cassandraAdminStub.addKeyspace(keyspaceInformation);
+            cassandraAdminStub.addKeyspace(envName, keyspaceInformation);
         } catch (Exception e) {
             session.setAttribute(CassandraAdminClientConstants.CURRENT_KEYSPACE, null);
             throw new CassandraAdminClientException("Error adding the keyspace !", e, log);
@@ -230,11 +231,11 @@ public class CassandraKeyspaceAdminClient {
      * @param keyspaceInformation keyspace information
      * @throws CassandraAdminClientException For errors during adding a keyspace
      */
-    public void updateKeyspace(KeyspaceInformation keyspaceInformation, HttpSession session)
+    public void updateKeyspace(String envName, KeyspaceInformation keyspaceInformation, HttpSession session)
             throws CassandraAdminClientException {
         validateKeyspaceInformation(keyspaceInformation);
         try {
-            cassandraAdminStub.updatedKeyspace(keyspaceInformation);
+            cassandraAdminStub.updatedKeyspace(envName, keyspaceInformation);
         } catch (Exception e) {
             session.setAttribute(CassandraAdminClientConstants.CURRENT_KEYSPACE, null);
             throw new CassandraAdminClientException("Error updating the keyspace !", e, log);
@@ -262,10 +263,10 @@ public class CassandraKeyspaceAdminClient {
      * @return true for success
      * @throws CassandraAdminClientException For errors during removing a keyspace
      */
-    public boolean deleteKeyspace(String keyspaceName) throws CassandraAdminClientException {
+    public boolean deleteKeyspace(String envName, String keyspaceName) throws CassandraAdminClientException {
         validateKeyspace(keyspaceName);
         try {
-            return cassandraAdminStub.deleteKeyspace(keyspaceName);
+            return cassandraAdminStub.deleteKeyspace(envName, keyspaceName);
         } catch (Exception e) {
             throw new CassandraAdminClientException("Error removing the keyspace !", e, log);
         }
@@ -280,12 +281,12 @@ public class CassandraKeyspaceAdminClient {
      * @return true for success
      * @throws CassandraAdminClientException for errors during removing a CF
      */
-    public boolean deleteColumnFamily(String keyspaceName, String columnFamilyName)
+    public boolean deleteColumnFamily(String envName, String keyspaceName, String columnFamilyName)
             throws CassandraAdminClientException {
         validateKeyspace(keyspaceName);
         validateCF(columnFamilyName);
         try {
-            return cassandraAdminStub.deleteColumnFamily(keyspaceName, columnFamilyName);
+            return cassandraAdminStub.deleteColumnFamily(envName, keyspaceName, columnFamilyName);
         } catch (Exception e) {
             throw new CassandraAdminClientException("Error removing the CF !", e, log);
         }
@@ -301,7 +302,7 @@ public class CassandraKeyspaceAdminClient {
             throws CassandraAdminClientException {
         validateColumnFamilyInformation(columnFamilyInformation);
         try {
-            cassandraAdminStub.addColumnFamily(columnFamilyInformation);
+            cassandraAdminStub.addColumnFamily((String) session.getAttribute("envName"), columnFamilyInformation);
         } catch (Exception e) {
             session.setAttribute(CassandraAdminClientConstants.CURRENT_KEYSPACE, null);
             throw new CassandraAdminClientException("Error adding the CF !", e, log);
@@ -318,7 +319,7 @@ public class CassandraKeyspaceAdminClient {
             throws CassandraAdminClientException {
         validateColumnFamilyInformation(columnFamilyInformation);
         try {
-            cassandraAdminStub.updateColumnFamily(columnFamilyInformation);
+            cassandraAdminStub.updateColumnFamily((String) session.getAttribute("envName"), columnFamilyInformation);
         } catch (Exception e) {
             session.setAttribute(CassandraAdminClientConstants.CURRENT_KEYSPACE, null);
             throw new CassandraAdminClientException("Error updating the CF !", e, log);
@@ -332,11 +333,11 @@ public class CassandraKeyspaceAdminClient {
      * @return Token range as a list
      * @throws CassandraAdminClientException for errors during calling backend service
      */
-    public TokenRangeInformation[] getTokenRange(String keyspace)
+    public TokenRangeInformation[] getTokenRange(String envName, String keyspace)
             throws CassandraAdminClientException {
         validateKeyspace(keyspace);
         try {
-            return cassandraAdminStub.getTokenRange(keyspace);
+            return cassandraAdminStub.getTokenRange(envName, keyspace);
         } catch (Exception e) {
             log.error("Error getting the token range of the keyspace : " + keyspace, e);
         }
@@ -389,5 +390,15 @@ public class CassandraKeyspaceAdminClient {
         if (columnFamilyName == null || "".equals(columnFamilyName.trim())) {
             throw new CassandraAdminClientException("The column family name name is empty or null", log);
         }
+    }
+
+    public String[] getAllEnvironments() throws CassandraAdminClientException {
+        try {
+            String[] envs = cassandraAdminStub.getAllEnvironmentNames();
+            return envs == null ? new String[0] : envs;
+        } catch (Exception e) {
+            log.error("Error getting environments.");
+        }
+        return null;
     }
 }

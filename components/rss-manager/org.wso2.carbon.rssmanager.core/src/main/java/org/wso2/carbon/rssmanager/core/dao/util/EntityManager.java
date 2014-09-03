@@ -19,23 +19,6 @@
 
 package org.wso2.carbon.rssmanager.core.dao.util;
 
-import java.sql.Connection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-import javax.sql.XAConnection;
-import javax.transaction.NotSupportedException;
-import javax.transaction.Synchronization;
-import javax.transaction.SystemException;
-import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
-import javax.transaction.UserTransaction;
-import javax.transaction.xa.XAResource;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
@@ -43,6 +26,19 @@ import org.wso2.carbon.rssmanager.core.RSSTransactionManager;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.jpa.persistence.internal.JPAManagerUtil;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+import javax.sql.XAConnection;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
+import javax.transaction.UserTransaction;
+import javax.transaction.xa.XAResource;
+import java.sql.Connection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 public class EntityManager {
 
@@ -220,7 +216,7 @@ public class EntityManager {
  					}
  				    
  				});*/
-        		transactions.get().commit();  
+        		transactions.get().commit();
         		transactions.remove();
         		//getTransactionManager().commit();
         		 

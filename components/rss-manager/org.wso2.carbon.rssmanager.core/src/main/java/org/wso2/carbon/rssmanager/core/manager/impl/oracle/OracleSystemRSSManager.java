@@ -24,7 +24,6 @@ import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.config.RSSManagementRepository;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
-import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate;
 import org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry;
 import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
@@ -57,6 +56,11 @@ public class OracleSystemRSSManager extends SystemRSSManager {
                 "for Oracle");
     }
 
+    @Override
+    public boolean isDatabaseExist(String rssInstanceName, String databaseName) throws RSSManagerException {
+        return false;
+    }
+
     public DatabaseUser addDatabaseUser(DatabaseUser user) throws RSSManagerException {
         boolean inTx = false;
         Connection conn = null;
@@ -76,12 +80,14 @@ public class OracleSystemRSSManager extends SystemRSSManager {
         user.setRssInstanceName(user.getRssInstanceName());
         user.setType(RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
 
-        RSSInstance rssInstance = this.getEnvironment().getNextAllocatedNode();
-        if (rssInstance == null) {
-            throw new RuntimeException("No valid RSS instance is available for database user " +
-                    "creation");
-        }
         try {
+
+            RSSInstance rssInstance = this.getNextAllocationNode();
+            if (rssInstance == null) {
+                throw new RuntimeException("No valid RSS instance is available for database user " +
+                        "creation");
+            }
+
             conn = this.getConnection(rssInstance.getName());
             conn.setAutoCommit(false);
             String sql = "CREATE USER " + qualifiedUsername + " IDENTIFIED BY '" +
@@ -91,7 +97,6 @@ public class OracleSystemRSSManager extends SystemRSSManager {
             inTx = this.getEntityManager().beginTransaction();
 
             final int tenantId = RSSManagerUtil.getTenantId();
-            this.getRSSDAO().getDatabaseDAO().addDatabase(getEnvironmentName(), null, tenantId);
             this.getRSSDAO().getDatabaseUserDAO().addDatabaseUser(getEnvironmentName(),
                     rssInstance, user, tenantId);
             this.getRSSDAO().getUserDatabaseEntryDAO().addUserDatabaseEntry(getEnvironmentName(),
@@ -125,7 +130,8 @@ public class OracleSystemRSSManager extends SystemRSSManager {
         PreparedStatement stmt = null;
         boolean inTx = false;
         try {
-            RSSInstance rssInstance = this.getEnvironment().getNextAllocatedNode();
+            final int tenantId = RSSManagerUtil.getTenantId();
+            RSSInstance rssInstance = this.getEnvironmentManagementDAO().getRSSInstanceDAO().getRSSInstance(this.getEnvironmentName(),rssInstanceName,tenantId);
             if (rssInstance == null) {
                 throw new RuntimeException("Unable to resolve the RSS instance on which the " +
                         "database user '" + username + "' exists");
@@ -140,19 +146,12 @@ public class OracleSystemRSSManager extends SystemRSSManager {
             /* Initiating the transaction */
             inTx = this.getEntityManager().beginTransaction();
 
-            final int tenantId = RSSManagerUtil.getTenantId();
             this.getRSSDAO().getUserPrivilegesDAO().removeDatabasePrivileges(
                     getEnvironmentName(), rssInstance.getId(), username, tenantId);
             //TODO
             /*this.getRSSDAO().getUserDatabaseEntryDAO().removeUserDatabaseEntriesByUser(
                     getEnvironmentName(), rssInstance.getId(), username,
                     rssInstance.getInstanceType(), tenantId);*/
-            this.getRSSDAO().getDatabaseUserDAO().removeDatabaseUser(getEnvironmentName(),
-                    rssInstance.getName(), username, tenantId);
-
-            this.getRSSDAO().getDatabaseDAO().removeDatabase(getEnvironmentName(),
-                    rssInstanceName, username, tenantId);
-
             /* Actual database creation is committed just before committing the meta info into RSS
           * management repository. This is done as it is not possible to control CREATE, DROP,
           * ALTER operations within a JTA transaction since those operations are committed
@@ -188,7 +187,7 @@ public class OracleSystemRSSManager extends SystemRSSManager {
         try {
             final int tenantId = RSSManagerUtil.getTenantId();
             String rssInstanceName = this.getRSSDAO().getDatabaseDAO().resolveRSSInstanceByDatabase(
-                    this.getEnvironmentName(), null, databaseName,
+                    this.getEnvironmentName(), databaseName,
                     RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, tenantId);
             RSSInstance rssInstance = this.getEnvironment().getRSSInstance(rssInstanceName);
             if (rssInstance == null) {
@@ -229,5 +228,13 @@ public class OracleSystemRSSManager extends SystemRSSManager {
                 "supported for Oracle");
     }
 
+    @Override
+    public boolean isDatabaseUserExist(String rssInstanceName, String username) throws RSSManagerException {
+        return false;
+    }
 
+    @Override
+    public DatabaseUser editDatabaseUser(String environmentName, DatabaseUser databaseUser) {
+        return null;
+    }
 }

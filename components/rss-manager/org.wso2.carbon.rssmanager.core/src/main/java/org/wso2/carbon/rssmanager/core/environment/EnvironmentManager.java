@@ -18,17 +18,6 @@
 
 package org.wso2.carbon.rssmanager.core.environment;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import javax.sql.DataSource;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
@@ -41,21 +30,20 @@ import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplateEntry;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
-import org.wso2.carbon.rssmanager.core.environment.dao.DatabasePrivilegeTemplateDAO;
-import org.wso2.carbon.rssmanager.core.environment.dao.EnvironmentDAO;
-import org.wso2.carbon.rssmanager.core.environment.dao.EnvironmentManagementDAO;
-import org.wso2.carbon.rssmanager.core.environment.dao.EnvironmentManagementDAOFactory;
-import org.wso2.carbon.rssmanager.core.environment.dao.RSSInstanceDAO;
+import org.wso2.carbon.rssmanager.core.environment.dao.*;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.RSSManagerDataHolder;
 import org.wso2.carbon.rssmanager.core.jpa.persistence.dao.EntityBaseDAO;
-import org.wso2.carbon.rssmanager.core.jpa.persistence.entity.EntityType;
 import org.wso2.carbon.rssmanager.core.jpa.persistence.internal.JPAManagerUtil;
 import org.wso2.carbon.rssmanager.core.jpa.persistence.internal.PersistenceManager;
 import org.wso2.carbon.rssmanager.core.manager.adaptor.RSSManagerAdaptor;
 import org.wso2.carbon.rssmanager.core.manager.adaptor.RSSManagerAdaptorFactory;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+
+import javax.sql.DataSource;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class EnvironmentManager {
 
@@ -126,7 +114,6 @@ public class EnvironmentManager {
 		boolean inTx = false;
 		try {
 			int tenantId = RSSManagerUtil.getTenantId();
-			
 			EnvironmentDAO envDao = this.getEnvironmentDAOMgr().getEnvironmentDAO();
 			Environment env = validateEnvironment(rssInstance.getEnvironmentName(),envDao);
 			
@@ -136,9 +123,8 @@ public class EnvironmentManager {
 				throw new RSSManagerException(" RSSInstance already exist ");
 			}
 			rssInstance.setEnvironment(env);
-			closeJPASession();
-
 			inTx = this.getEntityManager().beginTransaction();
+            joinTransaction();
 			rssInstance.setTenantId((long) tenantId);
 			this.getEnvironmentDAOMgr().getRSSInstanceDAO()
 			    .insert(rssInstance);
@@ -161,26 +147,18 @@ public class EnvironmentManager {
 		boolean inTx = false;
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
-			
-			EnvironmentDAO envDao = this.getEnvironmentDAOMgr().getEnvironmentDAO();
-			Environment env = validateEnvironment(environmentName,envDao);
-			
-			RSSInstanceDAO dao = this.getEnvironmentDAOMgr().getRSSInstanceDAO();
+            RSSInstanceDAO dao = this.getEnvironmentDAOMgr().getRSSInstanceDAO();
 			RSSInstance entity = dao.getRSSInstance(environmentName, rssInstanceName, tenantId);
-			//closeJPASession();
-
 			inTx = getEntityManager().beginTransaction();
-			//overrideJPASession(dao);
 			joinTransaction();
-			//entity = dao.merge(entity);
 			dao.remove(entity);
 			if (inTx) {
 				this.getEntityManager().endJPATransaction();
 			}
 		} catch (RSSDAOException e) {
-			if (inTx) {
-				getEntityManager().rollbackJPATransaction();
-			}
+            if (inTx) {
+                getEntityManager().rollbackJPATransaction();
+            }
 			String msg = "Error occurred while removing metadata related to " + "RSS instance '" + rssInstanceName + "' from RSS metadata repository : " + e.getMessage();
 			handleException(msg, e);
 		} finally {
@@ -211,9 +189,6 @@ public class EnvironmentManager {
 			entity.setTenantId((long) tenantId);
 			entity.setDbmsType(rssInstance.getInstanceType());
 			entity.setEnvironment(env);
-
-			//closeJPASession();
-
 			inTx = this.getEntityManager().beginTransaction();
 			//overrideJPASession(dao);
 			joinTransaction();
@@ -295,6 +270,32 @@ public class EnvironmentManager {
 		return rssInstances;
 	}
 
+    public RSSInstance[] getRSSInstancesList() throws RSSManagerException {
+        RSSInstance[] rssInstances = new RSSInstance[0];
+        Set<RSSInstance> serverSet = new HashSet<RSSInstance>();
+        try {
+            final int tenantId = RSSManagerUtil.getTenantId();
+            RSSInstanceDAO dao = this.getEnvironmentDAOMgr().getRSSInstanceDAO();
+            RSSInstance[] systemServers = dao.getSystemRSSInstances(tenantId);
+            RSSInstance[] UserDefinedInstances = dao.getUserDefinedRSSInstances(tenantId);
+            if (UserDefinedInstances != null && UserDefinedInstances.length > 0) {
+                serverSet.addAll(Arrays.asList(UserDefinedInstances));
+            }
+
+            if (systemServers != null && systemServers.length > 0) {
+                serverSet.addAll(Arrays.asList(systemServers));
+            }
+
+            rssInstances = serverSet.toArray(new RSSInstance[serverSet.size()]);
+        } catch (RSSDAOException e) {
+            String msg = "Error occurred while retrieving metadata related to " + "RSS instances from RSS metadata repository : " + e.getMessage();
+            this.handleException(msg, e);
+        } finally {
+            this.closeJPASession();
+        }
+        return rssInstances;
+    }
+
 	public void initEnvironments(String rssProvider, RSSManagementRepository repository)
 	                                                                                    throws RSSManagerException {
 
@@ -363,11 +364,7 @@ public class EnvironmentManager {
 			if (!isEvnExist) {
 				envDAO.insert(environment);
 				managedEnv = environment;
-			} else {
-
 			}
-
-
 			//By doing this it will not ignore dynamically added new instances, which are not in rss-config.xml
 			for (RSSInstance instanceFromDB : instances) {	
 				if (RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equals(instanceFromDB.getInstanceType()) || 
@@ -379,10 +376,11 @@ public class EnvironmentManager {
 				
 				String key = instanceFromDB.getName();
 				RSSInstance instanceFromBoth = rssInstancesMapFromConfig.get(key);
-				instanceFromBoth.setTenantId((long) tenantId);
-				instanceFromBoth.setEnvironment(managedEnv);
+				
 				if(instanceFromBoth != null){
-					//TODO apply changes
+					instanceFromBoth.setTenantId((long) tenantId);
+					instanceFromBoth.setEnvironment(managedEnv);
+					RSSManagerUtil.applyInstanceChanges(instanceFromDB, instanceFromBoth);
 					
 				}
 				rssInstanceMapFromDB.put((managedEnv.getName() + instanceFromDB.getName() + tenantId), instanceFromDB);
@@ -444,6 +442,7 @@ public class EnvironmentManager {
 			this.closeJPASession();
 		}
 	}
+	
 
 	public void handleException(String msg, Exception e) throws RSSManagerException {
 		log.error(msg, e);
@@ -476,9 +475,7 @@ public class EnvironmentManager {
 			DatabasePrivilegeTemplateDAO dao = this.getEnvironmentDAOMgr().getDatabasePrivilegeTemplateDAO();
 			DatabasePrivilegeTemplate template = dao.getDatabasePrivilegesTemplate(environmentName,
 			                                                                       templateName, tenantId);
-
 			//this.closeJPASession();
-
 			inTx = getEntityManager().beginTransaction();
 			//this.overrideJPASession(dao);
 			joinTransaction();

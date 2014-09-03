@@ -66,5 +66,6 @@ public interface RSSManagerAdaptor {
 
     boolean isDatabaseUserExist(String rssInstanceName, String username, String type) throws RSSManagerException;
 
+    DatabaseUser editDatabaseUser(String environmentName,DatabaseUser databaseUser) throws RSSManagerException;
 
 }

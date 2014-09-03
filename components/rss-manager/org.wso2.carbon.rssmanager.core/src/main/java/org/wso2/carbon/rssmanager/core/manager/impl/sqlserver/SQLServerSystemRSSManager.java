@@ -30,7 +30,6 @@ import org.wso2.carbon.rssmanager.core.dto.common.UserDatabasePrivilege;
 import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
-import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstanceDSWrapper;
 import org.wso2.carbon.rssmanager.core.environment.Environment;
 import org.wso2.carbon.rssmanager.core.exception.EntityAlreadyExistsException;
 import org.wso2.carbon.rssmanager.core.exception.EntityNotFoundException;
@@ -42,11 +41,7 @@ import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -62,7 +57,7 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
         Connection conn = null;
         PreparedStatement stmt = null;
         AtomicBoolean isInTx = new AtomicBoolean(false);
-
+        RSSInstance rssInstance = null;
         final String qualifiedDatabaseName =
                 RSSManagerUtil.getFullyQualifiedDatabaseName(database.getName());
 
@@ -74,14 +69,13 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
             throw new EntityAlreadyExistsException(msg);
         }
 
-        RSSInstance rssInstance = this.getEnvironment().getNextAllocatedNode();
-        if (rssInstance == null) {
-            String msg = "RSS instance " + database.getRssInstanceName() + " does not exist";
-            log.error(msg);
-            throw new EntityNotFoundException(msg);
-        }
-
         try {
+            rssInstance = this.getNextAllocationNode();
+            if (rssInstance == null) {
+                String msg = "RSS instance " + database.getRssInstanceName() + " does not exist";
+                log.error(msg);
+                throw new EntityNotFoundException(msg);
+            }
             /* Validating database name to avoid any possible SQL injection attack */
             RSSManagerUtil.checkIfParameterSecured(qualifiedDatabaseName);
 
@@ -121,7 +115,7 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
         PreparedStatement stmt = null;
         AtomicBoolean isInTx = new AtomicBoolean(false);
 
-        RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName);
+        RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
         if (rssInstance == null) {
             String msg = "Unresolvable RSS Instance. Database " + databaseName + " does not exist";
             log.error(msg);
@@ -136,7 +130,7 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
             String sql = "DROP DATABASE " + databaseName;
             stmt = conn.prepareStatement(sql);
 
-            removeDatabase(isInTx, rssInstance.getName(), databaseName, rssInstance);
+            super.removeDatabase(isInTx, rssInstance.getName(), databaseName, rssInstance,RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
 
             stmt.execute();
 
@@ -173,18 +167,12 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
         String qualifiedUsername = RSSManagerUtil.getFullyQualifiedUsername(user.getName());
 
         try {
-            super.addDatabaseUser(isInTx, user, qualifiedUsername);
-
-            for (RSSInstanceDSWrapper wrapper : getEnvironment().getDSWrapperRepository()
-                    .getAllRSSInstanceDSWrappers()) {
+            super.addDatabaseUser(isInTx, user, qualifiedUsername,RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            RSSInstance[] rssInstances = getEnvironmentManagementDAO().getRSSInstanceDAO().getSystemRSSInstancesInEnvironment(
+                    MultitenantConstants.SUPER_TENANT_ID,this.getEnvironmentName());
+            for (RSSInstance rssInstance : rssInstances) {
                 try {
-                    RSSInstance rssInstance;
-                    PrivilegedCarbonContext.startTenantFlow();
-                    PrivilegedCarbonContext.getThreadLocalCarbonContext()
-                            .setTenantId(MultitenantConstants.SUPER_TENANT_ID);
-                    rssInstance = this.getEnvironment().getRSSInstance(wrapper.getName());
-                    PrivilegedCarbonContext.endTenantFlow();
-
+                    rssInstance = this.getEnvironment().getRSSInstance(rssInstance.getName());
                     conn = getConnection(rssInstance.getName());
                     conn.setAutoCommit(false);
                     String password = user.getPassword();
@@ -263,16 +251,10 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
         PreparedStatement stmt = null;
         AtomicBoolean isInTx = new AtomicBoolean(false);
         try {
-            removeDatabaseUser(isInTx, type, username);
-
-            for (RSSInstanceDSWrapper wrapper :
-                    getEnvironment().getDSWrapperRepository().getAllRSSInstanceDSWrappers()) {
+            super.removeDatabaseUser(isInTx, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            for (RSSInstance rssInstance: getEnvironmentManagementDAO().getRSSInstanceDAO().getSystemRSSInstances(MultitenantConstants.SUPER_TENANT_ID)) {
                 try {
-                    RSSInstance rssInstance;
-                    PrivilegedCarbonContext.startTenantFlow();
-                    PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantId(
-                            MultitenantConstants.SUPER_TENANT_ID);
-                    rssInstance = this.getEnvironment().getRSSInstance(wrapper.getName());
+                    rssInstance = this.getEnvironment().getRSSInstance(rssInstance.getName());
                     PrivilegedCarbonContext.endTenantFlow();
 
                     conn = getConnection(rssInstance.getName());
@@ -328,7 +310,7 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
 
             final int tenantId = RSSManagerUtil.getTenantId();
             String rssInstanceName = this.getRSSDAO().getDatabaseDAO().resolveRSSInstanceByDatabase(
-                    this.getEnvironmentName(), null, databaseName,
+                    this.getEnvironmentName(), databaseName,
                     RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, tenantId);
             RSSInstance rssInstance = this.getEnvironment().getRSSInstance(rssInstanceName);
             if (rssInstance == null) {
@@ -337,7 +319,6 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
             }
 
             user.setRssInstanceName(rssInstance.getName());
-
             UserDatabasePrivilege entity = this.getRSSDAO()
                     .getUserPrivilegesDAO()
                     .getUserDatabasePrivileges(getEnvironmentName(),
@@ -421,7 +402,7 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
         String databaseName = entry.getDatabaseName();
         String username = entry.getUsername();
 
-        RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName);
+        RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
 
         try {
             super.attachUser(isInTx, entry, privileges, rssInstance);
@@ -492,7 +473,7 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
         PreparedStatement stmtDetachUser = null;
 
         try {
-            RSSInstance rssInstance = detachUser(isInTx, entry);
+            RSSInstance rssInstance = super.detachUser(isInTx, entry, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
 
             conn = getConnection(rssInstance.getName());
             conn.setAutoCommit(false);
@@ -661,4 +642,38 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
         return granted.equals("Y");
     }
 
+    public boolean isDatabaseExist(String rssInstanceName, String databaseName) throws RSSManagerException {
+        boolean isExist=false;
+        try {
+            isExist = super.isDatabaseExist(rssInstanceName,databaseName,RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+        }catch(Exception ex){
+            if (ex instanceof EntityAlreadyExistsException) {
+                handleException(ex.getMessage(), ex);
+            }
+            String msg = "Error while check whether database '" + databaseName +
+                    "' on RSS instance : " +rssInstanceName+ "exists"+ ex.getMessage();
+            handleException(msg, ex);
+        }
+        return isExist;
+    }
+
+    public boolean isDatabaseUserExist(String rssInstanceName, String username) throws RSSManagerException {
+        boolean isExist=false;
+        try {
+            isExist = super.isDatabaseUserExist(rssInstanceName,username,RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+        }catch(Exception ex){
+            if (ex instanceof EntityAlreadyExistsException) {
+                handleException(ex.getMessage(), ex);
+            }
+            String msg = "Error while check whether user '" + username +
+                    "' on RSS instance : " +rssInstanceName+ "exists"+ ex.getMessage();
+            handleException(msg, ex);
+        }
+        return isExist;
+    }
+
+    @Override
+    public DatabaseUser editDatabaseUser(String environmentName, DatabaseUser databaseUser) {
+        return null;
+    }
 }
