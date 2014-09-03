@@ -182,10 +182,14 @@
                                             </td>
                                             <td>
                                                 <input type="hidden" name="keyspaceName<%=j%>" id="keyspaceName<%=j%>" value="<%=name%>"/>
+                                                <%
+                                                if(rolePermissions.length != 0){
+                                                %>
                                                 <a class="edit-icon-link" href="#"
                                                    onclick="location.href = 'keyspace_dashboard.jsp?name=<%=name%>&setPermissions=true#permissionArea';"
                                                    href="#"><fmt:message
                                                         key="cassandra.actions.share"/></a>
+                                                <%}%>
                                                 <a class="edit-icon-link" href="#"
                                                    onclick="location.href = 'add_edit_keyspace.jsp?region=region1&item=cassandra_ks_mgt_create_menu&mode=edit&name=' + '<%=name%>';"><fmt:message
                                                         key="cassandra.actions.edit"/></a>

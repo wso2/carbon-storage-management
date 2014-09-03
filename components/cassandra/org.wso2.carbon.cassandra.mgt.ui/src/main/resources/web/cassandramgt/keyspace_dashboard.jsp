@@ -289,10 +289,16 @@
                                     && !keyspace.equals("system_traces")) {%>
                                 <td>
                                      <input type="hidden" name="cfName<%=j%>" id="cfName<%=j%>" value="<%=name%>"/>
+                                 <%
+                                 if(rolePermissions.length != 0){
+                                 %>
                                     <a class="edit-icon-link"
                                        onclick="location.href = 'cf_dashboard.jsp?keyspaceName=<%=keyspace%>&cfName=<%=name%>&setPermissions=true#permissionArea';"
                                        href="#"><fmt:message
                                             key="cassandra.actions.share"/></a>
+                                 <%
+                                 }
+                                 %>
                                     <a class="edit-icon-link"
                                        onclick="showCFEditor('<%=keyspace%>','<%=j%>');"
                                        href="#"><fmt:message
