@@ -1,10 +1,9 @@
 package org.wso2.carbon.rssmanager.core.jpa.persistence.dao;
 
-import java.util.List;
+import org.wso2.carbon.rssmanager.core.jpa.persistence.entity.EntityType;
 
 import javax.persistence.EntityManager;
-
-import org.wso2.carbon.rssmanager.core.jpa.persistence.entity.EntityType;
+import java.util.List;
 
 /**
  * A DAO that provides access to an entity must implement this interface.

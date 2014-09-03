@@ -35,10 +35,14 @@ import org.apache.cassandra.exceptions.UnauthorizedException;
 import org.apache.cassandra.thrift.TokenRange;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.cassandra.common.CassandraConstants;
 import org.wso2.carbon.cassandra.common.auth.Action;
+import org.wso2.carbon.cassandra.common.auth.AuthUtils;
 import org.wso2.carbon.cassandra.common.cache.UserAccessKeyCacheEntry;
 import org.wso2.carbon.cassandra.dataaccess.ClusterInformation;
 import org.wso2.carbon.cassandra.dataaccess.DataAccessService;
+import org.wso2.carbon.cassandra.mgt.environment.Environment;
+import org.wso2.carbon.cassandra.mgt.environment.EnvironmentManager;
 import org.wso2.carbon.cassandra.mgt.internal.CassandraAdminDataHolder;
 import org.wso2.carbon.cassandra.mgt.util.CassandraManagementUtils;
 import org.wso2.carbon.context.CarbonContext;
@@ -53,6 +57,7 @@ import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.cache.Cache;
 import javax.cache.Caching;
+import javax.sql.DataSource;
 import java.io.*;
 import java.util.*;
 
@@ -74,8 +79,8 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
      *
      */
 
-    public String getClusterName() throws CassandraServerManagementException {
-        Cluster cluster = getCluster(null);
+    public String getClusterName(String environment) throws CassandraServerManagementException {
+        Cluster cluster = getCluster(environment, null);
         return cluster.getName();
     }
 
@@ -87,7 +92,7 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
      * @throws CassandraServerManagementException
      *          for any errors during locating keyspaces
      */
-    public String[] listKeyspaces(String clusterName, String username, String password)
+    public String[] listKeyspaces(String environment, String clusterName, String username, String password)
             throws CassandraServerManagementException {
 
         if (username == null || "".equals(username.trim())) {
@@ -105,7 +110,7 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
         ClusterInformation clusterInfo =
                 new ClusterInformation(username, password);
         clusterInfo.setClusterName(clusterName);
-        return getKeyspaces(clusterInfo);
+        return getKeyspaces(environment, clusterInfo);
     }
 
     /**
@@ -115,8 +120,8 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
      * @throws CassandraServerManagementException
      *          for any errors during locating keyspaces
      */
-    public String[] listKeyspacesOfCurrentUser() throws CassandraServerManagementException {
-        return getKeyspaces(null);
+    public String[] listKeyspacesOfCurrentUser(String environment) throws CassandraServerManagementException {
+        return getKeyspaces(environment, null);
     }
 
     /**
@@ -127,9 +132,9 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
      * @throws CassandraServerManagementException
      *          For any errors
      */
-    public String[] listColumnFamiliesOfCurrentUser(String keyspaceName)
+    public String[] listColumnFamiliesOfCurrentUser(String environment, String keyspaceName)
             throws CassandraServerManagementException {
-        KeyspaceDefinition keyspaceDefinition = getKeyspaceDefinition(keyspaceName);
+        KeyspaceDefinition keyspaceDefinition = getKeyspaceDefinition(environment, keyspaceName);
 
         List<String> cfNames = new ArrayList<String>();
         for (ColumnFamilyDefinition columnFamilyDefinition : keyspaceDefinition.getCfDefs()) {
@@ -149,10 +154,10 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
      * @throws CassandraServerManagementException
      *          For any errors during accessing a keyspace
      */
-    public KeyspaceInformation getKeyspaceofCurrentUser(String keyspaceName)
+    public KeyspaceInformation getKeyspaceofCurrentUser(String environment, String keyspaceName)
             throws CassandraServerManagementException {
 
-        KeyspaceDefinition keyspaceDefinition = getKeyspaceDefinition(keyspaceName);
+        KeyspaceDefinition keyspaceDefinition = getKeyspaceDefinition(environment, keyspaceName);
         KeyspaceInformation keyspaceInformation = new KeyspaceInformation(keyspaceDefinition.getName());
         keyspaceInformation.setStrategyClass(keyspaceDefinition.getStrategyClass());
         keyspaceInformation.setReplicationFactor(keyspaceDefinition.getReplicationFactor());
@@ -179,11 +184,11 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
      * @throws CassandraServerManagementException
      *          for errors in removing operation
      */
-    public ColumnFamilyInformation getColumnFamilyOfCurrentUser(
-            String keyspaceName, String columnFamilyName) throws CassandraServerManagementException {
+    public ColumnFamilyInformation getColumnFamilyOfCurrentUser(String environment,
+                            String keyspaceName, String columnFamilyName) throws CassandraServerManagementException {
         ColumnFamilyInformation info = null;
         try {
-            KeyspaceDefinition keyspaceDefinition = getKeyspaceDefinition(keyspaceName);
+            KeyspaceDefinition keyspaceDefinition = getKeyspaceDefinition(environment, keyspaceName);
             CassandraManagementUtils.validateCF(columnFamilyName);
 
             //TODO change hector to get exactly one CF
@@ -317,10 +322,10 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
      * @throws CassandraServerManagementException
      *          For any error
      */
-    public void addKeyspace(KeyspaceInformation keyspaceInformation)
+    public void addKeyspace(String environment, KeyspaceInformation keyspaceInformation)
             throws CassandraServerManagementException {
         CassandraManagementUtils.validateKeyspaceInformation(keyspaceInformation);
-        addOrUpdateKeyspace(true, keyspaceInformation.getName(), keyspaceInformation.getReplicationFactor(),
+        addOrUpdateKeyspace(environment, true, keyspaceInformation.getName(), keyspaceInformation.getReplicationFactor(),
                 keyspaceInformation.getStrategyClass(), keyspaceInformation.getStrategyOptions());
     }
 
@@ -331,10 +336,10 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
      * @throws CassandraServerManagementException
      *          For any error during update operation
      */
-    public void updatedKeyspace(KeyspaceInformation keyspaceInformation)
+    public void updatedKeyspace(String environment, KeyspaceInformation keyspaceInformation)
             throws CassandraServerManagementException {
         CassandraManagementUtils.validateKeyspaceInformation(keyspaceInformation);
-        addOrUpdateKeyspace(false, keyspaceInformation.getName(), keyspaceInformation.getReplicationFactor(),
+        addOrUpdateKeyspace(environment, false, keyspaceInformation.getName(), keyspaceInformation.getReplicationFactor(),
                 keyspaceInformation.getStrategyClass(), keyspaceInformation.getStrategyOptions());
     }
 
@@ -366,6 +371,16 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
     public AuthorizedRolesInformation[] getResourcePermissionsOfRoles(String resourcePath)
             throws CassandraServerManagementException {
         try {
+            int prefixLength = AuthUtils.RESOURCE_PATH_PREFIX.length();
+            String pathFromEnv = resourcePath.substring(prefixLength + 1);
+            String envName = pathFromEnv;
+            if(pathFromEnv.contains("/")){
+                envName = pathFromEnv.substring(0, pathFromEnv.indexOf("/"));
+            }
+            EnvironmentManager envManager = CassandraAdminDataHolder.getInstance().getEnvironmentManager();
+            if(envManager.getEnvironment(envName).isExternal()){
+                return new AuthorizedRolesInformation[0];
+            }
             CassandraAdminDataHolder dataHolder = CassandraAdminDataHolder.getInstance();
             UserRealm userRealm = dataHolder.getRealmForCurrentTenant();
             AuthorizationManager authorizationManager = userRealm.getAuthorizationManager();
@@ -396,10 +411,10 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
      * @throws CassandraServerManagementException
      *          for errors in removing operation
      */
-    public boolean deleteKeyspace(String keyspaceName) throws CassandraServerManagementException {
+    public boolean deleteKeyspace(String environment, String keyspaceName) throws CassandraServerManagementException {
         CassandraManagementUtils.validateKeyspace(keyspaceName);
         try {
-            Cluster cluster = getCluster(null);
+            Cluster cluster = getCluster(environment, null);
             cluster.dropKeyspace(keyspaceName.trim());
             return true;
         } catch (HInvalidRequestException e){
@@ -418,9 +433,9 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
      * @throws CassandraServerManagementException
      *          For errors during adding a CF
      */
-    public void addColumnFamily(ColumnFamilyInformation columnFamilyInformation)
+    public void addColumnFamily(String environment, ColumnFamilyInformation columnFamilyInformation)
             throws CassandraServerManagementException {
-        addOrUpdateCF(true, columnFamilyInformation);
+        addOrUpdateCF(environment, true, columnFamilyInformation);
     }
 
     /**
@@ -430,9 +445,9 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
      * @throws CassandraServerManagementException
      *          For errors during updating a CF
      */
-    public void updateColumnFamily(ColumnFamilyInformation columnFamilyInformation)
+    public void updateColumnFamily(String environment, ColumnFamilyInformation columnFamilyInformation)
             throws CassandraServerManagementException {
-        addOrUpdateCF(false, columnFamilyInformation);
+        addOrUpdateCF(environment, false, columnFamilyInformation);
     }
 
     /**
@@ -444,12 +459,12 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
      * @throws CassandraServerManagementException
      *          for errors in removing operation
      */
-    public boolean deleteColumnFamily(String keyspaceName, String columnFamilyName)
+    public boolean deleteColumnFamily(String environment, String keyspaceName, String columnFamilyName)
             throws CassandraServerManagementException {
         CassandraManagementUtils.validateKeyspace(keyspaceName);
         CassandraManagementUtils.validateCF(columnFamilyName);
         try {
-            Cluster cluster = getCluster(null);
+            Cluster cluster = getCluster(environment, null);
             cluster.dropColumnFamily(keyspaceName.trim(), columnFamilyName.trim());
             return true;
         } catch (HInvalidRequestException e){
@@ -469,10 +484,10 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
      * @throws CassandraServerManagementException
      *          for errors during getting the token ring
      */
-    public TokenRangeInformation[] getTokenRange(String keyspace)
+    public TokenRangeInformation[] getTokenRange(String environment, String keyspace)
             throws CassandraServerManagementException {
         CassandraManagementUtils.validateKeyspace(keyspace);
-        ThriftCluster thriftCluster = (ThriftCluster) getCluster(null);     // hector limitation
+        ThriftCluster thriftCluster = (ThriftCluster) getCluster(environment, null);     // hector limitation
         Set<CassandraHost> cassandraHosts = thriftCluster.getKnownPoolHosts(true);  // This returns all endpoints if only auto discovery is set.
         int rpcPort = CassandraHost.DEFAULT_PORT;
         for (CassandraHost cassandraHost : cassandraHosts) {
@@ -508,6 +523,35 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
         return tokenRangeInformations.toArray(new TokenRangeInformation[tokenRangeInformations.size()]);
     }
 
+    public void deleteEnvironment(String environmentName) throws CassandraServerManagementException {
+        CassandraAdminDataHolder.getInstance().getEnvironmentManager().deleteEnvironment(environmentName);
+    }
+
+    public Environment getEnvironment(String envName) throws CassandraServerManagementException {
+        return CassandraAdminDataHolder.getInstance().getEnvironmentManager().getEnvironment(envName);
+    }
+
+    public void addEnvironment(Environment env) throws CassandraServerManagementException {
+        CassandraAdminDataHolder.getInstance().getEnvironmentManager().addEnvironment(env);
+    }
+
+    public Environment[] getAllEnvironments() throws CassandraServerManagementException {
+        return CassandraAdminDataHolder.getInstance().getEnvironmentManager().getAllEnvironments();
+    }
+
+    public String[] getAllEnvironmentNames() throws CassandraServerManagementException{
+        Environment[] envs = this.getAllEnvironments();
+        if (envs != null) {
+            String[] envNames = new String[envs.length];
+            int i = 0;
+            for (Environment env : envs) {
+                envNames[i++] = env.getEnvironmentName();
+            }
+            return envNames;
+        }
+        return new String[0];
+    }
+
     /**
      * Helper method to get all keyspace names
      *
@@ -516,9 +560,9 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
      * @throws CassandraServerManagementException
      *          for errors during accessing keyspaces
      */
-    private String[] getKeyspaces(ClusterInformation clusterInformation)
+    private String[] getKeyspaces(String environment, ClusterInformation clusterInformation)
             throws CassandraServerManagementException {
-        Cluster cluster = getCluster(clusterInformation);
+        Cluster cluster = getCluster(environment, clusterInformation);
         List<String> keyspaceNames = new ArrayList<String>();
         for (KeyspaceDefinition keyspaceDefinition : cluster.describeKeyspaces()) {
             String name = keyspaceDefinition.getName();
@@ -537,41 +581,47 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
      * @throws CassandraServerManagementException
      *          for errors during accessing a hector cluster
      */
-    private Cluster getCluster(ClusterInformation clusterInfo) throws CassandraServerManagementException {
+    private Cluster getCluster(String envName, ClusterInformation clusterInfo) throws CassandraServerManagementException {
         DataAccessService dataAccessService =
                 CassandraAdminDataHolder.getInstance().getDataAccessService();
         Cluster cluster = null;
-        boolean resetConnection = true;
-        try {
-            if (clusterInfo != null) {
-                cluster = dataAccessService.getCluster(clusterInfo, resetConnection);
-            } else {
-                //Create a key for a user and store it in a distributed cache.
-                //Distributed cache is visible to all Cassandra cluster
-                //TODO: add cache related configuration to a common cassandra config file
-                //String sharedKey = getSharedKey();
-                String tenantDomain = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain();
-                String tenantUserName = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
-                if (!tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
-                    tenantUserName = tenantUserName + "@" + tenantDomain;
+        if(CassandraConstants.CASSANDRA_DEFAULT_ENVIRONMENT.equalsIgnoreCase(envName)){
+            boolean resetConnection = true;
+            try {
+                if (clusterInfo != null) {
+                    cluster = dataAccessService.getCluster(clusterInfo, resetConnection);
+                } else {
+                    //Create a key for a user and store it in a distributed cache.
+                    //Distributed cache is visible to all Cassandra cluster
+                    //TODO: add cache related configuration to a common cassandra config file
+                    //String sharedKey = getSharedKey();
+                    String tenantDomain = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain();
+                    String tenantUserName = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
+                    if (!tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+                        tenantUserName = tenantUserName + "@" + tenantDomain;
+                    }
+                    String sharedKey = getCachedSharedKey(tenantUserName);
+                    cluster = dataAccessService.getClusterForCurrentUser(sharedKey, resetConnection);
                 }
-                String sharedKey = getCachedSharedKey(tenantUserName);
-                cluster = dataAccessService.getClusterForCurrentUser(sharedKey, resetConnection);
+            } catch (Throwable e) {
+                super.getHttpSession().removeAttribute(
+                        CassandraManagementConstants.AuthorizationActions.USER_ACCESSKEY_ATTR_NAME); //this allows to get a new key
+                handleException("Error getting cluster");
             }
-        } catch (Throwable e) {
-            super.getHttpSession().removeAttribute(
-                    CassandraManagementConstants.AuthorizationActions.USER_ACCESSKEY_ATTR_NAME); //this allows to get a new key
-            handleException("Error getting cluster");
+        } else {
+            Environment env = CassandraAdminDataHolder.getInstance().getEnvironmentManager().getEnvironment(envName);
+            String dataSourceName = env.getDataSourceName();
+            cluster = CassandraManagementUtils.lookupCluster(dataSourceName, null);
         }
         return cluster;
     }
 
     /* Helper method for adding or updating a keyspace */
 
-    private void addOrUpdateKeyspace(boolean isAdd, String ksName, int replicationFactor,
+    private void addOrUpdateKeyspace(String environment, boolean isAdd, String ksName, int replicationFactor,
                                      String replicationStrategy, String[] strategyOptions) throws CassandraServerManagementException {
 
-        Cluster cluster = getCluster(null);
+        Cluster cluster = getCluster(environment, null);
         try {
             ThriftKsDef definition =
                     (ThriftKsDef) HFactory.createKeyspaceDefinition(ksName.trim(), replicationStrategy,
@@ -599,7 +649,7 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
 
     /* Helper method for adding or updating a CF */
 
-    private void addOrUpdateCF(boolean isAdd, ColumnFamilyInformation columnFamilyInformation)
+    private void addOrUpdateCF(String environment, boolean isAdd, ColumnFamilyInformation columnFamilyInformation)
             throws CassandraServerManagementException {
 
         String keyspaceName = columnFamilyInformation.getKeyspace();
@@ -671,7 +721,7 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
         }
 
         try {
-            Cluster cluster = getCluster(null);
+            Cluster cluster = getCluster(environment, null);
             if (isAdd) {
                 cluster.addColumnFamily(new ThriftCfDef(familyDefinition));
             } else {
@@ -686,10 +736,10 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
         }
     }
 
-    private KeyspaceDefinition getKeyspaceDefinition(
-            String keyspace) throws CassandraServerManagementException {
+    private KeyspaceDefinition getKeyspaceDefinition(String environment,
+                                                     String keyspace) throws CassandraServerManagementException {
         CassandraManagementUtils.validateKeyspace(keyspace);
-        Cluster cluster = getCluster(null);
+        Cluster cluster = getCluster(environment, null);
         KeyspaceDefinition keyspaceDefinition = cluster.describeKeyspace(keyspace.trim());
         if (keyspaceDefinition == null) {
             handleException("Cannot find a keyspace for : " + keyspace);

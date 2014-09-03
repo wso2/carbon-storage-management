@@ -18,10 +18,6 @@
  */
 package org.wso2.carbon.rssmanager.core.service;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.CarbonContext;
@@ -29,16 +25,14 @@ import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.rssmanager.common.exception.RSSManagerCommonException;
 import org.wso2.carbon.rssmanager.core.config.RSSConfigurationManager;
-import org.wso2.carbon.rssmanager.core.dto.DatabaseInfo;
-import org.wso2.carbon.rssmanager.core.dto.DatabasePrivilegeSetInfo;
-import org.wso2.carbon.rssmanager.core.dto.MySQLPrivilegeSetInfo;
-import org.wso2.carbon.rssmanager.core.dto.DatabasePrivilegeTemplateInfo;
-import org.wso2.carbon.rssmanager.core.dto.DatabaseUserInfo;
-import org.wso2.carbon.rssmanager.core.dto.RSSInstanceInfo;
-import org.wso2.carbon.rssmanager.core.dto.UserDatabaseEntryInfo;
+import org.wso2.carbon.rssmanager.core.dto.*;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.manager.adaptor.EnvironmentAdaptor;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class RSSAdmin extends AbstractAdmin implements RSSManagerService {
 
@@ -68,9 +62,13 @@ public class RSSAdmin extends AbstractAdmin implements RSSManagerService {
         return this.getEnvironmentAdaptor().getRSSInstances(environmentName);
     }
 
+    public RSSInstanceInfo[] getRSSInstancesList() throws RSSManagerException {
+        return this.getEnvironmentAdaptor().getRSSInstancesList();
+    }
+
     public DatabaseInfo addDatabase(String environmentName,
                                 DatabaseInfo database) throws RSSManagerException {
-        return this.getEnvironmentAdaptor().addDatabase(environmentName, database);
+                        return this.getEnvironmentAdaptor().addDatabase(environmentName, database);
     }
 
     public void removeDatabase(String environmentName, String rssInstanceName,
@@ -344,5 +342,14 @@ public class RSSAdmin extends AbstractAdmin implements RSSManagerService {
         throw new RSSManagerException(msg, e);
     }
 
+    @Override
+    public DatabaseUserInfo editDatabaseUser(String environmentName,DatabaseUserInfo databaseUserInfo) throws RSSManagerException {
+        return this.getEnvironmentAdaptor().editDatabaseUser(environmentName, databaseUserInfo);
+    }
+
+    @Override
+    public String getRSSProvider() {
+        return RSSConfigurationManager.getInstance().getRSSConfig().getRSSProvider();
+    }
 
 }

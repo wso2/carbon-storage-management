@@ -20,7 +20,7 @@
 			<property name="eclipselink.transaction.join-existing" value="true" />
 			<property name="eclipselink.target-server" value="com.atomikos.eclipselink.platform.AtomikosPlatform" />
 			<property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
-			 <property name="eclipselink.logging.level.sql" value="FINE"/>
+			 <property name="eclipselink.logging.level.sql" value="SEVERE"/>
  			<property name="eclipselink.logging.parameters" value="true"/>
 			<property name="eclipselink.target-database" value="org.eclipse.persistence.platform.database.HSQLPlatform"/>
 			<property name="eclipselink.jdbc.batch-writing" value="JDBC"/>

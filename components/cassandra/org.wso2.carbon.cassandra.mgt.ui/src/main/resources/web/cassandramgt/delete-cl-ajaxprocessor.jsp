@@ -7,6 +7,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
 
 <%
+    String envName = (String) session.getAttribute("envName");
     String cf = request.getParameter("cf");
     if (cf == null || "".equals(cf.trim())) {
         throw new RuntimeException("Column Family Name is null or empty"); //TODO

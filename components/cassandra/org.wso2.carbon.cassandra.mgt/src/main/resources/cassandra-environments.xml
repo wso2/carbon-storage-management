@@ -1,0 +1,13 @@
+<CassandraEnvironments>
+    <Environment>
+        <Name>DEFAULT</Name>
+    </Environment>
+    <Environment>
+        <Name>DEV</Name>
+        <DatasourceJndiName>CassandraDevDS</DatasourceJndiName>
+    </Environment>
+    <Environment>
+        <Name>PROD</Name>
+        <DatasourceJndiName>CassandraProdDS</DatasourceJndiName>
+    </Environment>
+</CassandraEnvironments>

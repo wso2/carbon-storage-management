@@ -126,6 +126,7 @@
                     <thead>
                     <tr>
                         <th width="30%"><fmt:message key="rss.manager.user"/></th>
+                        <th width="30%"><fmt:message key="rss.manager.instance.type"/></th>
                         <th width="30%"><fmt:message key="rss.manager.instance.name"/></th>
                         <th width="40%"><fmt:message key="rss.manager.actions"/></th>
                     </tr>
@@ -138,12 +139,18 @@
                     <tr>
                         <td id="<%=user.getName()%>"><%=user.getName()%>
                         </td>
+                        <td><%=user.getType()%>
                         <td><%=user.getRssInstanceName()%>
                         </td>
                         <td>
                             <a class="icon-link"
+                               style="background-image:url(../admin/images/edit.gif);"
+                               onclick="dispatchEditDatabaseUser('<%=user.getRssInstanceName()%>', '<%=user.getName()%>', '<%=environmentName%>', '<%=user.getType()%>')"
+                               href="#"><fmt:message
+                                    key="rss.manager.edit.database"/></a>
+                            <a class="icon-link"
                                style="background-image:url(../admin/images/delete.gif);"
-                               onclick="dropDatabaseUser('<%=user.getRssInstanceName()%>', '<%=user.getName()%>', '<%=environmentName%>')"
+                               onclick="dropDatabaseUser('<%=user.getRssInstanceName()%>', '<%=user.getName()%>', '<%=environmentName%>', '<%=user.getType()%>')"
                                href="#"><fmt:message
                                     key="rss.manager.delete.database"/></a>
                         </td>
@@ -207,7 +214,21 @@
                     var opt = envCombo.options[envCombo.selectedIndex].value;
                     window.location = 'databaseUsers.jsp?envName=' + opt;
                 }
+
+                function dispatchEditDatabaseUser(rssInstanceName, username, envName, instanceType) {
+                    document.getElementById('rssInstanceName').value = rssInstanceName;
+                    document.getElementById('environment').value = envName;
+                    document.getElementById('username').value = username;
+                    document.getElementById('rssType').value = instanceType;
+                    document.getElementById('editUser').submit();
+                }
             </script>
+            <form action="editDatabaseUser.jsp" method="post" id="editUser">
+                <input id="rssInstanceName" name="rssInstanceName" type="hidden"/>
+                <input id="environment" name="environment" type="hidden"/>
+                <input id="rssType" name="rssType" type="hidden"/>
+                <input id="username" name="username" type="hidden"/>
+            </form>
             <form action="../dbconsole/login.jsp" method="post" id="exploreForm">
                 <input type="hidden" id="dbConsoleUsername" name="userName"/>
                 <input type="hidden" id="url" name="url"/>

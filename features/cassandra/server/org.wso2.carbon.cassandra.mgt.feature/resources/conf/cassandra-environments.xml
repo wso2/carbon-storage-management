@@ -1,0 +1,17 @@
+<CassandraEnvironmentConfig>
+	<CassandraEnvironments>
+	    <Environment>
+		<Name>DEFAULT</Name>
+		<IsExternal>false</IsExternal>
+	    </Environment>
+	    <Environment>
+		<Name>DEV</Name>
+		<DatasourceJndiName>DevDS</DatasourceJndiName>
+		<IsExternal>true</IsExternal>
+	    </Environment>
+	    <!--Environment>
+		<Name>PROD</Name>
+		<DatasourceJndiName>CassandraProdDS</DatasourceJndiName>
+	    </Environment-->
+	</CassandraEnvironments>
+</CassandraEnvironmentConfig>

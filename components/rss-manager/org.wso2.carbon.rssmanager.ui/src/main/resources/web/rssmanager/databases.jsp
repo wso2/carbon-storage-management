@@ -46,7 +46,6 @@
         String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
         String environmentName = request.getParameter("envName");
         String[] environments = (String[]) session.getAttribute("environments");
-
         try {
             client = new RSSManagerClient(cookie, backendServerURL, configContext,
                     request.getLocale());
@@ -126,7 +125,7 @@
                     <tr>
                         <th><fmt:message key="rss.manager.db.name"/></th>
                         <th><fmt:message key="rss.manager.instance.name"/></th>
-                            <%--<th><fmt:message key="rss.manager.tenant.domain"/></th>--%>
+                        <th><fmt:message key="rss.manager.rss.instance.type"/></th>
                         <th><fmt:message key="rss.manager.db.url"/></th>
                         <th><fmt:message key="rss.manager.actions"/></th>
                     </tr>
@@ -142,42 +141,23 @@
                         </td>
                         <td><%=database.getRssInstanceName()%>
                         </td>
-                            <%--<td><%=database.getRssTenantDomain()%>--%>
-                            <%--</td>--%>
+                        <td><%=database.getType()%>
+                        </td>
                         <td><%=database.getUrl()%>
                         </td>
-                        <%
-                            if (RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equals(database.getRssInstanceName())) {
-                        %>
                         <td>
                             <a class="icon-link"
                                style="background-image:url(../admin/images/edit.gif);"
-                               onclick="submitManageForm('<%=database.getRssInstanceName()%>','<%=database.getName()%>', '<%=environmentName%>')"><fmt:message
+                               onclick="submitManageForm('<%=database.getRssInstanceName()%>','<%=database.getName()%>', '<%=environmentName%>', '<%=database.getType()%>')"><fmt:message
                                     key="rss.manager.manage.database"/></a>
                             <a class="icon-link"
                                style="background-image:url(../admin/images/delete.gif);"
-                               onclick="dropDatabase('<%=database.getRssInstanceName()%>', '<%=database.getName()%>', '<%=environmentName%>')"><fmt:message
+                               onclick="dropDatabase('<%=database.getRssInstanceName()%>', '<%=database.getName()%>', '<%=environmentName%>', '<%=database.getType()%>')"><fmt:message
                                     key="rss.manager.delete.database"/></a>
                         </td>
                     </tr>
-
-                    <%
-                    } else {
-
-                    %>
-                    <td>
-                        <a class="icon-link"
-                           style="background-image:url(../admin/images/edit.gif);"
-                           onclick="submitManageForm('<%=database.getRssInstanceName()%>','<%=database.getName()%>', '<%=environmentName%>')"><fmt:message
-                                key="rss.manager.manage.database"/></a>
-                        <a class="icon-link"
-                           style="background-image:url(../admin/images/delete.gif);"
-                           onclick="dropDatabase('<%=database.getRssInstanceName()%>', '<%=database.getName()%>', '<%=environmentName%>')"><fmt:message
-                                key="rss.manager.delete.database"/></a>
-                    </td>
                     <%
 
-                                }
                             }
                         }
                     } else {
@@ -209,9 +189,11 @@
                 <div style="clear:both"></div>
             </form>
             <script type="text/javascript">
-                function submitManageForm(rssInstanceName, databaseName, envName) {
+                function submitManageForm(rssInstanceName, databaseName, envName, instanceType) {
                     document.getElementById('rssInstanceName').value = rssInstanceName;
                     document.getElementById('databaseName').value = databaseName;
+                    document.getElementById('envName1').value = envName;
+                    document.getElementById('instanceType').value = instanceType;
                     document.getElementById('manageForm').submit();
                 }
                 function submitDropForm(databaseName) {
@@ -231,6 +213,7 @@
                 <input type="hidden" id="rssInstanceName" name="rssInstanceName"/>
                 <input type="hidden" id="envName1" name="envName" value="<%=environmentName%>"/>
                 <input type="hidden" id="databaseName" name="databaseName"/>
+                <input type="hidden" id="instanceType" name="instanceType"/>
             </form>
             <form action="createDatabase.jsp" method="post" id="createDBForm">
                 <input type="hidden" id="envName2" name="envName" value="<%=environmentName%>"/>
