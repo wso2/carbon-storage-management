@@ -50,7 +50,7 @@
             resourceBundle="org.wso2.carbon.cassandra.explorer.ui.i18n.Resources"
             request="<%=request%>" i18nObjectName="cassandrajsi18n"/>
     <carbon:breadcrumb
-            label="<%=request.getParameter("rowID")%>"
+            label="<%=request.getParameter(\"rowID\")%>"
             resourceBundle="org.wso2.carbon.cassandra.explorer.ui.i18n.Resources"
             topPage="false"
             request="<%=request%>"/>

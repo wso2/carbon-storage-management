@@ -19,12 +19,11 @@
 
 package org.wso2.carbon.rssmanager.core.environment.dao;
 
-import java.util.List;
-
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
-import org.wso2.carbon.rssmanager.core.environment.Environment;
 import org.wso2.carbon.rssmanager.core.jpa.persistence.dao.EntityBaseDAO;
+
+import java.util.List;
 
 public interface RSSInstanceDAO extends EntityBaseDAO<Integer, RSSInstance>{
 
@@ -47,8 +46,14 @@ public interface RSSInstanceDAO extends EntityBaseDAO<Integer, RSSInstance>{
     
     RSSInstance[] getUserDefinedRSSInstances(String environmentName, int tenantId) throws RSSDAOException;
 
+    RSSInstance[] getUserDefinedRSSInstances(int tenantId) throws RSSDAOException;
+
+    RSSInstance[] getSystemRSSInstances(int tenantId) throws RSSDAOException;
+
     RSSInstance[] getRSSInstances(String environmentName, int tenantId) throws RSSDAOException;
-    
+
+    public RSSInstance[] getSystemRSSInstancesInEnvironment(int tenantId, String environmentName) throws RSSDAOException;
+
     void removeRSSInstance(List<RSSInstance> instances) throws RSSDAOException;
     
 }

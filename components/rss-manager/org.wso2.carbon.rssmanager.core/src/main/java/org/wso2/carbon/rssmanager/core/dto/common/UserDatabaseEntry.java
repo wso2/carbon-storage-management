@@ -19,26 +19,11 @@
 
 package org.wso2.carbon.rssmanager.core.dto.common;
 
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Transient;
-import javax.persistence.Version;
-
 import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 import org.wso2.carbon.rssmanager.core.jpa.persistence.entity.AbstractEntity;
+
+import javax.persistence.*;
 
 /**
  * Class to represent a many-to-many mappings of user's permissions to a specific database.
@@ -62,15 +47,15 @@ public class UserDatabaseEntry extends AbstractEntity<Integer, UserDatabaseEntry
 	
 	@Transient
     private Integer userId;
-	
-	@ManyToOne(cascade={CascadeType.PERSIST,CascadeType.REFRESH,CascadeType.MERGE}, fetch=FetchType.EAGER)
+
+	@ManyToOne(cascade={CascadeType.REFRESH,CascadeType.MERGE}, fetch=FetchType.EAGER)
     @JoinColumn(name = "DATABASE_USER_ID", nullable = false)
     private DatabaseUser databaseUser;
 	
 	@Transient
     private Integer databaseId;
 	
-	@ManyToOne(cascade={CascadeType.ALL}, fetch=FetchType.EAGER)
+	@ManyToOne(cascade={CascadeType.PERSIST,CascadeType.REFRESH,CascadeType.MERGE}, fetch=FetchType.EAGER)
     @JoinColumn(name = "DATABASE_ID", nullable = false)
     private Database database;
 	

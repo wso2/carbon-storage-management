@@ -19,20 +19,17 @@
 
 package org.wso2.carbon.rssmanager.core.dao.impl;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.Query;
-
-import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.dao.DatabaseUserDAO;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dao.util.EntityManager;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
 import org.wso2.carbon.rssmanager.core.jpa.persistence.dao.AbstractEntityDAO;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+
+import javax.persistence.Query;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class DatabaseUserDAOImpl extends AbstractEntityDAO<Integer, DatabaseUser> implements DatabaseUserDAO {
 
@@ -45,13 +42,11 @@ public class DatabaseUserDAOImpl extends AbstractEntityDAO<Integer, DatabaseUser
 
     public void addDatabaseUser(String environmentName, RSSInstance rssInstance, DatabaseUser user,
                                 int tenantId) throws RSSDAOException {
-        user.setTenantId(tenantId);
         super.insert(user);
     }
 
     @Override
-    public void addDatabaseUser(DatabaseUser user, int tenantId) throws RSSDAOException {
-        user.setTenantId(tenantId);
+    public void addDatabaseUser(DatabaseUser user) throws RSSDAOException {
         super.saveOrUpdate(user);
     }
 
@@ -59,59 +54,32 @@ public class DatabaseUserDAOImpl extends AbstractEntityDAO<Integer, DatabaseUser
         super.remove(user);
     }
 
-    @Override
-    public void removeDatabaseUser(String environmentName, String rssInstanceName, String username,
-                                   int tenantId) throws RSSDAOException {
-
-    }
-
-    public boolean isDatabaseUserExist(String environmentName, String rssInstanceName,
-                                       String username, int tenantId) throws RSSDAOException {
-
+    public boolean isDatabaseUserExist(String environmentName,
+                                       String username, int tenantId, String instanceType) throws RSSDAOException {
         boolean isExist = false;
-        if (RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equals(rssInstanceName)) {
-            Query query = this.getEntityManager().getJpaUtil().getJPAEntityManager().createQuery(" SELECT us FROM DatabaseUser us  join  us.instances si WHERE us.username = :username AND us.tenantId = :uTenantId AND us.type = :type  AND " + ""
+            Query query = this.getEntityManager().getJpaUtil().getJPAEntityManager().createQuery(" SELECT us FROM DatabaseUser us  join  us.instances si WHERE us.username = :username AND us.tenantId = :uTenantId AND us.type = :type AND " + ""
                     + " si.environment.name = :evname");
             query.setParameter("username", username);
-            query.setParameter("type", RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            query.setParameter("type", instanceType);
             query.setParameter("evname", environmentName);
             query.setParameter("uTenantId", tenantId);
-
-            DatabaseUser user = null;
             List<DatabaseUser> result = query.getResultList();
             if (result != null && !result.isEmpty()) {
-                user = result.iterator().next();
-                isExist = true;
+                result.iterator().next();
+                return true;
             }
-        } else {
-            Query query = this.getEntityManager().getJpaUtil().getJPAEntityManager().createQuery(" SELECT us FROM DatabaseUser us  join  us.instances si WHERE us.username = :username AND us.tenantId = :uTenantId AND us.type = :type AND si.name = :instanceName  AND " + ""
-                    + " si.environment.name = :evname");
-            query.setParameter("username", username);
-            query.setParameter("type", RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
-            query.setParameter("evname", environmentName);
-            query.setParameter("instanceName", rssInstanceName);
-            query.setParameter("uTenantId", tenantId);
-
-            DatabaseUser user = null;
-            List<DatabaseUser> result = query.getResultList();
-            if (result != null && !result.isEmpty()) {
-                user = result.iterator().next();
-                isExist = true;
-            }
-        }
         return isExist;
     }
 
     public DatabaseUser getDatabaseUser(String environmentName, String rssInstanceName,
-                                        String username, int tenantId) throws RSSDAOException {
-        Query query = this.getEntityManager().getJpaUtil().getJPAEntityManager().createQuery(" SELECT us FROM DatabaseUser us  join  us.instances si WHERE us.username = :username AND us.tenantId = :uTenantId AND si.name = :instanceName  AND " + ""
-                + " si.tenantId = :tenantId AND si.environment.name = :evname");
+                                        String username, int tenantId, String instanceType) throws RSSDAOException {
+        Query query = this.getEntityManager().getJpaUtil().getJPAEntityManager().createQuery(" SELECT us FROM DatabaseUser us  join  us.instances si WHERE us.username = :username AND us.tenantId = :uTenantId AND us.type = :type AND si.name = :instanceName  AND " + ""
+                + "si.environment.name = :evname");
         query.setParameter("username", username);
-        query.setParameter("tenantId", (long)MultitenantConstants.SUPER_TENANT_ID);
+        query.setParameter("type", instanceType);
         query.setParameter("evname", environmentName);
         query.setParameter("instanceName", rssInstanceName);
         query.setParameter("uTenantId", tenantId);
-
         DatabaseUser user = null;
         List<DatabaseUser> result = query.getResultList();
         if (result != null && !result.isEmpty()) {
@@ -121,14 +89,14 @@ public class DatabaseUserDAOImpl extends AbstractEntityDAO<Integer, DatabaseUser
     }
 
     public DatabaseUser getDatabaseUser(String environmentName,
-                                        String username, int tenantId) throws RSSDAOException {
-        Query query = this.getEntityManager().getJpaUtil().getJPAEntityManager().createQuery(" SELECT us FROM DatabaseUser us  join  us.instances si WHERE us.username = :username AND us.tenantId = :uTenantId  AND " + ""
-                + " si.tenantId = :tenantId AND si.environment.name = :evname");
+                                        String username, int tenantId, String instanceType) throws RSSDAOException {
+        Query query = this.getEntityManager().getJpaUtil().getJPAEntityManager().createQuery(" SELECT us FROM DatabaseUser us  left join fetch us.userDatabaseEntries ue left join fetch  us.instances si  " +
+                "WHERE us.username = :username AND us.type = :type AND us.tenantId = :uTenantId  AND " + ""
+                + "si.environment.name = :envName");
         query.setParameter("username", username);
-        query.setParameter("tenantId", (long)MultitenantConstants.SUPER_TENANT_ID);
-        query.setParameter("evname", environmentName);
+        query.setParameter("type", instanceType);
+        query.setParameter("envName", environmentName);
         query.setParameter("uTenantId", tenantId);
-
         DatabaseUser user = null;
         List<DatabaseUser> result = query.getResultList();
         if (result != null && !result.isEmpty()) {
@@ -138,12 +106,12 @@ public class DatabaseUserDAOImpl extends AbstractEntityDAO<Integer, DatabaseUser
     }
 
     public DatabaseUser[] getDatabaseUsers(String environmentName,
-                                           int tenantId, String databaseUserType) throws RSSDAOException {
+                                           int tenantId, String instanceType) throws RSSDAOException {
         Query query = this.getEntityManager().getJpaUtil().getJPAEntityManager().createQuery(" SELECT us  FROM DatabaseUser us  join us.instances si WHERE  us.tenantId = :uTenantId  AND "
-                + " si.environment.name = :evname AND us.type = :type");
-        query.setParameter("evname", environmentName);
+                + " si.environment.name = :envName AND us.type = :type");
+        query.setParameter("envName", environmentName);
         query.setParameter("uTenantId", tenantId);
-        query.setParameter("type", databaseUserType);
+        query.setParameter("type", instanceType);
 
         DatabaseUser[] user = new DatabaseUser[0];
         List<DatabaseUser> result = query.getResultList();
@@ -153,45 +121,18 @@ public class DatabaseUserDAOImpl extends AbstractEntityDAO<Integer, DatabaseUser
             user = userSet.toArray(new DatabaseUser[userSet.size()]);
         }
         return user;
-    }
-
-    public DatabaseUser[] getAssignedDatabaseUsers(String environmentName, String rssInstanceName,
-                                                   String databaseName,
-                                                   int tenantId) throws RSSDAOException {
-
-        Query query = this.getEntityManager().getJpaUtil().getJPAEntityManager().createQuery(
-                " SELECT us FROM DatabaseUser us  join  us.instances si, Database db  join  db.userDatabaseEntries ue WHERE  us.tenantId = :uTenantId AND si.name = :instanceName  AND " + ""
-                        + " si.tenantId = :tenantId AND si.environment.name = :evname AND ue.databaseUser.id = us.id AND db.name = :dbName");
-
-        query.setParameter("tenantId", (long)MultitenantConstants.SUPER_TENANT_ID);
-        query.setParameter("evname", environmentName);
-        query.setParameter("instanceName", rssInstanceName);
-        query.setParameter("uTenantId", tenantId);
-        query.setParameter("dbName", databaseName);
-
-
-        DatabaseUser[] user = new DatabaseUser[0];
-        List<DatabaseUser> result = query.getResultList();
-        if (result != null) {
-        	Set<DatabaseUser> userSet = new HashSet<DatabaseUser>();
-        	userSet.addAll(result);
-            user = userSet.toArray(new DatabaseUser[userSet.size()]);
-        }
-        return user;
-
     }
 
     @Override
-    public String resolveRSSInstanceByUser(String environmentName, String rssInstanceName,
+    public String resolveRSSInstanceByUser(String environmentName,
                                            String rssInstanceType, String username,
                                            int tenantId) throws RSSDAOException {
 
         Query query = this.getEntityManager().getJpaUtil().getJPAEntityManager().createQuery(" SELECT si FROM DatabaseUser us  join  us.instances si WHERE us.username = :username AND us.tenantId = :uTenantId AND us.type = :type AND "
-                + " si.environment.name = :evname");
+                + " si.environment.name = :envName");
         query.setParameter("username", username);
         query.setParameter("type", rssInstanceType);
-        query.setParameter("evname", environmentName);
-        /*query.setParameter("instanceName", rssInstanceName);*/
+        query.setParameter("envName", environmentName);
         query.setParameter("uTenantId", tenantId);
 
         RSSInstance rssInstance = null;
@@ -218,28 +159,7 @@ public class DatabaseUserDAOImpl extends AbstractEntityDAO<Integer, DatabaseUser
         return new DatabaseUser[0];
     }
 
-    public DatabaseUser[] getAvailableDatabaseUsers(String environmentName, String rssInstanceName,
-                                                    String databaseName, int tenantId) throws RSSDAOException {
-        Query query = this.getEntityManager()
-                .getJpaUtil()
-                .getJPAEntityManager()
-                .createQuery(" SELECT us FROM DatabaseUser us  join  us.instances si, Database db  left join  db.userDatabaseEntries ue WHERE  us.tenantId = :uTenantId AND si.name = :instanceName  AND "  +
-                " si.tenantId = :tenantId AND si.environment.name = :evname  ");
 
-        query.setParameter("tenantId", (long)MultitenantConstants.SUPER_TENANT_ID);
-        query.setParameter("evname", environmentName);
-        query.setParameter("instanceName", rssInstanceName);
-        query.setParameter("uTenantId", tenantId);
-
-        DatabaseUser[] user = new DatabaseUser[0];
-        List<DatabaseUser> result = query.getResultList();
-        if (result != null) {
-        	Set<DatabaseUser> userSet = new HashSet<DatabaseUser>();
-        	userSet.addAll(result);
-            user = userSet.toArray(new DatabaseUser[userSet.size()]);
-        }
-        return user;
-    }
 
     private EntityManager getEntityManager() {
         return entityManager;

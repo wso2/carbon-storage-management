@@ -40,6 +40,7 @@
     <%
         RSSManagerClient client = null;
         String rssInstanceName = request.getParameter("rssInstanceName");
+        String instanceType = request.getParameter("instanceType");
         String databaseName = request.getParameter("databaseName");
         String envName = request.getParameter("envName");
                
@@ -49,6 +50,7 @@
         session.setAttribute("rssInstanceName", rssInstanceName);
         session.setAttribute("databaseName", databaseName);
         session.setAttribute("envName", envName);
+        session.setAttribute("instanceType", instanceType);
 
         DatabaseUserInfo[] availableUsers = new DatabaseUserInfo[0];
 
@@ -75,7 +77,7 @@
                     if (client != null) {
                         try {
                             availableUsers =
-                                    client.getAvailableUsersToAttachToDatabase(envName,rssInstanceName,databaseName,RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+                                    client.getAvailableUsersToAttachToDatabase(envName,rssInstanceName,databaseName,instanceType);
                         } catch (Exception e) {
                             CarbonUIMessage.sendCarbonUIMessage(e.getMessage(),
                                     CarbonUIMessage.ERROR, request, e);
@@ -105,6 +107,14 @@
                                             color='red'>*</font></td>
                                     <td><input value="<%=rssInstanceName%>" id="rssInstanceName"
                                                name="rssInstanceName"
+                                               size="30" type="text" readonly="readonly"></td>
+                                </tr>
+                                <tr>
+                                    <td align="left"><fmt:message
+                                            key="rss.manager.rss.instance.type"/><font
+                                            color='red'>*</font></td>
+                                    <td><input value="<%=instanceType%>" id="instanceType"
+                                               name="instanceType"
                                                size="30" type="text" readonly="readonly"></td>
                                 </tr>
                                 <tr>

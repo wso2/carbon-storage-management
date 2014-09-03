@@ -18,35 +18,21 @@
 
 package org.wso2.carbon.rssmanager.core.environment;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Transient;
-import javax.persistence.Version;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-
 import org.wso2.carbon.rssmanager.core.RSSInstanceDSWrapperRepository;
-import org.wso2.carbon.rssmanager.core.config.node.allocation.NodeAllocationStrategy;
-import org.wso2.carbon.rssmanager.core.config.node.allocation.NodeAllocationStrategyFactory;
-import org.wso2.carbon.rssmanager.core.config.node.allocation.NodeAllocationStrategyFactory.NodeAllocationStrategyTypes;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.jpa.persistence.entity.AbstractEntity;
 import org.wso2.carbon.rssmanager.core.manager.adaptor.RSSManagerAdaptor;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
+
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 @XmlRootElement(name = "Environment")
 @Entity
@@ -83,22 +69,12 @@ public class Environment extends AbstractEntity<Integer, Environment> {
 	@Transient
 	private RSSManagerAdaptor adaptor;
 	@Transient
-	private NodeAllocationStrategy nodeAllocStrategy;
-	@Transient
 	private String nodeAllocationStrategyType;
 
 	public synchronized void init(RSSManagerAdaptor adaptor) throws RSSManagerException {
 		this.adaptor = adaptor;
 		this.repository = new RSSInstanceDSWrapperRepository(this.getRSSInstances());
 		this.rssInstanceMap = RSSManagerUtil.getRSSInstanceMap(this.getRSSInstances());
-		NodeAllocationStrategyFactory.NodeAllocationStrategyTypes type = null;
-		if (this.getNodeAllocationStrategyType() == null) {
-			type = NodeAllocationStrategyTypes.ROUND_ROBIN;
-		} else {
-			type = NodeAllocationStrategyFactory.NodeAllocationStrategyTypes.valueOf(this.getNodeAllocationStrategyType());
-		}
-		this.nodeAllocStrategy = NodeAllocationStrategyFactory.getNodeAllocationStrategy(type,
-		                                                                                 this.getRSSInstances());
 	}
 
 	@XmlElement(name = "Name", nillable = false, required = true)
@@ -113,12 +89,8 @@ public class Environment extends AbstractEntity<Integer, Environment> {
 	}
 
 	@XmlElement(name = "NodeAllocationStrategy", nillable = false)
-	private String getNodeAllocationStrategyType() {
+	public String getNodeAllocationStrategyType() {
 		return nodeAllocationStrategyType;
-	}
-
-	private void setNodeAllocationStrategyType(String nodeAllocationStrategyType) {
-		this.nodeAllocationStrategyType = nodeAllocationStrategyType;
 	}
 
 	public void setName(String name) {
@@ -136,23 +108,6 @@ public class Environment extends AbstractEntity<Integer, Environment> {
 	public void setId(int id) {
 		this.id = id;
 	}
-
-	/*
-	 * @Override
-	 * public boolean equals(Object o) {
-	 * if (!(o instanceof Environment)) {
-	 * return false;
-	 * }
-	 * Environment environment = (Environment) o;
-	 * return this.getName().equals(environment.getName());
-	 * }
-	 * 
-	 * @Override
-	 * public int hashCode() {
-	 * assert false : "hashCode() is not implemented";
-	 * return -1;
-	 * }
-	 */
 
 	public RSSInstanceDSWrapperRepository getDSWrapperRepository() {
 		return repository;
@@ -209,10 +164,6 @@ public class Environment extends AbstractEntity<Integer, Environment> {
 
 	public RSSInstance getRSSInstance(String rssInstanceName) {
 		return rssInstanceMap.get(rssInstanceName);
-	}
-
-	public RSSInstance getNextAllocatedNode() throws RSSManagerException {
-		return nodeAllocStrategy.getNextAllocatedNode();
 	}
 
 	public Set<RSSInstance> getRssInstanceEntities() {

@@ -25,26 +25,12 @@ import org.wso2.carbon.rssmanager.core.jpa.persistence.dao.EntityBaseDAO;
 
 public interface DatabasePrivilegeTemplateDAO extends EntityBaseDAO<Integer, DatabasePrivilegeTemplate>{
 
-    void addDatabasePrivilegesTemplate(String environmentName, DatabasePrivilegeTemplate template,
-                                       int tenantId) throws RSSDAOException;
-
-    void removeDatabasePrivilegesTemplate(String environmentName, String templateName,
-                                          int tenantId) throws RSSDAOException;
-
-//    void updateDatabasePrivilegesTemplate(String environmentName, DatabasePrivilegeTemplate template,
-//                                          int tenantId) throws RSSDAOException;
 
     DatabasePrivilegeTemplate getDatabasePrivilegesTemplate(String environmentName, String name,
                                                             int tenantId) throws RSSDAOException;
 
     DatabasePrivilegeTemplate[] getDatabasePrivilegesTemplates(
             String environmentName, int tenantId) throws RSSDAOException;
-
-//    void setPrivilegeTemplateProperties(String environmentName, DatabasePrivilegeTemplate template,
-//                                        int tenantId) throws RSSDAOException;
-//
-//    void removeDatabasePrivilegesTemplateEntries(String environmentName, String templateName,
-//                                                 int tenantId) throws RSSDAOException;
 
     boolean isDatabasePrivilegeTemplateExist(String environmentName, String templateName,
                                              int tenantId) throws RSSDAOException;

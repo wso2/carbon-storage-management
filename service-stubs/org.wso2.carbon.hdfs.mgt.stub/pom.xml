@@ -159,7 +159,10 @@
                         <Export-Package>
                             org.wso2.carbon.hdfs.mgt.stub.*;
                         </Export-Package>
-                        <DynamicImport-Package>*</DynamicImport-Package>
+                        <Import-Package>
+                            javax.activation;resolution:=optional,
+                            *;resolution:=optional,
+                        </Import-Package>
                     </instructions>
                 </configuration>
             </plugin>

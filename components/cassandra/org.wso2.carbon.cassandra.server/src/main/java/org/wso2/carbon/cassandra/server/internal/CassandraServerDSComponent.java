@@ -31,6 +31,7 @@ import org.wso2.carbon.cassandra.server.util.CassandraServerUtil;
 import org.wso2.carbon.identity.authentication.AuthenticationService;
 import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
 import org.wso2.carbon.user.core.service.RealmService;
+import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import java.io.File;
@@ -116,6 +117,11 @@ public class CassandraServerDSComponent {
             //register OSGI service
             CassandraServerService cassandraServerService =
                     new CassandraServerServiceImpl(cassandraServerController);
+
+            /* Loading tenant specific data */
+            componentContext.getBundleContext().registerService(Axis2ConfigurationContextObserver.class.getName(),
+                    new CassandraServerAxis2ConfigContextObserver(), null);
+
             componentContext.getBundleContext().registerService(
                     CassandraServerService.class.getName(), cassandraServerService, null);
             componentContext.getBundleContext().registerService(TenantMgtListener.class.getName(),

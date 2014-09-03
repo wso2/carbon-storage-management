@@ -24,6 +24,7 @@
 <script type="text/javascript" src="js/cassandra_ui_util.js"></script>
 
 <%
+    String envName = (String) session.getAttribute("envName");
     String name = request.getParameter("name");
     String rf = request.getParameter("rf");
     String rs = request.getParameter("rs");
@@ -50,9 +51,9 @@
             keyspaceInformation.setReplicationFactor(replicationFactor);
         }
         if ("add".equals(mode)) {
-            cassandraKeyspaceAdminClient.addKeyspace(keyspaceInformation, session);
+            cassandraKeyspaceAdminClient.addKeyspace(envName, keyspaceInformation, session);
         } else {
-            cassandraKeyspaceAdminClient.updateKeyspace(keyspaceInformation, session);
+            cassandraKeyspaceAdminClient.updateKeyspace(envName, keyspaceInformation, session);
         }
         %>
 

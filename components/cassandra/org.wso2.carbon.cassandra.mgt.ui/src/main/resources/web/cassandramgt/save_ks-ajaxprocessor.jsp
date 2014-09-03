@@ -16,7 +16,7 @@
     try {
         session.removeAttribute(CassandraAdminClientConstants.CURRENT_KEYSPACE);
         CassandraKeyspaceAdminClient cassandraKeyspaceAdminClient = new CassandraKeyspaceAdminClient(config.getServletContext(), session);
-        ksNames = cassandraKeyspaceAdminClient.listKeyspacesOfCurrentUSer();
+        ksNames = cassandraKeyspaceAdminClient.listKeyspacesOfCurrentUSer((String) session.getAttribute("envName"));
         if (ksNames != null && ksNames.length > 0) {
                 for (String  ks : ksNames) {
                     if(name.equalsIgnoreCase(ks)){

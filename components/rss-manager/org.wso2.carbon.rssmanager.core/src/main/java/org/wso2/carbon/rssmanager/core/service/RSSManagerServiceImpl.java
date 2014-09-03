@@ -24,12 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.ndatasource.common.DataSourceException;
 import org.wso2.carbon.ndatasource.core.DataSourceMetaInfo;
 import org.wso2.carbon.rssmanager.core.config.RSSConfigurationManager;
-import org.wso2.carbon.rssmanager.core.dto.DatabaseInfo;
-import org.wso2.carbon.rssmanager.core.dto.DatabasePrivilegeSetInfo;
-import org.wso2.carbon.rssmanager.core.dto.DatabasePrivilegeTemplateInfo;
-import org.wso2.carbon.rssmanager.core.dto.DatabaseUserInfo;
-import org.wso2.carbon.rssmanager.core.dto.RSSInstanceInfo;
-import org.wso2.carbon.rssmanager.core.dto.UserDatabaseEntryInfo;
+import org.wso2.carbon.rssmanager.core.dto.*;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.RSSManagerDataHolder;
 import org.wso2.carbon.rssmanager.core.manager.adaptor.EnvironmentAdaptor;
@@ -90,6 +85,18 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         RSSInstanceInfo [] rssInstances = new RSSInstanceInfo [0];
         try {
             rssInstances = this.getEnvironmentAdaptor().getRSSInstances(environmentName);
+        } catch (RSSManagerException e) {
+            String msg = "Error occurred in retrieving the RSS instance list";
+            handleException(msg, e);
+        }
+        return rssInstances;
+    }
+
+    @Override
+    public RSSInstanceInfo[] getRSSInstancesList() throws RSSManagerException {
+        RSSInstanceInfo [] rssInstances = new RSSInstanceInfo [0];
+        try {
+            rssInstances = this.getEnvironmentAdaptor().getRSSInstancesList();
         } catch (RSSManagerException e) {
             String msg = "Error occurred in retrieving the RSS instance list";
             handleException(msg, e);
@@ -443,5 +450,14 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         throw new RSSManagerException(msg, e);
     }
 
+    @Override
+    public DatabaseUserInfo editDatabaseUser(String environmentName,DatabaseUserInfo databaseUserInfo) throws RSSManagerException {
+        return this.getEnvironmentAdaptor().editDatabaseUser(environmentName, databaseUserInfo);
+    }
+
+    @Override
+    public String getRSSProvider() {
+        return RSSConfigurationManager.getInstance().getRSSConfig().getRSSProvider();
+    }
 }
 

@@ -36,6 +36,7 @@
     String mode = request.getParameter("mode");
 
     String keyspace = request.getParameter("keyspace");
+    String envName = (String) session.getAttribute("envName");
 
     String index = request.getParameter("index");
     if (index == null) {

@@ -17,12 +17,7 @@
  */
 package org.wso2.carbon.rssmanager.core.service;
 
-import org.wso2.carbon.rssmanager.core.dto.DatabaseInfo;
-import org.wso2.carbon.rssmanager.core.dto.DatabasePrivilegeSetInfo;
-import org.wso2.carbon.rssmanager.core.dto.DatabasePrivilegeTemplateInfo;
-import org.wso2.carbon.rssmanager.core.dto.DatabaseUserInfo;
-import org.wso2.carbon.rssmanager.core.dto.RSSInstanceInfo;
-import org.wso2.carbon.rssmanager.core.dto.UserDatabaseEntryInfo;
+import org.wso2.carbon.rssmanager.core.dto.*;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 
 public interface RSSManagerService {
@@ -38,6 +33,8 @@ public interface RSSManagerService {
 	                                                                                       throws RSSManagerException;
 
 	RSSInstanceInfo[] getRSSInstances(String environmentName) throws RSSManagerException;
+
+    RSSInstanceInfo[] getRSSInstancesList() throws RSSManagerException;
 
 	DatabaseInfo addDatabase(String environmentName, DatabaseInfo database) throws RSSManagerException;
 
@@ -117,4 +114,7 @@ public interface RSSManagerService {
 
 	String[] getEnvironments() throws RSSManagerException;
 
+    DatabaseUserInfo editDatabaseUser(String environmentName,DatabaseUserInfo databaseUserInfo) throws RSSManagerException;
+
+    String getRSSProvider();
 }

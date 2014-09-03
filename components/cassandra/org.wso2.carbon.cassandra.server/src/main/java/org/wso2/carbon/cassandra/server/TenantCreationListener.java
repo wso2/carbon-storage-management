@@ -19,24 +19,7 @@ public class TenantCreationListener implements TenantMgtListener {
 
     @Override
     public void onTenantCreate(TenantInfoBean tenantInfoBean) throws StratosException {
-        try {
-            PrivilegedCarbonContext.startTenantFlow();
-            PrivilegedCarbonContext cc = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-            cc.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
-            cc.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
-            UserRealmService realmService = CassandraServerDataHolder.getInstance().getRealmService();
-            int tenantID = realmService.getTenantManager().getTenantId(tenantInfoBean.getTenantDomain());
-            UserRealm userRealm = realmService.getTenantUserRealm(tenantID);
-            AuthorizationManager authorizationManager = userRealm.getAuthorizationManager();
-            for (String action : Action.ALL_ACTIONS_ARRAY) {
-                authorizationManager.authorizeRole(userRealm.getRealmConfiguration().getAdminRoleName(),
-                        AuthUtils.RESOURCE_PATH_PREFIX, action);
-            }
-        } catch (UserStoreException e) {
-            log.error("Setting Cassandra permissions for tenant admin role failed at onTenantCreate event.", e);
-        } finally {
-            PrivilegedCarbonContext.endTenantFlow();
-        }
+        // Do nothing
     }
 
     @Override

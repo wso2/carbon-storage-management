@@ -17,33 +17,15 @@
  */
 package org.wso2.carbon.rssmanager.core.manager.impl.postgres;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.config.RSSManagementRepository;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
-import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
-import org.wso2.carbon.rssmanager.core.dto.common.MySQLPrivilegeSet;
-import org.wso2.carbon.rssmanager.core.dto.common.PostgresPrivilegeSet;
-import org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry;
-import org.wso2.carbon.rssmanager.core.dto.common.UserDatabasePrivilege;
+import org.wso2.carbon.rssmanager.core.dto.common.*;
 import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
-import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstanceDSWrapper;
 import org.wso2.carbon.rssmanager.core.environment.Environment;
 import org.wso2.carbon.rssmanager.core.exception.EntityAlreadyExistsException;
 import org.wso2.carbon.rssmanager.core.exception.EntityNotFoundException;
@@ -52,6 +34,13 @@ import org.wso2.carbon.rssmanager.core.manager.SystemRSSManager;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.utils.xml.StringUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PostgresSystemRSSManager extends SystemRSSManager {
 
@@ -65,29 +54,21 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
         Connection conn = null;
         PreparedStatement stmt = null;
         AtomicBoolean isInTx = new AtomicBoolean(false);
-
         String qualifiedDatabaseName = RSSManagerUtil.getFullyQualifiedDatabaseName(database.getName());
-        RSSInstance rssInstance = this.getEnvironment().getNextAllocatedNode();
-        if (rssInstance == null) {
-            throw new EntityNotFoundException(
-                    "RSS instance " + database.getRssInstanceName() + " does not exist");
-        }
-
         RSSManagerUtil.checkIfParameterSecured(qualifiedDatabaseName);
+        RSSInstance rssInstance = null;
 
         try {
+             rssInstance = this.getNextAllocationNode();
+            if (rssInstance == null) {
+                throw new EntityNotFoundException(
+                        "RSS instance " + database.getRssInstanceName() + " does not exist");
+            }
             super.addDatabase(isInTx, database, rssInstance, qualifiedDatabaseName);
-
             conn = getConnection(rssInstance.getName());
-            conn.setAutoCommit(true);
+            conn.setAutoCommit(false);
             String sql = "CREATE DATABASE " + qualifiedDatabaseName;
             stmt = conn.prepareStatement(sql);
-
-			/*
-             * this.getRSSDAO().getDatabaseDAO().incrementSystemRSSDatabaseCount(
-			 * getEnvironmentName(),
-			 * Connection.TRANSACTION_SERIALIZABLE);
-			 */
 
 			/*
              * Actual database creation is committed just before committing the
@@ -100,13 +81,10 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
 			 */
             stmt.execute();
             disAllowedConnect(conn, qualifiedDatabaseName, "PUBLIC");
-
-
             if (isInTx.get()) {
                 this.getEntityManager().endJPATransaction();
             }
-            // conn.commit();
-
+            conn.commit();
             return database;
         } catch (SQLException e) {
             if (isInTx.get()) {
@@ -120,7 +98,7 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
                 this.getEntityManager().rollbackJPATransaction();
             }
             try {
-                // conn.rollback();
+                conn.rollback();
             } catch (Exception e1) {
                 log.error(e1);
             }
@@ -138,8 +116,7 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
         PreparedStatement stmt = null;
         AtomicBoolean isInTx = new AtomicBoolean(false);
         PreparedStatement delStmt = null;
-
-        RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName);
+        RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
         if (rssInstance == null) {
             throw new EntityNotFoundException(
                     "Unresolvable RSS Instance. Database " + databaseName + " does not exist");
@@ -147,14 +124,11 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
 
         RSSManagerUtil.checkIfParameterSecured(databaseName);
         try {
-
-            super.removeDatabase(isInTx, rssInstance.getName(), databaseName, rssInstance);
-
+            super.removeDatabase(isInTx, rssInstance.getName(), databaseName, rssInstance, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
             conn = getConnection(rssInstance.getName());
-            conn.setAutoCommit(true);
+            conn.setAutoCommit(false);
             String sql = "DROP DATABASE " + databaseName;
             stmt = conn.prepareStatement(sql);
-
 			/*
              * Actual database creation is committed just before committing the
 			 * meta info into RSS
@@ -168,14 +142,11 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
             if (isInTx.get()) {
                 this.getEntityManager().endJPATransaction();
             }
-
-
-            // conn.commit();
+            conn.commit();
         } catch (SQLException e) {
             if (isInTx.get()) {
                 this.getEntityManager().rollbackJPATransaction();
             }
-
             throw new RSSManagerException(
                     "Error while dropping the database '" + databaseName + "' on RSS " + "instance '" + rssInstance.getName() + "' : " + e.getMessage(),
                     e);
@@ -183,7 +154,6 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
             if (isInTx.get()) {
                 this.getEntityManager().rollbackJPATransaction();
             }
-
             throw new RSSManagerException(
                     "Error while dropping the database '" + databaseName + "' on RSS " + "instance '" + rssInstance.getName() + "' : " + e.getMessage(),
                     e);
@@ -200,45 +170,27 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
         String qualifiedUsername = null;
         AtomicBoolean isInTx = new AtomicBoolean(false);
         Map<String,String> mapUserwithInstance = new HashMap<String,String>();
-
         qualifiedUsername = RSSManagerUtil.getFullyQualifiedUsername(user.getName());
-			/* Committing distributed transaction */
-			
-	    /* Sets the fully qualified username */
         user.setName(qualifiedUsername);
         user.setRssInstanceName(user.getRssInstanceName());
         user.setType(RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
-
         RSSManagerUtil.checkIfParameterSecured(qualifiedUsername);
-
         try {
-            super.addDatabaseUser(isInTx, user, qualifiedUsername);
+            super.addDatabaseUser(isInTx, user, qualifiedUsername, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
 			/* Committing distributed transaction */
-
-            for (RSSInstanceDSWrapper wrapper : getEnvironment().getDSWrapperRepository()
-                    .getAllRSSInstanceDSWrappers()) {
-
+            RSSInstance[] rssInstances = getEnvironmentManagementDAO().getRSSInstanceDAO().getSystemRSSInstancesInEnvironment(
+                    MultitenantConstants.SUPER_TENANT_ID,this.getEnvironmentName());
+            for (RSSInstance rssInstance: rssInstances) {
                 try {
-                    RSSInstance rssInstance;
-                    PrivilegedCarbonContext.startTenantFlow();
-                    PrivilegedCarbonContext.getThreadLocalCarbonContext()
-                            .setTenantId(MultitenantConstants.SUPER_TENANT_ID);
-                    rssInstance = this.getEnvironment().getRSSInstance(wrapper.getName());
-                    PrivilegedCarbonContext.endTenantFlow();
-
                     conn = getConnection(rssInstance.getName());
                     conn.setAutoCommit(true);
-
                     boolean hasPassword = (!StringUtils.isEmpty(user.getPassword()));
-
                     StringBuilder sql = new StringBuilder(" CREATE USER " + qualifiedUsername);
                     if (hasPassword) {
                         RSSManagerUtil.checkIfParameterSecured(user.getPassword());
                         sql.append(" WITH PASSWORD '").append(user.getPassword()).append("'");
                     }
                     stmt = conn.prepareStatement(sql.toString());
-                    
-    					
     					/*
     					 * Actual database user creation is committed just before
     					 * committing the meta
@@ -253,9 +205,7 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
                 } finally {
                     RSSManagerUtil.cleanupResources(null, stmt, conn);
                 }
-
             }
-
             if (isInTx.get()) {
                 this.getEntityManager().endJPATransaction();
             }
@@ -270,7 +220,6 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
             String msg = "Error while creating the database user '" +
                     user.getName() + "' on RSS instance '" + user.getRssInstanceName() +
                     "' : " + e.getMessage();
-            
             if(!mapUserwithInstance.isEmpty()){
                 dropAddedUsers(mapUserwithInstance);
             }
@@ -286,7 +235,6 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
             closeJPASession();
             RSSManagerUtil.cleanupResources(null, stmt, conn);
         }
-
         return user;
     }
     
@@ -301,11 +249,9 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
     		try{
     			conn = getConnection(instanceName);
     			conn.setAutoCommit(true);
-
     			String sql = "drop owned by " + userName;
                 dropOwnedStmt = conn.prepareStatement(sql);
                 dropUserStmt = conn.prepareStatement(" drop user " + userName);
-                
                 dropOwnedStmt.execute();
                 dropUserStmt.execute();
     		}catch(Exception ex){
@@ -327,21 +273,14 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
 
         RSSManagerUtil.checkIfParameterSecured(username);
         try {
-            removeDatabaseUser(isInTx, type, username);
+            super.removeDatabaseUser(isInTx, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
 			/* committing the distributed transaction */
-
-            for (RSSInstanceDSWrapper wrapper : getEnvironment().getDSWrapperRepository()
-                    .getAllRSSInstanceDSWrappers()) {
+            RSSInstance[] rssInstances = getEnvironmentManagementDAO().getRSSInstanceDAO().getSystemRSSInstancesInEnvironment(
+                    MultitenantConstants.SUPER_TENANT_ID,this.getEnvironmentName());
+            for (RSSInstance rssInstance: rssInstances) {
                 try {
-                    PrivilegedCarbonContext.startTenantFlow();
-                    PrivilegedCarbonContext.getThreadLocalCarbonContext()
-                            .setTenantId(MultitenantConstants.SUPER_TENANT_ID);
-                    RSSInstance rssInstance = this.getEnvironment().getRSSInstance(wrapper.getName());
-                    PrivilegedCarbonContext.endTenantFlow();
-
-                    conn = getConnection(wrapper.getRssInstance().getName());
+                    conn = getConnection(rssInstance.getName());
                     conn.setAutoCommit(true);
-
                     String sql = "drop owned by " + username;
                     dropOwnedStmt = conn.prepareStatement(sql);
                     dropUserStmt = conn.prepareStatement(" drop user " + username);
@@ -362,7 +301,6 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
                     RSSManagerUtil.cleanupResources(null, dropOwnedStmt, null);
                     RSSManagerUtil.cleanupResources(null, dropUserStmt, conn);
                 }
-
             }
             if (isInTx.get()) {
                 this.getEntityManager().endJPATransaction();
@@ -395,26 +333,17 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
         Connection conn = null;
         AtomicBoolean isInTx = new AtomicBoolean(false);
 
-		/*
-		 * if (!(privileges instanceof PostgresPrivilegeSet)) {
-		 * throw new RuntimeException("Invalid privilege set defined");
-		 * }
-		 * PostgresPrivilegeSet postgresPrivs = (PostgresPrivilegeSet)
-		 * privileges;
-		 */
-
         try {
             if (privileges == null) {
                 throw new RSSManagerException("Database privileges-set is null");
             }
             PostgresPrivilegeSet postgresPrivs = new PostgresPrivilegeSet();
             createPostgresPrivilegeSet(postgresPrivs, privileges);
-
             final int tenantId = RSSManagerUtil.getTenantId();
             String rssInstanceName = this.getRSSDAO().getDatabaseDAO().resolveRSSInstanceByDatabase(
-                    this.getEnvironmentName(), null, databaseName,
+                    this.getEnvironmentName(), databaseName,
                     RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, tenantId);
-            RSSInstance rssInstance = this.getEnvironment().getRSSInstance(rssInstanceName);
+            RSSInstance rssInstance = this.getEnvironmentManagementDAO().getRSSInstanceDAO().getRSSInstance(this.getEnvironmentName(), rssInstanceName, tenantId);
             if (rssInstance == null) {
                 String msg = "Database '" + databaseName + "' does not exist " + "in RSS instance '" + user.getRssInstanceName() + "'";
                 throw new EntityNotFoundException(msg);
@@ -427,27 +356,19 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
                             rssInstanceName, databaseName,
                             user.getUsername(), tenantId);
             RSSManagerUtil.createDatabasePrivilege(privileges, entity);
-
-            closeJPASession();
-
             boolean inTx = getEntityManager().beginTransaction();
             isInTx.set(inTx);
 
             this.getRSSDAO().getUserPrivilegesDAO().merge(entity);
-
             dbConn = getConnection(rssInstance.getName(), databaseName);
             dbConn.setAutoCommit(true);
-
             conn = getConnection(rssInstance.getName());
             conn.setAutoCommit(true);
-
             revokeAllPrivileges(conn, databaseName, user.getName());
             composePreparedStatement(dbConn, databaseName, user.getName(), postgresPrivs);
-
             if (isInTx.get()) {
                 this.getEntityManager().endJPATransaction();
             }
-
         } catch (SQLException e) {
             if (isInTx.get()) {
                 this.getEntityManager().rollbackJPATransaction();
@@ -487,7 +408,6 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
 
         if (privileges instanceof MySQLPrivilegeSet) {
             MySQLPrivilegeSet myPriv = (MySQLPrivilegeSet) privileges;
-
             postgresPrivs.setExecutePriv(myPriv.getExecutePriv());
             postgresPrivs.setReferencesPriv(myPriv.getReferencesPriv());
             postgresPrivs.setTriggerPriv(myPriv.getTriggerPriv());
@@ -505,18 +425,15 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
         String databaseName = entry.getDatabaseName();
         String username = entry.getUsername();
 
-        RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName);
+        RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
         if (rssInstance == null) {
             throw new EntityNotFoundException(
                     "Database '" + databaseName + "' does not exist in " + "RSS instance '" + rssInstanceName + "'");
         }
-			/* ending distributed transaction */
 
         try {
 
             super.attachUser(isInTx, entry, privileges, rssInstance);
-			/* ending distributed transaction */
-
             conn = getConnection(rssInstance.getName());
             conn.setAutoCommit(true);
             dbConn = getConnection(rssInstance.getName(), databaseName);
@@ -532,10 +449,7 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
 			 * implicitly
 			 */
             grantConnect(conn, databaseName, username);
-			
-			/*if (!(privileges instanceof PostgresPrivilegeSet)) {
-				throw new RuntimeException("Invalid privilege set defined");
-			}*/
+
             PostgresPrivilegeSet postgresPrivs = new PostgresPrivilegeSet();
             createPostgresPrivilegeSet(postgresPrivs, privileges);
             this.composePreparedStatement(dbConn, databaseName, username, postgresPrivs);
@@ -574,14 +488,11 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
         RSSManagerUtil.checkIfParameterSecured(databaseName);
 
         try {
-			/* Committing the transaction */
-
-            RSSInstance rssInstance = detachUser(isInTx, entry);
+            RSSInstance rssInstance = super.detachUser(isInTx, entry, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
 			/* Committing the transaction */
 
             conn = getConnection(rssInstance.getName());
             conn.setAutoCommit(true);
-
 			/*
 			 * Actual database user detachment is committed just before
 			 * committing the meta info
@@ -593,11 +504,9 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
 			 */
             revokeAllPrivileges(conn, databaseName, username);
             disAllowedConnect(conn, databaseName, username);
-
             if (isInTx.get()) {
                 this.getEntityManager().endJPATransaction();
             }
-
         } catch (SQLException e) {
             if (isInTx.get()) {
                 this.getEntityManager().rollbackJPATransaction();
@@ -811,4 +720,38 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
         TABLE, DATABASE, SEQUENCE, FUNCTION, LANGUAGE, LARGE_OBJECT, SCHEMA, TABLESPACE;
     }
 
+    public boolean isDatabaseExist(String rssInstanceName, String databaseName) throws RSSManagerException {
+        boolean isExist=false;
+        try {
+            isExist = super.isDatabaseExist(rssInstanceName,databaseName,RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+        }catch(Exception ex){
+            if (ex instanceof EntityAlreadyExistsException) {
+                handleException(ex.getMessage(), ex);
+            }
+            String msg = "Error while check whether database '" + databaseName +
+                    "' on RSS instance : " +rssInstanceName+ "exists"+ ex.getMessage();
+            handleException(msg, ex);
+        }
+        return isExist;
+    }
+
+    public boolean isDatabaseUserExist(String rssInstanceName, String username) throws RSSManagerException {
+        boolean isExist=false;
+        try {
+            isExist = super.isDatabaseUserExist(rssInstanceName,username,RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+        }catch(Exception ex){
+            if (ex instanceof EntityAlreadyExistsException) {
+                handleException(ex.getMessage(), ex);
+            }
+            String msg = "Error while check whether user '" + username +
+                    "' on RSS instance : " +rssInstanceName+ "exists"+ ex.getMessage();
+            handleException(msg, ex);
+        }
+        return isExist;
+    }
+
+    @Override
+    public DatabaseUser editDatabaseUser(String environmentName, DatabaseUser databaseUser) {
+        return null;
+    }
 }
