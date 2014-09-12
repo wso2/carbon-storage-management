@@ -15,10 +15,11 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.hadoop.security.HadoopCarbonMessageContext;
 import org.wso2.carbon.identity.authenticator.krb5.stub.types.Krb5AuthenticatorStub;
 
+
 public class Krb5TicketCacheFinderImpl implements Krb5TicketCacheFinder {
     private Log log = LogFactory.getLog(Krb5TicketCacheFinderImpl.class);
     private Configuration conf;
-	@Override
+	//@Override
 	public String getTenantTicketCache() {
 		HadoopCarbonMessageContext msgCtx = HadoopCarbonMessageContext.get();
 		return msgCtx.getKrb5TicketCache();

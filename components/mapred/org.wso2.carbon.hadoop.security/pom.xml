@@ -58,9 +58,9 @@
                             javax.xml.namespace.*;version="0.0.0",
                             *;resolution:=optional
                         </Import-Package>
-                        <Bundle-Activator>
+                        <!-- Bundle-Activator>
                             org.wso2.carbon.hadoop.security.HadoopCarbonSecurityActivator
-                        </Bundle-Activator>
+                        </Bundle-Activator -->
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
                 </configuration>
