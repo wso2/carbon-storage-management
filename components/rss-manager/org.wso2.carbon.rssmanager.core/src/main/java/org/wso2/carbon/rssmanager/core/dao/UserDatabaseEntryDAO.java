@@ -19,8 +19,6 @@
 
 package org.wso2.carbon.rssmanager.core.dao;
 
-import javax.persistence.Query;
-
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
@@ -30,21 +28,10 @@ public interface UserDatabaseEntryDAO extends EntityBaseDAO<Integer, UserDatabas
 
     int addUserDatabaseEntry(String environmentName, UserDatabaseEntry entry,
                              int tenantId) throws RSSDAOException;
-    
-    void removeUserDatabaseEntriesByUser(Integer userId) throws RSSDAOException;
-    
+
+    public void removeUserDatabaseEntriesByUser(Integer userId) throws RSSDAOException;
+
     void removeUserDatabaseEntriesByDatabase(Integer dbId) throws RSSDAOException;
-
-   /* void removeUserDatabaseEntry(String environmentName, int rssInstanceId, String username,
-                                 String type, int tenantId) throws RSSDAOException;
-
-    void removeUserDatabaseEntriesByDatabase(String environmentName, int rssInstanceId,
-                                             String databaseName, String type,
-                                             int tenantId) throws RSSDAOException;
-
-    void removeUserDatabaseEntriesByUser(String environmentName, int rssInstanceId,
-                                         String username, String type,
-                                         int tenantId) throws RSSDAOException;*/
 
     UserDatabaseEntry getUserDatabaseEntry(Integer envId, Integer instanceId, UserDatabaseEntry entry,
                                            int tenantId) throws RSSDAOException;
@@ -52,4 +39,9 @@ public interface UserDatabaseEntryDAO extends EntityBaseDAO<Integer, UserDatabas
     UserDatabaseEntry[] getUserDatabaseEntries(String environmentName, UserDatabaseEntry entries,
                                                int tenantId) throws RSSDAOException;
 
+    public DatabaseUser[] getAssignedDatabaseUsers(String environmentName, String rssInstanceName,
+                                                   String databaseName,
+                                                   int tenantId, String instanceType) throws RSSDAOException;
+    public DatabaseUser[] getAvailableDatabaseUsers(String environmentName, String rssInstanceName,
+                                                    String databaseName, int tenantId, String instanceType) throws RSSDAOException;
 }

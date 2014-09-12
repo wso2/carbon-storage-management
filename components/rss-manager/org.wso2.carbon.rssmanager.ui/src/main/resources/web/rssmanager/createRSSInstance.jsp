@@ -15,11 +15,46 @@
 ~ specific language governing permissions and limitations
 ~ under the License.
 -->
+<%@ page import="org.wso2.carbon.rssmanager.ui.RSSManagerClient" %>
+<%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
+<%@ page import="org.apache.axis2.context.ConfigurationContext" %>
+<%@ page import="org.wso2.carbon.CarbonConstants" %>
+<%@ page import="org.wso2.carbon.utils.ServerConstants" %>
+<%@ page import="org.wso2.carbon.utils.multitenancy.MultitenantConstants" %>
+<%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerConstants" %>
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
+<%
+    RSSManagerClient client = null;
+    String rssProvider = null;
+    String tenantDomain = null;
+    try {
+        String backendServerUrl =
+                CarbonUIUtil.getServerURL(config.getServletContext(), session);
+        ConfigurationContext configContext =
+                (ConfigurationContext) config.getServletContext().getAttribute(
+                        CarbonConstants.CONFIGURATION_CONTEXT);
+        String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
+        client = new RSSManagerClient(cookie, backendServerUrl, configContext,
+                request.getLocale());
+        tenantDomain = (String) session.getAttribute(MultitenantConstants.TENANT_DOMAIN);
+        rssProvider = client.getRSSProvider();
+    } catch (Exception e) {
+        CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
+    }
 
+    String[] environments = null;
+    if (client != null) {
+        try {
+            environments = client.getRSSEnvironmentNames();
+        } catch (Exception e) {
+            CarbonUIMessage.sendCarbonUIMessage(e.getMessage(),
+                    CarbonUIMessage.ERROR, request, e);
+        }
+    }
+%>
 <script type=text/javascript src="js/uiValidator.js"></script>
 
 <fmt:bundle basename="org.wso2.carbon.rssmanager.ui.i18n.Resources">
@@ -52,45 +87,76 @@
                                 </tr>
                                 <tr>
                                     <td class="leftCol-med"><fmt:message
-                                            key="rss.manager.server.category"/>
+                                            key="rss.environment.name"/><font
+                                            color='red'>*</font></td>
+                                    <td><label>
+                                    <select name="serverEnvironment" id="serverEnvironment">
+                                        <option value="">----SELECT----
+                                        </option>
+                                        <%for(String environment:environments) {%>
+                                        <option value="<%=environment%>">
+                                            <%=environment%>
+                                        </option>
+                                        <%}%>
+                                    </select>
+                                </label></td>
+                                </tr>
+                                <%
+                                if(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equalsIgnoreCase(tenantDomain)) {
+                                %>
+                                <tr>
+                                    <td class="leftCol-med"><fmt:message
+                                            key="rss.manager.rss.instance.type"/>
                                         <font color="red">*</font>
                                     </td>
-                                    <td><label>
-                                        <select name="serverCategory" id="serverCategory">
-                                            <option value="">----SELECT----
-                                            </option>
-                                            <option value="<%=RSSManagerConstants.RDS%>">
-                                                <%=RSSManagerConstants.RDS%>
-                                            </option>
-                                            <option value="<%=RSSManagerConstants.LOCAL%>">
-                                                <%=RSSManagerConstants.LOCAL%>
-                                            </option>
-                                        </select>
-                                    </label>
+                                    <td>
+                                        <label>
+                                            <select name="instancetype" id="instancetype">
+                                                <option value="<%=RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM%>" selected><%=RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM%>
+                                                </option>
+                                                <option value="<%=RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED%>"><%=RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED%>
+                                                </option>
+                                            </select>
+                                        </label>
                                     </td>
-                                </tr>
+                                <tr>
+                                <%}%>
                                 <tr>
                                     <td class="leftCol-med"><fmt:message
                                             key="rss.manager.instance.type"/>
                                         <font color="red">*</font>
                                     </td>
-                                    <td><label>
-                                        <select name="databaseEngine" id="databaseEngine"
-                                                onchange="setJDBCValues(this,document)">
-                                            <option value="">----SELECT----
-                                            </option>
-                                            <option value="jdbc:mysql://[machine-name/ip]:[port]#com.mysql.jdbc.Driver">
-                                                MySQL
-                                            </option>
-                                        </select>
-                                    </label>
+                                    <td>
+                                        <input value="<%=rssProvider%>" id="provider"
+                                        name="provider"
+                                        size="30" type="text" readonly="readonly">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td align="leftCol-med"><fmt:message
                                             key="rss.manager.instance.url"/><font
                                             color='red'>*</font></td>
-                                    <td><input value="" id="serverUrl"
+                                    <%
+                                        String serverUrl = null;
+                                        String driver = null;
+                                    if(RSSManagerConstants.H2.equalsIgnoreCase(rssProvider)) {
+                                        serverUrl = "jdbc:h2:tcp://<server>[:<port>]/[<path>]<databaseName>";
+                                        driver = "org.h2.Driver";
+                                    } else if(RSSManagerConstants.MYSQL.equalsIgnoreCase(rssProvider)) {
+                                        serverUrl = "jdbc:mysql://[machine-name/ip]:[port]";
+                                        driver = "com.mysql.jdbc.Driver";
+                                    }if(RSSManagerConstants.POSTGRES.equalsIgnoreCase(rssProvider)) {
+                                        serverUrl = "jdbc:postgresql://[machine-name/ip]:[port]";
+                                        driver = "org.postgresql.Driver";
+                                    }if(RSSManagerConstants.SQLSERVER.equalsIgnoreCase(rssProvider)) {
+                                        serverUrl = "dbc:sqlserver://[machine-name/ip]";
+                                        driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+                                    }if(RSSManagerConstants.ORACLE.equalsIgnoreCase(rssProvider)) {
+                                        serverUrl = "jdbc:oracle:thin:@//[machine-name/ip][:port]";
+                                        driver = "oracle.jdbc.driver.OracleDriver";
+                                    }
+                                    %>
+                                    <td><input value="<%=serverUrl%>" id="serverUrl"
                                                name="serverUrl"
                                                class="longInput"></td>
                                 </tr>
@@ -100,7 +166,7 @@
                                             color='red'>*</font></td>
                                     <td>
                                         <input id="dataSourceClassName" name="dataSourceClassName" class="longInput"
-                                               value=""/>
+                                               value="<%=driver%>"/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -117,11 +183,20 @@
                                             key="rss.manager.instance.password"/><font
                                             color='red'>*</font></td>
                                     <td>
-                                        <input id="password" name="password" class="longInput"
+                                        <input type="password" id="password" name="password" class="longInput"
                                                value=""/>
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td align="leftCol-med"><fmt:message
+                                            key="rss.manager.confirm.instance.password"/><font
+                                            color='red'>*</font></td>
+                                    <td>
+                                        <input id="repassword" type="password" name="repassword" class="longInput"
+                                               value=""/>
+                                    </td>
+                                </tr>
+                                <%--<tr>
                                     <td align="leftCol-med">
                                         <fmt:message key="rss.manager.datasource.properties"/>
                                     </td>
@@ -134,8 +209,8 @@
                                                 <fmt:message key="rss.manager.add.property"/></a>
 
                                             <div style="clear:both;"></div>
-                                        </div>
-                                        <div>
+                                        </div>--%>
+                                        <%--<div>
                                             <table cellpadding="0" cellspacing="0" border="0"
                                                    class="styledLeft"
                                                    id="dsPropertyTable"
@@ -154,8 +229,8 @@
                                                 </tbody>
                                             </table>
 
-                                        </div>
-                                    </td>
+                                        </div>--%>
+                                    <%--</td>--%>
                                 </tr>
                             </table>
                         </td>

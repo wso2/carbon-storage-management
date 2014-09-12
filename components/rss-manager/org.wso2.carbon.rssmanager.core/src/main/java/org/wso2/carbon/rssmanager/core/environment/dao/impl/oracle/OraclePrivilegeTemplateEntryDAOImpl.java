@@ -31,17 +31,4 @@ public abstract class OraclePrivilegeTemplateEntryDAOImpl implements DatabasePri
                                             int tenantId) throws RSSDAOException {
         
     }
-
-    /*@Override
-    public void updatePrivilegeTemplateEntries(String environmentName, String templateName,
-                                               DatabasePrivilegeSet privileges,
-                                               int tenantId) throws RSSDAOException {
-
-    }
-
-    @Override
-    public void removePrivilegeTemplateEntries(String environmentName, String templateName,
-                                               int tenantId) throws RSSDAOException {
-
-    }*/
 }

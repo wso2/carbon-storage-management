@@ -1,9 +1,9 @@
 package org.wso2.carbon.rssmanager.core.manager.impl.h2;
 
-import javax.persistence.Query;
-
 import org.wso2.carbon.rssmanager.core.dao.util.EntityManager;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
+
+import javax.persistence.Query;
 
 public class H2JPAResolver {
 	

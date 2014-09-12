@@ -18,35 +18,8 @@
  */
 package org.wso2.carbon.rssmanager.core.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.apache.axiom.om.OMElement;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.ndatasource.common.DataSourceException;
@@ -58,20 +31,8 @@ import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.common.RSSManagerHelper;
 import org.wso2.carbon.rssmanager.common.exception.RSSManagerCommonException;
 import org.wso2.carbon.rssmanager.core.config.datasource.RDBMSConfig;
-import org.wso2.carbon.rssmanager.core.dto.DatabaseInfo;
-import org.wso2.carbon.rssmanager.core.dto.DatabasePrivilegeSetInfo;
-import org.wso2.carbon.rssmanager.core.dto.DatabasePrivilegeTemplateInfo;
-import org.wso2.carbon.rssmanager.core.dto.DatabaseUserInfo;
-import org.wso2.carbon.rssmanager.core.dto.MySQLPrivilegeSetInfo;
-import org.wso2.carbon.rssmanager.core.dto.RSSInstanceInfo;
-import org.wso2.carbon.rssmanager.core.dto.UserDatabaseEntryInfo;
-import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
-import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate;
-import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplateEntry;
-import org.wso2.carbon.rssmanager.core.dto.common.MySQLPrivilegeSet;
-import org.wso2.carbon.rssmanager.core.dto.common.SQLServerPrivilegeSet;
-import org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry;
-import org.wso2.carbon.rssmanager.core.dto.common.UserDatabasePrivilege;
+import org.wso2.carbon.rssmanager.core.dto.*;
+import org.wso2.carbon.rssmanager.core.dto.common.*;
 import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
@@ -81,6 +42,22 @@ import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecretResolverFactory;
+
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
 
 public final class RSSManagerUtil {
 
@@ -454,14 +431,15 @@ public final class RSSManagerUtil {
     		return;
     	}
     	info.setDbmsType(entity.getDbmsType());
-    	info.setEnvironmentName(entity.getEnvironmentName());
+    	info.setEnvironmentName(entity.getEnvironment().getName());
     	info.setInstanceType(entity.getInstanceType());
     	info.setName(entity.getName());
     	info.setServerCategory(entity.getServerCategory());
     	info.setServerURL(entity.getServerURL());
     	info.setUsername(entity.getAdminUserName());
     	info.setPassword(entity.getAdminPassword());
-    	
+    	info.setDriverClass(entity.getDriverClassName());
+
     }
     
     public static void createDatabaseInfo(DatabaseInfo info, Database entity){
@@ -569,7 +547,8 @@ public final class RSSManagerUtil {
     	entity.setServerURL(info.getServerURL());
     	entity.setAdminPassword(info.getPassword());
     	entity.setAdminUserName(info.getUsername());
-    	
+    	entity.setDriverClassName(info.getDriverClass());
+
     }
     
     public static void createDatabase(DatabaseInfo info, Database entity){

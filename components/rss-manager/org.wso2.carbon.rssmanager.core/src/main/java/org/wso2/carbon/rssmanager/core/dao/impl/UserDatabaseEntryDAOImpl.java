@@ -19,20 +19,17 @@
 
 package org.wso2.carbon.rssmanager.core.dao.impl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-
-import javax.persistence.Query;
-
 import org.wso2.carbon.rssmanager.core.dao.UserDatabaseEntryDAO;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dao.util.EntityManager;
-import org.wso2.carbon.rssmanager.core.dao.util.RSSDAOUtil;
 import org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry;
+import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 import org.wso2.carbon.rssmanager.core.jpa.persistence.dao.AbstractEntityDAO;
+
+import javax.persistence.Query;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class UserDatabaseEntryDAOImpl extends AbstractEntityDAO<Integer, UserDatabaseEntry> implements UserDatabaseEntryDAO {
 
@@ -89,48 +86,52 @@ public class UserDatabaseEntryDAOImpl extends AbstractEntityDAO<Integer, UserDat
         return new UserDatabaseEntry[0];
     }
 
-    private int getDatabaseUserId(Connection conn, int rssInstanceId, String username, String type,
-                                  int tenantId) throws SQLException {
-        ResultSet rs = null;
-        PreparedStatement stmt = null;
-        int userId = -1;
-        try {
-            String sql = "SELECT ID FROM RM_DATABASE_USER WHERE RSS_INSTANCE_ID = ? AND USERNAME = ? AND TYPE = ? AND TENANT_ID = ?";
-            stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, rssInstanceId);
-            stmt.setString(2, username);
-            stmt.setString(3, type);
-            stmt.setInt(4, tenantId);
-            rs = stmt.executeQuery();
-            if (rs.next()) {
-                userId = rs.getInt("ID");
-            }
-        } finally {
-            RSSDAOUtil.cleanupResources(rs, stmt, null);
+    public DatabaseUser[] getAssignedDatabaseUsers(String environmentName, String rssInstanceName,
+                                                   String databaseName,
+                                                   int tenantId, String instanceType) throws RSSDAOException {
+
+        Query query = this.getEntityManager().getJpaUtil().getJPAEntityManager().createQuery(
+                " SELECT us FROM DatabaseUser us  join  us.instances si, Database db  join  db.userDatabaseEntries ue WHERE  us.tenantId = :uTenantId AND si.name = :instanceName  AND " + ""
+                        + " si.instanceType = :instanceType AND si.environment.name = :evname AND ue.databaseUser.id = us.id AND db.name = :dbName");
+
+        query.setParameter("instanceType", instanceType);
+        query.setParameter("evname", environmentName);
+        query.setParameter("instanceName", rssInstanceName);
+        query.setParameter("uTenantId", tenantId);
+        query.setParameter("dbName", databaseName);
+
+
+        DatabaseUser[] user = new DatabaseUser[0];
+        List<DatabaseUser> result = query.getResultList();
+        if (result != null) {
+            Set<DatabaseUser> userSet = new HashSet<DatabaseUser>();
+            userSet.addAll(result);
+            user = userSet.toArray(new DatabaseUser[userSet.size()]);
         }
-        return userId;
+        return user;
     }
 
-    private int getDatabaseId(Connection conn, int rssInstanceId, String databaseName, String type,
-                              int tenantId) throws SQLException {
-        ResultSet rs = null;
-        PreparedStatement stmt = null;
-        int databaseId = -1;
-        try {
-            String sql = "SELECT ID FROM RM_DATABASE WHERE RSS_INSTANCE_ID = ? AND NAME = ? AND TYPE = ? AND TENANT_ID = ?";
-            stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, rssInstanceId);
-            stmt.setString(2, databaseName);
-            stmt.setString(3, type);
-            stmt.setInt(4, tenantId);
-            rs = stmt.executeQuery();
-            if (rs.next()) {
-                databaseId = rs.getInt("ID");
-            }
-        } finally {
-            RSSDAOUtil.cleanupResources(rs, stmt, null);
+    public DatabaseUser[] getAvailableDatabaseUsers(String environmentName, String rssInstanceName,
+                                                    String databaseName, int tenantId, String instanceType) throws RSSDAOException {
+        Query query = this.getEntityManager()
+                .getJpaUtil()
+                .getJPAEntityManager()
+                .createQuery(" SELECT us FROM DatabaseUser us  join  us.instances si, Database db  left join  db.userDatabaseEntries ue WHERE  us.tenantId = :uTenantId AND si.name = :instanceName  AND "  +
+                        " si.instanceType = :instanceType AND si.environment.name = :envName  ");
+
+        query.setParameter("instanceType", instanceType);
+        query.setParameter("envName", environmentName);
+        query.setParameter("instanceName", rssInstanceName);
+        query.setParameter("uTenantId", tenantId);
+
+        DatabaseUser[] user = new DatabaseUser[0];
+        List<DatabaseUser> result = query.getResultList();
+        if (result != null) {
+            Set<DatabaseUser> userSet = new HashSet<DatabaseUser>();
+            userSet.addAll(result);
+            user = userSet.toArray(new DatabaseUser[userSet.size()]);
         }
-        return databaseId;
+        return user;
     }
 
     private EntityManager getEntityManager() {

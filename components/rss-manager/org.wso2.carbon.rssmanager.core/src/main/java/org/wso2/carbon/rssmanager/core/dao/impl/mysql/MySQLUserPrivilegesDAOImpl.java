@@ -18,10 +18,6 @@
 
 package org.wso2.carbon.rssmanager.core.dao.impl.mysql;
 
-import java.util.List;
-
-import javax.persistence.Query;
-
 import org.wso2.carbon.rssmanager.core.dao.UserPrivilegesDAO;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dao.util.EntityManager;
@@ -30,7 +26,9 @@ import org.wso2.carbon.rssmanager.core.dto.common.UserDatabasePrivilege;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
 import org.wso2.carbon.rssmanager.core.jpa.persistence.dao.AbstractEntityDAO;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+
+import javax.persistence.Query;
+import java.util.List;
 
 public class MySQLUserPrivilegesDAOImpl extends
         AbstractEntityDAO<Integer, UserDatabasePrivilege> implements UserPrivilegesDAO {
@@ -85,15 +83,14 @@ public class MySQLUserPrivilegesDAOImpl extends
 		                  .getJPAEntityManager()
 		                  .createQuery(" select pr from UserDatabasePrivilege pr where pr.id in ( "
 		                               + " SELECT pr.id FROM UserDatabasePrivilege pr  join  pr.userDatabaseEntry pe join pe.databaseUser du join du.instances si " 
-		                 +" WHERE du.username = :username AND du.tenantId = :uTenantId AND si.name = :instanceName  " 
-		                 +" AND si.tenantId = :tenantId AND si.environment.name = :evname ) "
+		                 +" WHERE du.username = :username AND du.tenantId = :uTenantId AND si.name = :instanceName  "
+		                 +" AND si.environment.name = :evname ) "
 		                 +" and pr.id in ( "
 		                 +" SELECT pr.id FROM UserDatabasePrivilege pr  join  pr.userDatabaseEntry pe join pe.database du join du.rssInstance si "
 		                 +" WHERE du.name = :dbName AND du.tenantId = :uTenantId AND si.name = :instanceName  " 
-		                 +" AND si.tenantId = :tenantId AND si.environment.name = :evname ) "
+		                 +" AND si.environment.name = :evname ) "
 		                	);
 
-		query.setParameter("tenantId", (long)MultitenantConstants.SUPER_TENANT_ID);
 		query.setParameter("evname", environmentName);
 		query.setParameter("instanceName", rssInstanceName);
 		query.setParameter("uTenantId", tenantId);

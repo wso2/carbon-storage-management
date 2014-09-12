@@ -77,6 +77,11 @@ public final class RSSManagerConstants {
     public static final String MAX_CONNECTIONS = "max_connections";
     public static final String MAX_USER_CONNECTIONS = "max_user_connections";
     public static final String MAX_UPDATES = "max_updates";
+    public static final String H2 = "H2";
+    public static final String MYSQL = "MYSQL";
+    public static final String SQLSERVER = "SQLSERVER";
+    public static final String ORACLE = "ORACLE";
+    public static final String POSTGRES = "POSTGRES";
 
     public static final String STANDARD_TRANSACTION_MANAGER_JNDI_NAME = "java:comp/TransactionManager";
     public static final String STANDARD_USER_TRANSACTION_JNDI_NAME = "java:comp/UserTransaction";

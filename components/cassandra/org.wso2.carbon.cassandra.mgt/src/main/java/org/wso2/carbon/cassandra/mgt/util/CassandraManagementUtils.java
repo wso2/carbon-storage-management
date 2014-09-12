@@ -19,13 +19,21 @@
 
 package org.wso2.carbon.cassandra.mgt.util;
 
+import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.ddl.ColumnDefinition;
 import me.prettyprint.hector.api.ddl.ColumnFamilyDefinition;
 import me.prettyprint.hector.api.ddl.ColumnIndexType;
 import org.apache.cassandra.db.ColumnFamilyStoreMBean;
+import org.w3c.dom.Document;
 import org.wso2.carbon.cassandra.mgt.*;
 
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
 import java.nio.ByteBuffer;
+import java.util.Hashtable;
 import java.util.List;
 
 public class CassandraManagementUtils {
@@ -144,6 +152,30 @@ public class CassandraManagementUtils {
         cfStats.setPendingTasks(cfsMBean.getPendingTasks());
 
         return cfStats;
+    }
+
+    public static Document convertToDocument(File file) throws CassandraServerManagementException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        try {
+            DocumentBuilder docBuilder = factory.newDocumentBuilder();
+            return docBuilder.parse(file);
+        } catch (Exception e) {
+            throw new CassandraServerManagementException("Error occurred while parsing file, while converting " +
+                    "to a org.w3c.dom.Document : " + e.getMessage(), e);
+        }
+    }
+
+    public static Cluster lookupCluster(String jndiName, final Hashtable<Object,Object> jndiProperties) {
+        try {
+            if(jndiProperties == null || jndiProperties.isEmpty()){
+                return (Cluster) InitialContext.doLookup(jndiName);
+            }
+            final InitialContext context = new InitialContext(jndiProperties);
+            return (Cluster) context.doLookup(jndiName);
+        } catch (Exception e) {
+            throw new RuntimeException("Error in looking up cluster instance: " + e.getMessage(), e);
+        }
     }
 
 }

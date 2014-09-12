@@ -19,11 +19,11 @@
 
 package org.wso2.carbon.rssmanager.core.environment.dao;
 
-import java.util.Set;
-
 import org.wso2.carbon.rssmanager.core.environment.Environment;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.jpa.persistence.dao.EntityBaseDAO;
+
+import java.util.Set;
 
 public interface EnvironmentDAO extends EntityBaseDAO<Integer, Environment>{
 
