@@ -23,5 +23,7 @@ public class CassandraConstants {
     public static final String CASSANDRA_ENVIRONMENT_CONFIG_FILE = "cassandra-environments.xml";
     public static final String CASSANDRA_ENVIRONMENT_REGISTRY_PATH = "/repository/components/org.wso2.carbon.cassandra.mgt.environment/environments";
     public static final String CASSANDRA_DEFAULT_ENVIRONMENT = "DEFAULT";
+    public static final String CASSANDRA_SYSTEM_CLUSTER = "SYSTEM";
+    public static final String CASSANDRA_CLUSTERS = "clusters";
 
 }

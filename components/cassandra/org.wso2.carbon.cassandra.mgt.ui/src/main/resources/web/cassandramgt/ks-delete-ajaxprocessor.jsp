@@ -4,11 +4,12 @@
 
 <%
     String envName = (String) session.getAttribute("envName");
+    String clusterName = request.getParameter("cluster");
     String name = request.getParameter("name");
     JSONObject obj = new JSONObject();
     try {
         CassandraKeyspaceAdminClient cassandraKeyspaceAdminClient = new CassandraKeyspaceAdminClient(config.getServletContext(), session);
-        cassandraKeyspaceAdminClient.deleteKeyspace(envName, name);
+        cassandraKeyspaceAdminClient.deleteKeyspace(envName, clusterName, name);
         obj.put("status", "success");
         out.print(obj);
         out.flush();

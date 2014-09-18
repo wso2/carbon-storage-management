@@ -178,4 +178,8 @@ public class CassandraManagementUtils {
         }
     }
 
+    public static void checkAuthorization(String envName, String resourcePath) throws CassandraServerManagementException {
+        //throw new CassandraServerManagementException("User is not authorized for this action.");
+    }
+
 }

@@ -28,11 +28,12 @@
 <%
     String keyspaceName = request.getParameter("keyspaceName");
     String envName = (String) session.getAttribute("envName");
+    String clusterName = (String) session.getAttribute("clusterName");
 
     try {
         CassandraKeyspaceAdminClient cassandraKeyspaceAdminClient = new CassandraKeyspaceAdminClient(config.getServletContext(), session);
         String path = CassandraAdminClientConstants.CASSANDRA_RESOURCE_ROOT + "/" +
-            envName + "/" + keyspaceName;
+            envName + "/" + clusterName + "/" + keyspaceName;
         String[] allowedRolesCreate = new String[0];
         String[] allowedRolesAlter = new String[0];
         String[] allowedRolesDrop = new String[0];
@@ -93,11 +94,11 @@
         session.setAttribute(CarbonUIMessage.ID, uiMsg);
 %>
 <script type="text/javascript">
-     var callbackUrl = "keyspace_dashboard.jsp?name=<%=keyspaceName%>#permissionArea";
+     var callbackUrl = "keyspace_dashboard.jsp?name=<%=keyspaceName%>&cluster=<%=clusterName%>#permissionArea";
      showErrorDialog('<%=e.getMessage()%>', callbackUrl);
  </script>
 <%}%>
 
 <script type="text/javascript">
-   window.location = "keyspace_dashboard.jsp?name=<%=keyspaceName%>#permissionArea";
+   window.location = "keyspace_dashboard.jsp?name=<%=keyspaceName%>&cluster=<%=clusterName%>#permissionArea";
 </script>

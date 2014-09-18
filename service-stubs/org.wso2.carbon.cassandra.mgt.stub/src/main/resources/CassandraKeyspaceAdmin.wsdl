@@ -4,9 +4,15 @@
         <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://environment.mgt.cassandra.carbon.wso2.org/xsd">
             <xs:complexType name="Environment">
                 <xs:sequence>
-                    <xs:element minOccurs="0" name="dataSourceName" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="clusters" nillable="true" type="ax23:Cluster"/>
                     <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="external" type="xs:boolean"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="Cluster">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="dataSourceJndiName" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
         </xs:schema>
@@ -57,6 +63,7 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="environment" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="clusterName" nillable="true" type="xs:string"/>
                         <xs:element minOccurs="0" name="keyspaceName" nillable="true" type="xs:string"/>
                         <xs:element minOccurs="0" name="columnFamilyName" nillable="true" type="xs:string"/>
                     </xs:sequence>
@@ -73,6 +80,7 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="environment" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="clusterName" nillable="true" type="xs:string"/>
                         <xs:element minOccurs="0" name="keyspaceName" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
@@ -88,6 +96,7 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="environment" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="clusterName" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -112,46 +121,30 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="getClusterList">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="envName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getClusterListResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="listColumnFamiliesOfCurrentUser">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="environment" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="clusterName" nillable="true" type="xs:string"/>
                         <xs:element minOccurs="0" name="keyspaceName" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="listColumnFamiliesOfCurrentUserResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="listKeyspaces">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="environment" nillable="true" type="xs:string"/>
-                        <xs:element minOccurs="0" name="clusterName" nillable="true" type="xs:string"/>
-                        <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
-                        <xs:element minOccurs="0" name="password" nillable="true" type="xs:string"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="listKeyspacesResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="listKeyspacesOfCurrentUser">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="environment" nillable="true" type="xs:string"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="listKeyspacesOfCurrentUserResponse">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
@@ -176,6 +169,7 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="environment" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="clusterName" nillable="true" type="xs:string"/>
                         <xs:element minOccurs="0" name="keyspaceName" nillable="true" type="xs:string"/>
                         <xs:element minOccurs="0" name="columnFamilyName" nillable="true" type="xs:string"/>
                     </xs:sequence>
@@ -188,18 +182,50 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="getKeyspaceofCurrentUser">
+            <xs:element name="getKeyspaceOfCurrentUser">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="environment" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="clusterName" nillable="true" type="xs:string"/>
                         <xs:element minOccurs="0" name="keyspaceName" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="getKeyspaceofCurrentUserResponse">
+            <xs:element name="getKeyspaceOfCurrentUserResponse">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="return" nillable="true" type="ax22:KeyspaceInformation"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listKeyspaces">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="environment" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="clusterName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="password" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listKeyspacesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax22:KeyspaceInformation"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listKeyspacesOfCurrentUser">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="environment" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listKeyspacesOfCurrentUserResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax22:KeyspaceInformation"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -207,6 +233,7 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="environment" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="clusterName" nillable="true" type="xs:string"/>
                         <xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
@@ -243,6 +270,7 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="environment" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="clusterName" nillable="true" type="xs:string"/>
                         <xs:element minOccurs="0" name="columnFamilyInformation" nillable="true" type="ax22:ColumnFamilyInformation"/>
                     </xs:sequence>
                 </xs:complexType>
@@ -257,7 +285,6 @@
             <xs:element name="addKeyspace">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="environment" nillable="true" type="xs:string"/>
                         <xs:element minOccurs="0" name="keyspaceInformation" nillable="true" type="ax22:KeyspaceInformation"/>
                     </xs:sequence>
                 </xs:complexType>
@@ -273,6 +300,7 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="environment" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="clusterName" nillable="true" type="xs:string"/>
                         <xs:element minOccurs="0" name="columnFamilyInformation" nillable="true" type="ax22:ColumnFamilyInformation"/>
                     </xs:sequence>
                 </xs:complexType>
@@ -280,7 +308,6 @@
             <xs:element name="updatedKeyspace">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="environment" nillable="true" type="xs:string"/>
                         <xs:element minOccurs="0" name="keyspaceInformation" nillable="true" type="ax22:KeyspaceInformation"/>
                     </xs:sequence>
                 </xs:complexType>
@@ -299,10 +326,12 @@
             </xs:complexType>
             <xs:complexType name="ColumnFamilyInformation">
                 <xs:sequence>
+                    <xs:element minOccurs="0" name="clusterName" nillable="true" type="xs:string"/>
                     <xs:element maxOccurs="unbounded" minOccurs="0" name="columns" nillable="true" type="ax21:ColumnInformation"/>
                     <xs:element minOccurs="0" name="comment" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="comparatorType" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="defaultValidationClass" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="gcGraceSeconds" type="xs:int"/>
                     <xs:element minOccurs="0" name="id" type="xs:int"/>
                     <xs:element minOccurs="0" name="keyCacheSize" type="xs:double"/>
@@ -328,7 +357,9 @@
             </xs:complexType>
             <xs:complexType name="KeyspaceInformation">
                 <xs:sequence>
+                    <xs:element minOccurs="0" name="clusterName" nillable="true" type="xs:string"/>
                     <xs:element maxOccurs="unbounded" minOccurs="0" name="columnFamilies" nillable="true" type="ax21:ColumnFamilyInformation"/>
+                    <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="replicationFactor" type="xs:int"/>
                     <xs:element minOccurs="0" name="strategyClass" nillable="true" type="xs:string"/>
@@ -344,17 +375,11 @@
             </xs:complexType>
         </xs:schema>
     </wsdl:types>
-    <wsdl:message name="getKeyspaceofCurrentUserRequest">
-        <wsdl:part name="parameters" element="ns:getKeyspaceofCurrentUser"/>
-    </wsdl:message>
-    <wsdl:message name="getKeyspaceofCurrentUserResponse">
-        <wsdl:part name="parameters" element="ns:getKeyspaceofCurrentUserResponse"/>
+    <wsdl:message name="updateColumnFamilyRequest">
+        <wsdl:part name="parameters" element="ns:updateColumnFamily"/>
     </wsdl:message>
     <wsdl:message name="CassandraServerManagementException">
         <wsdl:part name="parameters" element="ns:CassandraServerManagementException"/>
-    </wsdl:message>
-    <wsdl:message name="updateColumnFamilyRequest">
-        <wsdl:part name="parameters" element="ns:updateColumnFamily"/>
     </wsdl:message>
     <wsdl:message name="getEnvironmentRequest">
         <wsdl:part name="parameters" element="ns:getEnvironment"/>
@@ -437,6 +462,18 @@
     <wsdl:message name="getAllEnvironmentsResponse">
         <wsdl:part name="parameters" element="ns:getAllEnvironmentsResponse"/>
     </wsdl:message>
+    <wsdl:message name="getKeyspaceOfCurrentUserRequest">
+        <wsdl:part name="parameters" element="ns:getKeyspaceOfCurrentUser"/>
+    </wsdl:message>
+    <wsdl:message name="getKeyspaceOfCurrentUserResponse">
+        <wsdl:part name="parameters" element="ns:getKeyspaceOfCurrentUserResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getClusterListRequest">
+        <wsdl:part name="parameters" element="ns:getClusterList"/>
+    </wsdl:message>
+    <wsdl:message name="getClusterListResponse">
+        <wsdl:part name="parameters" element="ns:getClusterListResponse"/>
+    </wsdl:message>
     <wsdl:message name="clearResourcePermissionsRequest">
         <wsdl:part name="parameters" element="ns:clearResourcePermissions"/>
     </wsdl:message>
@@ -456,11 +493,6 @@
         <wsdl:part name="parameters" element="ns:addKeyspace"/>
     </wsdl:message>
     <wsdl:portType name="CassandraKeyspaceAdminPortType">
-        <wsdl:operation name="getKeyspaceofCurrentUser">
-            <wsdl:input message="ns:getKeyspaceofCurrentUserRequest" wsaw:Action="urn:getKeyspaceofCurrentUser"/>
-            <wsdl:output message="ns:getKeyspaceofCurrentUserResponse" wsaw:Action="urn:getKeyspaceofCurrentUserResponse"/>
-            <wsdl:fault message="ns:CassandraServerManagementException" name="CassandraServerManagementException" wsaw:Action="urn:getKeyspaceofCurrentUserCassandraServerManagementException"/>
-        </wsdl:operation>
         <wsdl:operation name="updateColumnFamily">
             <wsdl:input message="ns:updateColumnFamilyRequest" wsaw:Action="urn:updateColumnFamily"/>
             <wsdl:fault message="ns:CassandraServerManagementException" name="CassandraServerManagementException" wsaw:Action="urn:updateColumnFamilyCassandraServerManagementException"/>
@@ -542,6 +574,16 @@
             <wsdl:output message="ns:getAllEnvironmentsResponse" wsaw:Action="urn:getAllEnvironmentsResponse"/>
             <wsdl:fault message="ns:CassandraServerManagementException" name="CassandraServerManagementException" wsaw:Action="urn:getAllEnvironmentsCassandraServerManagementException"/>
         </wsdl:operation>
+        <wsdl:operation name="getKeyspaceOfCurrentUser">
+            <wsdl:input message="ns:getKeyspaceOfCurrentUserRequest" wsaw:Action="urn:getKeyspaceOfCurrentUser"/>
+            <wsdl:output message="ns:getKeyspaceOfCurrentUserResponse" wsaw:Action="urn:getKeyspaceOfCurrentUserResponse"/>
+            <wsdl:fault message="ns:CassandraServerManagementException" name="CassandraServerManagementException" wsaw:Action="urn:getKeyspaceOfCurrentUserCassandraServerManagementException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getClusterList">
+            <wsdl:input message="ns:getClusterListRequest" wsaw:Action="urn:getClusterList"/>
+            <wsdl:output message="ns:getClusterListResponse" wsaw:Action="urn:getClusterListResponse"/>
+            <wsdl:fault message="ns:CassandraServerManagementException" name="CassandraServerManagementException" wsaw:Action="urn:getClusterListCassandraServerManagementException"/>
+        </wsdl:operation>
         <wsdl:operation name="clearResourcePermissions">
             <wsdl:input message="ns:clearResourcePermissionsRequest" wsaw:Action="urn:clearResourcePermissions"/>
             <wsdl:output message="ns:clearResourcePermissionsResponse" wsaw:Action="urn:clearResourcePermissionsResponse"/>
@@ -563,18 +605,6 @@
     </wsdl:portType>
     <wsdl:binding name="CassandraKeyspaceAdminSoap11Binding" type="ns:CassandraKeyspaceAdminPortType">
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
-        <wsdl:operation name="getKeyspaceofCurrentUser">
-            <soap:operation soapAction="urn:getKeyspaceofCurrentUser" style="document"/>
-            <wsdl:input>
-                <soap:body use="literal"/>
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal"/>
-            </wsdl:output>
-            <wsdl:fault name="CassandraServerManagementException">
-                <soap:fault use="literal" name="CassandraServerManagementException"/>
-            </wsdl:fault>
-        </wsdl:operation>
         <wsdl:operation name="getEnvironment">
             <soap:operation soapAction="urn:getEnvironment" style="document"/>
             <wsdl:input>
@@ -755,6 +785,18 @@
                 <soap:fault use="literal" name="CassandraServerManagementException"/>
             </wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="getKeyspaceOfCurrentUser">
+            <soap:operation soapAction="urn:getKeyspaceOfCurrentUser" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraServerManagementException">
+                <soap:fault use="literal" name="CassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
         <wsdl:operation name="getAllEnvironments">
             <soap:operation soapAction="urn:getAllEnvironments" style="document"/>
             <wsdl:input>
@@ -769,6 +811,18 @@
         </wsdl:operation>
         <wsdl:operation name="clearResourcePermissions">
             <soap:operation soapAction="urn:clearResourcePermissions" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraServerManagementException">
+                <soap:fault use="literal" name="CassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getClusterList">
+            <soap:operation soapAction="urn:getClusterList" style="document"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
@@ -812,18 +866,6 @@
     </wsdl:binding>
     <wsdl:binding name="CassandraKeyspaceAdminSoap12Binding" type="ns:CassandraKeyspaceAdminPortType">
         <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
-        <wsdl:operation name="getKeyspaceofCurrentUser">
-            <soap12:operation soapAction="urn:getKeyspaceofCurrentUser" style="document"/>
-            <wsdl:input>
-                <soap12:body use="literal"/>
-            </wsdl:input>
-            <wsdl:output>
-                <soap12:body use="literal"/>
-            </wsdl:output>
-            <wsdl:fault name="CassandraServerManagementException">
-                <soap12:fault use="literal" name="CassandraServerManagementException"/>
-            </wsdl:fault>
-        </wsdl:operation>
         <wsdl:operation name="getEnvironment">
             <soap12:operation soapAction="urn:getEnvironment" style="document"/>
             <wsdl:input>
@@ -1004,6 +1046,18 @@
                 <soap12:fault use="literal" name="CassandraServerManagementException"/>
             </wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="getKeyspaceOfCurrentUser">
+            <soap12:operation soapAction="urn:getKeyspaceOfCurrentUser" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraServerManagementException">
+                <soap12:fault use="literal" name="CassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
         <wsdl:operation name="getAllEnvironments">
             <soap12:operation soapAction="urn:getAllEnvironments" style="document"/>
             <wsdl:input>
@@ -1018,6 +1072,18 @@
         </wsdl:operation>
         <wsdl:operation name="clearResourcePermissions">
             <soap12:operation soapAction="urn:clearResourcePermissions" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraServerManagementException">
+                <soap12:fault use="literal" name="CassandraServerManagementException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getClusterList">
+            <soap12:operation soapAction="urn:getClusterList" style="document"/>
             <wsdl:input>
                 <soap12:body use="literal"/>
             </wsdl:input>
@@ -1061,15 +1127,6 @@
     </wsdl:binding>
     <wsdl:binding name="CassandraKeyspaceAdminHttpBinding" type="ns:CassandraKeyspaceAdminPortType">
         <http:binding verb="POST"/>
-        <wsdl:operation name="getKeyspaceofCurrentUser">
-            <http:operation location="CassandraKeyspaceAdmin/getKeyspaceofCurrentUser"/>
-            <wsdl:input>
-                <mime:content type="text/xml" part="getKeyspaceofCurrentUser"/>
-            </wsdl:input>
-            <wsdl:output>
-                <mime:content type="text/xml" part="getKeyspaceofCurrentUser"/>
-            </wsdl:output>
-        </wsdl:operation>
         <wsdl:operation name="getEnvironment">
             <http:operation location="CassandraKeyspaceAdmin/getEnvironment"/>
             <wsdl:input>
@@ -1202,6 +1259,15 @@
                 <mime:content type="text/xml" part="listKeyspacesOfCurrentUser"/>
             </wsdl:output>
         </wsdl:operation>
+        <wsdl:operation name="getKeyspaceOfCurrentUser">
+            <http:operation location="CassandraKeyspaceAdmin/getKeyspaceOfCurrentUser"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="getKeyspaceOfCurrentUser"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getKeyspaceOfCurrentUser"/>
+            </wsdl:output>
+        </wsdl:operation>
         <wsdl:operation name="getAllEnvironments">
             <http:operation location="CassandraKeyspaceAdmin/getAllEnvironments"/>
             <wsdl:input>
@@ -1218,6 +1284,15 @@
             </wsdl:input>
             <wsdl:output>
                 <mime:content type="text/xml" part="clearResourcePermissions"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getClusterList">
+            <http:operation location="CassandraKeyspaceAdmin/getClusterList"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="getClusterList"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getClusterList"/>
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="addEnvironment">
