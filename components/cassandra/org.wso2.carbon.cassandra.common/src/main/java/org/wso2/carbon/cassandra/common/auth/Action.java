@@ -33,4 +33,8 @@ public class Action {
 
     public static String[] ALL_ACTIONS_ARRAY = {ACTION_CREATE, ACTION_ALTER, ACTION_DROP, ACTION_SELECT,
             ACTION_MODIFY, ACTION_AUTHORIZE };
+
+    public static String UI_ACTION_ADD = "add";
+    public static String UI_ACTION_EDIT = "edit";
+    public static String UI_ACTION_DELETE = "delete";
 }

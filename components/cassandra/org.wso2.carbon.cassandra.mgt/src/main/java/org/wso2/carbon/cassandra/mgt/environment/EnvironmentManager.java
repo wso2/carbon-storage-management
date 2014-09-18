@@ -96,8 +96,4 @@ public class EnvironmentManager {
         throw new CassandraServerManagementException(msg, e);
     }
 
-    public String getDataSourceOfEnvironment(String environmentName) throws CassandraServerManagementException {
-        return getEnvironment(environmentName).getDataSourceName();
-    }
-
 }

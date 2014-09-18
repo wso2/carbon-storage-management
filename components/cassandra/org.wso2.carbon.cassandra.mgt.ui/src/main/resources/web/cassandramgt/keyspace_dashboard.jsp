@@ -46,7 +46,10 @@
     String keyspace = request.getParameter("name");
     String setPermissions = request.getParameter("setPermissions");
     String envName = (String) session.getAttribute("envName");
-    String clusterName = null;
+    String clusterName = request.getParameter("cluster");
+    session.setAttribute("clusterName", clusterName);
+
+    String cassandraClusterName = null;
     String[] userRoles = new String[0];
     String[] allowedRolesCreate = new String[0];
     String[] allowedRolesAlter = new String[0];
@@ -65,10 +68,11 @@
                                                                                     session, keyspace);
             CassandraKeyspaceAdminClient cassandraKeyspaceAdminClient =
                     new CassandraKeyspaceAdminClient(config.getServletContext(), session);
-            tokenRangeInformations = cassandraKeyspaceAdminClient.getTokenRange(envName, keyspace);
-            clusterName = cassandraKeyspaceAdminClient.getClusterName(envName);
+            tokenRangeInformations = cassandraKeyspaceAdminClient.getTokenRange(envName, clusterName, keyspace);
+            cassandraClusterName = cassandraKeyspaceAdminClient.getClusterName(envName, clusterName);
             userRoles = cassandraKeyspaceAdminClient.getAllRoles();
-            String resourcePath = CassandraAdminClientConstants.CASSANDRA_RESOURCE_ROOT + "/" + envName + "/" + keyspace;
+            String resourcePath = CassandraAdminClientConstants.CASSANDRA_RESOURCE_ROOT + "/" + envName +
+                                        "/" + clusterName + "/" + keyspace;
             rolePermissions = cassandraKeyspaceAdminClient.getResourcePermissionsOfRoles(resourcePath);
             if(rolePermissions == null){
                 if(setPermissions != null){
@@ -114,7 +118,7 @@
     List endPoints = CassandraAdminClientHelper.getCassandraEndPointList();
 %>
 <div id="middle">
-    <h2><fmt:message key="cassandra.keyspace.dashboard"/> (<%=envName%> > <%=keyspace%>) </h2>
+    <h2><fmt:message key="cassandra.keyspace.dashboard"/> (<%=envName%> > <%=clusterName%> > <%=keyspace%>) </h2>
 
     <div id="workArea">
 
@@ -131,7 +135,7 @@
                         </thead>
                         <tr>
                             <td width="30%"><fmt:message key="cassandra.cluster.name"/></td>
-                            <td><%=clusterName%>
+                            <td><%=cassandraClusterName%>
                             </td>
                         </tr>
                         <tr>
@@ -304,7 +308,7 @@
                                        href="#"><fmt:message
                                             key="cassandra.actions.edit"/></a>
                                     <a class="delete-icon-link"
-                                       onclick="deletecf('<%=keyspace%>','<%=j%>');"
+                                       onclick="deletecf('<%=clusterName%>','<%=keyspace%>','<%=j%>');"
                                        href="#"><fmt:message
                                             key="cassandra.actions.delete"/></a>
                                 </td>
@@ -321,7 +325,7 @@
                     <% if(!keyspace.equals("system") && !keyspace.equals("system_auth")
                         && !keyspace.equals("system_traces")) {%>
                     <div style="margin-top:0px;">
-                        <a class="add-icon-link" onclick="addcf('<%=keyspace%>');" href="#">
+                        <a class="add-icon-link" onclick="addcf('<%=keyspace%>','<%=clusterName%>');" href="#">
                             <fmt:message key="cassandra.add.new.cf"/></a>
                     </div>
                     <%}%>
@@ -441,7 +445,7 @@
                            <input type="hidden" name="keyspaceName" id="keyspaceName" value="<%=keyspace%>"/>
                            <input class="button" type="submit" value="Save">
                            <input id="cancelKSButton" class="button" name="cancelKSButton" type="button" href="#"
-                                   onclick="location.href = 'keyspace_dashboard.jsp?name=<%=keyspace%>#permissionArea';"
+                                   onclick="location.href = 'keyspace_dashboard.jsp?name=<%=keyspace%>&cluster=<%=clusterName%>#permissionArea';"
                                    value="<fmt:message key="cassandra.actions.cancel"/>"/>
                         </td>
                     </tr>

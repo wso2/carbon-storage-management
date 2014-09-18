@@ -9,10 +9,11 @@
     String keyspace = request.getParameter("keyspace");
     String name = request.getParameter("name");
     String envName = (String) session.getAttribute("envName");
+    String clusterName = (String) session.getAttribute("clusterName");
     JSONObject obj = new JSONObject();
     try {
         CassandraKeyspaceAdminClient cassandraKeyspaceAdminClient = new CassandraKeyspaceAdminClient(config.getServletContext(), session);
-        cassandraKeyspaceAdminClient.deleteColumnFamily(envName, keyspace, name);
+        cassandraKeyspaceAdminClient.deleteColumnFamily(envName, clusterName, keyspace, name);
         KeyspaceInformation keyspaceInformation =
                 (KeyspaceInformation) session.getAttribute(CassandraAdminClientConstants.CURRENT_KEYSPACE);
         if (keyspaceInformation != null) {

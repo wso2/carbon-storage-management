@@ -24,11 +24,30 @@ package org.wso2.carbon.cassandra.mgt;
  */
 public class ColumnFamilyInformation {
 
+    private String environmentName;
+    private String clusterName;
     private String keyspace;
     private String name;
     private String type = "Standard";
     private String comment;
     private double rowCacheSize;
+
+    public String getEnvironmentName() {
+        return environmentName;
+    }
+
+    public void setEnvironmentName(String environmentName) {
+        this.environmentName = environmentName;
+    }
+
+    public String getClusterName() {
+        return clusterName;
+    }
+
+    public void setClusterName(String clusterName) {
+        this.clusterName = clusterName;
+    }
+
     private int rowCacheSavePeriodInSeconds = 7;
     private double keyCacheSize;
     private double readRepairChance;

@@ -11,15 +11,15 @@
     JSONObject backendStatus = new JSONObject();
     backendStatus.put("isExist","no");
 
-    String[] ksNames = null;
+    KeyspaceInformation[] keyspaces = null;
 
     try {
         session.removeAttribute(CassandraAdminClientConstants.CURRENT_KEYSPACE);
         CassandraKeyspaceAdminClient cassandraKeyspaceAdminClient = new CassandraKeyspaceAdminClient(config.getServletContext(), session);
-        ksNames = cassandraKeyspaceAdminClient.listKeyspacesOfCurrentUSer((String) session.getAttribute("envName"));
-        if (ksNames != null && ksNames.length > 0) {
-                for (String  ks : ksNames) {
-                    if(name.equalsIgnoreCase(ks)){
+        keyspaces = cassandraKeyspaceAdminClient.listKeyspacesOfCurrentUSer((String) session.getAttribute("envName"));
+        if (keyspaces != null && keyspaces.length > 0) {
+                for (KeyspaceInformation  ks : keyspaces) {
+                    if(name.equalsIgnoreCase(ks.getName())){
                       backendStatus.put("isExist","yes");
                     }
                 }
