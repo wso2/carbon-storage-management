@@ -18,6 +18,7 @@
  */
 package org.wso2.carbon.rssmanager.core.service;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.CarbonContext;
@@ -140,7 +141,15 @@ public class RSSAdmin extends AbstractAdmin implements RSSManagerService {
     public void addDatabasePrivilegeTemplate(
             String environmentName,
             DatabasePrivilegeTemplateInfo template) throws RSSManagerException {
+    	String tempplateName = template.getName().trim();
+    	
+        if(!StringUtils.isAlphanumeric(tempplateName)){
+        String msg = "Only Alphanumeric characters and underscores are allowed in database privilege template name";
+        log.error(msg);
+        throw new RSSManagerException(msg);       
+        }else
         this.getEnvironmentAdaptor().addDatabasePrivilegeTemplate(environmentName, template);
+        
     }
 
     public void removeDatabasePrivilegeTemplate(String environmentName,

@@ -595,6 +595,11 @@ function createDatabasePrivilegeTemplate(flag, envName) {
         CARBON.showWarningDialog("'Database privilege template name' field cannot be left blank");
         return false;
     }
+    var validChar = new RegExp("^[a-zA-Z0-9_]+$");
+     if (!validChar.test(templateName)) {
+             CARBON.showWarningDialog("Alphanumeric characters and underscores are only allowed in database privilege template name");
+             return false;
+     }
     var url = composeDatabasePrivilegeTemplateActionUrl(flag, templateName, envName);
     jQuery('#connectionStatusDiv').load(url, displayPrivilegeTemplateActionStatus);
 }
