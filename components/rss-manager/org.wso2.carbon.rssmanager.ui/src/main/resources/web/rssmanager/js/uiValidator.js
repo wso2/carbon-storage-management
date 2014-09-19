@@ -585,18 +585,25 @@ function checkSelectedPrivileges() {
 }
 
 function createDatabasePrivilegeTemplate(flag, envName) {
-	if(envName == null)
-	{
+	if (envName == null) {
 		var environments = document.getElementById("envCombo");
 		var envName = trim(environments[environments.selectedIndex].value);
 	}
-    var templateName = trim(document.getElementById('privilegeTemplateName').value);
-    if (templateName == '' || templateName == null) {
-        CARBON.showWarningDialog("'Database privilege template name' field cannot be left blank");
-        return false;
-    }
-    var url = composeDatabasePrivilegeTemplateActionUrl(flag, templateName, envName);
-    jQuery('#connectionStatusDiv').load(url, displayPrivilegeTemplateActionStatus);
+	var templateName = trim(document.getElementById('privilegeTemplateName').value);
+	if (templateName == '' || templateName == null) {
+		CARBON.showWarningDialog("'Database privilege template name' field cannot be left blank");
+		return false;
+	}
+	var validChar = new RegExp("^[a-zA-Z0-9_]+$");
+	if (!validChar.test(templateName)) {
+		CARBON.showWarningDialog("Only Alphanumeric characters and underscores are "
+						+ "allowed in database privilege template name");
+		return false;
+	}
+	var url = composeDatabasePrivilegeTemplateActionUrl(flag, templateName,
+			envName);
+	jQuery('#connectionStatusDiv').load(url,
+			displayPrivilegeTemplateActionStatus);
 }
 
 function validateDatabasePrivilegeTemplateName() {
