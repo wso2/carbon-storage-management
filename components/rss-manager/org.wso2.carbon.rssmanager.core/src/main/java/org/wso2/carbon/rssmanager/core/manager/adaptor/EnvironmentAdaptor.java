@@ -339,18 +339,24 @@ public class EnvironmentAdaptor implements RSSManagerService {
 		return info;
 	}
 
-	public void addCarbonDataSource(String environmentName, UserDatabaseEntryInfo entry)
-	                                                                                    throws RSSManagerException {
+	public void addCarbonDataSource(String environmentName,
+			UserDatabaseEntryInfo entry) throws RSSManagerException {
 		Database database = this.getRSSManagerAdaptor(environmentName)
-		                        .getDatabase(entry.getRssInstanceName(), entry.getDatabaseName(),
-		                                     entry.getType());
+				.getDatabase(entry.getRssInstanceName(),
+						entry.getDatabaseName(), entry.getType());
+		DatabaseUser databaseuserinfo = this.getRSSManagerAdaptor(
+				environmentName).getDatabaseUser(entry.getRssInstanceName(),
+				entry.getUsername(), entry.getType());
 		DatabaseInfo info = new DatabaseInfo();
 		RSSManagerUtil.createDatabaseInfo(info, database);
-		DataSourceMetaInfo metaInfo = RSSManagerUtil.createDSMetaInfo(info, entry.getUsername());
+		DataSourceMetaInfo metaInfo = RSSManagerUtil.createDSMetaInfo(info,
+				entry.getUsername(), databaseuserinfo.getPassword());
 		try {
-			RSSManagerDataHolder.getInstance().getDataSourceService().addDataSource(metaInfo);
+			RSSManagerDataHolder.getInstance().getDataSourceService()
+					.addDataSource(metaInfo);
 		} catch (DataSourceException e) {
-			String msg = "Error occurred while creating carbon datasource for the database '" + entry.getDatabaseName() + "'";
+			String msg = "Error occurred while creating carbon datasource for the database '"
+					+ entry.getDatabaseName() + "'";
 			throw new RSSManagerException(msg, e);
 		}
 	}
