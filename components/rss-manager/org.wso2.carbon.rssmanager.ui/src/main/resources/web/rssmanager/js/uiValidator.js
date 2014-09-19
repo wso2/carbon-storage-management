@@ -597,8 +597,9 @@ function createDatabasePrivilegeTemplate(flag, envName) {
     }
     var validChar = new RegExp("^[a-zA-Z0-9_]+$");
      if (!validChar.test(templateName)) {
-             CARBON.showWarningDialog("Alphanumeric characters and underscores are only allowed in database privilege template name");
-             return false;
+                 CARBON.showWarningDialog("Only Alphanumeric characters and underscores are " +
+             		"allowed in database privilege template name");
+             		return false;
      }
     var url = composeDatabasePrivilegeTemplateActionUrl(flag, templateName, envName);
     jQuery('#connectionStatusDiv').load(url, displayPrivilegeTemplateActionStatus);
