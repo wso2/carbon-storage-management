@@ -143,8 +143,9 @@ public class RSSAdmin extends AbstractAdmin implements RSSManagerService {
             DatabasePrivilegeTemplateInfo template) throws RSSManagerException {
     	String tempplateName = template.getName().trim();
         if(!StringUtils.isAlphanumeric(tempplateName)){
-        String msg = "Only Alphanumeric characters and underscores are allowed in database privilege template name";
-        log.error(msg);
+        String msg = "Only Alphanumeric characters and underscores "
+        		+ "are allowed in database privilege template name";
+        		log.error(msg);
         throw new RSSManagerException(msg);       
         }else
         this.getEnvironmentAdaptor().addDatabasePrivilegeTemplate(environmentName, template);
