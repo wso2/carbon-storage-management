@@ -100,7 +100,7 @@
                             </a>
                             <a class="icon-link"
                                style="background-image:url(../rssmanager/images/data-sources-icon.gif);"
-                               onclick="createDataSource('<%=database.getRssInstanceName()%>','<%=databaseName%>', '<%=user.getName()%>', '<%=envName%>')"
+                               onclick="createDataSource('<%=database.getRssInstanceName()%>','<%=databaseName%>', '<%=user.getName()%>', '<%=envName%>' , '<%=instanceType%>' );"
                                href="#"><fmt:message key="rss.manager.create.datasource"/></a>
                             <a class="icon-link"
                                style="background-image:url(../admin/images/edit.gif);"

@@ -1030,9 +1030,9 @@ function getJdbcDriver(instanceUrl) {
     return '';
 }
 
-function createDataSource(rssInstanceName, databaseName, username, envName) {
+function createDataSource(rssInstanceName, databaseName, username, envName, instanceType) {
     var url = 'databaseUserOps_ajaxprocessor.jsp?databaseName=' + databaseName + '&username=' +
-            username + '&rssInstanceName=' + rssInstanceName + '&flag=createDS'+ '&envName='+envName;
+            username + '&rssInstanceName=' + rssInstanceName + '&flag=createDS'+ '&envName='+envName + '&instanceType='+instanceType;
     jQuery('#connectionStatusDiv').load(url, displayMessagesForCarbonDS);
 }
 

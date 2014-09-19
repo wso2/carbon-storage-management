@@ -25,6 +25,7 @@ import org.wso2.carbon.ndatasource.common.DataSourceException;
 import org.wso2.carbon.ndatasource.core.DataSourceMetaInfo;
 import org.wso2.carbon.rssmanager.core.config.RSSConfigurationManager;
 import org.wso2.carbon.rssmanager.core.dto.*;
+import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.RSSManagerDataHolder;
 import org.wso2.carbon.rssmanager.core.manager.adaptor.EnvironmentAdaptor;
@@ -382,21 +383,25 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         return users;
     }
 
-    public void addCarbonDataSource(String environmentName,
-                                    UserDatabaseEntryInfo entry) throws RSSManagerException {
-        DatabaseInfo database =
-                this.getDatabase(environmentName, entry.getRssInstanceName(),
-                        entry.getDatabaseName(), entry.getType());
-        DataSourceMetaInfo metaInfo =
-                RSSManagerUtil.createDSMetaInfo(database, entry.getUsername());
-        try {
-            RSSManagerDataHolder.getInstance().getDataSourceService().addDataSource(metaInfo);
-        } catch (DataSourceException e) {
-            String msg = "Error occurred while creating carbon datasource for the database '" +
-                    entry.getDatabaseName() + "'";
-            handleException(msg, e);
-        }
-    }
+	public void addCarbonDataSource(String environmentName,
+			UserDatabaseEntryInfo entry) throws RSSManagerException {
+		DatabaseInfo database = this.getDatabase(environmentName,
+				entry.getRssInstanceName(), entry.getDatabaseName(),
+				entry.getType());
+		DatabaseUserInfo databaseuserinfo = getDatabaseUser(environmentName,
+				entry.getRssInstanceName(), entry.getUsername(),
+				entry.getType());
+		DataSourceMetaInfo metaInfo = RSSManagerUtil.createDSMetaInfo(database,
+				entry.getUsername(), databaseuserinfo.getPassword());
+		try {
+			RSSManagerDataHolder.getInstance().getDataSourceService()
+					.addDataSource(metaInfo);
+		} catch (DataSourceException e) {
+			String msg = "Error occurred while creating carbon datasource for the database '"
+					+ entry.getDatabaseName() + "'";
+			handleException(msg, e);
+		}
+	}
 
     public DatabasePrivilegeSetInfo getUserDatabasePrivileges(
             String environmentName, String rssInstanceName, String databaseName,
