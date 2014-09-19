@@ -138,18 +138,19 @@ public class RSSAdmin extends AbstractAdmin implements RSSManagerService {
         return this.getEnvironmentAdaptor().getDatabaseUsers(environmentName);
     }
 
-    public void addDatabasePrivilegeTemplate(
-            String environmentName,
-            DatabasePrivilegeTemplateInfo template) throws RSSManagerException {
-    	String tempplateName = template.getName().trim();
-        if(!StringUtils.isAlphanumeric(tempplateName)){
-        String msg = "Only Alphanumeric characters and underscores "
-        		+ "are allowed in database privilege template name";
-        		log.error(msg);
-        throw new RSSManagerException(msg);       
-        }else
-        this.getEnvironmentAdaptor().addDatabasePrivilegeTemplate(environmentName, template);
-    }
+	public void addDatabasePrivilegeTemplate(String environmentName,
+			DatabasePrivilegeTemplateInfo template) throws RSSManagerException {
+		String tempplateName = template.getName().trim();
+		if (!StringUtils.isAlphanumeric(tempplateName)) {
+			String msg = "Only Alphanumeric characters and underscores "
+					+ "are allowed in database privilege template name";
+			log.error(msg);
+			throw new RSSManagerException(msg);
+		} else {
+			this.getEnvironmentAdaptor().addDatabasePrivilegeTemplate(
+					environmentName, template);
+		}
+	}
 
     public void removeDatabasePrivilegeTemplate(String environmentName,
                                                 String templateName) throws RSSManagerException {
