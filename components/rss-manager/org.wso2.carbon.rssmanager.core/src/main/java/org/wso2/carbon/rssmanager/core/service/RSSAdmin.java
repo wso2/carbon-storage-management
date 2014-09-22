@@ -105,10 +105,19 @@ public class RSSAdmin extends AbstractAdmin implements RSSManagerService {
                 templateName);
     }
 
-    public DatabaseUserInfo addDatabaseUser(String environmentName,
-                                        DatabaseUserInfo user) throws RSSManagerException {
-        return this.getEnvironmentAdaptor().addDatabaseUser(environmentName, user);
-    }
+	public DatabaseUserInfo addDatabaseUser(String environmentName,
+			DatabaseUserInfo user) throws RSSManagerException {
+		String username = user.getName().trim();
+		if (!StringUtils.isAlphanumeric(username)) {
+			String msg = "Only Alphanumeric characters and underscores "
+					+ "are allowed in database username";
+			log.error(msg);
+			throw new RSSManagerException(msg);
+		} else {
+			return this.getEnvironmentAdaptor().addDatabaseUser(
+					environmentName, user);
+		}
+	}
 
     public void removeDatabaseUser(String environmentName, String rssInstanceName,
                                    String username, String type) throws RSSManagerException {
