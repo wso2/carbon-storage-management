@@ -242,41 +242,49 @@ function displayDatabaseManageActionStatus(msg, status, xmlhttp) {
 }
 
 function createDatabaseUser(envName) {
-    var username = trim(document.getElementById('username').value);
-    var password = document.getElementById('password').value;
-    var repeatPass = document.getElementById('repeatPassword').value;
-    var rssInstances = document.getElementById('rssInstances');
-    var instanceTypes = document.getElementById("instanceTypes");
-    var instanceType = trim(instanceTypes[instanceTypes.selectedIndex].value);
-    var rssInstanceName = ""
-    if(rssInstances != null) {
-        rssInstanceName = rssInstances[rssInstances.selectedIndex].value;
-    }
-
-    if (username == '' || username == null) {
-        CARBON.showWarningDialog("Username field cannot be left blank");
-        return false;
-    } else if (username.length > 7) {
-        CARBON.showWarningDialog("Value in the username field entered exceeds the maximum permitted length of 7");
-        return false;
-    }
-    if (password == '' || password == null) {
-        CARBON.showWarningDialog("Password field cannot be left blank");
-        return false;
-    }
-    if (repeatPass == '' || repeatPass == null) {
-        CARBON.showWarningDialog("Repeat password field cannot be left blank");
-        return false;
-    }
-    if (password != repeatPass) {
-        CARBON.showErrorDialog("Values in Password and Repeat password fields do not match");
-        return false;
-    }
-    if (instanceType == '' || instanceType == null) {
-        CARBON.showWarningDialog("Select instance type");
-        return false;
-    }
-    dispatchDatabaseUserActionRequest('create', rssInstanceName, username, '', envName, instanceType);
+	var username = trim(document.getElementById('username').value);
+	var password = document.getElementById('password').value;
+	var repeatPass = document.getElementById('repeatPassword').value;
+	var rssInstances = document.getElementById('rssInstances');
+	var instanceTypes = document.getElementById("instanceTypes");
+	var instanceType = trim(instanceTypes[instanceTypes.selectedIndex].value);
+	var rssInstanceName = ""
+	if (rssInstances != null) {
+		rssInstanceName = rssInstances[rssInstances.selectedIndex].value;
+	}
+	if (username == '' || username == null) {
+		CARBON.showWarningDialog("Username field cannot be left blank");
+		return false;
+	} else if (username.length > 7) {
+		CARBON.showWarningDialog("Value in the username field" +
+				" entered exceeds the maximum permitted length of 7");
+		return false;
+	}
+	var validChar = new RegExp("^[a-zA-Z0-9_]+$");
+	if (!validChar.test(username)) {
+		CARBON.showWarningDialog("Only Alphanumeric characters and underscores are "
+						+ "allowed in Database Username");
+		return false;
+	}
+	if (password == '' || password == null) {
+		CARBON.showWarningDialog("Password field cannot be left blank");
+		return false;
+	}
+	if (repeatPass == '' || repeatPass == null) {
+		CARBON.showWarningDialog("Repeat password field cannot be left blank");
+		return false;
+	}
+	if (password != repeatPass) {
+		CARBON
+				.showErrorDialog("Values in Password and Repeat password fields do not match");
+		return false;
+	}
+	if (instanceType == '' || instanceType == null) {
+		CARBON.showWarningDialog("Select instance type");
+		return false;
+	}
+	dispatchDatabaseUserActionRequest('create', rssInstanceName, username, '',
+			envName, instanceType);
 }
 
 function editDatabaseUserPrivileges(rssInstanceName, username, databaseName, envName, instanceType) {
