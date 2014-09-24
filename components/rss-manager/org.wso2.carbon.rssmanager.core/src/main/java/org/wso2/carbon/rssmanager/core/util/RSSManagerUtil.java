@@ -180,7 +180,7 @@ public final class RSSManagerUtil {
 
     
 	public static DataSourceMetaInfo createDSMetaInfo(DatabaseInfo database,
-			String username, String password) throws RSSManagerException {
+			String username, String password,String dsName) throws RSSManagerException {
 		DataSourceMetaInfo metaInfo = new DataSourceMetaInfo();
 		RDBMSConfiguration rdbmsConfiguration = new RDBMSConfiguration();
 		String url = database.getUrl();
@@ -190,7 +190,7 @@ public final class RSSManagerUtil {
 		rdbmsConfiguration.setUsername(username);
 		rdbmsConfiguration.setPassword(password);
 		metaInfo.setDefinition(createDSXMLDefinition(rdbmsConfiguration));
-		metaInfo.setName(database.getName());
+		metaInfo.setName(dsName);
 		return metaInfo;
 	}
 

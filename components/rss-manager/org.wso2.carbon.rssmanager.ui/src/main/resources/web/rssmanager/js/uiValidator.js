@@ -1038,10 +1038,14 @@ function getJdbcDriver(instanceUrl) {
     return '';
 }
 
-function createDataSource(rssInstanceName, databaseName, username, envName, instanceType) {
-    var url = 'databaseUserOps_ajaxprocessor.jsp?databaseName=' + databaseName + '&username=' +
-            username + '&rssInstanceName=' + rssInstanceName + '&flag=createDS'+ '&envName='+envName + '&instanceType='+instanceType;
-    jQuery('#connectionStatusDiv').load(url, displayMessagesForCarbonDS);
+function createDataSource(rssInstanceName, databaseName, username, envName,
+		instanceType) {
+	var dsName = trim(document.getElementById('datasourcename').value);
+	var url = 'databaseUserOps_ajaxprocessor.jsp?dsName=' + dsName
+			+ '&databaseName=' + databaseName + '&username=' + username
+			+ '&rssInstanceName=' + rssInstanceName + '&flag=createDS'
+			+ '&envName=' + envName + '&instanceType=' + instanceType;
+	jQuery('#connectionStatusDiv').load(url, displayMessagesForCarbonDS);
 }
 
 function detachDatabaseUser(rssInstanceName, databaseName, username, envnName,instanceType) {
@@ -1103,30 +1107,38 @@ function displayMessagesForDatabaseUserActions(msg,status, xmlhttp) {
     }
 }
 
-function displayMessagesForCarbonDS(msg,status, xmlhttp) {
-    var xmlDoc=xmlhttp.responseXML;
-    var msg = xmlDoc.getElementsByTagName("Message")[0].childNodes[0].nodeValue;
-    var env = xmlDoc.getElementsByTagName("Environment")[0].childNodes[0].nodeValue;
-    
-    if (msg.search(/Datasource has been successfully created/) != -1) {
-        jQuery(document).ready(function() {
-            function handleOK() {
-                window.location = 'attachedDatabaseUsers.jsp?envName='+env;
-            }
+function displayMessagesForCarbonDS(msg, status, xmlhttp) {
+	var xmlDoc = xmlhttp.responseXML;
+	var msg = xmlDoc.getElementsByTagName("Message")[0].childNodes[0].nodeValue;
+	var env = xmlDoc.getElementsByTagName("Environment")[0].childNodes[0].nodeValue;
 
-            CARBON.showInfoDialog(msg, handleOK);
-        });
-    } else if (msg.search(/Unable to create carbon datasource/) != -1) {
-        jQuery(document).ready(function() {
-            function handleOK() {
-                window.location = 'attachedDatabaseUsers.jsp?envName='+env;
-            }
+	if (msg.search(/has been successfully created/) != -1) {
+		jQuery(document).ready(function() {
+			function handleOK() {
+				window.location = 'attachedDatabaseUsers.jsp?envName=' + env;
+			}
 
-            CARBON.showErrorDialog(msg);
-        });
-    } else {
-        CARBON.showErrorDialog('Unable to create carbon datasource');
-    }
+			CARBON.showInfoDialog(msg, handleOK);
+		});
+	} else if (msg.search(/Unable to create carbon datasource/) != -1) {
+		jQuery(document).ready(function() {
+			function handleOK() {
+				window.location = 'attachedDatabaseUsers.jsp?envName=' + env;
+			}
+
+			CARBON.showErrorDialog(msg);
+		});
+	} else if (msg.search(/Datasource already exists/) != -1) {
+		jQuery(document).ready(function() {
+			function handleOK() {
+				window.location = 'attachedDatabaseUsers.jsp?envName=' + env;
+			}
+
+			CARBON.showInfoDialog(msg, handleOK);
+		});
+	} else {
+		CARBON.showErrorDialog('Unable to create carbon datasource');
+	}
 }
 
 function exploreDatabase(userId, url, driver) {
