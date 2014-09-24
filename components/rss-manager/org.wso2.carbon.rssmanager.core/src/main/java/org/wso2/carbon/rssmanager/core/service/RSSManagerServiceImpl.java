@@ -383,7 +383,7 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         return users;
     }
 
-	public void addCarbonDataSource(String environmentName,
+	public void addCarbonDataSource(String environmentName,String dataSourceName,
 			UserDatabaseEntryInfo entry) throws RSSManagerException {
 		DatabaseInfo database = this.getDatabase(environmentName,
 				entry.getRssInstanceName(), entry.getDatabaseName(),
@@ -392,7 +392,7 @@ public class RSSManagerServiceImpl implements RSSManagerService {
 				entry.getRssInstanceName(), entry.getUsername(),
 				entry.getType());
 		DataSourceMetaInfo metaInfo = RSSManagerUtil.createDSMetaInfo(database,
-				entry.getUsername(), databaseuserinfo.getPassword());
+				entry.getUsername(), databaseuserinfo.getPassword(),dataSourceName);
 		try {
 			RSSManagerDataHolder.getInstance().getDataSourceService()
 					.addDataSource(metaInfo);

@@ -19,6 +19,7 @@
 package org.wso2.carbon.rssmanager.core.manager.adaptor;
 
 import org.wso2.carbon.ndatasource.common.DataSourceException;
+import org.wso2.carbon.ndatasource.core.CarbonDataSource;
 import org.wso2.carbon.ndatasource.core.DataSourceMetaInfo;
 import org.wso2.carbon.rssmanager.core.dto.*;
 import org.wso2.carbon.rssmanager.core.dto.common.*;
@@ -340,7 +341,8 @@ public class EnvironmentAdaptor implements RSSManagerService {
 	}
 
 	public void addCarbonDataSource(String environmentName,
-			UserDatabaseEntryInfo entry) throws RSSManagerException {
+			String dataSourceName, UserDatabaseEntryInfo entry)
+			throws RSSManagerException {
 		Database database = this.getRSSManagerAdaptor(environmentName)
 				.getDatabase(entry.getRssInstanceName(),
 						entry.getDatabaseName(), entry.getType());
@@ -350,8 +352,19 @@ public class EnvironmentAdaptor implements RSSManagerService {
 		DatabaseInfo info = new DatabaseInfo();
 		RSSManagerUtil.createDatabaseInfo(info, database);
 		DataSourceMetaInfo metaInfo = RSSManagerUtil.createDSMetaInfo(info,
-				entry.getUsername(), databaseuserinfo.getPassword());
+				entry.getUsername(), databaseuserinfo.getPassword(),
+				dataSourceName);
 		try {
+			List<CarbonDataSource> dsList = RSSManagerDataHolder.getInstance()
+					.getDataSourceService().getAllDataSources();
+			for (CarbonDataSource ds : dsList) {
+				if (ds.getDSMInfo().getName().equals(dataSourceName)) {
+					String msg = "Datasource already exists by name  '"
+							+ dataSourceName + "'";
+					throw new RSSManagerException(msg,
+							new DataSourceException());
+				}
+			}
 			RSSManagerDataHolder.getInstance().getDataSourceService()
 					.addDataSource(metaInfo);
 		} catch (DataSourceException e) {

@@ -110,7 +110,7 @@ public interface RSSManagerService {
 	DatabasePrivilegeTemplateInfo getDatabasePrivilegeTemplate(String environmentName, String templateName)
 	                                                                                                   throws RSSManagerException;
 
-	void addCarbonDataSource(String environmentName, UserDatabaseEntryInfo entry) throws RSSManagerException;
+	void addCarbonDataSource(String environmentName,String dataSourceName, UserDatabaseEntryInfo entry) throws RSSManagerException;
 
 	String[] getEnvironments() throws RSSManagerException;
 

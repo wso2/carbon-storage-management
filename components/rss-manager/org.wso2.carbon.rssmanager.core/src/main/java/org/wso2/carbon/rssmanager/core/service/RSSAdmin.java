@@ -205,10 +205,12 @@ public class RSSAdmin extends AbstractAdmin implements RSSManagerService {
                 databaseName, type);
     }
 
-    public void addCarbonDataSource(String environmentName,
-                                    UserDatabaseEntryInfo entry) throws RSSManagerException {
-        this.getEnvironmentAdaptor().addCarbonDataSource(environmentName, entry);
-    }
+	public void addCarbonDataSource(String environmentName,
+			String dataSourceName, UserDatabaseEntryInfo entry)
+			throws RSSManagerException {
+		this.getEnvironmentAdaptor().addCarbonDataSource(environmentName,
+				dataSourceName, entry);
+	}
 
     public DatabasePrivilegeSetInfo getUserDatabasePrivileges(
             String environmentName, String rssInstanceName, String databaseName,
