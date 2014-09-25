@@ -36,6 +36,7 @@
     <modules>
         <module>server/org.wso2.carbon.cassandra.server.feature</module>
         <module>client/org.wso2.carbon.cassandra.client.feature</module>
+        <module>client/org.wso2.carbon.cassandra.datareader.feature</module>
         <module>server/org.wso2.carbon.cassandra.dataaccess.feature</module>
         <module>server/org.wso2.carbon.cassandra.mgt.feature</module>
         <module>server/org.wso2.carbon.cassandra.mgt.ui.feature</module>

@@ -64,8 +64,13 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.utils</artifactId>
             <version>${project.version}</version>
-        </dependency>       
+        </dependency>
 
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.cassandra.datareader</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
     </dependencies>
 
@@ -96,9 +101,9 @@
                                 <bundleDef>org.apache.cassandra.wso2:apache-cassandra</bundleDef>
                                 <bundleDef>com.datastax.cassandra.wso2:cql-driver</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.ndatasource.common</bundleDef>
-				<bundleDef>org.wso2.carbon:org.wso2.carbon.ndatasource.core</bundleDef>
+				                <bundleDef>org.wso2.carbon:org.wso2.carbon.ndatasource.core</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.utils</bundleDef>
-                                
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.datareader</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
