@@ -166,7 +166,14 @@ public class Environment extends AbstractEntity<Integer, Environment> {
 		return rssInstanceMap.get(rssInstanceName);
 	}
 
-	public Set<RSSInstance> getRssInstanceEntities() {
+    public void addRSSInstance(RSSInstance rssInstance) {
+         rssInstanceMap.put(rssInstance.getName(),rssInstance);
+    }
+
+    public void removeRSSInstance(String rssInstanceName) {
+        rssInstanceMap.remove(rssInstanceName);
+    }
+    public Set<RSSInstance> getRssInstanceEntities() {
 		return rssInstanceEntities;
 	}
 

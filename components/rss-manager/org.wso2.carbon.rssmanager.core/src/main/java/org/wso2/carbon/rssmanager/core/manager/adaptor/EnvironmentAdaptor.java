@@ -51,12 +51,14 @@ public class EnvironmentAdaptor implements RSSManagerService {
 		RSSManagerUtil.createRSSInstance(rssInstance, entity);
 		entity= this.getEnvironmentManager().addRSSInstance(entity);
         environmentManager.getEnvironment(rssInstance.getEnvironmentName()).getDSWrapperRepository().addRSSInstanceDSWrapper(entity);
+        environmentManager.getEnvironment(rssInstance.getEnvironmentName()).addRSSInstance(entity);
 	}
 
 	public void removeRSSInstance(String environmentName, String rssInstanceName, String type)
 	                                                                                          throws RSSManagerException {
 		this.getEnvironmentManager().removeRSSInstance(environmentName, rssInstanceName);
         environmentManager.getEnvironment(environmentName).getDSWrapperRepository().removeRSSInstanceDSWrapper(rssInstanceName);
+        environmentManager.getEnvironment(environmentName).removeRSSInstance(rssInstanceName);
     }
 
 	public void updateRSSInstance(String environmentName, RSSInstanceInfo rssInstance)
@@ -65,7 +67,9 @@ public class EnvironmentAdaptor implements RSSManagerService {
 		RSSManagerUtil.createRSSInstance(rssInstance, entity);
 		this.getEnvironmentManager().updateRSSInstance(environmentName, entity);
         environmentManager.getEnvironment(environmentName).getDSWrapperRepository().removeRSSInstanceDSWrapper(rssInstance.getName());
+        environmentManager.getEnvironment(environmentName).removeRSSInstance(rssInstance.getName());
         environmentManager.getEnvironment(rssInstance.getEnvironmentName()).getDSWrapperRepository().addRSSInstanceDSWrapper(entity);
+        environmentManager.getEnvironment(rssInstance.getEnvironmentName()).addRSSInstance(entity);
     }
 
 	public RSSInstanceInfo getRSSInstance(String environmentName, String rssInstanceName, String type)
