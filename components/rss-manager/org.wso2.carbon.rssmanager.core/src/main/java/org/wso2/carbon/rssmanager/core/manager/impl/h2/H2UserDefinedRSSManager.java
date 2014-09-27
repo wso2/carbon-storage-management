@@ -46,6 +46,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * @see org.wso2.carbon.rssmanager.core.manager.RSSManager for the method java doc comments
+ */
 public class H2UserDefinedRSSManager extends UserDefinedRSSManager {
 
     public H2UserDefinedRSSManager(Environment environment, RSSManagementRepository config) {
