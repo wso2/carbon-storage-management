@@ -42,11 +42,8 @@ public class CassandraServerController {
     public void start() {
         thread = new Thread(new Runnable() {
             public void run() {
-                if (log.isDebugEnabled()) {
-                    log.debug("Activating the Cassandra Server");
-                }
+                log.info("Activating the Cassandra Server...");
                 cassandraSever.activate();
-                log.info("Cassandra Server Controller Thread was destroyed successfully");
             }
         }, "CassandraServerController");
         thread.start();
