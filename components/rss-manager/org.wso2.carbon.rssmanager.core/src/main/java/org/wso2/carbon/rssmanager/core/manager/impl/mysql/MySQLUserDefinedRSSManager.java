@@ -42,6 +42,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * @see org.wso2.carbon.rssmanager.core.manager.RSSManager for the method java doc comments
+ */
 public class MySQLUserDefinedRSSManager extends UserDefinedRSSManager {
 
     Log log = LogFactory.getLog(MySQLUserDefinedRSSManager.class);

@@ -58,6 +58,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Abstract class contains the common operations related to metadata handling
+ * of both user defined and system RSS Instances
+ */
 public abstract class AbstractRSSManager{
 
     private RSSDAO rssDAO;
@@ -108,6 +112,11 @@ public abstract class AbstractRSSManager{
         dao.overrideJPASession(getEntityManager().getJpaUtil().getJPAEntityManager());
     }
 
+    /**
+     * Get the database type of the given environment
+     * @param environment
+     * @return
+     */
     private RDBMSType resolveDBMSType(Environment environment) {
 
         RDBMSType dbmsType = RDBMSType.UNKNOWN;
@@ -149,6 +158,12 @@ public abstract class AbstractRSSManager{
         return entityManager;
     }
 
+    /**
+     * Get database connection from the provided rss instance
+     * @param rssInstanceName name of the rss instance to get the database connection
+     * @return Connection
+     * @throws RSSManagerException
+     */
     protected Connection getConnection(String rssInstanceName) throws RSSManagerException {
         RSSInstanceDSWrapper dsWrapper = getEnvironment().getDSWrapperRepository().
                 getRSSInstanceDSWrapper(rssInstanceName);
@@ -159,6 +174,13 @@ public abstract class AbstractRSSManager{
         return dsWrapper.getConnection();
     }
 
+    /**
+     * Get database connection from the provided rss instance and database name
+     * @param rssInstanceName name of the rss instance to get the database connection
+     * @param dbName name of the database to get the database connection
+     * @return Connection
+     * @throws RSSManagerException
+     */
     protected Connection getConnection(String rssInstanceName,
                                        String dbName) throws RSSManagerException {
         RSSInstanceDSWrapper dsWrapper =
@@ -169,7 +191,14 @@ public abstract class AbstractRSSManager{
         }
         return dsWrapper.getConnection(dbName);
     }
-        
+
+    /**
+     * Get data source from rss instance
+     * @param rssInstanceName name of the rss instance
+     * @param dbName name of the database
+     * @return DataSource
+     * @throws RSSManagerException
+     */
     protected DataSource getDataSource(String rssInstanceName,
                                        String dbName) throws RSSManagerException {
     	 RSSInstanceDSWrapper dsWrapper =
@@ -191,6 +220,10 @@ public abstract class AbstractRSSManager{
         throw new RSSManagerException(msg);
     }
 
+    /**
+     * Name of the environment
+     * @return
+     */
     public String getEnvironmentName() {
         return environment.getName();
     }
@@ -199,6 +232,16 @@ public abstract class AbstractRSSManager{
         return environment;
     }
 
+    /**
+     * Add database to metadata repo
+     * @param isInTx atomic boolean value for the distributed transaction
+     * @param database name of the database
+     * @param rssInstance name of the rss instance
+     * @param qualifiedDatabaseName fully qualified database name
+     * @return Database
+     * @throws RSSManagerException
+     * @throws RSSDAOException
+     */
     protected Database addDatabase(AtomicBoolean isInTx, Database database, RSSInstance rssInstance,
                                    String qualifiedDatabaseName) throws RSSManagerException, RSSDAOException {
         RSSManagerUtil.checkIfParameterSecured(qualifiedDatabaseName);
@@ -219,6 +262,12 @@ public abstract class AbstractRSSManager{
         return database;
     }
 
+    /**
+     * Get databases in the given rss instance type
+     * @param instanceType rss instance type
+     * @return Database[]
+     * @throws RSSManagerException
+     */
     public Database[] getDatabases(String instanceType) throws RSSManagerException {
         Database[] databases = new Database[0];
         try {
@@ -235,6 +284,14 @@ public abstract class AbstractRSSManager{
         return databases;
     }
 
+    /**
+     * Check whether database exist
+     * @param rssInstanceName name of the rss instance
+     * @param databaseName name of the database
+     * @param instanceType rss instance type
+     * @return boolean
+     * @throws RSSManagerException
+     */
     public boolean isDatabaseExist(String rssInstanceName,
                                    String databaseName,String instanceType) throws RSSManagerException {
         boolean isExist = false;
@@ -251,6 +308,13 @@ public abstract class AbstractRSSManager{
         return isExist;
     }
 
+    /**
+     * Check whether database user exist
+     * @param rssInstanceName name of the rss instance
+     * @param instanceType rss instance type
+     * @return boolean
+     * @throws RSSManagerException
+     */
     public boolean isDatabaseUserExist(String rssInstanceName,
                                        String username, String instanceType) throws RSSManagerException {
         boolean isExist = false;
@@ -269,9 +333,15 @@ public abstract class AbstractRSSManager{
     }
 
     /**
-     * transactional operations moved to common place -- tx not committed in here but in subclass
+     * Remove database
+     * @param isInTx Atomic boolean value for the distributed transaction
+     * @param rssInstanceName name of the rss instance
+     * @param databaseName name of the database
+     * @param rssInstance name of the rss instance
+     * @param instanceType rss instance type
+     * @throws RSSManagerException
+     * @throws RSSDAOException
      */
-
     protected void removeDatabase(AtomicBoolean isInTx, String rssInstanceName, String databaseName,
                                   RSSInstance rssInstance, String instanceType) throws RSSManagerException, RSSDAOException {
 
@@ -288,6 +358,17 @@ public abstract class AbstractRSSManager{
 
     }
 
+    /**
+     * Update user database privileges
+     * @param isInTx Atomic boolean value for the distributed transaction
+     * @param rssInstanceName name of the rss instance
+     * @param databaseName name of the database
+     * @param privileges updated database privileges
+     * @param username username of the database user
+     * @param instanceType rss instance type
+     * @throws RSSManagerException
+     * @throws RSSDAOException
+     */
     protected void updateDatabaseUserPrivileges(AtomicBoolean isInTx, String rssInstanceName, String databaseName,
                                   DatabasePrivilegeSet privileges, String username, String instanceType) throws RSSManagerException, RSSDAOException {
 
@@ -303,6 +384,13 @@ public abstract class AbstractRSSManager{
 
     }
 
+    /**
+     * Get database info
+     * @param instanceType rss instance type
+     * @param databaseName name of the database
+     * @return
+     * @throws RSSManagerException
+     */
     public Database getDatabase(String instanceType,
                                 String databaseName) throws RSSManagerException {
         try {
@@ -316,6 +404,15 @@ public abstract class AbstractRSSManager{
         }
     }
 
+    /**
+     * Deattach user from a given data source
+     * @param isInTx Atomic boolean value for the distributed transaction
+     * @param entry database user property object
+     * @param instanceType rss instance type
+     * @return RSSInstance
+     * @throws RSSManagerException
+     * @throws RSSDAOException
+     */
     protected RSSInstance detachUser(AtomicBoolean isInTx,
                                      UserDatabaseEntry entry, String instanceType) throws RSSManagerException, RSSDAOException {
         Database database = this.getDatabase(entry.getType(), entry.getDatabaseName());
@@ -350,6 +447,16 @@ public abstract class AbstractRSSManager{
         return rssInstance;
     }
 
+    /**
+     * Add database user
+     * @param isInTx Atomic boolean value for the distributed transaction
+     * @param user database user properties
+     * @param qualifiedUsername fully qualified username
+     * @param rssInstance name of the rss instance
+     * @return DatabaseUser
+     * @throws RSSManagerException
+     * @throws RSSDAOException
+     */
     protected DatabaseUser addDatabaseUser(AtomicBoolean isInTx, DatabaseUser user,
                                            String qualifiedUsername,RSSInstance rssInstance) throws RSSManagerException, RSSDAOException {
         boolean isExist = this.isDatabaseUserExist(user.getRssInstanceName(), qualifiedUsername, rssInstance.getInstanceType());
@@ -376,6 +483,16 @@ public abstract class AbstractRSSManager{
         return user;
     }
 
+    /**
+     * Update database user
+     * @param isInTx Atomic boolean value for the distributed transaction
+     * @param user database user properties
+     * @param rssInstance rss instance Obj
+     * @param instanceType rss instance type
+     * @return DatabaseUser
+     * @throws RSSManagerException
+     * @throws RSSDAOException
+     */
     protected DatabaseUser updateDatabaseUser(AtomicBoolean isInTx, DatabaseUser user,
                                            RSSInstance rssInstance, String instanceType) throws RSSManagerException, RSSDAOException {
         boolean isExist = this.isDatabaseUserExist(user.getRssInstanceName(), user.getUsername(), instanceType);
@@ -396,6 +513,15 @@ public abstract class AbstractRSSManager{
         return user;
     }
 
+    /**
+     * Update database user
+     * @param isInTx Atomic boolean value for the distributed transaction
+     * @param user database user properties
+     * @param instanceType rss instance type
+     * @return DatabaseUser
+     * @throws RSSManagerException
+     * @throws RSSDAOException
+     */
     protected DatabaseUser updateDatabaseUser(AtomicBoolean isInTx, DatabaseUser user,
                                                String instanceType) throws RSSManagerException, RSSDAOException {
 
@@ -416,6 +542,16 @@ public abstract class AbstractRSSManager{
         return user;
     }
 
+    /**
+     * Add database user
+     * @param isInTx Atomic boolean value for the distributed transaction
+     * @param user database user properties
+     * @param qualifiedUsername fully qualified username
+     * @param instanceType rss instance type
+     * @return DatabaseUser
+     * @throws RSSManagerException
+     * @throws RSSDAOException
+     */
     protected DatabaseUser addDatabaseUser(AtomicBoolean isInTx, DatabaseUser user,
                                            String qualifiedUsername, String instanceType) throws RSSManagerException, RSSDAOException {
 
@@ -452,6 +588,13 @@ public abstract class AbstractRSSManager{
         return user;
     }
 
+    /**
+     * Remove database user
+     * @param isInTx Atomic boolean value for the distributed transaction
+     * @param username username of the database user
+     * @param instanceType rss instance type
+     * @throws RSSManagerException
+     */
     protected void removeDatabaseUser(AtomicBoolean isInTx,String username, String instanceType) throws RSSManagerException {
         DatabaseUser dbUser;
         try {
@@ -481,6 +624,13 @@ public abstract class AbstractRSSManager{
         }
     }
 
+    /**
+     * Get RSS Instance from database
+     * @param databaseName name of the database
+     * @param instanceType rss instance type
+     * @return RSSInstance
+     * @throws RSSManagerException
+     */
     public RSSInstance resolveRSSInstanceByDatabase(String databaseName, String instanceType) throws RSSManagerException {
         try {
             int tenantId = RSSManagerUtil.getTenantId();
@@ -495,6 +645,15 @@ public abstract class AbstractRSSManager{
             throw new RSSManagerException("Error occurred while resolving RSS instance", e);
         }
     }
+
+    /**
+     * Get database user
+     * @param rssInstanceName name of the rss instance
+     * @param username username of the database user
+     * @param instanceType rss instance type
+     * @return DatabaseUser
+     * @throws RSSManagerException
+     */
     public DatabaseUser getDatabaseUser(String rssInstanceName,
                                         String username,String instanceType) throws RSSManagerException {
         try {
@@ -515,8 +674,15 @@ public abstract class AbstractRSSManager{
         }
     }
 
-
-
+    /**
+     * Attache database user to the database
+     * @param isInTx Atomic boolean value for the distributed transaction
+     * @param entry database user entry
+     * @param privileges database privilege set
+     * @param rssInstance rss  rss instance Obj
+     * @throws RSSManagerException
+     * @throws RSSDAOException
+     */
     protected void attachUser(AtomicBoolean isInTx, UserDatabaseEntry entry,
                               DatabasePrivilegeSet privileges, RSSInstance rssInstance)
             throws RSSManagerException,
