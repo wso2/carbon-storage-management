@@ -46,6 +46,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * @see org.wso2.carbon.rssmanager.core.manager.RSSManager for the method java doc comments
+ */
 public class SQLServerUserDefinedRSSManager extends UserDefinedRSSManager {
     private static final Log log = LogFactory.getLog(SQLServerSystemRSSManager.class);
 

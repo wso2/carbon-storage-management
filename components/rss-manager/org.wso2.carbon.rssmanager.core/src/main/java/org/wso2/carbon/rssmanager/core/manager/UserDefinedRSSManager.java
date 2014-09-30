@@ -44,6 +44,11 @@ public abstract class UserDefinedRSSManager extends AbstractRSSManager implement
         super(environment, config);
     }
 
+    /**
+     * Get databases of user defined RSS Instances for the environment
+     * @return
+     * @throws RSSManagerException
+     */
     public Database[] getDatabases() throws RSSManagerException {
         Database[] databases = new Database[0];
         try {
@@ -60,6 +65,11 @@ public abstract class UserDefinedRSSManager extends AbstractRSSManager implement
         return databases;
     }
 
+    /**
+     * Get database users of user defined RSS Instances for the environment
+     * @return
+     * @throws RSSManagerException
+     */
     public DatabaseUser[] getDatabaseUsers() throws RSSManagerException {
         DatabaseUser[] users = new DatabaseUser[0];
         try {
@@ -75,6 +85,13 @@ public abstract class UserDefinedRSSManager extends AbstractRSSManager implement
         return users;
     }
 
+    /**
+     * Get database user of given user defined rss instance
+     * @param rssInstanceName name of the RSS Instance
+     * @param username username of the database user
+     * @return DatabaseUser
+     * @throws RSSManagerException
+     */
     public DatabaseUser getDatabaseUser(String rssInstanceName,
                                         String username) throws RSSManagerException {
         try {
@@ -96,6 +113,13 @@ public abstract class UserDefinedRSSManager extends AbstractRSSManager implement
         }
     }
 
+    /**
+     * Get attached database users give user defined rss instance
+     * @param rssInstanceName name of the RSS Instance
+     * @param databaseName name of the database
+     * @return DatabaseUser
+     * @throws RSSManagerException
+     */
     public DatabaseUser[] getAttachedUsers(String rssInstanceName,
                                                      String databaseName) throws RSSManagerException {
         try {
@@ -121,6 +145,13 @@ public abstract class UserDefinedRSSManager extends AbstractRSSManager implement
         }
     }
 
+    /**
+     * Get available users to attach to rss instance
+     * @param rssInstanceName name of the RSS Instance
+     * @param databaseName name of the database
+     * @return DatabaseUser
+     * @throws RSSManagerException
+     */
     public DatabaseUser[] getAvailableUsers(String rssInstanceName,
                                                               String databaseName) throws RSSManagerException {
         try {
@@ -153,6 +184,14 @@ public abstract class UserDefinedRSSManager extends AbstractRSSManager implement
         }
     }
 
+    /**
+     * Get database user privileges in user define RSS Instance of a given database user
+     * @param rssInstanceName name of the RSS Instance
+     * @param databaseName name of the database
+     * @param username username of the database user
+     * @return DatabasePrivilegeSet
+     * @throws RSSManagerException
+     */
     public DatabasePrivilegeSet getUserDatabasePrivileges(String rssInstanceName,
                                                           String databaseName,
                                                           String username) throws RSSManagerException {

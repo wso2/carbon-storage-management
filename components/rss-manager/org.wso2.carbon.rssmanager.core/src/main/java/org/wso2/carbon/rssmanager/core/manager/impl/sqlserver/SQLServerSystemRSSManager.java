@@ -45,6 +45,9 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * @see org.wso2.carbon.rssmanager.core.manager.RSSManager for the method java doc comments
+ */
 public class SQLServerSystemRSSManager extends SystemRSSManager {
 
     private static final Log log = LogFactory.getLog(SQLServerSystemRSSManager.class);
