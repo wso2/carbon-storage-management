@@ -23,7 +23,7 @@ import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
 
 public class RoundRobinNodeAllocationStrategy implements NodeAllocationStrategy {
 
-    private int currentPos;
+    private static int currentPos;
     private final Object lock = new Object();
     private RSSInstance[] servers;
 
