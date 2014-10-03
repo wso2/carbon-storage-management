@@ -60,9 +60,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.datastax.cassandra</groupId>
-            <artifactId>cassandra-driver-core</artifactId>
-            <version>1.0.5</version>
+            <groupId>com.datastax.cassandra.wso2</groupId>
+            <artifactId>cql-driver</artifactId>
+            <version>1.0.5.wso2v2</version>
         </dependency>
 
         <dependency>
@@ -114,7 +114,7 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>org.apache.cassandra.wso2:apache-cassandra</bundleDef>
-                                <bundleDef>com.datastax.cassandra:cassandra-driver-core</bundleDef>
+                                <bundleDef>com.datastax.cassandra.wso2:cql-driver</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.ndatasource.common</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.ndatasource.core</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.utils</bundleDef>
