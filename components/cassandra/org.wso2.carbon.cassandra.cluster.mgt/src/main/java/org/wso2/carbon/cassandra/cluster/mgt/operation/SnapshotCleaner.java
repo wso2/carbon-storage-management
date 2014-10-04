@@ -22,17 +22,14 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.cassandra.cluster.mgt.exception.ClusterDataAdminException;
 import org.wso2.carbon.cassandra.cluster.mgt.mbean.ClusterMBeanProxy;
 
-public class TakeSnapshot implements Runnable {
-
-    private static Log log = LogFactory.getLog(ClearSnapshot.class);
+public class SnapshotCleaner implements Runnable{
+    private static Log log = LogFactory.getLog(SnapshotCleaner.class);
     private String tag;
     private String keyspace;
-    private String cf;
 
-    public TakeSnapshot(String tag, String keyspace, String cf) {
+    public SnapshotCleaner(String tag, String keyspace) {
         this.tag = tag;
         this.keyspace = keyspace;
-        this.cf = cf;
     }
 
     public String getTag() {
@@ -50,21 +47,13 @@ public class TakeSnapshot implements Runnable {
     public void setKeyspace(String keyspace) {
         this.keyspace = keyspace;
     }
-
-    public String getCf() {
-        return cf;
-    }
-
-    public void setCf(String cf) {
-        this.cf = cf;
-    }
     @Override
     public void run(){
 
         try {
-            ClusterMBeanProxy.getClusterStorageMBeanService().takeSnapShot(tag,cf,keyspace);
+            ClusterMBeanProxy.getClusterStorageMBeanService().clearSnapShot(tag, keyspace);
         } catch (ClusterDataAdminException e) {
-            log.info("Error while taking the snapshot",e);
+           log.error("Error while clear the snapshot",e);
         }
 
     }

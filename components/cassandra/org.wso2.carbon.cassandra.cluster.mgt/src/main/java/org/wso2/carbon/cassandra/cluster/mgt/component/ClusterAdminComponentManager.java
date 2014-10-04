@@ -48,9 +48,9 @@ public final class ClusterAdminComponentManager {
     private TaskService taskService;
     private TaskManager taskManager;
     private boolean initialized = false;
-    private final String CONFIGURATION_LOCATION = CarbonUtils.getCarbonHome()+ File.separator + "repository" + File.separator + "conf"
-                                                  + File.separator + "etc" + File.separator;
-    private final String CONFIGURATION_FILE_NAME="cluster-monitor-config.xml";
+    private final String CONFIGURATION_LOCATION = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator + "conf"
+            + File.separator + "etc" + File.separator;
+    private final String CONFIGURATION_FILE_NAME = "cluster-monitor-config.xml";
 
 
     public static ClusterAdminComponentManager getInstance() {
@@ -60,37 +60,37 @@ public final class ClusterAdminComponentManager {
     private ClusterAdminComponentManager() {
     }
 
-    public void init(ClusterMBeanDataAccess clusterMBeanDataAccess,TaskService taskService)
-    {
+    public void init(ClusterMBeanDataAccess clusterMBeanDataAccess, TaskService taskService) {
         this.clusterMBeanDataAccess = clusterMBeanDataAccess;
-        this.taskService=taskService;
+        this.taskService = taskService;
         try {
-            this.taskManager=taskService.getTaskManager(ClusterConstants.CLUSTER_MONITOR);
+            this.taskManager = taskService.getTaskManager(ClusterConstants.CLUSTER_MONITOR);
         } catch (TaskException e) {
             log.error("Task manager not in the task service");
+        } catch (Exception e) {
+            log.error("Error occur while registering the task");
         }
-        this.initialized=true;
+        this.initialized = true;
         try {
             startMonitoring();
         } catch (ClusterDataAdminException e) {
-           if(log.isDebugEnabled())
-           {
-               log.error("Error while starting cluster monitoring",e);
-           }
+            log.error("Error while starting cluster monitoring", e);
         }
 
     }
 
     public ClusterMBeanDataAccess getClusterMBeanDataAccess() throws
-                                                              ClusterDataAdminException {
+            ClusterDataAdminException {
         assertInitialized();
         return clusterMBeanDataAccess;
     }
+
     public TaskService getTaskService() throws
-                                        ClusterDataAdminException {
+            ClusterDataAdminException {
         assertInitialized();
         return taskService;
     }
+
     private void assertInitialized() throws ClusterDataAdminException {
         if (!initialized) {
             throw new ClusterDataAdminException("Cassandra Admin Component has not been initialized.... ", log);
@@ -103,108 +103,90 @@ public final class ClusterAdminComponentManager {
     public void destroy() {
         clusterMBeanDataAccess = null;
         try {
-            if(taskManager.isTaskScheduled(ClusterConstants.CLUSTER_STATS))
-            {
+            if (taskManager.isTaskScheduled(ClusterConstants.CLUSTER_STATS)) {
                 taskManager.deleteTask(ClusterConstants.CLUSTER_STATS);
             }
         } catch (TaskException e) {
-            if(log.isDebugEnabled())
-            {
-            log.error("Unable to stop cluster monitor task");
-            }
+                log.error("Unable to stop cluster monitor task");
         }
-        taskService=null;
+        taskService = null;
     }
 
     public void startMonitoring() throws ClusterDataAdminException {
-        if(isConfigurationExists())
-        {
+        if (isConfigurationExists()) {
             setClusterMonitorConfiguration();
-            if(ClusterMonitorConfig.isMonitoringEnable())
-            {
+            if (ClusterMonitorConfig.isMonitoringEnable()) {
                 try {
-                    taskManager=taskService.getTaskManager(ClusterConstants.CLUSTER_MONITOR);
+                    taskManager = taskService.getTaskManager(ClusterConstants.CLUSTER_MONITOR);
                     taskManager.registerTask(NTaskConfiguration.getTaskEnvironment());
                 } catch (TaskException e) {
-                    if(log.isDebugEnabled())
-                    {
-                        log.info("Error getting task manager",e);
-                    }
+                        log.error("Error getting task manager", e);
                 }
-            }
-            else
-            {
+            } else {
                 try {
-                    if(taskManager.isTaskScheduled(ClusterConstants.CLUSTER_STATS))
-                    {
+                    if (taskManager.isTaskScheduled(ClusterConstants.CLUSTER_STATS)) {
                         taskManager.deleteTask(ClusterConstants.CLUSTER_STATS);
                     }
                 } catch (TaskException e) {
-                    if(log.isDebugEnabled())
-                    {
                         log.error("Unable to stop cluster monitor task");
-                    }
                 }
             }
-        }
-        else
-        {
+        } else {
             try {
-                if(taskManager.isTaskScheduled(ClusterConstants.CLUSTER_STATS))
-                {
+                if (taskManager.isTaskScheduled(ClusterConstants.CLUSTER_STATS)) {
                     taskManager.deleteTask(ClusterConstants.CLUSTER_STATS);
                 }
             } catch (TaskException e) {
-                if(log.isDebugEnabled())
-                {
                     log.error("Unable to stop cluster monitor task");
-                }
             }
         }
     }
+
     private boolean isConfigurationExists() {
-        return  new File(CONFIGURATION_LOCATION + CONFIGURATION_FILE_NAME).exists();
+        return new File(CONFIGURATION_LOCATION + CONFIGURATION_FILE_NAME).exists();
     }
+
     private void setClusterMonitorConfiguration() throws ClusterDataAdminException {
         String fileContents;
-        try
-        {
-        fileContents=readFile(CONFIGURATION_LOCATION +CONFIGURATION_FILE_NAME);
-        }catch (IOException e)
-        {
-        throw new ClusterDataAdminException("Error while reading configuration",e,log);
+        try {
+            fileContents = readFile(CONFIGURATION_LOCATION + CONFIGURATION_FILE_NAME);
+        } catch (IOException e) {
+            throw new ClusterDataAdminException("Error while reading configuration", e, log);
         }
-        OMElement omElement= null;
+        OMElement omElement = null;
         try {
             omElement = AXIOMUtil.stringToOM(fileContents);
         } catch (XMLStreamException e) {
-            throw new ClusterDataAdminException("Unable to parse string to XML",e,log);
+            throw new ClusterDataAdminException("Unable to parse string to XML", e, log);
         }
-        ClusterMonitorConfig.setCronExpression(omElement.getFirstElement().getFirstChildWithName(new QName("cron_expression")).getText());
-        ClusterMonitorConfig.setReceiverUrl(omElement.getFirstElement().getFirstChildWithName(new QName("bam_receiver_url")).getText());
-        ClusterMonitorConfig.setSecureUrl(omElement.getFirstElement().getFirstChildWithName(new QName("bam_secure_url")).getText());
+        OMElement omEl = omElement.getFirstElement();
+        ClusterMonitorConfig.setCronExpression(omEl.getFirstChildWithName(new QName("cron_expression")).getText());
+        ClusterMonitorConfig.setReceiverUrl(omEl.getFirstChildWithName(new QName("bam_receiver_url")).getText());
+        ClusterMonitorConfig.setSecureUrl(omEl.getFirstChildWithName(new QName("bam_secure_url")).getText());
         ClusterMonitorConfig.setMonitoringEnable(Boolean.parseBoolean(omElement.getFirstElement().getFirstChildWithName(new QName("monitoring_enable")).getText()));
         ClusterMonitorConfig.setNodeId(omElement.getFirstElement().getFirstChildWithName(new QName("node_id")).getText());
-        OMElement cardinals=omElement.getFirstElement().getFirstChildWithName((new QName("bam_authentiacation")));
+        OMElement cardinals = omEl.getFirstChildWithName((new QName("bam_authentiacation")));
         ClusterMonitorConfig.setUsername(cardinals.getFirstChildWithName(new QName("username")).getText());
         ClusterMonitorConfig.setPassword(cardinals.getFirstChildWithName(new QName("password")).getText());
     }
 
-    private  String readFile(String filePath) throws IOException {
-        BufferedReader reader=null;
+    private String readFile(String filePath) throws IOException {
+        BufferedReader reader = null;
         StringBuilder stringBuilder;
         String line;
         String ls;
-        log.debug("Path to file : " + filePath);
-            reader = new BufferedReader(new FileReader(filePath));
-            stringBuilder = new StringBuilder();
-            ls = System.getProperty("line.separator");
+        if(log.isDebugEnabled()) {
+            log.debug("Path to file : " + filePath);
+        }
+        reader = new BufferedReader(new FileReader(filePath));
+        stringBuilder = new StringBuilder();
+        ls = System.getProperty("line.separator");
 
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line);
-                stringBuilder.append(ls);
-            }
-            reader.close();
+        while ((line = reader.readLine()) != null) {
+            stringBuilder.append(line);
+            stringBuilder.append(ls);
+        }
+        reader.close();
         return stringBuilder.toString();
     }
 }

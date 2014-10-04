@@ -50,18 +50,8 @@ public class ClusterDataPublisher extends AbstractTask {
         DataPublisher dataPublisher = null;
         try {
             dataPublisher = getDataPublisher();
-        } catch (AgentException e) {
-            log.info(e);
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (AuthenticationException e) {
-            log.info(e);
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (TransportException e) {
-            log.info(e);
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (MalformedURLException e) {
-            log.info(e);
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (Exception e) {
+            log.error("Error while getting data publisher"+e);
         }
 
         try {

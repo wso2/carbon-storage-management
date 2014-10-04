@@ -33,21 +33,17 @@ public class ClusterMBeanDataServiceComponent {
     private ServiceRegistration serviceRegistration;
 
     protected void activate(ComponentContext componentContext) {
-        if (log.isDebugEnabled()) {
-            log.debug("Starting the cluster tools service component for Cassandra");
-        }
+        log.debug("Starting the cluster tools service component for Cassandra");
         ClusterMBeanDataAccess clusterMBeanDataAccess =new ClusterDataAccessMBeanImplementation();
         if(clusterMBeanDataAccess !=null)
         {
-            serviceRegistration = componentContext.getBundleContext().registerService(ClusterMBeanDataAccess.class.getName(), clusterMBeanDataAccess,null);
+            serviceRegistration = componentContext.getBundleContext().registerService(ClusterMBeanDataAccess.class.getName(),
+                    clusterMBeanDataAccess,null);
         }
     }
 
     protected void deactivate(ComponentContext componentContext) {
-
-        if (log.isDebugEnabled()) {
-            log.debug("Stopping the cluster tools service component for Cassandra");
-        }
+        log.debug("Stopping the cluster tools service component for Cassandra");
         componentContext.getBundleContext().ungetService(serviceRegistration.getReference());
     }
 

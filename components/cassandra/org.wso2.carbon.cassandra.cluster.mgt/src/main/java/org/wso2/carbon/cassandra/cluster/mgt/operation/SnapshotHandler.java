@@ -22,29 +22,50 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.cassandra.cluster.mgt.exception.ClusterDataAdminException;
 import org.wso2.carbon.cassandra.cluster.mgt.mbean.ClusterMBeanProxy;
 
-public class MoveNode implements Runnable {
-    private static Log log = LogFactory.getLog(MoveNode.class);
-    private String newToken;
+public class SnapshotHandler implements Runnable {
 
-    public MoveNode(String newToken) {
-        this.newToken = newToken;
+    private static Log log = LogFactory.getLog(SnapshotCleaner.class);
+    private String tag;
+    private String keyspace;
+    private String cf;
+
+    public SnapshotHandler(String tag, String keyspace, String cf) {
+        this.tag = tag;
+        this.keyspace = keyspace;
+        this.cf = cf;
     }
 
-    public String getNewToken() {
-        return newToken;
+    public String getTag() {
+        return tag;
     }
 
-    public void setNewToken(String newToken) {
-        this.newToken = newToken;
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
+    public String getKeyspace() {
+        return keyspace;
+    }
 
+    public void setKeyspace(String keyspace) {
+        this.keyspace = keyspace;
+    }
+
+    public String getCf() {
+        return cf;
+    }
+
+    public void setCf(String cf) {
+        this.cf = cf;
+    }
     @Override
-    public void run() {
+    public void run(){
+
         try {
-            ClusterMBeanProxy.getClusterStorageMBeanService().moveNode(newToken);
+            ClusterMBeanProxy.getClusterStorageMBeanService().takeSnapShot(tag,cf,keyspace);
         } catch (ClusterDataAdminException e) {
-            log.info("Error while move node",e);
+            log.error("Error while taking the snapshot",e);
         }
+
     }
 }

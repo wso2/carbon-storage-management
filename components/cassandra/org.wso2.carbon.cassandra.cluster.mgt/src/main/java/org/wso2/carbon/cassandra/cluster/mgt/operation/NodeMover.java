@@ -22,39 +22,29 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.cassandra.cluster.mgt.exception.ClusterDataAdminException;
 import org.wso2.carbon.cassandra.cluster.mgt.mbean.ClusterMBeanProxy;
 
-public class ClearSnapshot implements Runnable{
-    private static Log log = LogFactory.getLog(ClearSnapshot.class);
-    private String tag;
-    private String keyspace;
+public class NodeMover implements Runnable {
+    private static Log log = LogFactory.getLog(NodeMover.class);
+    private String newToken;
 
-    public ClearSnapshot(String tag, String keyspace) {
-        this.tag = tag;
-        this.keyspace = keyspace;
+    public NodeMover(String newToken) {
+        this.newToken = newToken;
     }
 
-    public String getTag() {
-        return tag;
+    public String getNewToken() {
+        return newToken;
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
+    public void setNewToken(String newToken) {
+        this.newToken = newToken;
     }
 
-    public String getKeyspace() {
-        return keyspace;
-    }
 
-    public void setKeyspace(String keyspace) {
-        this.keyspace = keyspace;
-    }
     @Override
-    public void run(){
-
+    public void run() {
         try {
-            ClusterMBeanProxy.getClusterStorageMBeanService().clearSnapShot(tag, keyspace);
+            ClusterMBeanProxy.getClusterStorageMBeanService().moveNode(newToken);
         } catch (ClusterDataAdminException e) {
-           log.info("Error while clear the snapshot",e);
+            log.error("Error while move node",e);
         }
-
     }
 }

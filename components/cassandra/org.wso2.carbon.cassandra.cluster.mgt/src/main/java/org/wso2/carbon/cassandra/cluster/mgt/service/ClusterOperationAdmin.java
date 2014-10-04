@@ -23,9 +23,9 @@ import org.wso2.carbon.cassandra.cluster.mgt.data.NodeInitialInfo;
 import org.wso2.carbon.cassandra.cluster.mgt.exception.ClusterDataAdminException;
 import org.wso2.carbon.cassandra.cluster.mgt.mbean.ClusterColumnFamilyMBeanService;
 import org.wso2.carbon.cassandra.cluster.mgt.mbean.ClusterMBeanProxy;
-import org.wso2.carbon.cassandra.cluster.mgt.operation.ClearSnapshot;
-import org.wso2.carbon.cassandra.cluster.mgt.operation.MoveNode;
-import org.wso2.carbon.cassandra.cluster.mgt.operation.TakeSnapshot;
+import org.wso2.carbon.cassandra.cluster.mgt.operation.NodeMover;
+import org.wso2.carbon.cassandra.cluster.mgt.operation.SnapshotCleaner;
+import org.wso2.carbon.cassandra.cluster.mgt.operation.SnapshotHandler;
 import org.wso2.carbon.cassandra.cluster.mgt.registry.RegistryStore;
 import org.wso2.carbon.core.AbstractAdmin;
 
@@ -57,7 +57,7 @@ public class ClusterOperationAdmin extends AbstractAdmin{
      * @throws org.wso2.carbon.cassandra.cluster.mgt.exception.ClusterDataAdminException for unable to move node due to exception
      */
     public void moveNode(String newToken) throws ClusterDataAdminException {
-        MoveNode moveNode=new MoveNode(newToken);
+        NodeMover moveNode=new NodeMover(newToken);
         new Thread(moveNode).start();
     }
 
@@ -213,7 +213,7 @@ public class ClusterOperationAdmin extends AbstractAdmin{
      */
     public void takeSnapshotOfNode(String snapShotName) throws
                                                            ClusterDataAdminException {
-        TakeSnapshot takeSnapshot=new TakeSnapshot(snapShotName,null,null);
+        SnapshotHandler takeSnapshot=new SnapshotHandler(snapShotName,null,null);
         new Thread(takeSnapshot).start();
     }
 
@@ -225,7 +225,7 @@ public class ClusterOperationAdmin extends AbstractAdmin{
      */
     public void takeSnapshotOfKeyspace(String snapShotName,String keyspace) throws
                                                                                ClusterDataAdminException {
-        TakeSnapshot takeSnapshot=new TakeSnapshot(snapShotName,keyspace,null);
+        SnapshotHandler takeSnapshot=new SnapshotHandler(snapShotName,keyspace,null);
         new Thread(takeSnapshot).start();
     }
 
@@ -238,7 +238,7 @@ public class ClusterOperationAdmin extends AbstractAdmin{
      */
     public void takeSnapshotOfColumnFamily(String snapShotName,String keyspace,String columnFamily)
             throws ClusterDataAdminException {
-        TakeSnapshot takeSnapshot=new TakeSnapshot(snapShotName,keyspace,columnFamily);
+        SnapshotHandler takeSnapshot=new SnapshotHandler(snapShotName,keyspace,columnFamily);
         new Thread(takeSnapshot).start();
     }
 
@@ -250,7 +250,7 @@ public class ClusterOperationAdmin extends AbstractAdmin{
      */
     public void clearSnapshotOfNode(String snapShotName) throws
                                                             ClusterDataAdminException {
-        ClearSnapshot clearSnapshot=new ClearSnapshot(snapShotName,null);
+        SnapshotCleaner clearSnapshot=new SnapshotCleaner(snapShotName,null);
         new Thread(clearSnapshot).start();
     }
 
@@ -263,7 +263,7 @@ public class ClusterOperationAdmin extends AbstractAdmin{
      */
     public void clearSnapshotOfKeyspace(String snapShotName,String keyspace) throws
                                                                                 ClusterDataAdminException {
-        ClearSnapshot clearSnapshot=new ClearSnapshot(snapShotName,keyspace);
+        SnapshotCleaner clearSnapshot=new SnapshotCleaner(snapShotName,keyspace);
         new Thread(clearSnapshot).start();
     }
 
