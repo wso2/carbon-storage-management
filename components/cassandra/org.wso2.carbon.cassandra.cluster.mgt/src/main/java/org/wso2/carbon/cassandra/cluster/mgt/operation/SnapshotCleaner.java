@@ -32,6 +32,10 @@ public class SnapshotCleaner implements Runnable{
         this.keyspace = keyspace;
     }
 
+    public SnapshotCleaner(String tag) {
+        this.tag = tag;
+    }
+
     public String getTag() {
         return tag;
     }

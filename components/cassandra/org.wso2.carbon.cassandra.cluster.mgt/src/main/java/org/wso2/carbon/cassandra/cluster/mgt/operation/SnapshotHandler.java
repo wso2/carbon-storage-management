@@ -35,6 +35,14 @@ public class SnapshotHandler implements Runnable {
         this.cf = cf;
     }
 
+    public SnapshotHandler(String tag, String keyspace) {
+        this.tag = tag;
+        this.keyspace = keyspace;
+    }
+
+    public SnapshotHandler(String tag) {
+        this.tag = tag;
+    }
     public String getTag() {
         return tag;
     }
