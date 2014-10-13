@@ -38,13 +38,13 @@
         <dependency>
             <groupId>org.apache.cassandra.wso2</groupId>
             <artifactId>apache-cassandra</artifactId>
-	    <version>1.2.10.wso2v1</version>
+	    <version>1.2.13.wso2v4</version>
         </dependency>
        
 	<dependency>
             <groupId>com.datastax.cassandra.wso2</groupId>
             <artifactId>cql-driver</artifactId>
-            <version>1.0.5.wso2v1</version>
+            <version>1.0.5.wso2v2</version>
         </dependency>
 
 	<dependency>

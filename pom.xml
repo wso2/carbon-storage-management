@@ -1115,6 +1115,6 @@
     <gson.version>1.7.1</gson.version>
     <jboss-transaction-api.version>1.0.0.Final</jboss-transaction-api.version>
     <slf4j.wso2.version>1.5.10.wso2v1</slf4j.wso2.version>
-	<wso2.cassandra.version>1.2.13.wso2v3</wso2.cassandra.version>
+	<wso2.cassandra.version>1.2.13.wso2v4</wso2.cassandra.version>
     </properties>
 </project>
