@@ -51,7 +51,8 @@
 	String isFolder = request.getParameter("isFolder");
 	String defaultOperationDisplayStyle = "display:''";
 	String requestedPage = request.getParameter("requested_page");
-
+	String pageitems = request.getParameter("ipp");
+	String ipp = pageitems==null?"10":pageitems;
 	if (requestedPage != null && requestedPage != "") {
 		pageNumber = new Integer(requestedPage);
 	} else {
@@ -63,6 +64,9 @@
 	HDFSAdminClient client;
 	FolderInformation[] folderInfo = null;
 	FolderInformation[] allFolders = null;
+	String unselected="pageLinks";
+	String selected  ="pageLinks-selected";
+	String ippset[] = {"1","5","10","15","20","30","50","100"};
 	try {
 		client = new HDFSAdminClient(config.getServletContext(),
 				session);
@@ -204,6 +208,27 @@
 						</form>
 					</td>
 				</tr>
+				<tr>
+					<td><fmt:message key="pagelim" /> <select id="pageLimCombo"
+						name="pageLimCombo"
+						onchange="changeIpp(<%=(pageNumber)%>, '<%=path%>','<%=viewMode%>','<%=resourceConsumer%>','<%=targetDivID%>',this)">
+							<%
+								for (String items : ippset) {
+										if (items.equals(ipp.trim())) {
+							%>
+							<option id="<%=items%>" value="<%=items%>" selected="selected"><%=items%>
+							</option>
+							<%
+								} else {
+							%>
+							<option id="<%=items%>" value="<%=items%>"><%=items%>
+							</option>
+							<%
+								}
+									}
+							%>
+					</select></td>
+				</tr>
 			</tbody>
 		</table>
 	</fmt:bundle>
@@ -227,8 +252,8 @@
 
 						int start;
 						int end;
-						//need to move this to a configurable variable.
-						int itemsPerPage = 10;
+						//this is a configurable variable.
+						int itemsPerPage = Integer.parseInt(ipp);
 
 						int numberOfPages = 1;
 						if (totalCount % itemsPerPage == 0) {
@@ -542,7 +567,7 @@
  	}
  					if (numberOfPages <= 10) {
  						for (int pageItem = 1; pageItem <= numberOfPages; pageItem++) {
- %> <a
+ %> <a class="<%=pageItem==pageNumber?selected:unselected%>" 
 						title="<fmt:message key="page.x.to.y"><fmt:param value="<%=pageItem%>"/><fmt:param value="<%=Utils.getFirstPage(pageItem,
 												itemsPerPage, allFolders)%>"/><fmt:param value="<%=Utils.getLastPage(pageItem,
 												itemsPerPage, allFolders)%>"/></fmt:message>"
@@ -573,7 +598,7 @@
 												if (place == "end" || place == "middle") {
 
 													for (int pageItem = 1; pageItem <= 2; pageItem++) {
-						%> <a class="pageLinks"
+						%> <a class="<%=pageItem==pageNumber?selected:unselected%>"
 						title="<fmt:message key="page.x.to.y"><fmt:param value="<%=pageItem%>"/><fmt:param value="<%=Utils.getFirstPage(
 													pageItem, itemsPerPage,
 													allFolders)%>"/><fmt:param value="<%=Utils.getLastPage(
@@ -586,7 +611,7 @@
  	}
 
  						for (int pageItem = pageItemFrom; pageItem <= pageItemTo; pageItem++) {
- %> <a
+ %> <a  class="<%=pageItem==pageNumber?selected:unselected%>"
 						title="<fmt:message key="page.x.to.y"><fmt:param value="<%=pageItem%>"/><fmt:param value="<%=Utils.getFirstPage(pageItem,
 												itemsPerPage, allFolders)%>"/><fmt:param value="<%=Utils.getLastPage(pageItem,
 												itemsPerPage, allFolders)%>"/></fmt:message>"
@@ -597,7 +622,7 @@
 												if (place == "start" || place == "middle") {
 						%> <%
  	for (int pageItem = (numberOfPages - 1); pageItem <= numberOfPages; pageItem++) {
- %> <a class="pageLinks"
+ %> <a class="<%=pageItem==pageNumber?selected:unselected%>" 
 						title="<fmt:message key="page.x.to.y"><fmt:param value="<%=pageItem%>"/><fmt:param value="<%=Utils.getFirstPage(
 													pageItem, itemsPerPage,
 													allFolders)%>"/><fmt:param value="<%=Utils.getLastPage(
@@ -637,6 +662,13 @@
 					}
 			%>
 		</table>
+		<script type="text/javascript">
+		function changeIpp(wantedPage, resourcePath, viewMode, consumerID, targetDivID,combo){
+	            newIpp = combo.options[combo.selectedIndex].value;
+	            fillContentSection(resourcePath, wantedPage, viewMode, consumerID, targetDivID, newIpp);
+	            YAHOO.util.Event.onAvailable("xx"+wantedPage,loadData);
+        }
+       </script>
 	</fmt:bundle>
 
 </div>
