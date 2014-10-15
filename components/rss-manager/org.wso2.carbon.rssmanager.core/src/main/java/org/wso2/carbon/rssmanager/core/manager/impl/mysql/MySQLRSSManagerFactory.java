@@ -19,7 +19,6 @@
 
 package org.wso2.carbon.rssmanager.core.manager.impl.mysql;
 
-import org.wso2.carbon.rssmanager.core.config.RSSManagementRepository;
 import org.wso2.carbon.rssmanager.core.environment.Environment;
 import org.wso2.carbon.rssmanager.core.manager.AbstractRSSManagerFactory;
 import org.wso2.carbon.rssmanager.core.manager.SystemRSSManager;
@@ -27,16 +26,22 @@ import org.wso2.carbon.rssmanager.core.manager.UserDefinedRSSManager;
 
 public class MySQLRSSManagerFactory extends AbstractRSSManagerFactory {
 
-    public MySQLRSSManagerFactory(Environment environment, RSSManagementRepository config) {
-        super(environment, config);
-    }
+	public MySQLRSSManagerFactory(Environment environment) {
+		super(environment);
+	}
 
-    public SystemRSSManager getSystemRSSManager() {
-        return new MySQLSystemRSSManager(getEnvironment(), getConfig());
-    }
+	/**
+	 * @see org.wso2.carbon.rssmanager.core.manager.RSSManagerFactory#getSystemRSSManager()
+	 */
+	public SystemRSSManager getSystemRSSManager() {
+		return new MySQLSystemRSSManager(getEnvironment());
+	}
 
-    public UserDefinedRSSManager getUserDefinedRSSManager() {
-        return new MySQLUserDefinedRSSManager(getEnvironment(), getConfig());
-    }
-    
+	/**
+	 * @see org.wso2.carbon.rssmanager.core.manager.RSSManagerFactory#getUserDefinedRSSManager()
+	 */
+	public UserDefinedRSSManager getUserDefinedRSSManager() {
+		return new MySQLUserDefinedRSSManager(getEnvironment());
+	}
+
 }

@@ -18,10 +18,21 @@
  */
 package org.wso2.carbon.rssmanager.core.manager;
 
+/**
+ * RSS Manager factory intterface
+ */
 public interface RSSManagerFactory {
 
-    SystemRSSManager getSystemRSSManager();
+	/**
+	 * Get system rss manager
+	 * @return SystemRSSManager
+	 */
+	SystemRSSManager getSystemRSSManager();
 
-    UserDefinedRSSManager getUserDefinedRSSManager();
+	/**
+	 * Get user defined rss manager
+	 * @return UserDefinedRSSManager
+	 */
+	UserDefinedRSSManager getUserDefinedRSSManager();
 
 }

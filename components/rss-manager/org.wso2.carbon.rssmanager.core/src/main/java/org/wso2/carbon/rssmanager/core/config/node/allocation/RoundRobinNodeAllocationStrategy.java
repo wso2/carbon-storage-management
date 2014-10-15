@@ -20,31 +20,34 @@
 package org.wso2.carbon.rssmanager.core.config.node.allocation;
 
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
+import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 
 public class RoundRobinNodeAllocationStrategy implements NodeAllocationStrategy {
 
-    private static int currentPos;
-    private final Object lock = new Object();
-    private RSSInstance[] servers;
+	private int currentPos;
+	private final Object lock = new Object();
+	private RSSInstance[] servers;
 
-    public RoundRobinNodeAllocationStrategy(RSSInstance[] servers) {
-        this.servers = servers;
-    }
+	public RoundRobinNodeAllocationStrategy(RSSInstance[] servers) {
+		this.servers = servers;
+	}
 
-    @Override
-    public RSSInstance getNextAllocatedNode() {
-        if (this.getServers() == null || this.getServers().length == 0) {
-            throw new RuntimeException("No available RSS instance to be allocated");
-        }
-        int serverCount = this.getServers().length;
-        synchronized (lock) {
-            currentPos = (currentPos >= 0 && currentPos < (serverCount - 1)) ? ++currentPos : 0;
-            return this.getServers()[currentPos];
-        }
-    }
+	/**
+	 * @see NodeAllocationStrategy#getNextAllocatedNode()
+	 */
+	public RSSInstance getNextAllocatedNode() throws RSSManagerException {
+		if (this.getServers() == null || this.getServers().length == 0) {
+			throw new RSSManagerException("No available RSS instance to be allocated");
+		}
+		int serverCount = this.getServers().length;
+		synchronized (lock) {
+			currentPos = (currentPos >= 0 && currentPos < (serverCount - 1)) ? ++currentPos : 0;
+			return this.getServers()[currentPos];
+		}
+	}
 
-    private RSSInstance[] getServers() {
-        return servers;
-    }
-    
+	private RSSInstance[] getServers() {
+		return servers;
+	}
+
 }

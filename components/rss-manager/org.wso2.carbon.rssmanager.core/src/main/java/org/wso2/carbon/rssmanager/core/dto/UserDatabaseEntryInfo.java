@@ -21,10 +21,8 @@ package org.wso2.carbon.rssmanager.core.dto;
 import java.io.Serializable;
 
 /**
- * Class to represent a many-to-many mappings of user's permissions to a
- * specific database.
+ * Class to represent a user's permissions to a specific database
  */
-
 public class UserDatabaseEntryInfo implements Serializable {
 
 	private static final long serialVersionUID = -6519110782592048084L;

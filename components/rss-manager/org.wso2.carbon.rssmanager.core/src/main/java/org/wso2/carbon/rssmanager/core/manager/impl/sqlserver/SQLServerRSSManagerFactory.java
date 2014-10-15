@@ -17,6 +17,7 @@
  *
  */
 
+
 package org.wso2.carbon.rssmanager.core.manager.impl.sqlserver;
 
 import org.wso2.carbon.rssmanager.core.config.RSSManagementRepository;
@@ -27,16 +28,17 @@ import org.wso2.carbon.rssmanager.core.manager.UserDefinedRSSManager;
 
 public class SQLServerRSSManagerFactory extends AbstractRSSManagerFactory {
 
-    public SQLServerRSSManagerFactory(Environment environment, RSSManagementRepository config) {
-        super(environment, config);
-    }
+	public SQLServerRSSManagerFactory(Environment environment) {
+		super(environment);
+	}
 
-    public SystemRSSManager getSystemRSSManager() {
-        return new SQLServerSystemRSSManager(this.getEnvironment(), this.getConfig());
-    }
+	public SystemRSSManager getSystemRSSManager() {
+		return new SQLServerSystemRSSManager(this.getEnvironment());
+	}
 
-    public UserDefinedRSSManager getUserDefinedRSSManager() {
-        return new SQLServerUserDefinedRSSManager(this.getEnvironment(), this.getConfig());
-    }
-    
+	public UserDefinedRSSManager getUserDefinedRSSManager() {
+		return new SQLServerUserDefinedRSSManager(this.getEnvironment());
+	}
+
 }
+

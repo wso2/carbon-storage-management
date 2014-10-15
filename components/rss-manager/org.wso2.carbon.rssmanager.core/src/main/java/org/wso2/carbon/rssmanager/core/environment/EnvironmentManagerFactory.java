@@ -21,8 +21,13 @@ package org.wso2.carbon.rssmanager.core.environment;
 
 public class EnvironmentManagerFactory {
 
-    public static EnvironmentManager getEnvironmentManager(Environment[] environments) {
-        return new EnvironmentManager(environments);
-    }
+	/**
+	 * Get environment manager
+	 * @param environments list of system environments
+	 * @return EnvironmentManager
+	 */
+	public static EnvironmentManager getEnvironmentManager(Environment[] environments) {
+		return new EnvironmentManager(environments);
+	}
 
 }

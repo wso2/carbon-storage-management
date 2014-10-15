@@ -19,42 +19,56 @@
 package org.wso2.carbon.rssmanager.core.exception;
 
 /**
- * Exception class for RSS DAO related operations.
+ * Exception class for rss operations related operations.
  */
 public class RSSManagerException extends Exception {
 
-    private String errorMessage;
-    private static final long serialVersionUID = 2021891706072918886L;
+	private String errorMessage;
+	private static final long serialVersionUID = 2021891706072918886L;
 
-    public RSSManagerException(String message, Exception nestedEx) {
-        super(message, nestedEx);
-        setErrorMessage(message);
-    }
+	/**
+	 * Constructs a new exception with the specified detail message and nested exception.
+	 *
+	 * @param message error message
+	 * @param nestedEx exception
+	 */
+	public RSSManagerException(String message, Exception nestedEx) {
+		super(message, nestedEx);
+		setErrorMessage(message);
+	}
 
-    public RSSManagerException(String message, Throwable cause) {
-        super(message, cause);
-        setErrorMessage(message);
-    }
+	/**
+	 * Constructs a new exception with the specified detail message and cause.
+	 *
+	 * @param message the detail message.
+	 * @param cause   the cause of this exception.
+	 */
+	public RSSManagerException(String message, Throwable cause) {
+		super(message, cause);
+		setErrorMessage(message);
+	}
 
-    public RSSManagerException(String message) {
-        super(message);
-        setErrorMessage(message);
-    }
+	/**
+	 * Constructs a new exception with the specified detail message
+	 *
+	 * @param message the detail message.
+	 */
+	public RSSManagerException(String message) {
+		super(message);
+		setErrorMessage(message);
+	}
 
-    public RSSManagerException(Throwable cause) {
-        super(cause);
-    }
+	/**
+	 * Constructs a new exception with cause.
+	 *
+	 * @param cause   the cause of this exception.
+	 */
+	public RSSManagerException(Throwable cause) {
+		super(cause);
+	}
 
-    public RSSManagerException() {
-        super();
-    }
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
 
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
-    
 }

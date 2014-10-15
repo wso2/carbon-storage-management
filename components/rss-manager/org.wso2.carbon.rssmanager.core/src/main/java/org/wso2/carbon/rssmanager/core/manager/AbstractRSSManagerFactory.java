@@ -22,22 +22,19 @@ package org.wso2.carbon.rssmanager.core.manager;
 import org.wso2.carbon.rssmanager.core.config.RSSManagementRepository;
 import org.wso2.carbon.rssmanager.core.environment.Environment;
 
+/**
+ * Abstract class to represent rss manager factory tto use in relevent rss manager implementation
+ */
 public abstract class AbstractRSSManagerFactory implements RSSManagerFactory {
 
-    private RSSManagementRepository config;
-    private Environment environment;
+	private Environment environment;
 
-    public AbstractRSSManagerFactory(Environment environment, RSSManagementRepository config) {
-        this.environment = environment;
-        this.config = config;
-    }
+	public AbstractRSSManagerFactory(Environment environment) {
+		this.environment = environment;
+	}
 
-    public RSSManagementRepository getConfig() {
-        return config;
-    }
+	public Environment getEnvironment() {
+		return environment;
+	}
 
-    public Environment getEnvironment() {
-        return environment;
-    }
-    
 }

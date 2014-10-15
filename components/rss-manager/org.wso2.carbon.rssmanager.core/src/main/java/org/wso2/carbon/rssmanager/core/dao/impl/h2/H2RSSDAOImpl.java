@@ -21,21 +21,19 @@ package org.wso2.carbon.rssmanager.core.dao.impl.h2;
 import org.wso2.carbon.rssmanager.core.dao.UserPrivilegesDAO;
 import org.wso2.carbon.rssmanager.core.dao.impl.AbstractRSSDAO;
 import org.wso2.carbon.rssmanager.core.dao.impl.mysql.MySQLUserPrivilegesDAOImpl;
-import org.wso2.carbon.rssmanager.core.dao.util.EntityManager;
 
 
 /**
- * DAO implementation for RSSDAO interface.
+ * DAO implementation of H2 for user privilege DAO in RSSDAO interface.
  */
 public class H2RSSDAOImpl extends AbstractRSSDAO {
 
-    public H2RSSDAOImpl(EntityManager entityManager) {
-        super(entityManager);
-    }
-
-    @Override
-    public UserPrivilegesDAO getUserPrivilegesDAO() {
-        return new MySQLUserPrivilegesDAOImpl(this.getEntityManager());
-    }
+	/**
+	 * @see org.wso2.carbon.rssmanager.core.dao.impl.AbstractRSSDAO#getUserPrivilegesDAO()
+	 */
+	public UserPrivilegesDAO getUserPrivilegesDAO() {
+		//TODO changed to return H2 privilege DAO implementation when rss manager restructure to hold separate privilege template DAO for H2
+		return new MySQLUserPrivilegesDAOImpl();
+	}
 
 }

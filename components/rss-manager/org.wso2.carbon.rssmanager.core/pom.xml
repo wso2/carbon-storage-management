@@ -1,174 +1,171 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<parent>
-		<groupId>org.wso2.carbon</groupId>
-		<artifactId>rss-manager</artifactId>
-		<version>4.3.0-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>rss-manager</artifactId>
+        <version>4.3.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.wso2.carbon</groupId>
-	<artifactId>org.wso2.carbon.rssmanager.core</artifactId>
-	<version>4.3.0-SNAPSHOT</version>
-	<packaging>bundle</packaging>
-	<name>WSO2 Carbon - RSS Manager Core</name>
-	<description>WSO2 Carbon - RSS Manager Core</description>
-	<url>http://wso2.org</url>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.wso2.carbon</groupId>
+    <artifactId>org.wso2.carbon.rssmanager.core</artifactId>
+    <version>4.3.0-SNAPSHOT</version>
+    <packaging>bundle</packaging>
+    <name>WSO2 Carbon - RSS Manager Core</name>
+    <description>WSO2 Carbon - RSS Manager Core</description>
+    <url>http://wso2.org</url>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.axis2</groupId>
-				<artifactId>axis2-java2wsdl-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>java2wsdl</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<className>
-						org.wso2.carbon.rssmanager.core.service.RSSAdmin
-					</className>
-				</configuration>
-			</plugin>
-			
-			<!-- <plugin>
-				<groupId>org.apache.openjpa</groupId>
-				<artifactId>openjpa-maven-plugin</artifactId>
-				<version>2.2.0-SNAPSHOT</version>
-				<configuration>
-					<includes>org/wso2/carbon/rssmanager/core/dto/common/DatabasePrivilegeTemplate.class,org/wso2/carbon/rssmanager/core/dto/common/DatabasePrivilegeTemplateEntry.class,
-					org/wso2/carbon/rssmanager/core/dto/common/UserDatabasePrivilege.class,org/wso2/carbon/rssmanager/core/dto/common/UserDatabaseEntry.class,
-					org/wso2/carbon/rssmanager/core/dto/restricted/DatabaseUser.class,org/wso2/carbon/rssmanager/core/dto/restricted/Database.class,
-					org/wso2/carbon/rssmanager/core/dto/restricted/RSSInstance.class,
-					org/wso2/carbon/rssmanager/core/environment/Environment.class</includes>
-					<excludes></excludes>
-					<addDefaultConstructor>true</addDefaultConstructor>
-					<enforcePropertyRestrictions>true</enforcePropertyRestrictions>
-				</configuration>
-				<executions>
-					<execution>
-						<id>enhancer</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>enhance</goal>
-						</goals>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.openjpa.wso2</groupId>
-						<artifactId>openjpa</artifactId>
-						<version>${openjpa.wso2.version}</version>
-					</dependency>
-				</dependencies>
-			</plugin> -->
-			
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-scr-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<version>1.4.0</version>
-				<extensions>true</extensions>
-				<configuration>
-					<instructions>
-						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-						<Bundle-Name>${project.artifactId}</Bundle-Name>
-						<Bundle-Version>${project.version}</Bundle-Version>
-						<Bundle-Description>RSS Manager Core Bundle</Bundle-Description>
-						<Private-Package>org.wso2.carbon.rssmanager.core.internal</Private-Package>
-						<Import-Package>
-							org.apache.axis2.*;
-							version="${axis2.osgi.version.range}",
-							javax.xml.*,
-							org.osgi.framework, org.osgi.service.component,
-							org.apache.commons.logging,
-							org.wso2.carbon.core.*,
-							org.wso2.carbon.utils.*,
-							org.wso2.carbon.rssmanager.common;
-							version="0.0.0",
-							org.wso2.carbon.context.*,
-							org.wso2.carbon.transaction.manager.*
-						</Import-Package>
-						<Meta-Persistence>META-INF/persistence.xml</Meta-Persistence>
-						<JPA-PersistenceUnits>sample</JPA-PersistenceUnits>
-						<Export-Package>
-							!org.wso2.carbon.rssmanager.core.internal,
-							org.wso2.carbon.rssmanager.core.*
-						</Export-Package>
-						<DynamicImport-Package>*</DynamicImport-Package>
-					</instructions>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.axis2</groupId>
+                <artifactId>axis2-java2wsdl-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java2wsdl</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <className>
+                        org.wso2.carbon.rssmanager.core.service.RSSAdmin
+                    </className>
+                </configuration>
+            </plugin>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.jboss.spec.javax.transaction</groupId>
-			<artifactId>jboss-transaction-api_1.1_spec</artifactId>
-			<version>${jboss-transaction-api.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon</groupId>
-			<artifactId>org.wso2.carbon.utils</artifactId>
-			<version>${carbon.platform.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon</groupId>
-			<artifactId>org.wso2.carbon.rssmanager.common</artifactId>
-			<version>${carbon.platform.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon</groupId>
-			<artifactId>org.wso2.carbon.ndatasource.core</artifactId>
-			<version>${carbon.platform.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon</groupId>
-			<artifactId>org.wso2.carbon.ndatasource.rdbms</artifactId>
-			<version>${carbon.platform.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon</groupId>
-			<artifactId>org.wso2.carbon.transaction.manager</artifactId>
-			<version>${carbon.platform.version}</version>
-		</dependency>
+            <!-- <plugin>
+                <groupId>org.apache.openjpa</groupId>
+                <artifactId>openjpa-maven-plugin</artifactId>
+                <version>2.2.0-SNAPSHOT</version>
+                <configuration>
+                    <includes>org/wso2/carbon/rssmanager/core/dto/common/DatabasePrivilegeTemplate.class,org/wso2/carbon/rssmanager/core/dto/common/DatabasePrivilegeTemplateEntry.class,
+                    org/wso2/carbon/rssmanager/core/dto/common/UserDatabasePrivilege.class,org/wso2/carbon/rssmanager/core/dto/common/UserDatabaseEntry.class,
+                    org/wso2/carbon/rssmanager/core/dto/restricted/DatabaseUser.class,org/wso2/carbon/rssmanager/core/dto/restricted/Database.class,
+                    org/wso2/carbon/rssmanager/core/dto/restricted/RSSInstance.class,
+                    org/wso2/carbon/rssmanager/core/environment/Environment.class</includes>
+                    <excludes></excludes>
+                    <addDefaultConstructor>true</addDefaultConstructor>
+                    <enforcePropertyRestrictions>true</enforcePropertyRestrictions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>enhancer</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.openjpa.wso2</groupId>
+                        <artifactId>openjpa</artifactId>
+                        <version>${openjpa.wso2.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin> -->
 
-		<!-- <dependency> <groupId>org.apache.openjpa.wso2</groupId> <artifactId>openjpa</artifactId> 
-			<version>${openjpa.wso2.version}</version> </dependency> -->
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-scr-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>1.4.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Name>${project.artifactId}</Bundle-Name>
+                        <Bundle-Version>${project.version}</Bundle-Version>
+                        <Bundle-Description>RSS Manager Core Bundle</Bundle-Description>
+                        <Private-Package>org.wso2.carbon.rssmanager.core.internal</Private-Package>
+                        <Import-Package>
+                            org.apache.axis2.*;
+                            version="${axis2.osgi.version.range}",
+                            javax.xml.*,
+                            org.osgi.framework, org.osgi.service.component,
+                            org.apache.commons.logging,
+                            org.wso2.carbon.core.*,
+                            org.wso2.carbon.utils.*,
+                            org.wso2.carbon.rssmanager.common;
+                            version="0.0.0",
+                            org.wso2.carbon.context.*,
+                            org.wso2.carbon.transaction.manager.*
+                        </Import-Package>
+                        <Meta-Persistence>META-INF/persistence.xml</Meta-Persistence>
+                        <JPA-PersistenceUnits>sample</JPA-PersistenceUnits>
+                        <Export-Package>
+                            !org.wso2.carbon.rssmanager.core.internal,
+                            org.wso2.carbon.rssmanager.core.*
+                        </Export-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
-		<!-- <dependency> <groupId>org.apache.geronimo.specs</groupId> <artifactId>geronimo-jpa_2.0_spec</artifactId> 
-			<version>1.1</version> </dependency> -->
+    <dependencies>
+        <dependency>
+            <groupId>org.jboss.spec.javax.transaction</groupId>
+            <artifactId>jboss-transaction-api_1.1_spec</artifactId>
+            <version>${jboss-transaction-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.utils</artifactId>
+            <version>${carbon.platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.rssmanager.common</artifactId>
+            <version>${carbon.platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ndatasource.core</artifactId>
+            <version>${carbon.platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ndatasource.rdbms</artifactId>
+            <version>${carbon.platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.transaction.manager</artifactId>
+            <version>${carbon.platform.version}</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.osgi</groupId>
-			<artifactId>org.osgi.enterprise</artifactId>
-			<version>4.2.0</version>
-		</dependency>
+        <!-- <dependency> <groupId>org.apache.openjpa.wso2</groupId> <artifactId>openjpa</artifactId>
+            <version>${openjpa.wso2.version}</version> </dependency> -->
 
-		<dependency>
-			<groupId>org.eclipse.persistence</groupId>
-			<artifactId>javax.persistence</artifactId>
-			<version>2.0.5</version>
-		</dependency>
+        <!-- <dependency> <groupId>org.apache.geronimo.specs</groupId> <artifactId>geronimo-jpa_2.0_spec</artifactId>
+            <version>1.1</version> </dependency> -->
 
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.enterprise</artifactId>
+            <version>4.2.0</version>
+        </dependency>
 
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>javax.persistence</artifactId>
+            <version>2.0.5</version>
+        </dependency>
 
 
+    </dependencies>
 
-	</dependencies>
-
-	<properties>
-		<openjpa.wso2.version>2.2.0.wso2v2</openjpa.wso2.version>
-	</properties>
+    <properties>
+        <openjpa.wso2.version>2.2.0.wso2v2</openjpa.wso2.version>
+    </properties>
 
 </project>
 

@@ -18,7 +18,9 @@
 
 package org.wso2.carbon.rssmanager.core.dto;
 
-
+/**
+ * Class for hold database privilege template info
+ */
 public class DatabasePrivilegeTemplateInfo {
 
 	private String name;
