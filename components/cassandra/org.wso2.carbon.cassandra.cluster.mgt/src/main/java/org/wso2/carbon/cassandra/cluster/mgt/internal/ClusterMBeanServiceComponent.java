@@ -35,30 +35,26 @@ import org.wso2.carbon.ntask.core.service.TaskService;
  * @scr.reference name="ntask.component" interface="org.wso2.carbon.ntask.core.service.TaskService"
  * cardinality="1..1" policy="dynamic" bind="setTaskService" unbind="unsetTaskService"
  */
-public class ClusterMBeanServiceBEComponent {
-    private static Log log = LogFactory.getLog(ClusterMBeanServiceBEComponent.class);
+public class ClusterMBeanServiceComponent {
+    private static Log log = LogFactory.getLog(ClusterMBeanServiceComponent.class);
 
     private ClusterMBeanDataAccess clusterMBeanDataAccess;
     private TaskService taskService;
+
     protected void activate(ComponentContext componentContext) {
-        if (log.isDebugEnabled()) {
-            log.debug("Cassandra Cluster tools Admin bundle is activated.");
-        }
+        log.debug("Starting Cassandra Cluster tools Admin bundle");
         try {
             taskService.registerTaskType(ClusterConstants.CLUSTER_MONITOR);
         } catch (TaskException e) {
-            if(log.isDebugEnabled())
-            {
-                log.debug("Error while registering task",e);
-            }
+            log.error("Error while registering task", e);
+        } catch (Exception e) {
+            log.error("Error while registering task"+e);
         }
-        ClusterAdminComponentManager.getInstance().init(clusterMBeanDataAccess,taskService);
+        ClusterAdminComponentManager.getInstance().init(clusterMBeanDataAccess, taskService);
     }
 
     protected void deactivate(ComponentContext componentContext) {
-        if (log.isDebugEnabled()) {
-            log.debug("Cassandra Cluster tools Admin bundle is deactivated.");
-        }
+        log.debug("Deactivating Cassandra Cluster tools Admin bundle");
         ClusterAdminComponentManager.getInstance().destroy();
     }
 
@@ -71,17 +67,12 @@ public class ClusterMBeanServiceBEComponent {
     }
 
     protected void setTaskService(TaskService taskService) {
-        this.taskService=taskService;
-        if (log.isDebugEnabled()) {
-            log.debug("Setting the Task Service");
-        }
+        this.taskService = taskService;
+        log.debug("Setting the Task Service");
     }
 
     protected void unsetTaskService(TaskService taskService) {
-        this.taskService=null;
-        if (log.isDebugEnabled()) {
-            log.debug("Unsetting the Task Service");
-        }
-
+        this.taskService = null;
+        log.debug("Unsetting the Task Service");
     }
 }
