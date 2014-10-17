@@ -431,10 +431,12 @@ function whileUpload(){
 //    return true;
 //}
 
-function fillContentSection(path, pageNumber, viewMode, consumerID, targetDivID, iperpg) {
-        var ipp = iperpg==null?10:iperpg;
-        var random = getRandom();
-        window.location = "../hdfsmgt/hdfs_dashboard.jsp?region=region3&item=hdfs_list_menu&viewType=std&path=" + path +  "&requested_page=" +  pageNumber + "&ipp=" + ipp;
+function fillContentSection(path, pageNumber, viewMode, consumerID,
+		targetDivID, iperpg) {
+	var ipp = iperpg == null ? 10 : iperpg;
+	var random = getRandom();
+	window.location = "../hdfsmgt/hdfs_dashboard.jsp?region=region3&item=hdfs_list_menu&viewType=std&path="
+			+ path + "&requested_page=" + pageNumber + "&ipp=" + ipp;
 }
 
 function showHDFSTreeWithLoadFunction(loadFunction, textBoxId, onOKCallback, rootPath, relativeRoot, displayRootPath) {
@@ -1223,9 +1225,11 @@ function deleteRaw(type, i) {
 }
 
 
-function navigatePages(wantedPage, resourcePath, viewMode, consumerID, targetDivID) {
-    fillContentSection(resourcePath, wantedPage, viewMode, consumerID, targetDivID);
-    YAHOO.util.Event.onAvailable("xx"+wantedPage,loadData);
+function navigatePages(wantedPage, resourcePath, viewMode, consumerID,
+		targetDivID) {
+	fillContentSection(resourcePath, wantedPage, viewMode, consumerID,
+			targetDivID);
+	YAHOO.util.Event.onAvailable("xx" + wantedPage, loadData);
 }
 
 

@@ -52,7 +52,7 @@
 	String defaultOperationDisplayStyle = "display:''";
 	String requestedPage = request.getParameter("requested_page");
 	String pageitems = request.getParameter("ipp");
-	String ipp = pageitems==null?"10":pageitems;
+	String ipp = pageitems==null? "10": pageitems;
 	if (requestedPage != null && requestedPage != "") {
 		pageNumber = new Integer(requestedPage);
 	} else {
