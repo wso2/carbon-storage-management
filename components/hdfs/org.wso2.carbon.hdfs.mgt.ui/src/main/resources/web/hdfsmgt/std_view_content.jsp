@@ -64,9 +64,9 @@
 	HDFSAdminClient client;
 	FolderInformation[] folderInfo = null;
 	FolderInformation[] allFolders = null;
-	String unselected="pageLinks";
-	String selected  ="pageLinks-selected";
-	String ippset[] = {"1","5","10","15","20","30","50","100"};
+	String unselected = "pageLinks";
+	String selected  = "pageLinks-selected";
+	String ippset[] = { "1" , "5" , "10" , "15" , "20" , "30" , "50" , "100" };
 	try {
 		client = new HDFSAdminClient(config.getServletContext(),
 				session);
