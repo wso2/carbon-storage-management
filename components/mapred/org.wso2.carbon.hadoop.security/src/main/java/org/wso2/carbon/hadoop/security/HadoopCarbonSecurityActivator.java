@@ -30,35 +30,35 @@ import org.osgi.service.component.ComponentContext;
  * @scr.component name="org.wso2.carbon.hadoop.security.component" immediate="true"
  */
 
-public class HadoopCarbonSecurityActivator implements BundleActivator{
+public class HadoopCarbonSecurityActivator implements BundleActivator {
 
-	private Log log = LogFactory.getLog(HadoopCarbonSecurityActivator.class);
-	
+    private Log log = LogFactory.getLog(HadoopCarbonSecurityActivator.class);
+
     protected void activate(ComponentContext componentContext) {
-    	Krb5TicketCacheFinder krb5TktCacheFndr = new Krb5TicketCacheFinderImpl();
-      //  UserGroupInformation.setKrb5TicketCacheFinder(krb5TktCacheFndr);   // not adding as cache finder 
-        		log.info("Activated Hadoop Carbon security through "+Krb5TicketCacheFinderImpl.class.getName());
-		
+        Krb5TicketCacheFinder krb5TktCacheFndr = new Krb5TicketCacheFinderImpl();
+        //  UserGroupInformation.setKrb5TicketCacheFinder(krb5TktCacheFndr);   // not adding as cache finder
+        log.info("Activated Hadoop Carbon security through " + Krb5TicketCacheFinderImpl.class.getName());
+
     }
-    
-    
+
+
     protected void deactivate(ComponentContext componentContext) {
-    	
-    	
+
+
     }
 
-	@Override
-	public void start(BundleContext arg0) throws Exception {
-		Krb5TicketCacheFinder krb5TktCacheFndr = new Krb5TicketCacheFinderImpl();
+    @Override
+    public void start(BundleContext arg0) throws Exception {
+        Krb5TicketCacheFinder krb5TktCacheFndr = new Krb5TicketCacheFinderImpl();
         UserGroupInformation.setKrb5TicketCacheFinder(krb5TktCacheFndr);
-        	if (log.isDebugEnabled()) {
-        		log.info("Activated Hadoop Carbon security through "+Krb5TicketCacheFinderImpl.class.getName());
-		}
-	}
+        if (log.isDebugEnabled()) {
+            log.info("Activated Hadoop Carbon security through " + Krb5TicketCacheFinderImpl.class.getName());
+        }
+    }
 
-	@Override
-	public void stop(BundleContext arg0) throws Exception {
-		//Nothing to be done here.
-	}
-	
+    @Override
+    public void stop(BundleContext arg0) throws Exception {
+        //Nothing to be done here.
+    }
+
 }

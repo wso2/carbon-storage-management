@@ -18,30 +18,24 @@
  */
 package org.wso2.carbon.mapred.mgt.ui;
 
+import org.apache.axis2.AxisFault;
+import org.apache.axis2.client.Options;
+import org.apache.axis2.client.ServiceClient;
+import org.apache.axis2.context.ConfigurationContext;
+import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.mapred.mgt.stub.HadoopJobRunnerStub;
+import org.wso2.carbon.utils.ServerConstants;
+
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.rmi.RemoteException;
-import java.util.Properties;
-
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-import javax.rmi.CORBA.Stub;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.mapred.mgt.stub.HadoopJobRunnerStub;
-import org.wso2.carbon.utils.ServerConstants;
-import org.apache.axis2.AxisFault;
-import org.apache.axis2.client.Options;
-import org.apache.axis2.client.ServiceClient;
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.context.MessageContext;
-import org.bouncycastle.jce.provider.JDKDSASigner.stdDSA;
 
 public class HadoopJobRunnerProxy {
 

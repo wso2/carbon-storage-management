@@ -18,35 +18,27 @@
  */
 package org.wso2.carbon.mapred.reporting;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.rmi.RemoteException;
-
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.context.ConfigurationContextFactory;
-import org.apache.axis2.deployment.FileSystemConfigurator;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapred.Counters;
-import org.apache.hadoop.mapred.JobInProgress;
-import org.apache.hadoop.mapred.Task;
 import org.apache.hadoop.mapred.JobCoreReporter;
 import org.apache.hadoop.mapred.Task.Counter;
-import org.apache.tools.ant.types.resources.comparators.FileSystem;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.mapred.mgt.stub.HadoopJobRunnerStub;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.rmi.RemoteException;
 
 public class CarbonJobCoreReporter extends JobCoreReporter {
 

@@ -23,25 +23,20 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.authenticator.proxy.AuthenticationAdminClient;
-import org.wso2.carbon.authenticator.stub.RememberMeData;
 import org.wso2.carbon.core.common.AuthenticationException;
 import org.wso2.carbon.core.security.AuthenticatorsConfiguration;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.ui.AbstractCarbonUIAuthenticator;
-import org.wso2.carbon.ui.CarbonUIAuthenticator;
 import org.wso2.carbon.ui.CarbonUIUtil;
-import org.wso2.carbon.ui.DefaultCarbonAuthenticator;
 import org.wso2.carbon.utils.ServerConstants;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
-//import org.wso2.carbon.identity.authenticator.krb5.stub.types.Krb5AuthenticatorStub;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.rmi.RemoteException;
-import java.util.List;
 import java.util.Map;
+
+//import org.wso2.carbon.identity.authenticator.krb5.stub.types.Krb5AuthenticatorStub;
 
 public class Krb5UIAuthenticator extends AbstractCarbonUIAuthenticator{
 
@@ -75,7 +70,8 @@ public class Krb5UIAuthenticator extends AbstractCarbonUIAuthenticator{
 	}
 
     @Override
-    public String doAuthentication(Object o, boolean b, ServiceClient serviceClient, HttpServletRequest httpServletRequest) throws AuthenticationException {
+    public String doAuthentication(Object o, boolean b, ServiceClient serviceClient, HttpServletRequest httpServletRequest)
+                                                                                        throws AuthenticationException {
         return null;
     }
 

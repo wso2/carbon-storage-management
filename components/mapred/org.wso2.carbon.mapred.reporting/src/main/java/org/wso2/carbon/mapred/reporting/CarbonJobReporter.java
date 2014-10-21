@@ -18,21 +18,17 @@
  */
 package org.wso2.carbon.mapred.reporting;
 
+import org.apache.hadoop.mapred.Counters;
+import org.apache.hadoop.mapred.JobStatus;
+import org.apache.hadoop.mapred.RunningJob;
+import org.apache.hadoop.mapreduce.JobReporter;
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
-
-import org.apache.hadoop.mapreduce.JobID;
-import org.apache.hadoop.mapred.JobStatus;
-import org.apache.hadoop.mapred.JobTracker;
-import org.apache.hadoop.mapred.RunningJob;
-import org.apache.hadoop.mapred.Counters;
-import org.apache.hadoop.mapreduce.JobReporter;
-import org.apache.log4j.Logger;
-import org.compass.core.executor.workmanager.RunnableCallableAdapter;
 
 public class CarbonJobReporter extends JobReporter {
 

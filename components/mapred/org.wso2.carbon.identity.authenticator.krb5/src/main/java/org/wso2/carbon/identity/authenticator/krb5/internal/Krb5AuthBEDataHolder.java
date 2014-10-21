@@ -62,7 +62,7 @@ public class Krb5AuthBEDataHolder {
     }
     
     public BundleContext getBundleContext() {
-    	return bundleContext;
+        return bundleContext;
     }
     
     public void setServerConfiguration(ServerConfiguration serverConfiguration) {

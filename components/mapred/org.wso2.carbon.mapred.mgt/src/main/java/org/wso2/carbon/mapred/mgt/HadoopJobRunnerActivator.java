@@ -18,20 +18,14 @@
  */
 package org.wso2.carbon.mapred.mgt;
 
-import java.util.Hashtable;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceFactory;
-import org.osgi.framework.ServiceReference;
-
-import org.wso2.carbon.mapred.reporting.CarbonJobCoreReporter;
 import org.wso2.carbon.mapred.reporting.CarbonJobReporter;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import org.apache.hadoop.mapred.JobCoreReporterFactory;
+import java.util.Hashtable;
 
 public class HadoopJobRunnerActivator implements BundleActivator {
 

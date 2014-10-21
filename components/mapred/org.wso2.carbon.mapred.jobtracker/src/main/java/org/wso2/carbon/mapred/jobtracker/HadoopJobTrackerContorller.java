@@ -26,26 +26,15 @@ package org.wso2.carbon.mapred.jobtracker;
  * To change this template use File | Settings | File Templates.
  */
 
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.mapred.JobConf;
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
-import org.apache.hadoop.mapred.JobTracker;
-import org.apache.hadoop.mapred.TaskTracker;
-import org.apache.hadoop.util.ReflectionUtils;
-import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
-import org.apache.hadoop.metrics2.util.MBeans;
-
-import org.wso2.carbon.user.core.util.UserCoreUtil;
-import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.utils.ServerConstants;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.io.*;
-import java.lang.Thread;
-import java.util.*;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.mapred.JobConf;
+import org.apache.hadoop.mapred.JobTracker;
+import org.apache.hadoop.mapred.TaskTracker;
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import org.wso2.carbon.utils.ServerConstants;
 
 
 public class HadoopJobTrackerContorller implements BundleActivator{
