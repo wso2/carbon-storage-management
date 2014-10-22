@@ -30,6 +30,8 @@ import org.apache.hadoop.security.GroupMappingServiceProvider;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException;
+import org.wso2.carbon.hadoop.security.HadoopSecurityConstants;
+import org.wso2.carbon.hadoop.security.exception.HadoopSecurityComponentException;
 import org.wso2.carbon.um.ws.api.WSRealmBuilder;
 import org.wso2.carbon.user.api.UserStoreManager;
 import org.wso2.carbon.user.core.UserRealm;
@@ -56,11 +58,12 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
             try {
                 groups = getCarbonRoles(user);
                 break;
-            } catch (IOException e) {
+            } catch (HadoopSecurityComponentException e) {
                 try {
                     Thread.sleep((i + 1) * WINDOW_UPER_BOUND);
                 } catch (InterruptedException e1) {
-                    LOG.warn(e.getMessage());
+                    LOG.error(e.getMessage());
+	                throw new IOException(e.getMessage(), e);
                 }
                 continue;
             }
@@ -80,17 +83,17 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
 
     }
 
-    private List<String> getCarbonRoles(final String user) throws IOException {
+    private List<String> getCarbonRoles(final String user) throws HadoopSecurityComponentException {
         ConfigurationContext confCtx = null;
         AuthenticationAdminStub authAdminStub = null;
         boolean isAuthenticated = false;
         UserRealm realm = null;
         UserStoreManager userStoreMgr = null;
         List<String> groups = null;
-        String path = conf.get("hadoop.security.truststore", "wso2carbon.jks");
-        String username = conf.get("hadoop.security.admin.username", "admin");
-        String password = conf.get("hadoop.security.admin.password", "admin");
-        String serviceUrl = conf.get("hadoop.security.group.mapping.service.url", "https://127.0.0.1:9443/services/");
+        String path = conf.get(HadoopSecurityConstants.HADOOP_TRUSTSTORE_PROPERTY, "wso2carbon.jks");
+        String username = conf.get(HadoopSecurityConstants.HADOOP_USERNAME_PROPERTY, "admin");
+        String password = conf.get(HadoopSecurityConstants.HADOOP_PASSWORD_PROPERTY, "admin");
+        String serviceUrl = conf.get(HadoopSecurityConstants.HADOOP_SERVICE_URL_PROPERTY, "https://127.0.0.1:9443/services/");
         System.setProperty("javax.net.ssl.trustStore", path);
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
 
@@ -98,16 +101,15 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
             confCtx = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
         } catch (AxisFault e) {
             //e.printStackTrace();
-            LOG.warn(e.getMessage());
-            throw new IOException(e);
+            LOG.error(e.getMessage());
+            throw new HadoopSecurityComponentException(e.getMessage(), e);
         }
 
         try {
             authAdminStub = new AuthenticationAdminStub(confCtx, serviceUrl + "AuthenticationAdmin");
         } catch (AxisFault e) {
-            //e.printStackTrace();
-            LOG.warn(e.getMessage());
-            throw new IOException(e);
+	        LOG.error(e.getMessage());
+	        throw new HadoopSecurityComponentException(e.getMessage(), e);
         }
         authAdminStub._getServiceClient().getOptions().setManageSession(true);
         try {
@@ -116,16 +118,14 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
             isAuthenticated = authAdminStub.login(username, password, serviceHostName);
             LOG.info("Logging in as admin");
         } catch (RemoteException e) {
-            //e.printStackTrace();
-            LOG.warn(e.getMessage());
-            throw new IOException(e);
+	        LOG.error(e.getMessage());
+	        throw new HadoopSecurityComponentException(e.getMessage(), e);
         } catch (LoginAuthenticationExceptionException e) {
-            //e.printStackTrace();
-            LOG.warn(e.getMessage());
-            throw new IOException(e);
+	        LOG.error(e.getMessage());
+	        throw new HadoopSecurityComponentException(e.getMessage(), e);
         } catch (URISyntaxException e) {
-            //e.printStackTrace();
-            LOG.warn(e.getMessage());
+	        LOG.error(e.getMessage());
+	        throw new HadoopSecurityComponentException(e.getMessage(), e);
         }
         try {
             String cookie = (String) authAdminStub._getServiceClient().getServiceContext().getProperty(
@@ -137,21 +137,22 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
             for (int i = 0; i < roleList.length; i++) {
                 groups.add(roleList[i]);
             }
-            LOG.info("Retreived user roles");
+            LOG.debug("Retreived user roles");
             authAdminStub.logout();
         } catch (UserStoreException e) {
-            //e.printStackTrace();
-            LOG.warn(e.getMessage());
-            throw new IOException(e);
+	        LOG.error(e.getMessage());
+	        throw new HadoopSecurityComponentException(e.getMessage(), e);
         } catch (org.wso2.carbon.user.api.UserStoreException e) {
-            //e.printStackTrace();
-            LOG.warn(e.getMessage());
-            throw new IOException(e);
+            LOG.error(e.getMessage());
+            throw new HadoopSecurityComponentException(e.getMessage(), e);
         } catch (LogoutAuthenticationExceptionException e) {
-            //e.printStackTrace();
-            LOG.warn(e.getMessage());
+	        LOG.error(e.getMessage());
+	        throw new HadoopSecurityComponentException(e.getMessage(), e);
+        } catch (RemoteException e) {
+	        LOG.error(e.getMessage());
+	        throw new HadoopSecurityComponentException(e.getMessage(), e);
         }
-        return groups;
+	    return groups;
     }
 
     @Override

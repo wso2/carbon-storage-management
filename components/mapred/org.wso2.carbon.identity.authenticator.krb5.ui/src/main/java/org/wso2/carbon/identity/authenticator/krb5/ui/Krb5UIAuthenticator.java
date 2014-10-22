@@ -36,8 +36,6 @@ import javax.servlet.http.HttpSession;
 import java.rmi.RemoteException;
 import java.util.Map;
 
-//import org.wso2.carbon.identity.authenticator.krb5.stub.types.Krb5AuthenticatorStub;
-
 public class Krb5UIAuthenticator extends AbstractCarbonUIAuthenticator{
 
 	private static final Log log = LogFactory.getLog(Krb5UIAuthenticator.class);

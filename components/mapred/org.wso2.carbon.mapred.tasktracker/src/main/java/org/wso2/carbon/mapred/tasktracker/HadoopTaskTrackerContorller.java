@@ -34,7 +34,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.Properties;
 
-public class HadoopTaskTrackerContorller implements BundleActivator{
+public class HadoopTaskTrackerContorller implements BundleActivator {
 
 	private Log log = LogFactory.getLog(HadoopTaskTrackerContorller.class);
     private TaskTracker taskTracker;

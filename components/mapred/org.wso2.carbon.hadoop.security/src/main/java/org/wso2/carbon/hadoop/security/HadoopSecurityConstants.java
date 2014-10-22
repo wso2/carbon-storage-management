@@ -16,24 +16,11 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.mapred.jobtracker;
+package org.wso2.carbon.hadoop.security;
 
-/**
- * Created by IntelliJ IDEA.
- * User: wathsala
- * Date: 9/14/11
- * Time: 1:39 PM
- * To change this template use File | Settings | File Templates.
- */
-
-import java.io.File;
-import java.io.FilenameFilter;
-
-public class JarFilter implements FilenameFilter {
-    private final String ext = ".jar";
-
-    public boolean accept(File dir, String name) {
-        return name.endsWith(ext);
-    }
+public class HadoopSecurityConstants {
+	public static final String HADOOP_TRUSTSTORE_PROPERTY = "hadoop.security.truststore";
+	public static final String HADOOP_USERNAME_PROPERTY = "hadoop.security.admin.username";
+	public static final String HADOOP_PASSWORD_PROPERTY = "hadoop.security.admin.password";
+	public static final String HADOOP_SERVICE_URL_PROPERTY = "hadoop.security.group.mapping.service.url";
 }
-

@@ -37,7 +37,7 @@ import org.osgi.framework.BundleContext;
 import org.wso2.carbon.utils.ServerConstants;
 
 
-public class HadoopJobTrackerContorller implements BundleActivator{
+public class HadoopJobTrackerContorller implements BundleActivator {
     private Log log = LogFactory.getLog(HadoopJobTrackerContorller.class);
     private JobTracker jobTracker;
     private TaskTracker taskTracker;
