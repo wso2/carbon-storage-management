@@ -432,11 +432,11 @@ function whileUpload(){
 //}
 
 function fillContentSection(path, pageNumber, viewMode, consumerID,
-		targetDivID, iperpg) {
-	var ipp = iperpg == null ? 10 : iperpg;
+		targetDivID, iperPg) {
+	var itemsPerPage = iperPg == null ? 10 : iperPg;
 	var random = getRandom();
 	window.location = "../hdfsmgt/hdfs_dashboard.jsp?region=region3&item=hdfs_list_menu&viewType=std&path="
-			+ path + "&requested_page=" + pageNumber + "&ipp=" + ipp;
+			+ path + "&requested_page=" + pageNumber + "&itemCount=" + itemsPerPage;
 }
 
 function showHDFSTreeWithLoadFunction(loadFunction, textBoxId, onOKCallback, rootPath, relativeRoot, displayRootPath) {
