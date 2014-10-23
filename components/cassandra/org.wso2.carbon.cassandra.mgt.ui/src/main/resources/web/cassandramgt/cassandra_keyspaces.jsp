@@ -17,6 +17,7 @@
 -->
 <%@ page import="org.wso2.carbon.cassandra.mgt.ui.CassandraAdminClientConstants" %>
 <%@ page import="org.wso2.carbon.cassandra.mgt.ui.CassandraKeyspaceAdminClient" %>
+<%@ page import="org.wso2.carbon.cassandra.mgt.stub.ks.xsd.KeyspaceInformation" %>
 <%@ page import="org.wso2.carbon.cassandra.mgt.stub.ks.xsd.AuthorizedRolesInformation" %>
 <%@ page import="org.wso2.carbon.cassandra.common.auth.Action" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
@@ -24,7 +25,7 @@
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <script type="text/javascript" src="js/cassandra_ui_util.js"></script>
 <%
-    String[] ksNames = null;
+    KeyspaceInformation[] keyspaces = null;
     String ksTableDisplay = "display:none;";
     String[] userRoles = new String[0];
     String[] allowedRolesCreate = new String[0];
@@ -54,8 +55,8 @@
             session.setAttribute("environments", environments);
         }
 
-        ksNames = cassandraKeyspaceAdminClient.listKeyspacesOfCurrentUSer(envName);
-        if (ksNames != null && ksNames.length > 0) {
+        keyspaces = cassandraKeyspaceAdminClient.listKeyspacesOfCurrentUSer(envName);
+        if (keyspaces != null && keyspaces.length > 0) {
             ksTableDisplay = "";
         }
         userRoles = cassandraKeyspaceAdminClient.getAllRoles();
@@ -134,7 +135,7 @@
                 </select><br><br>
             </div>
             <%
-            if(ksNames == null || ksNames.length == 0){
+            if(keyspaces == null || keyspaces.length == 0){
             %>
                 <div>No Keyspaces Available</div>
             <%
@@ -146,25 +147,29 @@
                         <table class="styledLeft" id="keyspaceTable" style="<%=ksTableDisplay%>">
                             <thead>
                             <tr>
-                                <th width="20%"><fmt:message key="cassandra.keyspace.name"/></th>
-                                <th width="60%"><fmt:message key="cassandra.actions"/></th>
+                                <th width="15%"><fmt:message key="cassandra.keyspace.name"/></th>
+                                <th width="10%"><fmt:message key="cassandra.cluster.name"/></th>
+                                <th width="45%"><fmt:message key="cassandra.actions"/></th>
                             </tr>
                             </thead>
                             <tbody id="keyspaceBody">
                             <%
                                 int j = 0;
-                                if (ksNames != null && ksNames.length != 0) {
-                                    for (; j < ksNames.length; j++) {
-                                        String name = ksNames[j];
+                                if (keyspaces != null && keyspaces.length != 0) {
+                                    for (; j < keyspaces.length; j++) {
+                                        String name = keyspaces[j].getName();
                                         if(name.equals("system_auth") || name.equals("system_traces") ||
                                             name.equals("system") || name.equals("definitions")){
                                         %>
                                             <tr id="keyspaceRaw<%=j%>">
                                                 <td id="keyspaceTD<%=j%>">
                                                     <a id="keyspaceTDLink<%=j%>"
-                                                       onclick="location.href = 'keyspace_dashboard.jsp?name=' + '<%=name%>';"
+                                                       onclick="location.href = 'keyspace_dashboard.jsp?name=' + '<%=name%>' + '&cluster=' + '<%=keyspaces[j].getClusterName()%>';"
                                                        href="#"><%=name%>
                                                     </a>
+                                                </td>
+                                                <td>
+                                                    <div><%=keyspaces[j].getClusterName()%></div>
                                                 </td>
                                                 <td>
                                                    <div>N/A</div>
@@ -176,19 +181,27 @@
                                         <tr id="keyspaceRaw<%=j%>">
                                             <td id="keyspaceTD<%=j%>">
                                                 <a id="keyspaceTDLink<%=j%>"
-                                                   onclick="location.href = 'keyspace_dashboard.jsp?name=' + '<%=name%>';"
+                                                   onclick="location.href = 'keyspace_dashboard.jsp?name=' + '<%=name%>' + '&cluster=' + '<%=keyspaces[j].getClusterName()%>';"
                                                    href="#"><%=name%>
                                                 </a>
                                             </td>
                                             <td>
+                                                <div><%=keyspaces[j].getClusterName()%></div>
+                                            </td>
+                                            <td>
                                                 <input type="hidden" name="keyspaceName<%=j%>" id="keyspaceName<%=j%>" value="<%=name%>"/>
+                                                <input type="hidden" name="clusterName<%=j%>" id="clusterName<%=j%>" value="<%=keyspaces[j].getClusterName()%>"/>
+                                                <%
+                                                if(rolePermissions.length != 0){
+                                                %>
                                                 <a class="edit-icon-link" href="#"
-                                                   onclick="location.href = 'keyspace_dashboard.jsp?name=<%=name%>&setPermissions=true#permissionArea';"
+                                                   onclick="location.href = 'keyspace_dashboard.jsp?name=<%=name%>&cluster=<%=keyspaces[j].getClusterName()%>&setPermissions=true#permissionArea';"
                                                    href="#"><fmt:message
                                                         key="cassandra.actions.share"/></a>
+                                                <%}%>
                                                 <a class="edit-icon-link" href="#"
-                                                   onclick="location.href = 'add_edit_keyspace.jsp?region=region1&item=cassandra_ks_mgt_create_menu&mode=edit&name=' + '<%=name%>';"><fmt:message
-                                                        key="cassandra.actions.edit"/></a>
+                                                   onclick="location.href = 'add_edit_keyspace.jsp?region=region1&item=cassandra_ks_mgt_create_menu&mode=edit&name=<%=name%>&cluster=<%=keyspaces[j].getClusterName()%>';">
+                                                   <fmt:message key="cassandra.actions.edit"/></a>
                                                 <a class="delete-icon-link"
                                                    onclick="deleteKeyspace('<%=j%>');"
                                                    href="#"><fmt:message

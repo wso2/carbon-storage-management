@@ -20,9 +20,11 @@ package org.wso2.carbon.cassandra.mgt.environment;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.cassandra.common.CassandraConstants;
 import org.wso2.carbon.cassandra.mgt.CassandraServerManagementException;
 import org.wso2.carbon.context.CarbonContext;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.context.RegistryType;
 import org.wso2.carbon.registry.api.Collection;
 import org.wso2.carbon.registry.api.Registry;
@@ -33,44 +35,93 @@ import org.wso2.carbon.registry.core.ResourceImpl;
 public class RegistryAccessor {
 
     private static final Log log = LogFactory.getLog(RegistryAccessor.class);
-    public final String DATASOURCE_NAME = "DatasourceName";
+    public final String CLUSTER_NAME = "ClusterName";
+    public final String DATASOURCE_NAME = "Datasource";
     public final String ENVIRONMENT_NAME = "EnvironmentName";
     public final String IS_EXTERNAL = "IsExternal";
 
     public void addEnvironmentToRegistry(Environment env) throws CassandraServerManagementException {
         try {
-            Registry registry = CarbonContext.getThreadLocalCarbonContext().getRegistry(RegistryType.SYSTEM_CONFIGURATION);
+            PrivilegedCarbonContext.startTenantFlow();
+            PrivilegedCarbonContext cc = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+            cc.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
+            cc.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
+
+            Registry registry = CarbonContext.getThreadLocalCarbonContext()
+                    .getRegistry(RegistryType.SYSTEM_CONFIGURATION);
             if (!registry.resourceExists(CassandraConstants.CASSANDRA_ENVIRONMENT_REGISTRY_PATH)) {
-                Collection envCollection = registry.newCollection();
-                registry.put(CassandraConstants.CASSANDRA_ENVIRONMENT_REGISTRY_PATH, envCollection);
+                Collection environmentsCollection = registry.newCollection();
+                registry.put(CassandraConstants.CASSANDRA_ENVIRONMENT_REGISTRY_PATH, environmentsCollection);
             }
-            ResourceImpl envResource = new ResourceImpl();
-            envResource.setName(env.getEnvironmentName());
-            envResource.setProperty(ENVIRONMENT_NAME, env.getEnvironmentName());
-            envResource.setProperty(DATASOURCE_NAME, env.getDataSourceName());
-            envResource.setProperty(IS_EXTERNAL, String.valueOf(env.isExternal()));
-            registry.put(CassandraConstants.CASSANDRA_ENVIRONMENT_REGISTRY_PATH + "/" + envResource.getName(), envResource);
+            Collection envCollection = registry.newCollection();
+            envCollection.setProperty(ENVIRONMENT_NAME, env.getEnvironmentName());
+            envCollection.setProperty(IS_EXTERNAL, String.valueOf(env.isExternal()));
+            registry.put(CassandraConstants.CASSANDRA_ENVIRONMENT_REGISTRY_PATH + "/"
+                    + env.getEnvironmentName(), envCollection);
+            if (!CassandraConstants.CASSANDRA_DEFAULT_ENVIRONMENT.equals(env.getEnvironmentName())) {
+                Collection clusterCollection = registry.newCollection();
+                registry.put(CassandraConstants.CASSANDRA_ENVIRONMENT_REGISTRY_PATH + "/" +
+                        env.getEnvironmentName() + "/" +
+                        CassandraConstants.CASSANDRA_CLUSTERS, clusterCollection);
+                for (Cluster cluster : env.getClusters()) {
+                    ResourceImpl clustersResource = new ResourceImpl();
+                    clustersResource.setProperty(CLUSTER_NAME, cluster.getName());
+                    clustersResource.setProperty(DATASOURCE_NAME, cluster.getDataSourceJndiName());
+                    registry.put(CassandraConstants.CASSANDRA_ENVIRONMENT_REGISTRY_PATH + "/" +
+                            env.getEnvironmentName() + "/" +
+                            CassandraConstants.CASSANDRA_CLUSTERS + "/" +
+                            cluster.getName(), clustersResource);
+                }
+            }
         } catch (Exception e) {
             log.error("Unable to add Environment '" + env.getEnvironmentName() + "' to registry", e);
-            throw new CassandraServerManagementException("Unable to add Environment '" + env.getEnvironmentName() + "' to registry", e);
+            throw new CassandraServerManagementException("Unable to add Environment '"
+                    + env.getEnvironmentName() + "' to registry", e);
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
-    public Environment getEnvironmentFromRegistry(String environmentName) throws CassandraServerManagementException {
+    public Environment getEnvironmentFromRegistry(String environmentName)
+            throws CassandraServerManagementException {
         try {
-            Registry registry = CarbonContext.getThreadLocalCarbonContext().getRegistry(RegistryType.SYSTEM_CONFIGURATION);
-            String resourcePath = CassandraConstants.CASSANDRA_ENVIRONMENT_REGISTRY_PATH + "/" + environmentName;
+            PrivilegedCarbonContext.startTenantFlow();
+            PrivilegedCarbonContext cc = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+            cc.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
+            cc.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
+
+            Registry registry = CarbonContext.getThreadLocalCarbonContext()
+                    .getRegistry(RegistryType.SYSTEM_CONFIGURATION);
+            String resourcePath = CassandraConstants.CASSANDRA_ENVIRONMENT_REGISTRY_PATH
+                    + "/" + environmentName;
             if (registry.resourceExists(resourcePath)) {
                 Environment env = new Environment();
-                Resource resource = registry.get(resourcePath);
+                Collection resource = (Collection) registry.get(resourcePath);
                 env.setEnvironmentName(resource.getProperty(ENVIRONMENT_NAME));
-                env.setDataSourceName(resource.getProperty(DATASOURCE_NAME));
                 env.setExternal(Boolean.valueOf(resource.getProperty(IS_EXTERNAL)));
+                String clusterResourcePath = CassandraConstants.CASSANDRA_ENVIRONMENT_REGISTRY_PATH + "/" +
+                        env.getEnvironmentName() + "/" + CassandraConstants.CASSANDRA_CLUSTERS;
+                if (!CassandraConstants.CASSANDRA_DEFAULT_ENVIRONMENT.equals(env.getEnvironmentName())) {
+                    CollectionImpl clusterCollection = (CollectionImpl) registry.get(clusterResourcePath);
+                    Cluster[] clusters = new Cluster[clusterCollection.getChildCount()];
+                    int i = 0;
+                    for (String clusterName : clusterCollection.getChildren()) {
+                        Resource clusterResource = registry.get(clusterName);
+                        Cluster cluster = new Cluster();
+                        cluster.setName(clusterResource.getProperty(CLUSTER_NAME));
+                        cluster.setDataSourceJndiName(clusterResource.getProperty(DATASOURCE_NAME));
+                        clusters[i++] = cluster;
+                    }
+                    env.setClusters(clusters);
+                }
                 return env;
             }
         } catch (Exception e) {
             log.error("Unable to get Environment '" + environmentName + "' from registry", e);
-            throw new CassandraServerManagementException("Unable to get Environment '" + environmentName + "' from registry", e);
+            throw new CassandraServerManagementException("Unable to get Environment '"
+                    + environmentName + "' from registry", e);
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
         return null; // Resource does not exist
     }
@@ -78,17 +129,37 @@ public class RegistryAccessor {
     public Environment[] getAllEnvironmentsFromRegistry() throws CassandraServerManagementException {
         String resourcePath = CassandraConstants.CASSANDRA_ENVIRONMENT_REGISTRY_PATH;
         try {
-            Registry registry = CarbonContext.getThreadLocalCarbonContext().getRegistry(RegistryType.SYSTEM_CONFIGURATION);
+            PrivilegedCarbonContext.startTenantFlow();
+            PrivilegedCarbonContext cc = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+            cc.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
+            cc.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
+
+            Registry registry = CarbonContext.getThreadLocalCarbonContext()
+                    .getRegistry(RegistryType.SYSTEM_CONFIGURATION);
             if (registry.resourceExists(resourcePath)) {
-                CollectionImpl envCollection = (CollectionImpl) registry.get(resourcePath);
-                Environment[] environments = new Environment[envCollection.getChildCount()];
+                Collection environmentsCollection = (Collection) registry.get(resourcePath);
+                Environment[] environments = new Environment[environmentsCollection.getChildCount()];
                 int i = 0;
-                for (String envName : envCollection.getChildren()) {
-                    Resource envResource = registry.get(envName);
+                for (String envName : environmentsCollection.getChildren()) {
+                    Collection envCollection = (Collection) registry.get(envName);
                     Environment environment = new Environment();
-                    environment.setEnvironmentName(envResource.getProperty(ENVIRONMENT_NAME));
-                    environment.setDataSourceName(envResource.getProperty(DATASOURCE_NAME));
-                    environment.setExternal(Boolean.valueOf(envResource.getProperty(IS_EXTERNAL)));
+                    environment.setEnvironmentName(envCollection.getProperty(ENVIRONMENT_NAME));
+                    environment.setExternal(Boolean.valueOf(envCollection.getProperty(IS_EXTERNAL)));
+                    String clusterResourcePath = CassandraConstants.CASSANDRA_ENVIRONMENT_REGISTRY_PATH + "/" +
+                            environment.getEnvironmentName() + "/" + CassandraConstants.CASSANDRA_CLUSTERS;
+                    if (!CassandraConstants.CASSANDRA_DEFAULT_ENVIRONMENT.equals(environment.getEnvironmentName())) {
+                        Collection clusterCollection = (Collection) registry.get(clusterResourcePath);
+                        Cluster[] clusters = new Cluster[clusterCollection.getChildCount()];
+                        int j = 0;
+                        for (String clusterName : clusterCollection.getChildren()) {
+                            Resource clusterResource = registry.get(clusterName);
+                            Cluster cluster = new Cluster();
+                            cluster.setName(clusterResource.getProperty(CLUSTER_NAME));
+                            cluster.setDataSourceJndiName(clusterResource.getProperty(DATASOURCE_NAME));
+                            clusters[j++] = cluster;
+                        }
+                        environment.setClusters(clusters);
+                    }
                     environments[i++] = environment;
                 }
                 return environments;
@@ -96,21 +167,34 @@ public class RegistryAccessor {
         } catch (Exception e) {
             log.error("Unable to get Environments from registry", e);
             throw new CassandraServerManagementException("Unable to get Environments from registry", e);
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
-        log.warn("Resource Path '" + resourcePath + "' does not exits. Returning 0 environments." );
+        log.warn("Resource Path '" + resourcePath + "' does not exits. Returning 0 environments.");
         return new Environment[0]; // Resource does not exist
     }
 
-    public void deleteEnvironmentFromRegistry(String environmentName) throws CassandraServerManagementException {
+    public void deleteEnvironmentFromRegistry(String environmentName)
+            throws CassandraServerManagementException {
         try {
-            Registry registry = CarbonContext.getThreadLocalCarbonContext().getRegistry(RegistryType.SYSTEM_CONFIGURATION);
-            String resourcePath = CassandraConstants.CASSANDRA_ENVIRONMENT_REGISTRY_PATH + "/" + environmentName;
+            PrivilegedCarbonContext.startTenantFlow();
+            PrivilegedCarbonContext cc = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+            cc.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
+            cc.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
+
+            Registry registry = CarbonContext.getThreadLocalCarbonContext()
+                    .getRegistry(RegistryType.SYSTEM_CONFIGURATION);
+            String resourcePath = CassandraConstants.CASSANDRA_ENVIRONMENT_REGISTRY_PATH
+                    + "/" + environmentName;
             if (registry.resourceExists(resourcePath)) {
                 registry.delete(resourcePath);
             }
         } catch (Exception e) {
             log.error("Unable to delete Environment '" + environmentName + "' from registry", e);
-            throw new CassandraServerManagementException("Unable to delete Environment '" + environmentName + "' from registry", e);
+            throw new CassandraServerManagementException("Unable to delete Environment '"
+                    + environmentName + "' from registry", e);
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 

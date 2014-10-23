@@ -25,6 +25,7 @@ import org.wso2.carbon.ndatasource.common.DataSourceException;
 import org.wso2.carbon.ndatasource.core.DataSourceMetaInfo;
 import org.wso2.carbon.rssmanager.core.config.RSSConfigurationManager;
 import org.wso2.carbon.rssmanager.core.dto.*;
+import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.RSSManagerDataHolder;
 import org.wso2.carbon.rssmanager.core.manager.adaptor.EnvironmentAdaptor;
@@ -34,6 +35,9 @@ public class RSSManagerServiceImpl implements RSSManagerService {
 
     private static final Log log = LogFactory.getLog(RSSManagerService.class);
 
+    /*
+     *@see RSSManagerService#addRSSInstance
+     */
     public void addRSSInstance(String environmentName,
                                RSSInstanceInfo rssInstance) throws RSSManagerException {
         try {
@@ -45,6 +49,9 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         }
     }
 
+    /*
+     *@see RSSManagerService#removeRSSInstance
+     */
     public void removeRSSInstance(String environmentName, String rssInstanceName,
                                   String type) throws RSSManagerException {
         try {
@@ -55,6 +62,9 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         }
     }
 
+    /*
+     *@see RSSManagerService#updateRSSInstance
+     */
     public void updateRSSInstance(String environmentName,
                                   RSSInstanceInfo rssInstance) throws RSSManagerException {
         try {
@@ -66,6 +76,9 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         }
     }
 
+    /*
+     *@see RSSManagerService#getRSSInstance
+     */
     public RSSInstanceInfo getRSSInstance(String environmentName, String rssInstanceName,
                                       String type) throws RSSManagerException {
         RSSInstanceInfo metadata = null;
@@ -81,6 +94,9 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         return metadata;
     }
 
+    /*
+     *@see RSSManagerService#getRSSInstances
+     */
     public RSSInstanceInfo [] getRSSInstances(String environmentName) throws RSSManagerException {
         RSSInstanceInfo [] rssInstances = new RSSInstanceInfo [0];
         try {
@@ -92,6 +108,9 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         return rssInstances;
     }
 
+    /*
+     *@see RSSManagerService#getRSSInstancesList
+     */
     @Override
     public RSSInstanceInfo[] getRSSInstancesList() throws RSSManagerException {
         RSSInstanceInfo [] rssInstances = new RSSInstanceInfo [0];
@@ -104,6 +123,9 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         return rssInstances;
     }
 
+    /*
+     *@see RSSManagerService#addDatabase
+     */
     public DatabaseInfo addDatabase(String environmentName,
                                 DatabaseInfo database) throws RSSManagerException {
         try {
@@ -115,6 +137,9 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         return null;
     }
 
+    /*
+     *@see RSSManagerService#removeDatabase
+     */
     public void removeDatabase(String environmentName, String rssInstanceName,
                                String databaseName, String type) throws RSSManagerException {
         try {
@@ -126,6 +151,9 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         }
     }
 
+    /*
+     *@see RSSManagerService#getDatabases
+     */
     public DatabaseInfo [] getDatabases(String environmentName) throws RSSManagerException {
         DatabaseInfo [] databases = new DatabaseInfo [0];
         try {
@@ -137,7 +165,9 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         return databases;
     }
 
-
+    /*
+    *@see RSSManagerService#deleteTenantRSSData
+    */
     public boolean deleteTenantRSSData(String environmentName, String tenantDomain)
             throws RSSManagerException {
         boolean isDeleted = false;
@@ -155,6 +185,9 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         return isDeleted;
     }
 
+    /*
+     *@see RSSManagerService#getEnvironments
+     */
     public String[] getEnvironments() throws RSSManagerException {
         String[] environments = new String[0];
         try {
@@ -169,6 +202,9 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         return environments;
     }
 
+    /*
+     *@see RSSManagerService#getDatabase
+     */
     public DatabaseInfo getDatabase(String environmentName, String rssInstanceName,
                                 String databaseName, String type) throws RSSManagerException {
         DatabaseInfo database = null;
@@ -183,16 +219,25 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         return database;
     }
 
+    /*
+     *@see RSSManagerService#isDatabaseExist
+     */
     public boolean isDatabaseExist(String environmentName, String rssInstanceName,
                                    String databaseName, String type) throws RSSManagerException {
         return this.getEnvironmentAdaptor().isDatabaseExist(environmentName, rssInstanceName, databaseName, type);
     }
 
+    /*
+     *@see RSSManagerService#isDatabaseUserExist
+     */
     public boolean isDatabaseUserExist(String environmentName, String rssInstanceName,
                                        String username, String type) throws RSSManagerException {
         return this.getEnvironmentAdaptor().isDatabaseUserExist(environmentName, rssInstanceName, username, type);
     }
 
+    /*
+     *@see RSSManagerService#addDatabaseUser
+     */
     public DatabaseUserInfo addDatabaseUser(String environmentName,
                                         DatabaseUserInfo user) throws RSSManagerException {
         try {
@@ -205,6 +250,9 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         return null;
     }
 
+    /*
+     *@see RSSManagerService#removeDatabaseUser
+     */
     public void removeDatabaseUser(String environmentName, String rssInstanceName, String username,
                                    String type) throws RSSManagerException {
         try {
@@ -215,6 +263,9 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         }
     }
 
+    /*
+     *@see RSSManagerService#updateDatabaseUserPrivileges
+     */
     public void updateDatabaseUserPrivileges(String environmentName,
                                              DatabasePrivilegeSetInfo privileges,
                                              DatabaseUserInfo user,
@@ -223,7 +274,9 @@ public class RSSManagerServiceImpl implements RSSManagerService {
                 databaseName);
     }
 
-
+    /*
+    *@see RSSManagerService#getDatabaseUser
+    */
     public DatabaseUserInfo getDatabaseUser(String environmentName, String rssInstanceName, String username,
                                         String type) throws RSSManagerException {
         DatabaseUserInfo user = null;
@@ -237,6 +290,9 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         return user;
     }
 
+    /*
+     *@see RSSManagerService#getDatabaseUsers
+     */
     public DatabaseUserInfo [] getDatabaseUsers(String environmentName) throws RSSManagerException {
         DatabaseUserInfo [] users = new DatabaseUserInfo [0];
         try {
@@ -248,6 +304,9 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         return users;
     }
 
+    /*
+     *@see RSSManagerService#addDatabasePrivilegeTemplate
+     */
     public void addDatabasePrivilegeTemplate(
             String environmentName, DatabasePrivilegeTemplateInfo template) throws RSSManagerException {
         try {
@@ -259,6 +318,9 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         }
     }
 
+    /*
+     *@see RSSManagerService#removeDatabasePrivilegeTemplate
+     */
     public void removeDatabasePrivilegeTemplate(String environmentName,
                                                 String templateName) throws RSSManagerException {
         try {
@@ -271,6 +333,9 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         }
     }
 
+    /*
+     *@see RSSManagerService#updateDatabasePrivilegeTemplate
+     */
     public void updateDatabasePrivilegeTemplate(
             String environmentName, DatabasePrivilegeTemplateInfo template) throws RSSManagerException {
         try {
@@ -282,11 +347,17 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         }
     }
 
+    /*
+     *@see RSSManagerService#getDatabasePrivilegeTemplates
+     */
     public DatabasePrivilegeTemplateInfo [] getDatabasePrivilegeTemplates(
             String environmentName) throws RSSManagerException {
         return this.getEnvironmentAdaptor().getDatabasePrivilegeTemplates(environmentName);
     }
 
+    /*
+     *@see RSSManagerService#getDatabasePrivilegeTemplate
+     */
     public DatabasePrivilegeTemplateInfo getDatabasePrivilegeTemplate(
             String environmentName, String templateName) throws RSSManagerException {
         return this.getEnvironmentAdaptor().getDatabasePrivilegeTemplate(environmentName,
@@ -331,6 +402,9 @@ public class RSSManagerServiceImpl implements RSSManagerService {
 //        }
 //    }
 
+    /*
+     *@see RSSManagerService#attachUser
+     */
     public void attachUser(String environmentName, UserDatabaseEntryInfo ude,
                            String templateName) throws RSSManagerException {
         try {
@@ -343,6 +417,9 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         }
     }
 
+    /*
+     *@see RSSManagerService#detachUser
+     */
     public void detachUser(String environmentName,
                            UserDatabaseEntryInfo ude) throws RSSManagerException {
         try {
@@ -354,6 +431,9 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         }
     }
 
+    /*
+     *@see RSSManagerService#getAttachedUsers
+     */
     public DatabaseUserInfo [] getAttachedUsers(String environmentName, String rssInstanceName,
                                            String databaseName, String type) throws RSSManagerException {
         DatabaseUserInfo [] users = new DatabaseUserInfo [0];
@@ -368,6 +448,9 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         return users;
     }
 
+    /*
+     *@see RSSManagerService#getAvailableUsers
+     */
     public DatabaseUserInfo [] getAvailableUsers(String environmentName, String rssInstanceName,
                                             String databaseName, String type) throws RSSManagerException {
         DatabaseUserInfo [] users = new DatabaseUserInfo [0];
@@ -382,22 +465,32 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         return users;
     }
 
-    public void addCarbonDataSource(String environmentName,
-                                    UserDatabaseEntryInfo entry) throws RSSManagerException {
-        DatabaseInfo database =
-                this.getDatabase(environmentName, entry.getRssInstanceName(),
-                        entry.getDatabaseName(), entry.getType());
-        DataSourceMetaInfo metaInfo =
-                RSSManagerUtil.createDSMetaInfo(database, entry.getUsername());
-        try {
-            RSSManagerDataHolder.getInstance().getDataSourceService().addDataSource(metaInfo);
-        } catch (DataSourceException e) {
-            String msg = "Error occurred while creating carbon datasource for the database '" +
-                    entry.getDatabaseName() + "'";
-            handleException(msg, e);
-        }
-    }
+    /*
+     *@see RSSManagerService#addCarbonDataSource
+     */
+	public void addCarbonDataSource(String environmentName,String dataSourceName,
+			UserDatabaseEntryInfo entry) throws RSSManagerException {
+		DatabaseInfo database = this.getDatabase(environmentName,
+				entry.getRssInstanceName(), entry.getDatabaseName(),
+				entry.getType());
+		DatabaseUserInfo databaseuserinfo = getDatabaseUser(environmentName,
+				entry.getRssInstanceName(), entry.getUsername(),
+				entry.getType());
+		DataSourceMetaInfo metaInfo = RSSManagerUtil.createDSMetaInfo(database,
+				entry.getUsername(), databaseuserinfo.getPassword(),dataSourceName);
+		try {
+			RSSManagerDataHolder.getInstance().getDataSourceService()
+					.addDataSource(metaInfo);
+		} catch (DataSourceException e) {
+			String msg = "Error occurred while creating carbon datasource for the database '"
+					+ entry.getDatabaseName() + "'";
+			handleException(msg, e);
+		}
+	}
 
+    /*
+     *@see RSSManagerService#getUserDatabasePrivileges
+     */
     public DatabasePrivilegeSetInfo getUserDatabasePrivileges(
             String environmentName, String rssInstanceName, String databaseName,
             String username, String type) throws RSSManagerException {
@@ -414,22 +507,34 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         return privileges;
     }
 
+    /*
+     *@see RSSManagerService#getDatabasesForTenant
+     */
     public DatabaseInfo [] getDatabasesForTenant(String environmentName,
                                             String tenantDomain) throws RSSManagerException {
         return this.getEnvironmentAdaptor().getDatabasesForTenant(environmentName, tenantDomain);
     }
 
+    /*
+     *@see RSSManagerService#addDatabaseForTenant
+     */
     public void addDatabaseForTenant(String environmentName, DatabaseInfo database,
                                      String tenantDomain) throws RSSManagerException {
     	this.getEnvironmentAdaptor().addDatabaseForTenant(environmentName, database, tenantDomain);
     }
 
+    /*
+     *@see RSSManagerService#getDatabaseForTenant
+     */
     public DatabaseInfo getDatabaseForTenant(String environmentName, String rssInstanceName,
                                          String databaseName,
                                          String tenantDomain, String type) throws RSSManagerException {
         return this.getEnvironmentAdaptor().getDatabaseForTenant(environmentName, rssInstanceName, databaseName, tenantDomain, type);
     }
 
+    /*
+     *@see RSSManagerService#isDatabasePrivilegeTemplateExist
+     */
     public boolean isDatabasePrivilegeTemplateExist(String environmentName,
                                                     String templateName) throws RSSManagerException {
         return this.getEnvironmentAdaptor().isDatabasePrivilegeTemplateExist(environmentName, templateName);
@@ -450,11 +555,17 @@ public class RSSManagerServiceImpl implements RSSManagerService {
         throw new RSSManagerException(msg, e);
     }
 
+    /*
+     *@see RSSManagerService#editDatabaseUser
+     */
     @Override
     public DatabaseUserInfo editDatabaseUser(String environmentName,DatabaseUserInfo databaseUserInfo) throws RSSManagerException {
         return this.getEnvironmentAdaptor().editDatabaseUser(environmentName, databaseUserInfo);
     }
 
+    /*
+     *@see RSSManagerService#getRSSProvider
+     */
     @Override
     public String getRSSProvider() {
         return RSSConfigurationManager.getInstance().getRSSConfig().getRSSProvider();

@@ -100,7 +100,7 @@
                             </a>
                             <a class="icon-link"
                                style="background-image:url(../rssmanager/images/data-sources-icon.gif);"
-                               onclick="createDataSource('<%=database.getRssInstanceName()%>','<%=databaseName%>', '<%=user.getName()%>', '<%=envName%>')"
+                               onclick="createDataSourceForm('<%=database.getRssInstanceName()%>','<%=databaseName%>', '<%=user.getName()%>', '<%=envName%>' , '<%=instanceType%>');"
                                href="#"><fmt:message key="rss.manager.create.datasource"/></a>
                             <a class="icon-link"
                                style="background-image:url(../admin/images/edit.gif);"
@@ -194,6 +194,23 @@
                 <input type="hidden" id="dbConsoleUsername" name="username"/>
                 <input type="hidden" id="url" name="url"/>
                 <input type="hidden" id="driver" name="driver"/>
+            </form>
+             <script type="text/javascript">
+                function createDataSourceForm(rssInstanceName, databaseName, username, envName, instanceType) {
+                    document.getElementById('rssInstanceNameDS').value = rssInstanceName;
+                	document.getElementById('databaseNameDS').value = databaseName;
+                    document.getElementById('usernameDS').value = username;
+                    document.getElementById('envNameDS').value = envName;
+                    document.getElementById('instanceTypeDS').value = instanceType;
+                    document.getElementById('createDSFrom').submit();
+                }
+            </script>
+            <form action="createDataSource.jsp" method="post" id="createDSFrom">
+                <input type="hidden" id="rssInstanceNameDS" name="rssInstanceNameDS"/>
+                <input type="hidden" id="databaseNameDS" name="databaseNameDS"/>
+                <input type="hidden" id="usernameDS" name="usernameDS"/>
+                <input type="hidden" id="envNameDS" name="envNameDS"/>
+                <input type="hidden" id="instanceTypeDS" name="instanceTypeDS"/>
             </form>
         </div>
     </div>

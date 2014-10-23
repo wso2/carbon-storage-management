@@ -35,6 +35,24 @@ public class KeyspaceInformation {
     private int replicationFactor = 1;
     private ColumnFamilyInformation[] columnFamilies;
     private String[] strategyOptions = new String[0];    //key and value are separated by an underscore
+    private String environmentName;
+    private String clusterName;
+
+    public String getEnvironmentName() {
+        return environmentName;
+    }
+
+    public void setEnvironmentName(String environmentName) {
+        this.environmentName = environmentName;
+    }
+
+    public String getClusterName() {
+        return clusterName;
+    }
+
+    public void setClusterName(String clusterName) {
+        this.clusterName = clusterName;
+    }
 
     public KeyspaceInformation(String name) {
         if (name == null || "".equals(name.trim())) {

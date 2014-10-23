@@ -3,7 +3,8 @@ function deleteKeyspace(index) {
     opCount.value = parseInt(opCount.value) - 1;
     CARBON.showConfirmationDialog(cassandrajsi18n["cassandra.keyspace.delete.confirmation"], function() {
         var ksName = document.getElementById("keyspaceName" + index).value;
-        var url = 'ks-delete-ajaxprocessor.jsp?name=' + ksName;
+        var clusterName = document.getElementById("clusterName" + index).value;
+        var url = 'ks-delete-ajaxprocessor.jsp?name=' + ksName + '&cluster=' + clusterName;
         jQuery.get(url, ({}),
                    function(data, status) {
                        if (status != "success") {
@@ -32,7 +33,7 @@ function deleteKeyspace(index) {
     return false;
 }
 
-function deletecf(keyspace, index) {
+function deletecf(clusterName, keyspace, index) {
     var opCount = document.getElementById("cfCount");
     opCount.value = parseInt(opCount.value) - 1;
     CARBON.showConfirmationDialog(cassandrajsi18n["cassandra.cf.delete.confirmation"], function() {
@@ -53,7 +54,7 @@ function deletecf(keyspace, index) {
                                   if(data.cause == null){
                                       CARBON.showErrorDialog(data.error);
                                   } else {
-                                      var forward = "keyspace_dashboard.jsp?name=" + keyspace;
+                                      var forward = "keyspace_dashboard.jsp?name=" + keyspace + "&cluster=" + clusterName;
                                       showErrorDialog(data.cause, forward);
                                   }
                              }
@@ -289,7 +290,7 @@ function saveCL(mode, index, keyspace, cf) {
     return false;
 }
 
-function savecf(mode, index, keyspace, id) {
+function savecf(mode, index, clusterName, keyspace, id) {
     var formValidaterMesg = '';
     var name = document.getElementById("cf_editor_name").value;
     if (name == '') {
@@ -380,7 +381,7 @@ function savecf(mode, index, keyspace, id) {
                        CARBON.showWarningDialog(cassandrajsi18n["cassandra.add.cf.load.error"]);
                    } else {
                        if (data.status == "success") {
-                           location.href = 'keyspace_dashboard.jsp?name=' + keyspace;
+                           location.href = 'keyspace_dashboard.jsp?name=' + keyspace + "&cluster=" + clusterName;
                        } else {
                            if(data.error == null){
                               CARBON.showErrorDialog(cassandrajsi18n["cassandra." + mode + ".cf.duplicate.error"]);
@@ -388,7 +389,7 @@ function savecf(mode, index, keyspace, id) {
                               if(data.cause == null){
                                   CARBON.showErrorDialog(data.error);
                               } else {
-                                  var forward = "keyspace_dashboard.jsp?name=" + keyspace;
+                                  var forward = "keyspace_dashboard.jsp?name=" + keyspace + "&cluster=" + clusterName;
                                   showErrorDialog(data.cause, forward);
                               }
                            }

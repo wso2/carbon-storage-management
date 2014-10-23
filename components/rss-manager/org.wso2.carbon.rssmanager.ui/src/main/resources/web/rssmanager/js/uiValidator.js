@@ -242,41 +242,49 @@ function displayDatabaseManageActionStatus(msg, status, xmlhttp) {
 }
 
 function createDatabaseUser(envName) {
-    var username = trim(document.getElementById('username').value);
-    var password = document.getElementById('password').value;
-    var repeatPass = document.getElementById('repeatPassword').value;
-    var rssInstances = document.getElementById('rssInstances');
-    var instanceTypes = document.getElementById("instanceTypes");
-    var instanceType = trim(instanceTypes[instanceTypes.selectedIndex].value);
-    var rssInstanceName = ""
-    if(rssInstances != null) {
-        rssInstanceName = rssInstances[rssInstances.selectedIndex].value;
-    }
-
-    if (username == '' || username == null) {
-        CARBON.showWarningDialog("Username field cannot be left blank");
-        return false;
-    } else if (username.length > 7) {
-        CARBON.showWarningDialog("Value in the username field entered exceeds the maximum permitted length of 7");
-        return false;
-    }
-    if (password == '' || password == null) {
-        CARBON.showWarningDialog("Password field cannot be left blank");
-        return false;
-    }
-    if (repeatPass == '' || repeatPass == null) {
-        CARBON.showWarningDialog("Repeat password field cannot be left blank");
-        return false;
-    }
-    if (password != repeatPass) {
-        CARBON.showErrorDialog("Values in Password and Repeat password fields do not match");
-        return false;
-    }
-    if (instanceType == '' || instanceType == null) {
-        CARBON.showWarningDialog("Select instance type");
-        return false;
-    }
-    dispatchDatabaseUserActionRequest('create', rssInstanceName, username, '', envName, instanceType);
+	var username = trim(document.getElementById('username').value);
+	var password = document.getElementById('password').value;
+	var repeatPass = document.getElementById('repeatPassword').value;
+	var rssInstances = document.getElementById('rssInstances');
+	var instanceTypes = document.getElementById("instanceTypes");
+	var instanceType = trim(instanceTypes[instanceTypes.selectedIndex].value);
+	var rssInstanceName = ""
+	if (rssInstances != null) {
+		rssInstanceName = rssInstances[rssInstances.selectedIndex].value;
+	}
+	if (username == '' || username == null) {
+		CARBON.showWarningDialog("Username field cannot be left blank");
+		return false;
+	} else if (username.length > 7) {
+		CARBON.showWarningDialog("Value in the username field" +
+				" entered exceeds the maximum permitted length of 7");
+		return false;
+	}
+	var validChar = new RegExp("^[a-zA-Z0-9_]+$");
+	if (!validChar.test(username)) {
+		CARBON.showWarningDialog("Only Alphanumeric characters and underscores are "
+						+ "allowed in Database Username");
+		return false;
+	}
+	if (password == '' || password == null) {
+		CARBON.showWarningDialog("Password field cannot be left blank");
+		return false;
+	}
+	if (repeatPass == '' || repeatPass == null) {
+		CARBON.showWarningDialog("Repeat password field cannot be left blank");
+		return false;
+	}
+	if (password != repeatPass) {
+		CARBON
+				.showErrorDialog("Values in Password and Repeat password fields do not match");
+		return false;
+	}
+	if (instanceType == '' || instanceType == null) {
+		CARBON.showWarningDialog("Select instance type");
+		return false;
+	}
+	dispatchDatabaseUserActionRequest('create', rssInstanceName, username, '',
+			envName, instanceType);
 }
 
 function editDatabaseUserPrivileges(rssInstanceName, username, databaseName, envName, instanceType) {
@@ -585,18 +593,25 @@ function checkSelectedPrivileges() {
 }
 
 function createDatabasePrivilegeTemplate(flag, envName) {
-	if(envName == null)
-	{
+	if (envName == null) {
 		var environments = document.getElementById("envCombo");
 		var envName = trim(environments[environments.selectedIndex].value);
 	}
-    var templateName = trim(document.getElementById('privilegeTemplateName').value);
-    if (templateName == '' || templateName == null) {
-        CARBON.showWarningDialog("'Database privilege template name' field cannot be left blank");
-        return false;
-    }
-    var url = composeDatabasePrivilegeTemplateActionUrl(flag, templateName, envName);
-    jQuery('#connectionStatusDiv').load(url, displayPrivilegeTemplateActionStatus);
+	var templateName = trim(document.getElementById('privilegeTemplateName').value);
+	if (templateName == '' || templateName == null) {
+		CARBON.showWarningDialog("'Database privilege template name' field cannot be left blank");
+		return false;
+	}
+	var validChar = new RegExp("^[a-zA-Z0-9_]+$");
+	if (!validChar.test(templateName)) {
+		CARBON.showWarningDialog("Only Alphanumeric characters and underscores are "
+						+ "allowed in database privilege template name");
+		return false;
+	}
+	var url = composeDatabasePrivilegeTemplateActionUrl(flag, templateName,
+			envName);
+	jQuery('#connectionStatusDiv').load(url,
+			displayPrivilegeTemplateActionStatus);
 }
 
 function validateDatabasePrivilegeTemplateName() {
@@ -1023,10 +1038,14 @@ function getJdbcDriver(instanceUrl) {
     return '';
 }
 
-function createDataSource(rssInstanceName, databaseName, username, envName) {
-    var url = 'databaseUserOps_ajaxprocessor.jsp?databaseName=' + databaseName + '&username=' +
-            username + '&rssInstanceName=' + rssInstanceName + '&flag=createDS'+ '&envName='+envName;
-    jQuery('#connectionStatusDiv').load(url, displayMessagesForCarbonDS);
+function createDataSource(rssInstanceName, databaseName, username, envName,
+		instanceType) {
+	var dsName = trim(document.getElementById('datasourcename').value);
+	var url = 'databaseUserOps_ajaxprocessor.jsp?dsName=' + dsName
+			+ '&databaseName=' + databaseName + '&username=' + username
+			+ '&rssInstanceName=' + rssInstanceName + '&flag=createDS'
+			+ '&envName=' + envName + '&instanceType=' + instanceType;
+	jQuery('#connectionStatusDiv').load(url, displayMessagesForCarbonDS);
 }
 
 function detachDatabaseUser(rssInstanceName, databaseName, username, envnName,instanceType) {
@@ -1088,30 +1107,38 @@ function displayMessagesForDatabaseUserActions(msg,status, xmlhttp) {
     }
 }
 
-function displayMessagesForCarbonDS(msg,status, xmlhttp) {
-    var xmlDoc=xmlhttp.responseXML;
-    var msg = xmlDoc.getElementsByTagName("Message")[0].childNodes[0].nodeValue;
-    var env = xmlDoc.getElementsByTagName("Environment")[0].childNodes[0].nodeValue;
-    
-    if (msg.search(/Datasource has been successfully created/) != -1) {
-        jQuery(document).ready(function() {
-            function handleOK() {
-                window.location = 'attachedDatabaseUsers.jsp?envName='+env;
-            }
+function displayMessagesForCarbonDS(msg, status, xmlhttp) {
+	var xmlDoc = xmlhttp.responseXML;
+	var msg = xmlDoc.getElementsByTagName("Message")[0].childNodes[0].nodeValue;
+	var env = xmlDoc.getElementsByTagName("Environment")[0].childNodes[0].nodeValue;
 
-            CARBON.showInfoDialog(msg, handleOK);
-        });
-    } else if (msg.search(/Unable to create carbon datasource/) != -1) {
-        jQuery(document).ready(function() {
-            function handleOK() {
-                window.location = 'attachedDatabaseUsers.jsp?envName='+env;
-            }
+	if (msg.search(/has been successfully created/) != -1) {
+		jQuery(document).ready(function() {
+			function handleOK() {
+				window.location = 'attachedDatabaseUsers.jsp?envName=' + env;
+			}
 
-            CARBON.showErrorDialog(msg);
-        });
-    } else {
-        CARBON.showErrorDialog('Unable to create carbon datasource');
-    }
+			CARBON.showInfoDialog(msg, handleOK);
+		});
+	} else if (msg.search(/Unable to create carbon datasource/) != -1) {
+		jQuery(document).ready(function() {
+			function handleOK() {
+				window.location = 'attachedDatabaseUsers.jsp?envName=' + env;
+			}
+
+			CARBON.showErrorDialog(msg);
+		});
+	} else if (msg.search(/Datasource already exists/) != -1) {
+		jQuery(document).ready(function() {
+			function handleOK() {
+				window.location = 'attachedDatabaseUsers.jsp?envName=' + env;
+			}
+
+			CARBON.showInfoDialog(msg, handleOK);
+		});
+	} else {
+		CARBON.showErrorDialog('Unable to create carbon datasource');
+	}
 }
 
 function exploreDatabase(userId, url, driver) {

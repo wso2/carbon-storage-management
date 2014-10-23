@@ -43,6 +43,9 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * @see org.wso2.carbon.rssmanager.core.manager.RSSManager for the method java doc comments
+ */
 public class PostgresUserDefinedRSSManager extends UserDefinedRSSManager {
 
     Log log = LogFactory.getLog(PostgresUserDefinedRSSManager.class);

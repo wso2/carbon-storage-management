@@ -19,14 +19,17 @@
 package org.wso2.carbon.cassandra.mgt.environment;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
+import java.util.List;
 
-@XmlRootElement(name = "CassandraConstants")
+@XmlRootElement(name = "Environment")
 public class Environment {
 
     private String environmentName;
-    private String dataSourceName;
     private boolean isExternal;
+    private Cluster[] clusters = new Cluster[]{new Cluster()};
 
     @XmlElement(name = "Name", nillable = false, required = true)
     public String getEnvironmentName() {
@@ -37,13 +40,25 @@ public class Environment {
         this.environmentName = environmentName;
     }
 
-    @XmlElement(name = "DatasourceJndiName", nillable = false, required = true)
-    public String getDataSourceName() {
-        return dataSourceName;
+    @XmlElementWrapper(name = "Clusters", nillable = false)
+    @XmlElement(name = "Cluster", nillable = false)
+    public Cluster[] getClusters() {
+        return clusters;
     }
 
-    public void setDataSourceName(String dataSourceName) {
-        this.dataSourceName = dataSourceName;
+    public void setClusters(Cluster[] clusters) {
+        this.clusters = clusters;
+    }
+
+    public void setClusters(List<String> datasources){
+        Cluster[] clusters = new Cluster[datasources.size()];
+        for(int i = 0; i < datasources.size(); i++){
+            Cluster cluster = new Cluster();
+            cluster.setName(getClusterName(datasources.get(i)));
+            cluster.setDataSourceJndiName(datasources.get(i));
+            clusters[i] = cluster;
+        }
+        setClusters(clusters);
     }
 
     @XmlElement(name = "IsExternal", nillable = false, required = true)
@@ -54,4 +69,29 @@ public class Environment {
     public void setExternal(boolean isExternal) {
         this.isExternal = isExternal;
     }
+
+    public String getClusterName(String dataSourceName){
+        if(dataSourceName == null){
+            return null;
+        }
+        for(Cluster cluster : clusters){
+            if(dataSourceName.equals(cluster.getDataSourceJndiName())){
+                return cluster.getName();
+            }
+        }
+        return null;
+    }
+
+    public String getDatasourceJndiName(String clusterName){
+        if(clusterName == null){
+            return null;
+        }
+        for(Cluster cluster : clusters){
+            if(clusterName.equals(cluster.getName())){
+                return cluster.getDataSourceJndiName();
+            }
+        }
+        return null;
+    }
+
 }

@@ -28,6 +28,9 @@ import org.wso2.carbon.rssmanager.core.environment.Environment;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.manager.UserDefinedRSSManager;
 
+/**
+ * @see org.wso2.carbon.rssmanager.core.manager.RSSManager for the method java doc comments
+ */
 public class OracleUserDefinedRSSManager extends UserDefinedRSSManager {
 
     public OracleUserDefinedRSSManager(Environment environment, RSSManagementRepository config) {

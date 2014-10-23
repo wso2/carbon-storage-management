@@ -38,6 +38,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * @see org.wso2.carbon.rssmanager.core.manager.RSSManager for the method java doc comments
+ */
 public class OracleSystemRSSManager extends SystemRSSManager {
 
     private static final Log log = LogFactory.getLog(OracleSystemRSSManager.class);

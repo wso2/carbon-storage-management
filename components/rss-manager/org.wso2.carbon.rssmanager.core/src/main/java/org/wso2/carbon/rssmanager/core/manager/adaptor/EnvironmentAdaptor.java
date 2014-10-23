@@ -19,6 +19,7 @@
 package org.wso2.carbon.rssmanager.core.manager.adaptor;
 
 import org.wso2.carbon.ndatasource.common.DataSourceException;
+import org.wso2.carbon.ndatasource.core.CarbonDataSource;
 import org.wso2.carbon.ndatasource.core.DataSourceMetaInfo;
 import org.wso2.carbon.rssmanager.core.dto.*;
 import org.wso2.carbon.rssmanager.core.dto.common.*;
@@ -50,12 +51,14 @@ public class EnvironmentAdaptor implements RSSManagerService {
 		RSSManagerUtil.createRSSInstance(rssInstance, entity);
 		entity= this.getEnvironmentManager().addRSSInstance(entity);
         environmentManager.getEnvironment(rssInstance.getEnvironmentName()).getDSWrapperRepository().addRSSInstanceDSWrapper(entity);
+        environmentManager.getEnvironment(rssInstance.getEnvironmentName()).addRSSInstance(entity);
 	}
 
 	public void removeRSSInstance(String environmentName, String rssInstanceName, String type)
 	                                                                                          throws RSSManagerException {
 		this.getEnvironmentManager().removeRSSInstance(environmentName, rssInstanceName);
         environmentManager.getEnvironment(environmentName).getDSWrapperRepository().removeRSSInstanceDSWrapper(rssInstanceName);
+        environmentManager.getEnvironment(environmentName).removeRSSInstance(rssInstanceName);
     }
 
 	public void updateRSSInstance(String environmentName, RSSInstanceInfo rssInstance)
@@ -64,7 +67,9 @@ public class EnvironmentAdaptor implements RSSManagerService {
 		RSSManagerUtil.createRSSInstance(rssInstance, entity);
 		this.getEnvironmentManager().updateRSSInstance(environmentName, entity);
         environmentManager.getEnvironment(environmentName).getDSWrapperRepository().removeRSSInstanceDSWrapper(rssInstance.getName());
+        environmentManager.getEnvironment(environmentName).removeRSSInstance(rssInstance.getName());
         environmentManager.getEnvironment(rssInstance.getEnvironmentName()).getDSWrapperRepository().addRSSInstanceDSWrapper(entity);
+        environmentManager.getEnvironment(rssInstance.getEnvironmentName()).addRSSInstance(entity);
     }
 
 	public RSSInstanceInfo getRSSInstance(String environmentName, String rssInstanceName, String type)
@@ -339,18 +344,36 @@ public class EnvironmentAdaptor implements RSSManagerService {
 		return info;
 	}
 
-	public void addCarbonDataSource(String environmentName, UserDatabaseEntryInfo entry)
-	                                                                                    throws RSSManagerException {
+	public void addCarbonDataSource(String environmentName,
+			String dataSourceName, UserDatabaseEntryInfo entry)
+			throws RSSManagerException {
 		Database database = this.getRSSManagerAdaptor(environmentName)
-		                        .getDatabase(entry.getRssInstanceName(), entry.getDatabaseName(),
-		                                     entry.getType());
+				.getDatabase(entry.getRssInstanceName(),
+						entry.getDatabaseName(), entry.getType());
+		DatabaseUser databaseuserinfo = this.getRSSManagerAdaptor(
+				environmentName).getDatabaseUser(entry.getRssInstanceName(),
+				entry.getUsername(), entry.getType());
 		DatabaseInfo info = new DatabaseInfo();
 		RSSManagerUtil.createDatabaseInfo(info, database);
-		DataSourceMetaInfo metaInfo = RSSManagerUtil.createDSMetaInfo(info, entry.getUsername());
+		DataSourceMetaInfo metaInfo = RSSManagerUtil.createDSMetaInfo(info,
+				entry.getUsername(), databaseuserinfo.getPassword(),
+				dataSourceName);
 		try {
-			RSSManagerDataHolder.getInstance().getDataSourceService().addDataSource(metaInfo);
+			List<CarbonDataSource> dsList = RSSManagerDataHolder.getInstance()
+					.getDataSourceService().getAllDataSources();
+			for (CarbonDataSource ds : dsList) {
+				if (ds.getDSMInfo().getName().equals(dataSourceName)) {
+					String msg = "Datasource already exists by name  '"
+							+ dataSourceName + "'";
+					throw new RSSManagerException(msg,
+							new DataSourceException());
+				}
+			}
+			RSSManagerDataHolder.getInstance().getDataSourceService()
+					.addDataSource(metaInfo);
 		} catch (DataSourceException e) {
-			String msg = "Error occurred while creating carbon datasource for the database '" + entry.getDatabaseName() + "'";
+			String msg = "Error occurred while creating carbon datasource for the database '"
+					+ entry.getDatabaseName() + "'";
 			throw new RSSManagerException(msg, e);
 		}
 	}

@@ -25,6 +25,7 @@
 
 <%
     String envName = (String) session.getAttribute("envName");
+    String clusterName = (String) session.getAttribute("clusterName");
     String name = request.getParameter("name");
     String rf = request.getParameter("rf");
     String rs = request.getParameter("rs");
@@ -35,6 +36,8 @@
         CassandraKeyspaceAdminClient cassandraKeyspaceAdminClient = new CassandraKeyspaceAdminClient(config.getServletContext(), session);
         KeyspaceInformation keyspaceInformation = new KeyspaceInformation();
         keyspaceInformation.setName(name);
+        keyspaceInformation.setEnvironmentName(envName);
+        keyspaceInformation.setClusterName(clusterName);
         int replicationFactor = 1;
         if (rf != null && !"".equals(rf.trim())) {
             try {
@@ -51,9 +54,9 @@
             keyspaceInformation.setReplicationFactor(replicationFactor);
         }
         if ("add".equals(mode)) {
-            cassandraKeyspaceAdminClient.addKeyspace(envName, keyspaceInformation, session);
+            cassandraKeyspaceAdminClient.addKeyspace(keyspaceInformation, session);
         } else {
-            cassandraKeyspaceAdminClient.updateKeyspace(envName, keyspaceInformation, session);
+            cassandraKeyspaceAdminClient.updateKeyspace(keyspaceInformation, session);
         }
         %>
 

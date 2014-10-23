@@ -174,7 +174,7 @@
                 <div id="connectionStatusDiv" style="display: none;"></div>
                 <a class="icon-link"
                    style="background-image:url(../admin/images/add.gif);"
-                   href="createDatabasePrivilegeTemplate.jsp"><fmt:message
+                   href="javascript:submitAddDbPrivilegeTemplate()"><fmt:message
                         key="rss.manager.add.database.privilege.template"/></a>
 
                 <div style="clear:both"></div>
@@ -192,6 +192,14 @@
             <form method="post" action="editDatabasePrivilegeTemplate.jsp" id="editForm">
                 <input type="hidden" name="privilegeTemplateName" id="privilegeTemplateName"/>
                 <input type="hidden" name="envName" id="envName" value="<%=environmentName%>"/>
+            </form>
+            <script type="text/javascript">
+                function submitAddDbPrivilegeTemplate() {
+                    document.getElementById('addPrivilegeTemplate').submit();
+                }
+            </script>
+            <form action="createDatabasePrivilegeTemplate.jsp" method="post" id="addPrivilegeTemplate">
+                <input type="hidden" id="envName" name="envName" value="<%=environmentName%>"/>
             </form>
         </div>
     </div>

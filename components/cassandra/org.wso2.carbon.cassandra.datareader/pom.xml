@@ -73,15 +73,15 @@
         </dependency>
 
         <dependency>
-            <groupId>com.datastax.cassandra</groupId>
-            <artifactId>cassandra-driver-core</artifactId>
-            <version>1.0.5</version>
+            <groupId>com.datastax.cassandra.wso2</groupId>
+            <artifactId>cql-driver</artifactId>
+            <version>1.0.8.wso2v1</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.cassandra.wso2</groupId>
             <artifactId>apache-cassandra</artifactId>
-            <version>1.2.10.wso2v1</version>
+            <version>1.2.13.wso2v5</version>
         </dependency>
     </dependencies>
 </project>

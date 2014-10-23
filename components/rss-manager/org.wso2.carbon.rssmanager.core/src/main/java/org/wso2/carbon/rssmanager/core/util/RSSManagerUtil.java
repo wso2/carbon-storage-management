@@ -50,6 +50,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -177,21 +178,21 @@ public final class RSSManagerUtil {
         return defn;
     }
 
-    public static DataSourceMetaInfo createDSMetaInfo(DatabaseInfo database,
-                                                      String username) throws RSSManagerException {
-        DataSourceMetaInfo metaInfo = new DataSourceMetaInfo();
-        RDBMSConfiguration rdbmsConfiguration = new RDBMSConfiguration();
-        String url = database.getUrl();
-        String driverClassName = RSSManagerHelper.getDatabaseDriver(url);
-        rdbmsConfiguration.setUrl(url);
-        rdbmsConfiguration.setDriverClassName(driverClassName);
-        rdbmsConfiguration.setUsername(username);
-
-        metaInfo.setDefinition(createDSXMLDefinition(rdbmsConfiguration));
-        metaInfo.setName(database.getName());
-
-        return metaInfo;
-    }
+    
+	public static DataSourceMetaInfo createDSMetaInfo(DatabaseInfo database,
+			String username, String password,String dsName) throws RSSManagerException {
+		DataSourceMetaInfo metaInfo = new DataSourceMetaInfo();
+		RDBMSConfiguration rdbmsConfiguration = new RDBMSConfiguration();
+		String url = database.getUrl();
+		String driverClassName = RSSManagerHelper.getDatabaseDriver(url);
+		rdbmsConfiguration.setUrl(url);
+		rdbmsConfiguration.setDriverClassName(driverClassName);
+		rdbmsConfiguration.setUsername(username);
+		rdbmsConfiguration.setPassword(password);
+		metaInfo.setDefinition(createDSXMLDefinition(rdbmsConfiguration));
+		metaInfo.setName(dsName);
+		return metaInfo;
+	}
 
     private static Marshaller createMarshaller() throws RSSManagerException {
         JAXBContext ctx;
