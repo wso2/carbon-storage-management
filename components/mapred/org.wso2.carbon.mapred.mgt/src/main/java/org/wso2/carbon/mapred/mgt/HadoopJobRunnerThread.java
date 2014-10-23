@@ -80,6 +80,7 @@ public class HadoopJobRunnerThread extends Thread {
 					try {
 						FileUtil.fullyDelete(workDir);
 					} catch (IOException e) {
+						log.error("Error while deleting file "+e);
 					}
 				}
 			});
@@ -119,21 +120,14 @@ public class HadoopJobRunnerThread extends Thread {
 			HadoopCarbonSecurity.clean();
 		} catch (IOException io) {
 			log.error("Error opening job jar: " + jarName);
-			io.printStackTrace();
-			return;
 		} catch (ClassNotFoundException noClass) {
 			log.error("Cannot find the class"+ className +" in "+jarName);
-			noClass.printStackTrace();
-			return;
 		} catch (IllegalAccessException illegalAccess) {
 			log.error("Unable to access main method in "+className+" in "+jarName);
-			illegalAccess.printStackTrace();
-			return;
 		} catch (IllegalArgumentException illegalArg) {
-			illegalArg.printStackTrace();
-			illegalArg.getCause().getMessage();
+			log.error(illegalArg);
 		} catch (InstantiationException instantiation) {
-			instantiation.printStackTrace();
+			log.error(instantiation);
 		}
 	}
 

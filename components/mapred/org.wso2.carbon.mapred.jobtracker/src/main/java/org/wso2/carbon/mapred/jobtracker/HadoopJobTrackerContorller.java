@@ -38,7 +38,7 @@ import org.wso2.carbon.utils.ServerConstants;
 
 
 public class HadoopJobTrackerContorller implements BundleActivator {
-    private Log log = LogFactory.getLog(HadoopJobTrackerContorller.class);
+    private static Log log = LogFactory.getLog(HadoopJobTrackerContorller.class);
     private JobTracker jobTracker;
     private TaskTracker taskTracker;
     private Thread jobTrackerThread;
@@ -46,7 +46,6 @@ public class HadoopJobTrackerContorller implements BundleActivator {
     private JobConf jconf;
     private Properties hadoopConfiguration;
     private Properties taskController;
-    //public static final String TASK_CONTROLLER_CFG = "taskcontroller.cfg" ;
     public static final String MAPRED_SITE = "mapred-site.xml";
     public static final String CORE_SITE = "core-site.xml";
     public static final String HDFS_SITE = "hdfs-site.xml";
@@ -56,7 +55,6 @@ public class HadoopJobTrackerContorller implements BundleActivator {
     public static final String MAPRED_QUEUE_ACLS = "mapred-queue-acls.xml";
     public static final String METRICS2_CONF = "hadoop-metrics2.properties";
     private static String HADOOP_CONFIG_DIR;
-    //private static String[] TASKCONTROLLER_DEPENDS_DIRS;
 
     public HadoopJobTrackerContorller() {
         jconf = new JobConf();

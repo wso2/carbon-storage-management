@@ -31,6 +31,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.wso2.carbon.mapred.mgt.api.*;
 
 import java.io.IOException;
+import java.lang.Exception;
 import java.util.StringTokenizer;
 
 public class WordCount extends CarbonMapRedJob {
@@ -83,16 +84,7 @@ public class WordCount extends CarbonMapRedJob {
 			FileInputFormat.addInputPath(job, new Path(args[0]));
 			FileOutputFormat.setOutputPath(job, new Path(args[1]));
 			job.waitForCompletion(true);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return;
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return;
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 			return;
 		}

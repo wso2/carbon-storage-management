@@ -50,7 +50,7 @@ public class Krb5AuthenticatorDSComponent {
 
     private static final Log log = LogFactory.getLog(Krb5AuthenticatorDSComponent.class);
     private static RealmService realmService;
-    private static String DISABLE_HDFS_STARTUP = "disable.hdfs.startup";
+    private static final String DISABLE_HDFS_STARTUP = "disable.hdfs.startup";
 
     protected void activate(ComponentContext ctxt) {
 
@@ -104,10 +104,6 @@ public class Krb5AuthenticatorDSComponent {
         return Krb5AuthBEDataHolder.getInstance().getRegistryService();
     }
 
-    /*public static LoginSubscriptionManagerServiceImpl getLoginSubscriptionManagerServiceImpl() {
-        return loginSubscriptionManagerServiceImpl;
-    }*/
-
     protected void setServerConfiguration(ServerConfiguration configuration) {
         Krb5AuthBEDataHolder.getInstance().setServerConfiguration(configuration);
     }
@@ -119,21 +115,4 @@ public class Krb5AuthenticatorDSComponent {
     protected void unsetServerConfiguration(ServerConfiguration configuration) {
         Krb5AuthBEDataHolder.getInstance().setServerConfiguration(null);
     }
-
-    /*protected void setConfigurationContextService(ConfigurationContextService contextService) {
-        CarbonServicesServiceComponent.configContextService = contextService;
-    }*/
-
-    /*protected void unsetConfigurationContextService(ConfigurationContextService contextService) {
-        CarbonServicesServiceComponent.configContextService = null;
-    }
-
-    public static ConfigurationContextService getConfigurationContextService() throws Exception{
-        if (serverConfiguration == null) {
-            String msg = "Axis configuration is null. Some bundles in the system have not started";
-            log.error(msg);
-            throw new Exception(msg);
-        }
-        return CarbonServicesServiceComponent.configContextService;
-    }*/
 }

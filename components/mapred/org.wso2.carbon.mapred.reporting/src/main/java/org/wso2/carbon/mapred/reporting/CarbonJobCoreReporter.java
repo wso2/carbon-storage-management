@@ -62,9 +62,7 @@ public class CarbonJobCoreReporter extends JobCoreReporter {
 		try {
 			authAdminStub = new AuthenticationAdminStub(confCtx, serviceUrl+"AuthenticationAdmin");
 		} catch (AxisFault e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			log.warn(e.getMessage());
+			log.error(e.getMessage(), e);
 		}
         authAdminStub._getServiceClient().getOptions().setManageSession(true);
         try {
@@ -74,20 +72,13 @@ public class CarbonJobCoreReporter extends JobCoreReporter {
 			cookie = (String)authAdminStub._getServiceClient().getServiceContext().getProperty(HTTPConstants.COOKIE_STRING);
 			log.info("Logging in as admin");
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			log.warn(e.getMessage());
-		} catch (LoginAuthenticationExceptionException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			log.warn(e.getMessage());
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			log.warn(e.getMessage());
-		}
+	        log.error(e.getMessage(), e);
+        } catch (LoginAuthenticationExceptionException e) {
+	        log.error(e.getMessage(), e);
+        } catch (URISyntaxException e) {
+	        log.error(e.getMessage(), e);
+        }
 		try {
-			//confCtx = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
 			jobRunnerStub = new HadoopJobRunnerStub(confCtx, serviceUrl+"HadoopJobRunner");
 			ServiceClient client = jobRunnerStub._getServiceClient();
             Options options = client.getOptions();
@@ -97,14 +88,12 @@ public class CarbonJobCoreReporter extends JobCoreReporter {
 			jobRunnerStub.attachFinalReport(JSONEncode());
 			authAdminStub.logout();
 		} catch (AxisFault e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			log.warn(e.getMessage());
+			log.error(e.getMessage(), e);
 		} catch (RemoteException e) {
-			log.warn(e.getMessage());
+			log.error(e.getMessage(), e);
 		}
 		catch (Exception e) {
-			log.warn(e.getMessage());
+			log.error(e.getMessage(), e);
 		}
 	}
 

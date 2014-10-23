@@ -30,7 +30,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 
 public class JarFilter implements FilenameFilter {
-    private final String ext = ".jar";
+    private static final String ext = ".jar";
 
     public boolean accept(File dir, String name) {
         return name.endsWith(ext);

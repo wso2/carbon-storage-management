@@ -31,18 +31,27 @@ import org.wso2.carbon.utils.ServerConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
-//public class Krb5Authenticator /*extends AbstractAdmin*/ implements CarbonServerAuthenticator {
-    public class Krb5Authenticator extends AbstractAdmin implements ServerAuthenticator {
+public class Krb5Authenticator extends AbstractAdmin implements ServerAuthenticator {
 
     private static final Log log = LogFactory.getLog(Krb5Authenticator.class);
     private static final int DEFAULT_PRIORITY_LEVEL = 10;
     private static final String AUTHENTICATOR_NAME = "Krb5UIAuthenticator";
     private final String tgtCachePrefix = "/tmp/";
-    private String CARBON_HOME = System.getProperty(ServerConstants.CARBON_HOME); 
+    private static final String CARBON_HOME = System.getProperty(ServerConstants.CARBON_HOME);
     private String KRB5_CONFIG = CARBON_HOME+File.separator+"repository"+File.separator+"conf"+File.separator+"krb5.conf";
     private static HashMap<String, String> nameToUuidMap = new HashMap<String, String>();
     
@@ -56,7 +65,7 @@ import java.util.*;
     	if (KRB5_CONFIG == null)
     		KRB5_CONFIG = "/etc/krb5.conf";
     	env.put("KRB5_CONFIG", KRB5_CONFIG);
-    	log.info(env.get("KRB5_CONFIG"));
+    	log.debug(env.get("KRB5_CONFIG"));
     	HttpSession session = getHttpSession();
         try {
             Process proc = procBldr.start();
@@ -175,16 +184,6 @@ import java.util.*;
 		HttpSession clientSession = getHttpSession();
 		String username = (String) clientSession.getAttribute(ServerConstants.USER_LOGGED_IN);
 		return tgtCachePrefix+nameToUuidMap.get(username);
-	}
-
-	//@Override
-	public boolean isHandle(MessageContext msgContext) {
-		return true;
-	}
-
-	//@Override
-	public boolean authenticateWithRememberMe(MessageContext msgContext) {
-		return false;
 	}
 
 	@Override

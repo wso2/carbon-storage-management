@@ -23,6 +23,7 @@ import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.cassandra.mgt.ui.MapredClientException;
 import org.wso2.carbon.mapred.mgt.stub.HadoopJobRunnerStub;
 import org.wso2.carbon.utils.ServerConstants;
 
@@ -35,10 +36,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.Exception;
 import java.rmi.RemoteException;
 
 public class HadoopJobRunnerProxy {
-
+	private static Log log = LogFactory.getLog(HadoopJobRunnerProxy.class);
 	private final static int READ_BUFFER_SIZE = 256;
 	private String cookie;
 	private ConfigurationContext configCtx;
@@ -66,17 +68,13 @@ public class HadoopJobRunnerProxy {
 			FileDataSource fds = new FileDataSource(jarFile);
 			DataHandler dh = new DataHandler(fds);
 			HadoopJobRunnerStub stub = new HadoopJobRunnerStub(configCtx,
-					"https://127.0.0.1:9443/services/HadoopJobRunner");
+			                                                   "https://127.0.0.1:9443/services/HadoopJobRunner");
 			setupClientSession(stub);
 			stub.putJar(jarName, dh);
 			fos.close();
 			jarFile.delete();
-		} catch (AxisFault af) {
-			af.printStackTrace();
-		} catch (RemoteException re) {
-			re.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
+		} catch (Exception e) {
+			throw new MapredClientException("Error while uploading the jar", e, log);
 		}
 	}
 
@@ -87,11 +85,8 @@ public class HadoopJobRunnerProxy {
 					"https://127.0.0.1:9443/services/HadoopJobRunner");
 			setupClientSession(stub);
 			jarList = stub.getJarList();
-		} catch (AxisFault e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RemoteException re) {
-			re.printStackTrace();
+		} catch (Exception e) {
+			throw new MapredClientException("Error while listing the jars", e, log);
 		}
 		return jarList;
 	}
@@ -106,11 +101,8 @@ public class HadoopJobRunnerProxy {
 				stub.getJar(jarPath);
 				key = stub.runJob(jarPath, className, args);
 			}
-		} catch (AxisFault af) {
-			af.printStackTrace();
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new MapredClientException("Error while submitting the job", e, log);
 		}
 		return key;
 	}
@@ -122,10 +114,8 @@ public class HadoopJobRunnerProxy {
 			"https://127.0.0.1:9443/services/HadoopJobRunner");
 			setupClientSession(stub);
 			jobStatus = stub.getJobStatus(key);
-		} catch (AxisFault af) {
-			af.printStackTrace();
-		} catch (RemoteException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new MapredClientException("Error while getting job status", e, log);
 		}
 		return jobStatus;
 	}
@@ -137,10 +127,8 @@ public class HadoopJobRunnerProxy {
 			"https://127.0.0.1:9443/services/HadoopJobRunner");
 			setupClientSession(stub);
 			jobsList = stub.getFinalReportsList(offset);
-		} catch (AxisFault af) {
-			af.printStackTrace();
-		} catch (RemoteException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new MapredClientException("Error while getting final report list", e, log);
 		}
 		return jobsList;
 	}
@@ -152,10 +140,8 @@ public class HadoopJobRunnerProxy {
 			"https://127.0.0.1:9443/services/HadoopJobRunner");
 			setupClientSession(stub);
 			jobReport = stub.getJobFinalReport(jobID);
-		} catch (AxisFault af) {
-			af.printStackTrace();
-		} catch (RemoteException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new MapredClientException("Error while getting final report", e, log);
 		}
 		return jobReport;
 	}

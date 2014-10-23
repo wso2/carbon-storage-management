@@ -25,6 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.core.common.AuthenticationException;
 import org.wso2.carbon.core.security.AuthenticatorsConfiguration;
+import org.wso2.carbon.identity.authenticator.krb5.ui.exception.Krb5AuthenticatorException;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.ui.AbstractCarbonUIAuthenticator;
 import org.wso2.carbon.ui.CarbonUIUtil;
@@ -48,13 +49,9 @@ public class Krb5UIAuthenticator extends AbstractCarbonUIAuthenticator{
 		String password = request.getParameter("password");
 		try {
 			return authenticate(request, userName, password);
-		} catch (RemoteException e) {
+		} catch (Krb5AuthenticatorException e) {
 			throw new AuthenticationException(e.getMessage(), e);
 		}
-	}
-
-	public boolean isHandle(Object object) {
-		return true;
 	}
 
 	public int getPriority() {
@@ -83,7 +80,7 @@ public class Krb5UIAuthenticator extends AbstractCarbonUIAuthenticator{
 	}
 
 	protected boolean authenticate(HttpServletRequest request, String userName, String password)
-	throws RemoteException {
+	throws Krb5AuthenticatorException {
 		try {
 			ServletContext servletContext = request.getSession().getServletContext();
 			ConfigurationContext configContext = (ConfigurationContext) servletContext
@@ -113,20 +110,17 @@ public class Krb5UIAuthenticator extends AbstractCarbonUIAuthenticator{
 			Krb5AuthenticatorClient proxy = new Krb5AuthenticatorClient(configContext,
 					backendServerURL, cookie, session);
 
-            log.info("KRB User Name :" + userName);
+            log.debug("KRB User Name :" + userName);
 			String userNameWithDomain = userName;
 			String domainName = (String) request.getAttribute(RegistryConstants.TENANT_DOMAIN);
-            log.info("KRB Domain Name :" + domainName);
+            log.debug("KRB Domain Name :" + domainName);
 			if (domainName != null) {
 				userNameWithDomain += "@" + domainName;
 			}
 			return proxy.loginWithoutRememberMeOption(userNameWithDomain, password, request.getRemoteAddr());
-		} catch (AxisFault axisFault) {
-			throw axisFault;
-		} catch (RemoteException e) {
-			throw e;
 		} catch (Exception e) {
-			throw new AxisFault("Exception occured", e);
+			log.error(e);
+			throw new Krb5AuthenticatorException("Error occurred during authentication", e);
 		}
 	}
 

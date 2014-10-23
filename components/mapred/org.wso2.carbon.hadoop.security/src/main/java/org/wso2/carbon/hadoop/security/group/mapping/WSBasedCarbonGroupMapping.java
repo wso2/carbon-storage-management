@@ -46,10 +46,10 @@ import java.util.List;
 
 public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, Configurable {
 
-    private static final Log LOG = LogFactory.getLog(WSBasedCarbonGroupMapping.class);
+    private static final Log log = LogFactory.getLog(WSBasedCarbonGroupMapping.class);
     private Configuration conf = null;
-    private final int NR_RETRIES = 5;
-    private final int WINDOW_UPER_BOUND = 10000;
+    private final static int NR_RETRIES = 5;
+    private final static int WINDOW_UPER_BOUND = 10000;
 
     @Override
     public List<String> getGroups(String user) throws IOException {
@@ -62,7 +62,7 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
                 try {
                     Thread.sleep((i + 1) * WINDOW_UPER_BOUND);
                 } catch (InterruptedException e1) {
-                    LOG.error(e.getMessage());
+                    log.error(e.getMessage());
 	                throw new IOException(e.getMessage(), e);
                 }
                 continue;
@@ -101,14 +101,14 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
             confCtx = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
         } catch (AxisFault e) {
             //e.printStackTrace();
-            LOG.error(e.getMessage());
+            log.error(e.getMessage());
             throw new HadoopSecurityComponentException(e.getMessage(), e);
         }
 
         try {
             authAdminStub = new AuthenticationAdminStub(confCtx, serviceUrl + "AuthenticationAdmin");
         } catch (AxisFault e) {
-	        LOG.error(e.getMessage());
+	        log.error(e.getMessage());
 	        throw new HadoopSecurityComponentException(e.getMessage(), e);
         }
         authAdminStub._getServiceClient().getOptions().setManageSession(true);
@@ -116,15 +116,15 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
             URI serviceUrlObj = new URI(serviceUrl);
             String serviceHostName = serviceUrlObj.getHost();
             isAuthenticated = authAdminStub.login(username, password, serviceHostName);
-            LOG.info("Logging in as admin");
+            log.info("Logging in as admin");
         } catch (RemoteException e) {
-	        LOG.error(e.getMessage());
+	        log.error(e.getMessage());
 	        throw new HadoopSecurityComponentException(e.getMessage(), e);
         } catch (LoginAuthenticationExceptionException e) {
-	        LOG.error(e.getMessage());
+	        log.error(e.getMessage());
 	        throw new HadoopSecurityComponentException(e.getMessage(), e);
         } catch (URISyntaxException e) {
-	        LOG.error(e.getMessage());
+	        log.error(e.getMessage());
 	        throw new HadoopSecurityComponentException(e.getMessage(), e);
         }
         try {
@@ -137,19 +137,19 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
             for (int i = 0; i < roleList.length; i++) {
                 groups.add(roleList[i]);
             }
-            LOG.debug("Retreived user roles");
+            log.debug("Retreived user roles");
             authAdminStub.logout();
         } catch (UserStoreException e) {
-	        LOG.error(e.getMessage());
+	        log.error(e.getMessage());
 	        throw new HadoopSecurityComponentException(e.getMessage(), e);
         } catch (org.wso2.carbon.user.api.UserStoreException e) {
-            LOG.error(e.getMessage());
+            log.error(e.getMessage());
             throw new HadoopSecurityComponentException(e.getMessage(), e);
         } catch (LogoutAuthenticationExceptionException e) {
-	        LOG.error(e.getMessage());
+	        log.error(e.getMessage());
 	        throw new HadoopSecurityComponentException(e.getMessage(), e);
         } catch (RemoteException e) {
-	        LOG.error(e.getMessage());
+	        log.error(e.getMessage());
 	        throw new HadoopSecurityComponentException(e.getMessage(), e);
         }
 	    return groups;

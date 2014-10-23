@@ -29,7 +29,6 @@ public class Krb5TicketCacheFinderImpl implements Krb5TicketCacheFinder {
     private Configuration conf;
 	//@Override
 	public String getTenantTicketCache() {
-		HadoopCarbonMessageContext msgCtx = HadoopCarbonMessageContext.get();
-		return msgCtx.getKrb5TicketCache();
+		return HadoopCarbonMessageContext.get().getKrb5TicketCache();
 	}
 }

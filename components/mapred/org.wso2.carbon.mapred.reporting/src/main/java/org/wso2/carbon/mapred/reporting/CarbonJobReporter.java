@@ -35,23 +35,17 @@ public class CarbonJobReporter extends JobReporter {
 	private final Logger log = Logger.getLogger(CarbonJobReporter.class);
 	private String jobId = null;
 	private String jobName = null;
-	//private Counters counters = null;
 	RunningJob runningJob = null;
 	private long lastAccessed = System.currentTimeMillis();
 
 	public void init() {
 		runningJob = getRunningJob();
-		//try {
 			jobId = runningJob.getID().getJtIdentifier();
 			jobName = runningJob.getJobName();
-			//counters = runningJob.getCounters();
 			updateTimestap();
 			synchronized (this) {
 				this.notify();
 			}
-		//} catch (IOException e) {
-			//log.warn(e.getMessage());
-		//}
 	}
 
 	public float getMapProgress() {
@@ -85,11 +79,6 @@ public class CarbonJobReporter extends JobReporter {
 		updateTimestap();
 		return this.jobName;
 	}
-
-	/*public long getCounter(Enum key) {
-		updateTimestap();
-		return this.counters.getCounter(key);
-	}*/
 
 	public boolean isJobComplete() {
 		boolean status = false;
@@ -199,7 +188,7 @@ public class CarbonJobReporter extends JobReporter {
 				try {
 					Thread.sleep(MAX_CACHED_TIME_MS * 2);
 				} catch (InterruptedException e) {
-					log.warn(e.getMessage());
+					log.error(e.getMessage());
 				}
 			}
 		}
