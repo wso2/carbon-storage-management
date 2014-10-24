@@ -67,15 +67,14 @@
 	String unselected = "pageLinks";
 	String selected = "pageLinks-selected";
 	String ippSet[] = { "1", "5", "10", "15", "20", "30", "50", "100" };
+	String FALSE ="false";
 	try {
 		client = new HDFSAdminClient(config.getServletContext(), session);
 		folderInfo = client.getCurrentUserFSObjects(path);
 
 		//if the isFolder is not null and is set to false, then it is not a folder. if the requested path is the same as the returned item's path it is a file.i.e.
 		// this is when the user types a file path on the location bar and tries to navigate. and empty directory returns an empty collection.
-		if (isFolder != null &&
-		    isFolder.equals("false") ||
-		    (isFolder == null) &&
+		if (FALSE.equals(isFolder) ||
 		    (folderInfo.length == 1 && ((FolderInformation) folderInfo[0]).getFolderPath()
 		                                                                  .equals(path))) {
 			isFolder = "false";
