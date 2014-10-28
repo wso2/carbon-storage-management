@@ -19,12 +19,15 @@ package org.wso2.carbon.hdfs.namenode;
 
 import java.io.File;
 
+import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.NamenodeRole;
 import org.apache.hadoop.hdfs.server.namenode.NameNode;
 import org.wso2.carbon.context.CarbonContext;
+import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.ServerConstants;
 
 
@@ -33,81 +36,35 @@ import org.wso2.carbon.utils.ServerConstants;
  */
 public class HDFSNameNode {
     private static Log log = LogFactory.getLog(HDFSNameNode.class);
+	private static final String CORE_SITE_XML = "core-site.xml";
+	private static final String HDFS_SITE_XML = "hdfs-site.xml";
+	private static final String HADOOP_POLICY_XML = "hadoop-policy.xml";
+	private HdfsConfiguration conf;
+	private static final String krb5ConfFileLocation = CarbonUtils
+			.getCarbonConfigDirPath() + File.separator + "krb5.conf";  //location of krb5.conf in carbon home
+	private static final String hadoopConf = CarbonUtils
+			.getEtcCarbonConfigDirPath() + File.separator + "hadoop" + File.separator; //location of hadoop configurion files
+	private static final String hadoopCoreSiteConf = hadoopConf + CORE_SITE_XML;
+	private static final String hdfsCoreSiteConf   = hadoopConf + HDFS_SITE_XML;
+	private static final String hadoopPolicyConf   = hadoopConf + HADOOP_POLICY_XML;
 
-    private static String HDFS_NAMENODE_STARTUP_DELAY = "hdfs.namenode.startup.delay";
-
-    private static final String CORE_SITE_XML = "core-site.xml";
-    private static final String HDFS_SITE_XML = "hdfs-site.xml";
-    private static final String HADOOP_POLICY_XML = "hadoop-policy.xml";
-
-    private Thread thread;
-
-    public HDFSNameNode() {
-  	 
-        Configuration conf = new Configuration(false);
-        String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
-        String krb5ConfFileLocation = carbonHome+File.separator+"repository"+File.separator+"conf"+File.separator+"krb5.conf";
-        String hadoopConf = carbonHome + File.separator + "repository" + File.separator +
-                "conf" + File.separator + "etc" + File.separator + "hadoop";
-        String hadoopCoreSiteConf = carbonHome + File.separator + "repository" + File.separator +
-                "conf" + File.separator + "etc" + File.separator + "hadoop" + File.separator + CORE_SITE_XML;
-        String hdfsCoreSiteConf = carbonHome + File.separator + "repository" + File.separator +
-                "conf" + File.separator + "etc" + File.separator + "hadoop" + File.separator + HDFS_SITE_XML;
-        String hadoopPolicyConf = carbonHome + File.separator + "repository" + File.separator +
-                "conf" + File.separator + "etc" + File.separator + "hadoop" + File.separator + HADOOP_POLICY_XML;
-        System.setProperty("java.security.krb5.conf", krb5ConfFileLocation);
-        conf.addResource(new Path(hadoopCoreSiteConf));
-        conf.addResource(new Path(hdfsCoreSiteConf));
-        conf.addResource(new Path(hadoopPolicyConf));
-        String alterdJobNameNodeKeyTabPath = hadoopConf + File.separator + conf.get("dfs.namenode.keytab.file");
-        conf.set("dfs.namenode.keytab.file", alterdJobNameNodeKeyTabPath);
-
-        try {
-        		new NameNode(conf);
-        } catch (Throwable e) {
-            log.error("NameNode initialization error." + e);
-        }
-    }
-
+	public HDFSNameNode() {
+		System.setProperty("java.security.krb5.conf", krb5ConfFileLocation);
+		conf = new HdfsConfiguration(false);
+		conf.addResource(new Path(hadoopCoreSiteConf));
+		conf.addResource(new Path(hdfsCoreSiteConf));
+		conf.addResource(new Path(hadoopPolicyConf));
+	}
     /**
-     * Starts the Hadoop Name Node daemon
+     * Starts the Hadoop Name Node 
      */
-    public void start() {
-        thread = new Thread(new Runnable() {
-            public void run() {
-                if (log.isDebugEnabled()) {
-                    log.debug("Activating the HDFS Name Node");
-                }
-                new HDFSNameNode();
-            }
-        }, "HDFSNameNode");
-        long nameNodeStartupDelay = 0;
-        nameNodeStartupDelay = Long.parseLong(System.getProperty(HDFS_NAMENODE_STARTUP_DELAY));
-        if (nameNodeStartupDelay > 0) {
-            try {
-                if (log.isDebugEnabled()) {
-                    log.debug("Waiting for other services - datanode,mapred");
-                    log.debug("Name node starup delay is " + nameNodeStartupDelay);
-                }
-                Thread.sleep(nameNodeStartupDelay);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        thread.start();
-    }
+	public void start() throws Throwable {
+		String startOps = System.getProperty("hdfs.nn.stopts", "regular"); // get namenode startup options
+		startOps = "-" + startOps;
+		String args[] = { startOps };   // create start options argument list array
+		NameNode.createNameNode(args, conf); // create name node
 
-    /**
-     * Stops the Hadoop Name Node daemon
-     */
-    public void shutdown() {
-        if (log.isDebugEnabled()) {
-            log.debug("Deactivating the HDFS Name Node");
-        }
-        try {
-            thread.join();
-        } catch (InterruptedException ignored) {
-        }
-        log.info("HDFS name node shutdown");
-    }
+	}
+
+   
 }

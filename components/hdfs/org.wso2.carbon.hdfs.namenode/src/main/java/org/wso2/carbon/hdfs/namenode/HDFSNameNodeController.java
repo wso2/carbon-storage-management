@@ -15,19 +15,20 @@ public class HDFSNameNodeController {
 
     private static Log log = LogFactory.getLog(HDFSNameNodeController.class);
     private RealmService realmService;
-
-    protected void activate(ComponentContext componentContext) {
+    private String FALSE ="false";
+    protected void activate(ComponentContext componentContext) throws Throwable {
     	String enableHDFSstartup = System.getProperty("enable.hdfs.startup");
     	
         if (log.isDebugEnabled()) {
             log.debug("HDFS Name Node bunddle is activated.");
         }
-        if (("false".equals(enableHDFSstartup))) {
+        if ((FALSE.equals(enableHDFSstartup))) {
             log.debug("HDFS name node is disabled and not started in the service activator");
             return;
         }
         HDFSNameNodeComponentManager.getInstance().init(realmService);
-        new HDFSNameNode();
+        HDFSNameNode nameNode = new HDFSNameNode();
+        nameNode.start(); // start name node
     }
 
     protected void deactivate(ComponentContext componentContext) {

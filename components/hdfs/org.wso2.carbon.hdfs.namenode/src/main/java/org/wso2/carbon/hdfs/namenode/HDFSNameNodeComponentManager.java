@@ -30,12 +30,10 @@ import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
  */
 public class HDFSNameNodeComponentManager {
     private static Log log = LogFactory.getLog(HDFSNameNodeComponentManager.class);
-
     private static HDFSNameNodeComponentManager componentManager = null;
     private boolean initialized = false;
     private RealmService realmService;
-    //private AuthenticationService authenticationService;
-
+    
     public static HDFSNameNodeComponentManager getInstance() {
         if (componentManager == null) {
             synchronized (HDFSNameNodeComponentManager.class) {
@@ -48,14 +46,10 @@ public class HDFSNameNodeComponentManager {
     private HDFSNameNodeComponentManager() {
     }
 
-    //public void init(RealmService realmService, AuthenticationService authenticationService) {
     public void init(RealmService realmService) {
 
         this.realmService = realmService;
-        //this.authenticationService = authenticationService;
-        //if (realmService != null && authenticationService != null) {
             this.initialized = true;
-       // }
     }
 
 
