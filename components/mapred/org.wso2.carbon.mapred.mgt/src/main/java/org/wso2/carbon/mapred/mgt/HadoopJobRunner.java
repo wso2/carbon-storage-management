@@ -104,7 +104,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 			try {
 				hadoopJobThread.wait();
 			} catch (InterruptedException e) {
-				log.error(e.getMessage());
+				log.error(e.getMessage(), e);
 			}
 		}
 		CarbonJobReporter reporter = hadoopJobThread.getCarbonJobReporter();
@@ -113,7 +113,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 			try {
 				reporter.wait();
 			} catch (InterruptedException e) {
-				log.error(e.getMessage());
+				log.error(e.getMessage(), e);
 			}
 		}
 		return threadUuid.toString();
@@ -142,7 +142,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 			jsonObj.put("JobCompleted", reporter.isJobComplete());
 			jsonObj.put("JobSuccessful", reporter.isJobSuccessful());
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error(e.getMessage(), e);
 			throw new MapredManagerException("Error while getting job status", e);
 		}
 		return jsonObj.toString();
@@ -178,7 +178,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 				registry.put(REG_JOB_STATS_PATH+jsonObj.getString("JobUser"), resource);
 			}
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error(e.getMessage(), e);
 			throw new MapredManagerException("Error while attaching final report", e);
 		}
 	}
@@ -210,7 +210,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 			}
 			
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error(e.getMessage(), e);
 			throw new MapredManagerException("Error while getting final report list", e);
 		}
 		return null;
@@ -230,7 +230,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 			}
 			
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error(e.getMessage(), e);
 			throw new MapredManagerException("Error while getting final job report", e);
 		}
 		return null;
@@ -253,7 +253,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 		try {
 			resource = reg.get(REG_JAR_PATH+getCurrentUser()+File.separator+jarPath);
 		} catch (RegistryException e) {
-			log.error(e.getMessage());
+			log.error(e.getMessage(), e);
 			return;
 		}
 		try {
@@ -271,7 +271,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 			resIS.close();
 			fos.close();
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error(e.getMessage(), e);
 			throw new MapredManagerException("Error while getting jar", e);
 		}
 	}
@@ -288,7 +288,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 			resource.setContentStream(dataHandler.getInputStream());
 			String out = reg.put(REG_JAR_PATH+getCurrentUser()+ File.separator+friendlyName, resource);
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error(e.getMessage(), e);
 			throw new MapredManagerException("Error while putting jar to the registry", e);
 		}
 	}
@@ -314,7 +314,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 	        }
 	        result.discard();
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error(e.getMessage(), e);
 			throw new MapredManagerException("Error while getting jar list", e);
 		}
 		return paths;

@@ -119,15 +119,15 @@ public class HadoopJobRunnerThread extends Thread {
 			carbonMapRedJob.run(newArgs);
 			HadoopCarbonSecurity.clean();
 		} catch (IOException io) {
-			log.error("Error opening job jar: " + jarName);
+			log.error("Error opening job jar: " + jarName, io);
 		} catch (ClassNotFoundException noClass) {
-			log.error("Cannot find the class"+ className +" in "+jarName);
+			log.error("Cannot find the class"+ className +" in "+jarName, noClass);
 		} catch (IllegalAccessException illegalAccess) {
-			log.error("Unable to access main method in "+className+" in "+jarName);
+			log.error("Unable to access main method in "+className+" in "+jarName, illegalAccess);
 		} catch (IllegalArgumentException illegalArg) {
-			log.error(illegalArg);
+			log.error(illegalArg.getMessage(), instantiation);
 		} catch (InstantiationException instantiation) {
-			log.error(instantiation);
+			log.error(instantiation.getMessage(). instantiation);
 		}
 	}
 

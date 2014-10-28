@@ -29,12 +29,14 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.wso2.carbon.mapred.mgt.api.*;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.lang.Exception;
 import java.util.StringTokenizer;
 
 public class WordCount extends CarbonMapRedJob {
+	private final Logger log = Logger.getLogger(WordCount.class);
 	public static class TokenizerMapper 
 	extends Mapper<Object, Text, Text, IntWritable>{
 
@@ -85,7 +87,7 @@ public class WordCount extends CarbonMapRedJob {
 			FileOutputFormat.setOutputPath(job, new Path(args[1]));
 			job.waitForCompletion(true);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return;
 		}
 	}
