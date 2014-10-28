@@ -18,17 +18,9 @@
  */
 package org.wso2.carbon.hadoop.security;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.security.Krb5TicketCacheFinder;
-
-
-public class Krb5TicketCacheFinderImpl implements Krb5TicketCacheFinder {
-    private Log log = LogFactory.getLog(Krb5TicketCacheFinderImpl.class);
-    private Configuration conf;
-	//@Override
-	public String getTenantTicketCache() {
-		return HadoopCarbonMessageContext.get().getKrb5TicketCache();
-	}
+public class HadoopSecurityConstants {
+	public static final String HADOOP_TRUSTSTORE_PROPERTY = "hadoop.security.truststore";
+	public static final String HADOOP_USERNAME_PROPERTY = "hadoop.security.admin.username";
+	public static final String HADOOP_PASSWORD_PROPERTY = "hadoop.security.admin.password";
+	public static final String HADOOP_SERVICE_URL_PROPERTY = "hadoop.security.group.mapping.service.url";
 }
