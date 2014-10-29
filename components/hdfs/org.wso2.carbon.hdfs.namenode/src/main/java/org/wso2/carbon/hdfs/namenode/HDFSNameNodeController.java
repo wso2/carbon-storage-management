@@ -15,7 +15,7 @@ public class HDFSNameNodeController {
 
     private static Log log = LogFactory.getLog(HDFSNameNodeController.class);
     private RealmService realmService;
-    private String FALSE ="false";
+    private String FALSE = "false";
     protected void activate(ComponentContext componentContext) throws Throwable {
     	String enableHDFSstartup = System.getProperty("enable.hdfs.startup");
     	
