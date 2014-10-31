@@ -88,6 +88,28 @@
             <artifactId>org.wso2.carbon.cassandra.datareader</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>snappy-java.wso2</groupId>
+            <artifactId>snappy-java</artifactId>
+            <version>${snappy-java.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>metrics-core.wso2</groupId>
+            <artifactId>metrics-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -122,6 +144,10 @@
                                 <bundleDef>io.netty:netty</bundleDef>
                                 <bundleDef>org.slf4j:slf4j-api</bundleDef>
                                 <bundleDef>com.google.guava:guava</bundleDef>
+                                <bundleDef>snappy-java.wso2:snappy-java</bundleDef>
+                                <bundleDef>metrics-core.wso2:metrics-core</bundleDef>
+                                <bundleDef>org.codehaus.jackson:jackson-core-asl</bundleDef>
+                                <bundleDef>org.codehaus.jackson:jackson-mapper-asl</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
