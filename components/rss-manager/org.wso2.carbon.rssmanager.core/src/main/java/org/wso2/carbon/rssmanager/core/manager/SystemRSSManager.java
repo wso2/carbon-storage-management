@@ -147,12 +147,7 @@ public abstract class SystemRSSManager extends AbstractRSSManager implements RSS
 		DatabaseUser[] users = new DatabaseUser[0];
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
-			rssInstanceName = getDatabaseDAO().resolveRSSInstanceNameByDatabase(getEnvironmentName(),
-			                                                                    databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM,
-			                                                                    tenantId);
-			RSSInstance rssInstance = this.getEnvironment().getRSSInstance(rssInstanceName);
 			DatabaseUser[] availableUsers = getUserDatabaseEntryDAO().getAvailableDatabaseUsers(getEnvironmentName(),
-			                                                                                    rssInstance.getName(), databaseName,
 			                                                                                    tenantId, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
 			return availableUsers;
 		} catch (Exception e) {
