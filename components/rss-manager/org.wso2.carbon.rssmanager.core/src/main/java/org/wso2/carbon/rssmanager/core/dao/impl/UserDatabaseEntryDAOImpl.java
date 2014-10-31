@@ -187,7 +187,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 	public UserDatabaseEntry getUserDatabaseEntry(int databaseId, int userId) throws RSSDAOException {
 		Connection conn = null;
 		PreparedStatement entryIdStatement = null;
-		PreparedStatement entryStatement;
+		PreparedStatement entryStatement = null;
 		ResultSet resultSet = null;
 		UserDatabaseEntry databaseEntry = null;
 		int userEntryId = 0;
@@ -241,6 +241,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 			throw new RSSDAOException(msg, e);
 		} finally {
 			close(resultSet, RSSManagerConstants.SELECT_DATABASE_USER_ENTRY);
+			close(entryStatement, RSSManagerConstants.SELECT_DATABASE_USER_ENTRY);
 			close(entryIdStatement, RSSManagerConstants.SELECT_DATABASE_USER_ENTRY);
 			close(conn, RSSManagerConstants.SELECT_DATABASE_USER_ENTRY);
 		}

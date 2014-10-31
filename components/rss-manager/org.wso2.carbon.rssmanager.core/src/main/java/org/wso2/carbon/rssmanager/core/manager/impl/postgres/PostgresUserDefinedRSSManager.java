@@ -192,7 +192,8 @@ public class PostgresUserDefinedRSSManager extends UserDefinedRSSManager {
 			             "' on RSS instances : " + e.getMessage();
 			handleException(msg, e);
 		} finally {
-			RSSManagerUtil.cleanupResources(null, null, conn);
+			RSSManagerUtil.cleanupResources(null, dropOwnedStmt, null);
+			RSSManagerUtil.cleanupResources(null, dropUserStmt, conn);
 		}
 	}
 
