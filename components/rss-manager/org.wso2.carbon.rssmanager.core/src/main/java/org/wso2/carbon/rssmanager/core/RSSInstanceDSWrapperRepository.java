@@ -27,39 +27,39 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class RSSInstanceDSWrapperRepository {
 
-    private Map<String, RSSInstanceDSWrapper> dsWrappers =
-            new ConcurrentHashMap<String, RSSInstanceDSWrapper>();
+	private Map<String, RSSInstanceDSWrapper> dsWrappers =
+			new ConcurrentHashMap<String, RSSInstanceDSWrapper>();
 
-    public RSSInstanceDSWrapperRepository(RSSInstance[] rssInstances) {
-        this.init(rssInstances);
-    }
+	public RSSInstanceDSWrapperRepository(RSSInstance[] rssInstances) {
+		this.init(rssInstances);
+	}
 
-    public RSSInstanceDSWrapper getRSSInstanceDSWrapper(String name) {
-        return getDSWrappers().get(name);
-    }
+	public RSSInstanceDSWrapper getRSSInstanceDSWrapper(String name) {
+		return getDSWrappers().get(name);
+	}
 
-    public void addRSSInstanceDSWrapper(RSSInstance rssInstance) {
-        getDSWrappers().put(rssInstance.getName(), new RSSInstanceDSWrapper(rssInstance));
-    }
+	public void addRSSInstanceDSWrapper(RSSInstance rssInstance) {
+		getDSWrappers().put(rssInstance.getName(), new RSSInstanceDSWrapper(rssInstance));
+	}
 
-    public void removeRSSInstanceDSWrapper(String name) {
-        getDSWrappers().get(name).closeDataSource();
-        getDSWrappers().get(name).closeAllDBDataSources();
-        getDSWrappers().remove(name);
-    }
+	public void removeRSSInstanceDSWrapper(String name) {
+		getDSWrappers().get(name).closeDataSource();
+		getDSWrappers().get(name).closeAllDBDataSources();
+		getDSWrappers().remove(name);
+	}
 
-    private void init(RSSInstance[] rssInstances) {
-        for (RSSInstance rssInstance : rssInstances) {
-            addRSSInstanceDSWrapper(rssInstance);
-        }
-    }
+	private void init(RSSInstance[] rssInstances) {
+		for (RSSInstance rssInstance : rssInstances) {
+			addRSSInstanceDSWrapper(rssInstance);
+		}
+	}
 
-    public RSSInstanceDSWrapper[] getAllRSSInstanceDSWrappers() {
-        return getDSWrappers().values().toArray(new RSSInstanceDSWrapper[getDSWrappers().size()]);
-    }
+	public RSSInstanceDSWrapper[] getAllRSSInstanceDSWrappers() {
+		return getDSWrappers().values().toArray(new RSSInstanceDSWrapper[getDSWrappers().size()]);
+	}
 
-    private Map<String, RSSInstanceDSWrapper> getDSWrappers() {
-        return dsWrappers;
-    }
+	private Map<String, RSSInstanceDSWrapper> getDSWrappers() {
+		return dsWrappers;
+	}
 
 }

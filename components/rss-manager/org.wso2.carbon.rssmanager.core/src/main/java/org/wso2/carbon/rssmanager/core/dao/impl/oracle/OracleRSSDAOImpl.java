@@ -22,16 +22,17 @@ package org.wso2.carbon.rssmanager.core.dao.impl.oracle;
 import org.wso2.carbon.rssmanager.core.dao.UserPrivilegesDAO;
 import org.wso2.carbon.rssmanager.core.dao.impl.AbstractRSSDAO;
 import org.wso2.carbon.rssmanager.core.dao.impl.mysql.MySQLUserPrivilegesDAOImpl;
-import org.wso2.carbon.rssmanager.core.dao.util.EntityManager;
 
+/**
+ * DAO implementation of ORACLE for user privilege DAO in RSSDAO interface.
+ */
 public class OracleRSSDAOImpl extends AbstractRSSDAO {
 
-    public OracleRSSDAOImpl(EntityManager entityManager) {
-        super(entityManager);
-    }
-
-    @Override
-    public UserPrivilegesDAO getUserPrivilegesDAO() {
-        return new MySQLUserPrivilegesDAOImpl(this.getEntityManager());
-    }
+	/**
+	 * @see org.wso2.carbon.rssmanager.core.dao.impl.AbstractRSSDAO#getUserPrivilegesDAO()
+	 */
+	public UserPrivilegesDAO getUserPrivilegesDAO() {
+		//TODO changed to return ORACLE privilege DAO implementation when rss manager restructure to hold separate privilege template DAO for ORACLE
+		return new MySQLUserPrivilegesDAOImpl();
+	}
 }

@@ -23,6 +23,6 @@ import javax.xml.bind.Marshaller;
 
 public interface DSXMLConfig {
 
-    public Marshaller getDSMarshaller();
+	public Marshaller getDSMarshaller();
 
 }

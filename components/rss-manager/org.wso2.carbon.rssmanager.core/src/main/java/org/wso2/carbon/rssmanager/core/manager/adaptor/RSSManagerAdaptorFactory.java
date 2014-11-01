@@ -22,11 +22,21 @@ package org.wso2.carbon.rssmanager.core.manager.adaptor;
 import org.wso2.carbon.rssmanager.core.config.RSSManagementRepository;
 import org.wso2.carbon.rssmanager.core.environment.Environment;
 
+/**
+ * RSS Manager adaptor factory class
+ */
 public class RSSManagerAdaptorFactory {
 
-    public static RSSManagerAdaptor getRSSManagerAdaptor(String type,Environment environment,
-                                                         RSSManagementRepository repository) {
-        return new RSSManagerAdaptorImpl(environment, type, repository);
-    }
+	/**
+	 * Get rss manager adaptor implementation for environment
+	 * @param type type of the rss instance
+	 * @param environment the environment
+	 * @param repository rss management repository
+	 * @return RSSManagerAdaptor
+	 */
+	public static RSSManagerAdaptor getRSSManagerAdaptor(String type, Environment environment,
+	                                                     RSSManagementRepository repository) {
+		return new RSSManagerAdaptorImpl(environment, type, repository);
+	}
 
 }

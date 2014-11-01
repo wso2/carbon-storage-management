@@ -21,83 +21,87 @@ package org.wso2.carbon.rssmanager.core.dto;
 
 import java.io.Serializable;
 
-public abstract class DatabasePrivilegeSetInfo  implements Serializable{
+/**
+ * Abstract class for represent database privilege set info
+ */
+public abstract class DatabasePrivilegeSetInfo implements Serializable {
 
- 
-    private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = 1L;
 	private String selectPriv = "N";
-    private String insertPriv = "N";
-    private String updatePriv = "N";
-    private String deletePriv = "N";
-    private String createPriv = "N";
-    private String dropPriv = "N";
-    private String indexPriv = "N";
-    private String alterPriv = "N";
+	private String insertPriv = "N";
+	private String updatePriv = "N";
+	private String deletePriv = "N";
+	private String createPriv = "N";
+	private String dropPriv = "N";
+	private String indexPriv = "N";
+	private String alterPriv = "N";
 
-    public DatabasePrivilegeSetInfo() {}
+	public DatabasePrivilegeSetInfo() {
+	}
 
-    public String getSelectPriv() {
-        return selectPriv;
-    }
+	public String getSelectPriv() {
+		return selectPriv;
+	}
 
-    public void setSelectPriv(String selectPriv) {
-        this.selectPriv = selectPriv;
-    }
+	public void setSelectPriv(String selectPriv) {
+		this.selectPriv = selectPriv;
+	}
 
-    public String getInsertPriv() {
-        return insertPriv;
-    }
+	public String getInsertPriv() {
+		return insertPriv;
+	}
 
-    public void setInsertPriv(String insertPriv) {
-        this.insertPriv = insertPriv;
-    }
+	public void setInsertPriv(String insertPriv) {
+		this.insertPriv = insertPriv;
+	}
 
-    public String getUpdatePriv() {
-        return updatePriv;
-    }
+	public String getUpdatePriv() {
+		return updatePriv;
+	}
 
-    public void setUpdatePriv(String updatePriv) {
-        this.updatePriv = updatePriv;
-    }
+	public void setUpdatePriv(String updatePriv) {
+		this.updatePriv = updatePriv;
+	}
 
-    public String getDeletePriv() {
-        return deletePriv;
-    }
+	public String getDeletePriv() {
+		return deletePriv;
+	}
 
-    public void setDeletePriv(String deletePriv) {
-        this.deletePriv = deletePriv;
-    }
+	public void setDeletePriv(String deletePriv) {
+		this.deletePriv = deletePriv;
+	}
 
-    public String getCreatePriv() {
-        return createPriv;
-    }
+	public String getCreatePriv() {
+		return createPriv;
+	}
 
-    public void setCreatePriv(String createPriv) {
-        this.createPriv = createPriv;
-    }
+	public void setCreatePriv(String createPriv) {
+		this.createPriv = createPriv;
+	}
 
-    public String getDropPriv() {
-        return dropPriv;
-    }
+	public String getDropPriv() {
+		return dropPriv;
+	}
 
-    public void setDropPriv(String dropPriv) {
-        this.dropPriv = dropPriv;
-    }
+	public void setDropPriv(String dropPriv) {
+		this.dropPriv = dropPriv;
+	}
 
-    public String getIndexPriv() {
-        return indexPriv;
-    }
+	public String getIndexPriv() {
+		return indexPriv;
+	}
 
-    public void setIndexPriv(String indexPriv) {
-        this.indexPriv = indexPriv;
-    }
+	public void setIndexPriv(String indexPriv) {
+		this.indexPriv = indexPriv;
+	}
 
-    public String getAlterPriv() {
-        return alterPriv;
-    }
+	public String getAlterPriv() {
+		return alterPriv;
+	}
 
-    public void setAlterPriv(String alterPriv) {
-        this.alterPriv = alterPriv;
-    }
+	public void setAlterPriv(String alterPriv) {
+		this.alterPriv = alterPriv;
+	}
 
 }

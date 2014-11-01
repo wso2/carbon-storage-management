@@ -23,12 +23,28 @@ package org.wso2.carbon.rssmanager.core.dao;
  */
 public interface RSSDAO {
 
-    DatabaseDAO getDatabaseDAO();
+	/**
+	 * Get DatabaseDAO implementation
+	 * @return DatabaseDAO implementation
+	 */
+	DatabaseDAO getDatabaseDAO();
 
-    DatabaseUserDAO getDatabaseUserDAO();
+	/**
+	 * Get DatabaseUserDAO implementation
+	 * @return DatabaseUserDAO implementation
+	 */
+	DatabaseUserDAO getDatabaseUserDAO();
 
-    UserDatabaseEntryDAO getUserDatabaseEntryDAO();
+	/**
+	 * Get UserDatabaseEntryDAO implementation
+	 * @return UserDatabaseEntryDAO implementation
+	 */
+	UserDatabaseEntryDAO getUserDatabaseEntryDAO();
 
-    UserPrivilegesDAO getUserPrivilegesDAO();
+	/**
+	 * Get UserPrivilegesDAO implementation
+	 * @return UserPrivilegesDAO implementation
+	 */
+	UserPrivilegesDAO getUserPrivilegesDAO();
 
 }

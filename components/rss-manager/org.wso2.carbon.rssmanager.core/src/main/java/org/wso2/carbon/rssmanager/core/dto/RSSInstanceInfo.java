@@ -39,12 +39,12 @@ public class RSSInstanceInfo implements Serializable {
 	private String serverURL;
 
 	private String environmentName;
-	
+
 	private String username;
-	
+
 	private String password;
 
-    private String driverClass;
+	private String driverClass;
 
 	public RSSInstanceInfo() {
 	}
@@ -113,11 +113,11 @@ public class RSSInstanceInfo implements Serializable {
 		this.password = password;
 	}
 
-    public String getDriverClass() {
-        return driverClass;
-    }
+	public String getDriverClass() {
+		return driverClass;
+	}
 
-    public void setDriverClass(String driverClass) {
-        this.driverClass = driverClass;
-    }
+	public void setDriverClass(String driverClass) {
+		this.driverClass = driverClass;
+	}
 }

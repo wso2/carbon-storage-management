@@ -1,37 +1,36 @@
-
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
-	version="2.0">
-	<persistence-unit name="sample" transaction-type="JTA">
-		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-		<jta-data-source>MetadataRepoDS</jta-data-source>
-		<class>org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate</class>
-		<class>org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry</class>
-		<class>org.wso2.carbon.rssmanager.core.dto.common.UserDatabasePrivilege</class>
-		<class>org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplateEntry</class>
-		<class>org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser</class>
-		<class>org.wso2.carbon.rssmanager.core.dto.restricted.Database</class>
-		<class>org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance</class>
-		<class>org.wso2.carbon.rssmanager.core.environment.Environment</class>
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0">
+    <persistence-unit name="sample" transaction-type="JTA">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <jta-data-source>MetadataRepoDS</jta-data-source>
+        <class>org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate</class>
+        <class>org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry</class>
+        <class>org.wso2.carbon.rssmanager.core.dto.common.UserDatabasePrivilege</class>
+        <class>org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplateEntry</class>
+        <class>org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser</class>
+        <class>org.wso2.carbon.rssmanager.core.dto.restricted.Database</class>
+        <class>org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance</class>
+        <class>org.wso2.carbon.rssmanager.core.environment.Environment</class>
 
-		<!-- <class>org.jpa.generic.persistence.Merchant</class> -->
-		<!-- <properties>
-			<property name="openjpa.jdbc.DBDictionary" value="batchLimit=25" />
-			<property name="openjpa.jdbc.UpdateManager" value="operation-order" />
-			<property name="openjpa.Log" value="SQL=TRACE" />
-			<property name="openjpa.QueryCompilationCache" value="all" />
-			<property name="openjpa.OrphanedKeyAction" value="exception" />
-			<property name="openjpa.InverseManager" value="true(Action=exception)" />
-			<property name="openjpa.FlushBeforeQueries" value="false" />
-			<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(Sequences=false)" />
-			<property name="openjpa.DynamicEnhancementAgent" value="false" />
-			<property name="openjpa.RuntimeUnenhancedClasses" value="unsupported" />
-			<property name="openjpa.AutoDetach" value="close,commit" />
-			<property name="openjpa.ConnectionRetainMode" value="transaction" />
-			<property name="openjpa.ConnectionFactoryMode" value="managed" />
-			<property name="openjpa.TransactionMode" value="managed" />
+        <!-- <class>org.jpa.generic.persistence.Merchant</class> -->
+        <!-- <properties>
+            <property name="openjpa.jdbc.DBDictionary" value="batchLimit=25" />
+            <property name="openjpa.jdbc.UpdateManager" value="operation-order" />
+            <property name="openjpa.Log" value="SQL=TRACE" />
+            <property name="openjpa.QueryCompilationCache" value="all" />
+            <property name="openjpa.OrphanedKeyAction" value="exception" />
+            <property name="openjpa.InverseManager" value="true(Action=exception)" />
+            <property name="openjpa.FlushBeforeQueries" value="false" />
+            <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(Sequences=false)" />
+            <property name="openjpa.DynamicEnhancementAgent" value="false" />
+            <property name="openjpa.RuntimeUnenhancedClasses" value="unsupported" />
+            <property name="openjpa.AutoDetach" value="close,commit" />
+            <property name="openjpa.ConnectionRetainMode" value="transaction" />
+            <property name="openjpa.ConnectionFactoryMode" value="managed" />
+            <property name="openjpa.TransactionMode" value="managed" />
 
-		</properties> -->
-	</persistence-unit>
+        </properties> -->
+    </persistence-unit>
 </persistence> 

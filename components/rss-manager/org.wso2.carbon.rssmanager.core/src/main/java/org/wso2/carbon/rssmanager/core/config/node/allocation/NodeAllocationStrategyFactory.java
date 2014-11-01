@@ -23,26 +23,36 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
 
+/**
+ * Factory class to get the configured node allocation strategy
+ */
 public class NodeAllocationStrategyFactory {
 
-    public enum NodeAllocationStrategyTypes {
-        ROUND_ROBIN
-    }
+	public enum NodeAllocationStrategyTypes {
+		ROUND_ROBIN
+	}
 
-    private static final Log log = LogFactory.getLog(NodeAllocationStrategyFactory.class);
+	private static final Log log = LogFactory.getLog(NodeAllocationStrategyFactory.class);
 
-    public static NodeAllocationStrategy getNodeAllocationStrategy(
-            NodeAllocationStrategyTypes type, RSSInstance[] servers) {
-        switch (type) {
-            case ROUND_ROBIN:
-                return new RoundRobinNodeAllocationStrategy(servers);
-            default:
-                if (log.isDebugEnabled()) {
-                    log.debug("Unsupported node allocation strategy type defined. Falling back " +
-                            "to 'Round Robin' node allocation strategy, which is the default");
-                }
-                return new RoundRobinNodeAllocationStrategy(servers);
-        }
-    }
+	/**
+	 * Returns node allocation strategy. If type is not specified, this will return
+	 * Round robin node strategy as default
+	 * @param type node allocation strategy type
+	 * @param servers system rss instances of the environment
+	 * @return NodeAllocationStrategy
+	 */
+	public static NodeAllocationStrategy getNodeAllocationStrategy(
+			NodeAllocationStrategyTypes type, RSSInstance[] servers) {
+		switch (type) {
+			case ROUND_ROBIN:
+				return new RoundRobinNodeAllocationStrategy(servers);
+			default:
+				if (log.isDebugEnabled()) {
+					log.debug("Unsupported node allocation strategy type defined. Falling back " +
+					          "to 'Round Robin' node allocation strategy, which is the default");
+				}
+				return new RoundRobinNodeAllocationStrategy(servers);
+		}
+	}
 
 }

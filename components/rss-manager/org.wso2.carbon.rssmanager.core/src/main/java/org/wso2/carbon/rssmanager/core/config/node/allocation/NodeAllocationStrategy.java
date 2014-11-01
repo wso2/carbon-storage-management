@@ -22,8 +22,17 @@ package org.wso2.carbon.rssmanager.core.config.node.allocation;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 
+/**
+ * Node allocation strategy interface
+ */
 public interface NodeAllocationStrategy {
 
-    RSSInstance getNextAllocatedNode() throws RSSManagerException;
+	/**
+	 * Returns next rss instance instance to be used according to the underline node allocation
+	 * strategy
+	 * @return RSSInstance the rss next instance object
+	 * @throws RSSManagerException if no rss instances present
+	 */
+	RSSInstance getNextAllocatedNode() throws RSSManagerException;
 
 }

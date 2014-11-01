@@ -24,18 +24,20 @@ import org.wso2.carbon.rssmanager.core.config.datasource.DataSourceConfig;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement (name = "ManagementRepository")
+/**
+ * Class for holding management repository data
+ */
+@XmlRootElement(name = "ManagementRepository")
 public class RSSManagementRepository {
 
-    private DataSourceConfig dataSourceConfig;
+	private DataSourceConfig dataSourceConfig;
 
-    @XmlElement(name = "DataSourceConfiguration", nillable = false)
-    public DataSourceConfig getDataSourceConfig() {
-        return dataSourceConfig;
-    }
+	@XmlElement(name = "DataSourceConfiguration", nillable = false)
+	public DataSourceConfig getDataSourceConfig() {
+		return dataSourceConfig;
+	}
 
-    public void setDataSourceConfig(DataSourceConfig dataSourceConfig) {
-        this.dataSourceConfig = dataSourceConfig;
-    }
-
+	public void setDataSourceConfig(DataSourceConfig dataSourceConfig) {
+		this.dataSourceConfig = dataSourceConfig;
+	}
 }

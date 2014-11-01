@@ -19,137 +19,102 @@
 
 package org.wso2.carbon.rssmanager.core.dto.common;
 
-import org.wso2.carbon.rssmanager.core.jpa.persistence.entity.AbstractEntity;
+/**
+ * Abstract class for hold generic privileges
+ */
+public abstract class DatabasePrivilegeSet {
 
-import javax.persistence.*;
+	private Integer id;
+	private UserDatabaseEntry userDatabaseEntry;
+	private String selectPriv = "N";
+	private String insertPriv = "N";
+	private String updatePriv = "N";
+	private String deletePriv = "N";
+	private String createPriv = "N";
+	private String dropPriv = "N";
+	private String indexPriv = "N";
+	private String alterPriv = "N";
 
-@MappedSuperclass
-public abstract class DatabasePrivilegeSet extends AbstractEntity<Integer, DatabasePrivilegeSet> {
+	public DatabasePrivilegeSet() {
+	}
 
-    private static final long serialVersionUID = -3525295617675141739L;
+	public String getSelectPriv() {
+		return selectPriv;
+	}
 
-    @Version
-    @Column(name = "VERSION")
-    private Long version;
+	public void setSelectPriv(String selectPriv) {
+		this.selectPriv = selectPriv;
+	}
 
-    @Id
-    @TableGenerator(name = "USER_DATABASE_PRIVILEGE_TABLE_GEN", table = "USER_DATABASE_PRIVILEGE_SEQUENCE_TABLE", pkColumnName = "SEQ_NAME",
-            valueColumnName = "SEQ_COUNT", pkColumnValue = "EMP_SEQ")
-    @Column(name = "ID", columnDefinition = "INTEGER")
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "USER_DATABASE_PRIVILEGE_TABLE_GEN")
-    private Integer id;
+	public String getInsertPriv() {
+		return insertPriv;
+	}
 
-    @ManyToOne(cascade = {CascadeType.DETACH}, fetch = FetchType.EAGER)
-    @JoinColumn(name = "USER_DATABASE_ENTRY_ID", nullable = false)
-    private UserDatabaseEntry userDatabaseEntry;
+	public void setInsertPriv(String insertPriv) {
+		this.insertPriv = insertPriv;
+	}
 
-    @Column(name = "SELECT_PRIV")
-    private String selectPriv = "N";
-    @Column(name = "INSERT_PRIV")
-    private String insertPriv = "N";
-    @Column(name = "UPDATE_PRIV")
-    private String updatePriv = "N";
-    @Column(name = "DELETE_PRIV")
-    private String deletePriv = "N";
-    @Column(name = "CREATE_PRIV")
-    private String createPriv = "N";
-    @Column(name = "DROP_PRIV")
-    private String dropPriv = "N";
-    @Column(name = "INDEX_PRIV")
-    private String indexPriv = "N";
-    @Column(name = "ALTER_PRIV")
-    private String alterPriv = "N";
+	public String getUpdatePriv() {
+		return updatePriv;
+	}
 
-    public DatabasePrivilegeSet() {}
+	public void setUpdatePriv(String updatePriv) {
+		this.updatePriv = updatePriv;
+	}
 
-    public String getSelectPriv() {
-        return selectPriv;
-    }
+	public String getDeletePriv() {
+		return deletePriv;
+	}
 
-    public void setSelectPriv(String selectPriv) {
-        this.selectPriv = selectPriv;
-    }
+	public void setDeletePriv(String deletePriv) {
+		this.deletePriv = deletePriv;
+	}
 
-    public String getInsertPriv() {
-        return insertPriv;
-    }
+	public String getCreatePriv() {
+		return createPriv;
+	}
 
-    public void setInsertPriv(String insertPriv) {
-        this.insertPriv = insertPriv;
-    }
+	public void setCreatePriv(String createPriv) {
+		this.createPriv = createPriv;
+	}
 
-    public String getUpdatePriv() {
-        return updatePriv;
-    }
+	public String getDropPriv() {
+		return dropPriv;
+	}
 
-    public void setUpdatePriv(String updatePriv) {
-        this.updatePriv = updatePriv;
-    }
+	public void setDropPriv(String dropPriv) {
+		this.dropPriv = dropPriv;
+	}
 
-    public String getDeletePriv() {
-        return deletePriv;
-    }
+	public String getIndexPriv() {
+		return indexPriv;
+	}
 
-    public void setDeletePriv(String deletePriv) {
-        this.deletePriv = deletePriv;
-    }
+	public void setIndexPriv(String indexPriv) {
+		this.indexPriv = indexPriv;
+	}
 
-    public String getCreatePriv() {
-        return createPriv;
-    }
+	public String getAlterPriv() {
+		return alterPriv;
+	}
 
-    public void setCreatePriv(String createPriv) {
-        this.createPriv = createPriv;
-    }
+	public void setAlterPriv(String alterPriv) {
+		this.alterPriv = alterPriv;
+	}
 
-    public String getDropPriv() {
-        return dropPriv;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setDropPriv(String dropPriv) {
-        this.dropPriv = dropPriv;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public String getIndexPriv() {
-        return indexPriv;
-    }
+	public UserDatabaseEntry getUserDatabaseEntry() {
+		return userDatabaseEntry;
+	}
 
-    public void setIndexPriv(String indexPriv) {
-        this.indexPriv = indexPriv;
-    }
-
-    public String getAlterPriv() {
-        return alterPriv;
-    }
-
-    public void setAlterPriv(String alterPriv) {
-        this.alterPriv = alterPriv;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public UserDatabaseEntry getUserDatabaseEntry() {
-        return userDatabaseEntry;
-    }
-
-    public void setUserDatabaseEntry(UserDatabaseEntry userDatabaseEntry) {
-        this.userDatabaseEntry = userDatabaseEntry;
-    }
-
-
-    
+	public void setUserDatabaseEntry(UserDatabaseEntry userDatabaseEntry) {
+		this.userDatabaseEntry = userDatabaseEntry;
+	}
 }

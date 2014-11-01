@@ -16,47 +16,44 @@
  *  under the License.
  *
  */
-
 package org.wso2.carbon.rssmanager.core.environment.dao.impl;
 
-import org.wso2.carbon.rssmanager.core.dao.util.EntityManager;
 import org.wso2.carbon.rssmanager.core.environment.DatabasePrivilegeTemplateEntryDAO;
 import org.wso2.carbon.rssmanager.core.environment.dao.DatabasePrivilegeTemplateDAO;
 import org.wso2.carbon.rssmanager.core.environment.dao.EnvironmentDAO;
 import org.wso2.carbon.rssmanager.core.environment.dao.EnvironmentManagementDAO;
 import org.wso2.carbon.rssmanager.core.environment.dao.RSSInstanceDAO;
-import org.wso2.carbon.rssmanager.core.environment.dao.impl.mysql.MySQLPrivilegeTemplateEntryDAOImpl;
 
+/**
+ * Database management DAO implementation
+ */
 public class EnvironmentManagementDAOImpl implements EnvironmentManagementDAO {
 
-    private EntityManager entityManager;
+	/**
+	 * @see EnvironmentManagementDAO#getEnvironmentDAO()
+	 */
+	public EnvironmentDAO getEnvironmentDAO() {
+		return new EnvironmentDAOImpl();
+	}
 
-    public EnvironmentManagementDAOImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+	/**
+	 * @see EnvironmentManagementDAO#getRSSInstanceDAO()
+	 */
+	public RSSInstanceDAO getRSSInstanceDAO() {
+		return new RSSInstanceDAOImpl();
+	}
 
-    @Override
-    public EnvironmentDAO getEnvironmentDAO() {
-        return new EnvironmentDAOImpl(this.getEntityManager());
-    }
+	/**
+	 * @see EnvironmentManagementDAO#getDatabasePrivilegeTemplateDAO()
+	 */
+	public DatabasePrivilegeTemplateDAO getDatabasePrivilegeTemplateDAO() {
+		return new DatabasePrivilegeTemplateDAOImpl();
+	}
 
-    @Override
-    public RSSInstanceDAO getRSSInstanceDAO() {
-        return new RSSInstanceDAOImpl(this.getEntityManager());
-    }
-
-    @Override
-    public DatabasePrivilegeTemplateDAO getDatabasePrivilegeTemplateDAO() {
-        return new DatabasePrivilegeTemplateDAOImpl(this.getEntityManager());
-    }
-
-    @Override
-    public DatabasePrivilegeTemplateEntryDAO getDatabasePrivilegeTemplateEntryDAO() {
-        return new MySQLPrivilegeTemplateEntryDAOImpl(this.getEntityManager());  
-    }
-
-    private EntityManager getEntityManager() {
-        return entityManager;
-    }
-
+	/**
+	 * @see EnvironmentManagementDAO#getDatabasePrivilegeTemplateEntryDAO()
+	 */
+	public DatabasePrivilegeTemplateEntryDAO getDatabasePrivilegeTemplateEntryDAO() {
+		return new DatabasePrivilegeTemplateEntryDAOImpl();
+	}
 }
