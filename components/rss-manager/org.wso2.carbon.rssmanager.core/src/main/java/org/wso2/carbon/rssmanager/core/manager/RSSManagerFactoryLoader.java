@@ -22,35 +22,49 @@ package org.wso2.carbon.rssmanager.core.manager;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.config.RSSManagementRepository;
 import org.wso2.carbon.rssmanager.core.environment.Environment;
+//import org.wso2.carbon.rssmanager.core.manager.impl.h2.H2RSSManagerFactory;
 import org.wso2.carbon.rssmanager.core.manager.impl.h2.H2RSSManagerFactory;
 import org.wso2.carbon.rssmanager.core.manager.impl.mysql.MySQLRSSManagerFactory;
 import org.wso2.carbon.rssmanager.core.manager.impl.oracle.OracleRSSManagerFactory;
 import org.wso2.carbon.rssmanager.core.manager.impl.postgres.PostgresRSSManagerFactory;
 import org.wso2.carbon.rssmanager.core.manager.impl.sqlserver.SQLServerRSSManagerFactory;
+//import org.wso2.carbon.rssmanager.core.manager.impl.oracle.OracleRSSManagerFactory;
+//import org.wso2.carbon.rssmanager.core.manager.impl.postgres.PostgresRSSManagerFactory;
+//import org.wso2.carbon.rssmanager.core.manager.impl.sqlserver.SQLServerRSSManagerFactory;
 
+/**
+ * Factory class to get the configured rss provider
+ */
 public final class RSSManagerFactoryLoader {
 
-    public static RSSManagerFactory getRMFactory(String type, RSSManagementRepository repository,
-                                                 Environment environment) {
-        if (RSSManagerConstants.RSSManagerProviderTypes.
-                RM_PROVIDER_TYPE_MYSQL.equals(type)) {
-            return new MySQLRSSManagerFactory(environment, repository);
-        } else if (RSSManagerConstants.RSSManagerProviderTypes.
-                RM_PROVIDER_TYPE_ORACLE.equals(type)) {
-            return new OracleRSSManagerFactory(environment, repository);
-        } else if (RSSManagerConstants.RSSManagerProviderTypes.
-                RM_PROVIDER_TYPE_SQLSERVER.equals(type)) {
-            return new SQLServerRSSManagerFactory(environment, repository);
-        } else if (RSSManagerConstants.RSSManagerProviderTypes.
-                RM_PROVIDER_TYPE_POSTGRES.equals(type)) {
-            return new PostgresRSSManagerFactory(environment, repository);
-        } else if (RSSManagerConstants.RSSManagerProviderTypes.
-                RM_PROVIDER_TYPE_H2.equals(type)) {
-            return new H2RSSManagerFactory(environment, repository);
-        } else {
-            throw new IllegalArgumentException("Unsupported RSS provider type '" + type +
-                    "' provided");
-        }
-    }
+	/**
+	 * Resolve rss manager provider
+	 * @param type instance type
+	 * @param repository management repository configuration
+	 * @param environment to be get the rss manager factory
+	 * @return RSSManagerFactory
+	 */
+	public static RSSManagerFactory getRMFactory(String type, RSSManagementRepository repository,
+	                                             Environment environment) {
+		if (RSSManagerConstants.RSSManagerProviderTypes.
+				RM_PROVIDER_TYPE_MYSQL.equals(type)) {
+			return new MySQLRSSManagerFactory(environment);
+		} else if (RSSManagerConstants.RSSManagerProviderTypes.
+				RM_PROVIDER_TYPE_ORACLE.equals(type)) {
+			return new OracleRSSManagerFactory(environment);
+		} else if (RSSManagerConstants.RSSManagerProviderTypes.
+				RM_PROVIDER_TYPE_SQLSERVER.equals(type)) {
+			return new SQLServerRSSManagerFactory(environment);
+		} else if (RSSManagerConstants.RSSManagerProviderTypes.
+				RM_PROVIDER_TYPE_POSTGRES.equals(type)) {
+			return new PostgresRSSManagerFactory(environment);
+		} else if (RSSManagerConstants.RSSManagerProviderTypes.
+				RM_PROVIDER_TYPE_H2.equals(type)) {
+			return new H2RSSManagerFactory(environment);
+		} else {
+			throw new IllegalArgumentException("Unsupported RSS provider type '" + type +
+			                                   "' provided");
+		}
+	}
 
 }

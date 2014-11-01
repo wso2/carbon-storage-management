@@ -26,11 +26,11 @@ package org.wso2.carbon.mapred.jobtracker;
  * To change this template use File | Settings | File Templates.
  */
 
-import java.io.FilenameFilter;
 import java.io.File;
+import java.io.FilenameFilter;
 
-public class JarFilter implements FilenameFilter{
-    private final String ext = ".jar";
+public class JarFilter implements FilenameFilter {
+    private static final String ext = ".jar";
 
     public boolean accept(File dir, String name) {
         return name.endsWith(ext);

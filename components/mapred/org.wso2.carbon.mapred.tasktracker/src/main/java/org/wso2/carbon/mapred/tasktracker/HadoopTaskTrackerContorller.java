@@ -18,25 +18,23 @@
  */
 package org.wso2.carbon.mapred.tasktracker;
 
-import java.io.File;
-import java.io.FileReader;
-import java.util.Properties;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.TaskTracker;
-import org.apache.hadoop.util.ReflectionUtils;
 import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
 import org.apache.hadoop.metrics2.util.MBeans;
-
+import org.apache.hadoop.util.ReflectionUtils;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.wso2.carbon.utils.ServerConstants;
 
-public class HadoopTaskTrackerContorller implements BundleActivator{
+import java.io.File;
+import java.io.FileReader;
+import java.util.Properties;
+
+public class HadoopTaskTrackerContorller implements BundleActivator {
 
 	private Log log = LogFactory.getLog(HadoopTaskTrackerContorller.class);
     private TaskTracker taskTracker;

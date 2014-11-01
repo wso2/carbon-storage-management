@@ -38,27 +38,27 @@
         </parameter>
 
         <operation name="getDatabaseForTenant">
-                    <parameter name="superTenantService" locked="true">true</parameter>
+            <parameter name="superTenantService" locked="true">true</parameter>
         </operation>
 
         <operation name="createDatabaseForTenant">
-                    <parameter name="superTenantService" locked="true">true</parameter>
+            <parameter name="superTenantService" locked="true">true</parameter>
         </operation>
 
         <operation name="getDatabasesForTenant">
-                    <parameter name="superTenantService" locked="true">true</parameter>
+            <parameter name="superTenantService" locked="true">true</parameter>
         </operation>
 
         <operation name="getDatabaseForTenant">
-                    <parameter name="superTenantService" locked="true">true</parameter>
+            <parameter name="superTenantService" locked="true">true</parameter>
         </operation>
 
         <operation name="initializeTenant">
-                    <parameter name="superTenantService" locked="true">true</parameter>
+            <parameter name="superTenantService" locked="true">true</parameter>
         </operation>
 
         <operation name="isInitializedTenant">
-                    <parameter name="superTenantService" locked="true">true</parameter>
+            <parameter name="superTenantService" locked="true">true</parameter>
         </operation>
 
         <parameter name="adminService" locked="true">true</parameter>

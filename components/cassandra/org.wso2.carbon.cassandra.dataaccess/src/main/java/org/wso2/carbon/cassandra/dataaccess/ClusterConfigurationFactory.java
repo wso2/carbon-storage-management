@@ -32,6 +32,7 @@ import java.util.Iterator;
 public class ClusterConfigurationFactory {
 
     private static Log log = LogFactory.getLog(ClusterConfigurationFactory.class);
+    private static final String EXTERNAL_CASSANDRA_ATTRIBUTE = "externalCassandra";
 
     /**
      * Create an instance of <code>ClusterConfiguration</code> from the XML configuration
@@ -80,18 +81,16 @@ public class ClusterConfigurationFactory {
              */
             OMElement nodesElement = cluster.getFirstChildWithName(new QName("Nodes"));
             if (nodesElement != null) {
-                Boolean isExternalCassandra=false;
-                Iterator iterator=nodesElement.getAllAttributes();
-                String externalCassandra="";
-                while (iterator.hasNext()) {
-                    externalCassandra=nodesElement.getAttributeValue(new QName("externalCassandra"));
-                    iterator.next();
-                }
-                if(externalCassandra!=null && !"".equals(externalCassandra)) {
-                    isExternalCassandra=Boolean.parseBoolean(externalCassandra.trim());
-                } else {
-                    isExternalCassandra=true;
-                }
+                Boolean isExternalCassandra = false;
+                String externalCassandra = "";
+	            if (nodesElement.getAttribute(new QName(EXTERNAL_CASSANDRA_ATTRIBUTE)) != null) {
+		            externalCassandra = nodesElement.getAttributeValue(new QName(EXTERNAL_CASSANDRA_ATTRIBUTE));
+	            }
+	            if (externalCassandra != null && !"".equals(externalCassandra)) {
+		            isExternalCassandra = Boolean.parseBoolean(externalCassandra.trim());
+	            } else {
+		            isExternalCassandra = true;
+	            }
                 String nodesString = nodesElement.getText();
                 if (nodesString != null && !"".endsWith(nodesString.trim())) {
                     if(isExternalCassandra) {

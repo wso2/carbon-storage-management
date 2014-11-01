@@ -23,30 +23,18 @@ import org.wso2.carbon.rssmanager.core.dao.DatabaseDAO;
 import org.wso2.carbon.rssmanager.core.dao.DatabaseUserDAO;
 import org.wso2.carbon.rssmanager.core.dao.RSSDAO;
 import org.wso2.carbon.rssmanager.core.dao.UserDatabaseEntryDAO;
-import org.wso2.carbon.rssmanager.core.dao.util.EntityManager;
 
 public abstract class AbstractRSSDAO implements RSSDAO {
 
-    private EntityManager entityManager;
+	public DatabaseDAO getDatabaseDAO() {
+		return new DatabaseDAOImpl();
+	}
 
-    public AbstractRSSDAO(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+	public DatabaseUserDAO getDatabaseUserDAO() {
+		return new DatabaseUserDAOImpl();
+	}
 
-    public DatabaseDAO getDatabaseDAO() {
-        return new DatabaseDAOImpl(this.getEntityManager());
-    }
-
-    public DatabaseUserDAO getDatabaseUserDAO() {
-        return new DatabaseUserDAOImpl(this.getEntityManager());
-    }
-
-    public UserDatabaseEntryDAO getUserDatabaseEntryDAO() {
-        return new UserDatabaseEntryDAOImpl(this.getEntityManager());
-    }
-
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
-
+	public UserDatabaseEntryDAO getUserDatabaseEntryDAO() {
+		return new UserDatabaseEntryDAOImpl();
+	}
 }

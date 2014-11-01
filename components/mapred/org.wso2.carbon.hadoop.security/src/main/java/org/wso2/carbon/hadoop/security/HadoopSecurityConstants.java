@@ -16,9 +16,11 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.rssmanager.core.jpa.persistence;
+package org.wso2.carbon.hadoop.security;
 
-public enum JPAProvider {
-	OPEN_JPA,HIBERNATE;
-
+public class HadoopSecurityConstants {
+	public static final String HADOOP_TRUSTSTORE_PROPERTY = "hadoop.security.truststore";
+	public static final String HADOOP_USERNAME_PROPERTY = "hadoop.security.admin.username";
+	public static final String HADOOP_PASSWORD_PROPERTY = "hadoop.security.admin.password";
+	public static final String HADOOP_SERVICE_URL_PROPERTY = "hadoop.security.group.mapping.service.url";
 }

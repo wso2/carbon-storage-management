@@ -44,14 +44,15 @@
 	//set the tree view session
 	session.setAttribute("viewType", "std");
 	String cookie = (String) session
-			.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
+	.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
 	String viewMode = null;
 	String resourceConsumer = null;
 	String targetDivID = null;
 	String isFolder = request.getParameter("isFolder");
 	String defaultOperationDisplayStyle = "display:''";
 	String requestedPage = request.getParameter("requested_page");
-
+	String pageitemsCount = request.getParameter("itemCount");
+	pageitemsCount = pageitemsCount == null ? "10" : pageitemsCount;
 	if (requestedPage != null && requestedPage != "") {
 		pageNumber = new Integer(requestedPage);
 	} else {
@@ -59,22 +60,23 @@
 	}
 	String path = request.getParameter("path");
 	String loggedInUser = (String) request.getSession().getAttribute(
-			CarbonSecuredHttpContext.LOGGED_USER);
+	CarbonSecuredHttpContext.LOGGED_USER);
 	HDFSAdminClient client;
 	FolderInformation[] folderInfo = null;
 	FolderInformation[] allFolders = null;
+	String unselected = "pageLinks";
+	String selected = "pageLinks-selected";
+	String ippSet[] = { "1", "5", "10", "15", "20", "30", "50", "100" };
+	String FALSE ="false";
 	try {
-		client = new HDFSAdminClient(config.getServletContext(),
-				session);
+		client = new HDFSAdminClient(config.getServletContext(), session);
 		folderInfo = client.getCurrentUserFSObjects(path);
 
 		//if the isFolder is not null and is set to false, then it is not a folder. if the requested path is the same as the returned item's path it is a file.i.e.
 		// this is when the user types a file path on the location bar and tries to navigate. and empty directory returns an empty collection.
-		if (isFolder != null
-				&& isFolder.equals("false")
-				|| (isFolder == null)
-				&& (folderInfo.length == 1 && ((FolderInformation) folderInfo[0])
-						.getFolderPath().equals(path))) {
+		if (FALSE.equals(isFolder) ||
+		    (folderInfo.length == 1 && ((FolderInformation) folderInfo[0]).getFolderPath()
+		                                                                  .equals(path))) {
 			isFolder = "false";
 			defaultOperationDisplayStyle = "display:none";
 		}
@@ -204,6 +206,27 @@
 						</form>
 					</td>
 				</tr>
+				<tr>
+					<td><fmt:message key="pagelim" /> <select id="pageLimCombo"
+						name="pageLimCombo"
+						onchange="changeIpp(<%=(pageNumber)%>, '<%=path%>','<%=viewMode%>','<%=resourceConsumer%>','<%=targetDivID%>',this)">
+							<%
+								for (String items : ippSet) {
+										if (items.equals(pageitemsCount.trim())) {
+							%>
+							<option id="<%=items%>" value="<%=items%>" selected="selected"><%=items%>
+							</option>
+							<%
+								} else {
+							%>
+							<option id="<%=items%>" value="<%=items%>"><%=items%>
+							</option>
+							<%
+								}
+									}
+							%>
+					</select></td>
+				</tr>
 			</tbody>
 		</table>
 	</fmt:bundle>
@@ -227,8 +250,9 @@
 
 						int start;
 						int end;
-						//need to move this to a configurable variable.
-						int itemsPerPage = 10;
+						
+						//this is a configurable variable.
+						int itemsPerPage = Integer.parseInt(pageitemsCount);
 
 						int numberOfPages = 1;
 						if (totalCount % itemsPerPage == 0) {
@@ -249,8 +273,7 @@
 							end = (pageNumber - 1) * itemsPerPage + itemsPerPage;
 						}
 
-						folderInfo = Utils.getChildren(start, itemsPerPage,
-								folderInfo);
+						folderInfo = Utils.getChildren(start, itemsPerPage, folderInfo);
 			%>
 			<thead>
 				<tr>
@@ -542,7 +565,7 @@
  	}
  					if (numberOfPages <= 10) {
  						for (int pageItem = 1; pageItem <= numberOfPages; pageItem++) {
- %> <a
+ %> <a class="<%=pageItem == pageNumber ? selected : unselected%>"
 						title="<fmt:message key="page.x.to.y"><fmt:param value="<%=pageItem%>"/><fmt:param value="<%=Utils.getFirstPage(pageItem,
 												itemsPerPage, allFolders)%>"/><fmt:param value="<%=Utils.getLastPage(pageItem,
 												itemsPerPage, allFolders)%>"/></fmt:message>"
@@ -573,7 +596,7 @@
 												if (place == "end" || place == "middle") {
 
 													for (int pageItem = 1; pageItem <= 2; pageItem++) {
-						%> <a class="pageLinks"
+						%> <a class="<%=pageItem == pageNumber ? selected : unselected%>"
 						title="<fmt:message key="page.x.to.y"><fmt:param value="<%=pageItem%>"/><fmt:param value="<%=Utils.getFirstPage(
 													pageItem, itemsPerPage,
 													allFolders)%>"/><fmt:param value="<%=Utils.getLastPage(
@@ -586,7 +609,7 @@
  	}
 
  						for (int pageItem = pageItemFrom; pageItem <= pageItemTo; pageItem++) {
- %> <a
+ %> <a class="<%=pageItem == pageNumber ? selected : unselected%>"
 						title="<fmt:message key="page.x.to.y"><fmt:param value="<%=pageItem%>"/><fmt:param value="<%=Utils.getFirstPage(pageItem,
 												itemsPerPage, allFolders)%>"/><fmt:param value="<%=Utils.getLastPage(pageItem,
 												itemsPerPage, allFolders)%>"/></fmt:message>"
@@ -597,7 +620,7 @@
 												if (place == "start" || place == "middle") {
 						%> <%
  	for (int pageItem = (numberOfPages - 1); pageItem <= numberOfPages; pageItem++) {
- %> <a class="pageLinks"
+ %> <a class="<%=pageItem == pageNumber ? selected : unselected%>"
 						title="<fmt:message key="page.x.to.y"><fmt:param value="<%=pageItem%>"/><fmt:param value="<%=Utils.getFirstPage(
 													pageItem, itemsPerPage,
 													allFolders)%>"/><fmt:param value="<%=Utils.getLastPage(
@@ -637,6 +660,13 @@
 					}
 			%>
 		</table>
+		<script type="text/javascript">
+		function changeIpp(wantedPage, resourcePath, viewMode, consumerID, targetDivID,comboBox){
+	            var newIpp = comboBox.options[comboBox.selectedIndex].value;
+	            fillContentSection(resourcePath, wantedPage, viewMode, consumerID, targetDivID, newIpp);
+	            YAHOO.util.Event.onAvailable("xx" + wantedPage, loadData);
+        }
+       </script>
 	</fmt:bundle>
 
 </div>

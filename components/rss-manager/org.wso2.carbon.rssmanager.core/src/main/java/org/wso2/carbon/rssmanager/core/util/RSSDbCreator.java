@@ -26,21 +26,27 @@ import javax.sql.DataSource;
 
 public class RSSDbCreator extends DatabaseCreator {
 
-    private static final Log log = LogFactory.getLog(RSSDbCreator.class);
-    public String dbDir = "";  // stores the the location of the database script that is run according to the databse type
-    
-    public RSSDbCreator(DataSource dataSource) {
-		super(dataSource);
-		
-    }
-	
-    protected String getDbScriptLocation(String databaseType) {
-	        String scriptName = "wso2_rss_" + databaseType + ".sql";
-	        if (log.isDebugEnabled()) {
-	            log.debug("Loading database script from :" + scriptName);
-	        }
-	        return dbDir.replaceFirst("DBTYPE", databaseType)  + scriptName;
-    	
-    }
+	private static final Log log = LogFactory.getLog(RSSDbCreator.class);
+	private String rssDBScriptDirectory;// stores the the location of the database script that is run according to the databse type
 
+	public RSSDbCreator(DataSource dataSource) {
+		super(dataSource);
+
+	}
+
+	protected String getDbScriptLocation(String databaseType) {
+		String scriptName = "wso2_rss_" + databaseType + ".sql";
+		if (log.isDebugEnabled()) {
+			log.debug("Loading database script from :" + scriptName);
+		}
+		return rssDBScriptDirectory.replaceFirst("DBTYPE", databaseType) + scriptName;
+	}
+
+	/**
+	 * Sets database scripts directory
+	 * @param rssDBScriptDirectory database scripts location
+	 */
+	public void setRssDBScriptDirectory(String rssDBScriptDirectory) {
+		this.rssDBScriptDirectory = rssDBScriptDirectory;
+	}
 }

@@ -18,35 +18,22 @@
  */
 package org.wso2.carbon.mapred.mgt;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Properties;
-import java.util.UUID;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileUtil;
-import org.apache.hadoop.mapred.RunningJob;
 import org.apache.hadoop.mapreduce.JobReporterRegistry;
-import org.apache.hadoop.mapreduce.JobReporter;
-
+import org.wso2.carbon.hadoop.security.HadoopCarbonSecurity;
 import org.wso2.carbon.mapred.mgt.api.CarbonMapRedJob;
 import org.wso2.carbon.mapred.reporting.CarbonJobReporter;
-import org.wso2.carbon.hadoop.security.HadoopCarbonSecurity;
-import org.wso2.carbon.hadoop.security.HadoopCarbonMessageContext;
+
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Properties;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 public class HadoopJobRunnerThread extends Thread {
 
@@ -93,6 +80,7 @@ public class HadoopJobRunnerThread extends Thread {
 					try {
 						FileUtil.fullyDelete(workDir);
 					} catch (IOException e) {
+						log.error("Error while deleting file "+e);
 					}
 				}
 			});
@@ -132,21 +120,14 @@ public class HadoopJobRunnerThread extends Thread {
 			HadoopCarbonSecurity.clean();
 		} catch (IOException io) {
 			log.error("Error opening job jar: " + jarName);
-			io.printStackTrace();
-			return;
 		} catch (ClassNotFoundException noClass) {
 			log.error("Cannot find the class"+ className +" in "+jarName);
-			noClass.printStackTrace();
-			return;
 		} catch (IllegalAccessException illegalAccess) {
 			log.error("Unable to access main method in "+className+" in "+jarName);
-			illegalAccess.printStackTrace();
-			return;
 		} catch (IllegalArgumentException illegalArg) {
-			illegalArg.printStackTrace();
-			illegalArg.getCause().getMessage();
+			log.error(illegalArg);
 		} catch (InstantiationException instantiation) {
-			instantiation.printStackTrace();
+			log.error(instantiation);
 		}
 	}
 

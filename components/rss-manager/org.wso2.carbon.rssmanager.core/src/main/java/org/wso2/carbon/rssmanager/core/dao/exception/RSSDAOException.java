@@ -19,40 +19,61 @@
 
 package org.wso2.carbon.rssmanager.core.dao.exception;
 
+/**
+ * Custom exception class for data access related exceptions
+ */
 public class RSSDAOException extends Exception {
 
-    private String errorMessage;
-    private static final long serialVersionUID = 2021891706072918864L;
+	private String errorMessage;
+	private static final long serialVersionUID = 2021891706072918864L;
 
-    public RSSDAOException(String message, Exception nestedEx) {
-        super(message, nestedEx);
-        setErrorMessage(message);
-    }
+	/**
+	 * Constructs a new exception with the specified detail message and nested exception.
+	 *
+	 * @param message error message
+	 * @param nestedException exception
+	 */
+	public RSSDAOException(String message, Exception nestedException) {
+		super(message, nestedException);
+		setErrorMessage(message);
+	}
 
-    public RSSDAOException(String message, Throwable cause) {
-        super(message, cause);
-        setErrorMessage(message);
-    }
+	/**
+	 * Constructs a new exception with the specified detail message and cause.
+	 *
+	 * @param message the detail message.
+	 * @param cause   the cause of this exception.
+	 */
+	public RSSDAOException(String message, Throwable cause) {
+		super(message, cause);
+		setErrorMessage(message);
+	}
 
-    public RSSDAOException(String message) {
-        super(message);
-        setErrorMessage(message);
-    }
+	/**
+	 * Constructs a new exception with the specified detail message
+	 *
+	 * @param message the detail message.
+	 */
+	public RSSDAOException(String message) {
+		super(message);
+		setErrorMessage(message);
+	}
 
-    public RSSDAOException(Throwable cause) {
-        super(cause);
-    }
+	/**
+	 * Constructs a new exception with the specified and cause.
+	 *
+	 * @param cause   the cause of this exception.
+	 */
+	public RSSDAOException(Throwable cause) {
+		super(cause);
+	}
 
-    public RSSDAOException() {
-        super();
-    }
+	public String getErrorMessage() {
+		return errorMessage;
+	}
 
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
 
 }

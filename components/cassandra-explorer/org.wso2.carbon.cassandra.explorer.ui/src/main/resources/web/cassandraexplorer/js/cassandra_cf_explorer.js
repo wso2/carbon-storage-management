@@ -4,7 +4,7 @@ function viewExplorer(keyspace, columnFamily) {
         columnFamily;
 }
 function viewRowExplorer(keyspace, columnFamily) {
-    location.href = 'row_explorer.jsp?keyspace=' + keyspace + "&columnFamily=" +
+    location.href = 'row_explorer.jsp?ordinal=1&keyspace=' + keyspace + "&columnFamily=" +
                     columnFamily;
 }
 
