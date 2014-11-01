@@ -158,12 +158,12 @@ function attachUserToDatabase() {
         CARBON.showWarningDialog("Database name cannot be left blank");
         return false;
     }
-    if (templateName == '' || templateName == null || templateName == 'SELECT') {
-        CARBON.showWarningDialog("Select a valid database privilege template");
-        return false;
-    }
     if (username == '' || username == null || username == 'SELECT') {
         CARBON.showWarningDialog("Select a valid database user");
+        return false;
+    }
+    if (templateName == '' || templateName == null || templateName == 'SELECT') {
+        CARBON.showWarningDialog("Select a valid database privilege template");
         return false;
     }
     dispatchDatabaseManageAction('attach', rssInstanceName, username, databaseName, envName, instanceType);
