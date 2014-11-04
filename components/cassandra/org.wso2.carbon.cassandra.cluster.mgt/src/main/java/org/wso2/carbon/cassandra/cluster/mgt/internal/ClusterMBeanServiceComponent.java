@@ -45,10 +45,8 @@ public class ClusterMBeanServiceComponent {
         log.debug("Starting Cassandra Cluster tools Admin bundle");
         try {
             taskService.registerTaskType(ClusterConstants.CLUSTER_MONITOR);
-        } catch (TaskException e) {
-            log.error("Error while registering task", e);
         } catch (Exception e) {
-            log.error("Error while registering task"+e);
+            log.error("Error while registering task", e);
         }
         ClusterAdminComponentManager.getInstance().init(clusterMBeanDataAccess, taskService);
     }
