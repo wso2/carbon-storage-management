@@ -79,6 +79,7 @@ public class DatabasePrivilegeTemplateEntryDAOImpl implements DatabasePrivilegeT
 			templateEntryStatement.setString(19, entry.getEventPriv());
 			templateEntryStatement.setString(20, entry.getTriggerPriv());
 			templateEntryStatement.executeUpdate();
+			conn.commit();
 		} catch (SQLException e) {
 			String msg = "Failed to add database template entry to the metadata repository";
 			log.error(msg, e);
@@ -172,6 +173,7 @@ public class DatabasePrivilegeTemplateEntryDAOImpl implements DatabasePrivilegeT
 			entryUpdateStatement.setString(19, updatedEntry.getTriggerPriv());
 			entryUpdateStatement.setInt(20, templateId);
 			entryUpdateStatement.executeUpdate();
+			conn.commit();
 		} catch (SQLException e) {
 			String msg = "Failed to update database template entry in the metadata repository";
 			log.error(msg, e);
