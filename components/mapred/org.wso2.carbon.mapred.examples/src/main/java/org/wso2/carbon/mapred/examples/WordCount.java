@@ -87,7 +87,8 @@ public class WordCount extends CarbonMapRedJob {
 			FileOutputFormat.setOutputPath(job, new Path(args[1]));
 			job.waitForCompletion(true);
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			String msg = "Error occurred while executing word count map reduce job";
+			log.error(msg, e);
 			return;
 		}
 	}

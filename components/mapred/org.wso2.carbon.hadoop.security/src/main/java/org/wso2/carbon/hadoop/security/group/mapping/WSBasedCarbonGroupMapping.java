@@ -62,8 +62,9 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
                 try {
                     Thread.sleep((i + 1) * WINDOW_UPER_BOUND);
                 } catch (InterruptedException e1) {
-                    log.error(e.getMessage(), e);
-	                throw new IOException(e.getMessage(), e);
+	                String msg = "Error while getting groups of user " + user;
+	                log.error(msg, e);
+	                throw new IOException(msg, e);
                 }
                 continue;
             }
@@ -100,15 +101,17 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
         try {
             confCtx = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
         } catch (AxisFault e) {
-            log.error(e.getMessage(), e);
-            throw new HadoopSecurityComponentException(e.getMessage(), e);
+            String msg = "Error while creating the configuration context";
+            log.error(msg, e);
+            throw new HadoopSecurityComponentException(msg, e);
         }
 
         try {
             authAdminStub = new AuthenticationAdminStub(confCtx, serviceUrl + "AuthenticationAdmin");
         } catch (AxisFault e) {
-	        log.error(e.getMessage(), e);
-	        throw new HadoopSecurityComponentException(e.getMessage(), e);
+	        String msg = "Error while creating the authentication stub instance";
+	        log.error(msg, e);
+	        throw new HadoopSecurityComponentException(msg, e);
         }
         authAdminStub._getServiceClient().getOptions().setManageSession(true);
         try {
@@ -116,16 +119,12 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
             String serviceHostName = serviceUrlObj.getHost();
             isAuthenticated = authAdminStub.login(username, password, serviceHostName);
             log.info("Logging in as admin");
-        } catch (RemoteException e) {
-	        log.error(e.getMessage(), e);
-	        throw new HadoopSecurityComponentException(e.getMessage(), e);
-        } catch (LoginAuthenticationExceptionException e) {
-	        log.error(e.getMessage(), e);
-	        throw new HadoopSecurityComponentException(e.getMessage(), e);
-        } catch (URISyntaxException e) {
-	        log.error(e.getMessage(), e);
-	        throw new HadoopSecurityComponentException(e.getMessage(), e);
+        } catch (Exception e) {
+	        String msg = "Error occurred when login for user" + user;
+	        log.error(msg, e);
+	        throw new HadoopSecurityComponentException(msg, e);
         }
+
         try {
             String cookie = (String) authAdminStub._getServiceClient().getServiceContext().getProperty(
                     HTTPConstants.COOKIE_STRING);
@@ -138,18 +137,10 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
             }
             log.debug("Retreived user roles");
             authAdminStub.logout();
-        } catch (UserStoreException e) {
-	        log.error(e.getMessage(), e);
-	        throw new HadoopSecurityComponentException(e.getMessage(), e);
-        } catch (org.wso2.carbon.user.api.UserStoreException e) {
-            log.error(e.getMessage(), e);
-            throw new HadoopSecurityComponentException(e.getMessage(), e);
-        } catch (LogoutAuthenticationExceptionException e) {
-	        log.error(e.getMessage(), e);
-	        throw new HadoopSecurityComponentException(e.getMessage(), e);
-        } catch (RemoteException e) {
-	        log.error(e.getMessage(), e);
-	        throw new HadoopSecurityComponentException(e.getMessage(), e);
+        } catch (Exception e) {
+	        String msg = "Error occurred while getting user roles for user" + user;
+	        log.error(msg, e);
+	        throw new HadoopSecurityComponentException(msg, e);
         }
 	    return groups;
     }
