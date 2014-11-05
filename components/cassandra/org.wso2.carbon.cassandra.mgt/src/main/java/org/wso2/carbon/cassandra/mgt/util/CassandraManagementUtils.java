@@ -208,12 +208,12 @@ public class CassandraManagementUtils {
      * @return Cluster Object
      * @throws CassandraServerManagementException
      */
-    public static Cluster getCluster(String envName, String clusterName, ClusterInformation clusterInfo, HttpSession session)
-            throws CassandraServerManagementException {
+    public static Cluster getCluster(String envName, String clusterName, ClusterInformation clusterInfo,
+                                     HttpSession session) throws CassandraServerManagementException {
         DataAccessService dataAccessService =
                 CassandraAdminDataHolder.getInstance().getDataAccessService();
         Cluster cluster = null;
-        if (CassandraConstants.CASSANDRA_DEFAULT_ENVIRONMENT.equalsIgnoreCase(envName)) {
+        if (CassandraConstants.Environments.CASSANDRA_DEFAULT_ENVIRONMENT.equalsIgnoreCase(envName)) {
             boolean resetConnection = true;
             try {
                 if (clusterInfo != null) {
@@ -260,8 +260,8 @@ public class CassandraManagementUtils {
             cc.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
             cc.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
             Cache<String, UserAccessKeyCacheEntry> cache = Caching.getCacheManagerFactory()
-                    .getCacheManager(CassandraConstants.CASSANDRA_ACCESS_CACHE_MANAGER)
-                    .getCache(CassandraConstants.CASSANDRA_ACCESS_KEY_CACHE);
+                    .getCacheManager(CassandraConstants.Cache.CASSANDRA_ACCESS_CACHE_MANAGER)
+                    .getCache(CassandraConstants.Cache.CASSANDRA_ACCESS_KEY_CACHE);
             cacheKey = UUID.randomUUID().toString();
             sharedKey = username + cacheKey;
             cache.put(cacheKey, new UserAccessKeyCacheEntry(sharedKey));

@@ -36,7 +36,7 @@ public class EnvironmentManager {
     private RegistryAccessor registry = new RegistryAccessor();
     private EnvironmentConfig environmentConfig;
     private final String envConfigXMLPath = CarbonUtils.getEtcCarbonConfigDirPath() + File.separator
-            + CassandraConstants.CASSANDRA_ENVIRONMENT_CONFIG_FILE;
+            + CassandraConstants.Environments.CASSANDRA_ENVIRONMENT_CONFIG_FILE;
 
     public EnvironmentConfig getEnvironmentConfig() {
         return environmentConfig;
