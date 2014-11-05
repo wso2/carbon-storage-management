@@ -17,6 +17,7 @@
  *
  */
 
+
 package org.wso2.carbon.rssmanager.core.manager.impl.oracle;
 
 import org.wso2.carbon.rssmanager.core.config.RSSManagementRepository;
@@ -26,81 +27,83 @@ import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 import org.wso2.carbon.rssmanager.core.environment.Environment;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
+import org.wso2.carbon.rssmanager.core.manager.RSSManager;
 import org.wso2.carbon.rssmanager.core.manager.UserDefinedRSSManager;
 
 /**
  * @see org.wso2.carbon.rssmanager.core.manager.RSSManager for the method java doc comments
  */
+
 public class OracleUserDefinedRSSManager extends UserDefinedRSSManager {
 
-    public OracleUserDefinedRSSManager(Environment environment, RSSManagementRepository config) {
-        super(environment, config);
+    public OracleUserDefinedRSSManager(Environment environment) {
+        super(environment);
     }
 
-
-    @Override
     public Database addDatabase(Database database) throws RSSManagerException {
+	    //TODO implement when improve the oracle support
         return null;  
     }
 
-    @Override
     public void removeDatabase(String rssInstanceName,
                                String databaseName) throws RSSManagerException {
-        
+	    //TODO implement when improve the oracle support
     }
 
-    @Override
     public boolean isDatabaseExist(String rssInstanceName, String databaseName) throws RSSManagerException {
-        return false;
+	    //TODO implement when improve the oracle support
+	    return false;
     }
 
-    @Override
-    public DatabaseUser addDatabaseUser(DatabaseUser user) throws RSSManagerException {
-        return null;  
+	public Database getDatabase(String rssInstanceName, String databaseName) throws RSSManagerException {
+		//TODO implement when improve the oracle support
+		return null;
+	}
+
+	public DatabaseUser addDatabaseUser(DatabaseUser user) throws RSSManagerException {
+		//TODO implement when improve the oracle support
+		return null;
     }
 
-    @Override
     public void removeDatabaseUser(String rssInstanceName,
                                    String username) throws RSSManagerException {
-        
+	    //TODO implement when improve the oracle support
     }
 
-    @Override
     public DatabaseUser[] getAttachedUsers(String rssInstanceName,
                                            String databaseName) throws RSSManagerException {
-        return new DatabaseUser[0];  
+	    //TODO implement when improve the oracle support
+	    return new DatabaseUser[0];
     }
 
-    @Override
     public DatabaseUser[] getAvailableUsers(String rssInstanceName,
                                             String databaseName) throws RSSManagerException {
-        return new DatabaseUser[0];  
+	    //TODO implement when improve the oracle support
+	    return new DatabaseUser[0];
     }
 
-    @Override
     public void attachUser(UserDatabaseEntry ude,
                            DatabasePrivilegeSet privileges) throws RSSManagerException {
-        
+	    //TODO implement when improve the oracle support
     }
 
-    @Override
     public void detachUser(UserDatabaseEntry ude) throws RSSManagerException {
-        
+	    //TODO implement when improve the oracle support
     }
 
-    @Override
     public boolean isDatabaseUserExist(String rssInstanceName, String username) throws RSSManagerException {
-        return false;
+	    //TODO implement when improve the oracle support
+	    return false;
     }
 
-    @Override
     public void updateDatabaseUserPrivileges(DatabasePrivilegeSet privileges, DatabaseUser user,
                                              String databaseName) throws RSSManagerException {
-        
+	    //TODO implement when improve the oracle support
     }
 
-    @Override
     public DatabaseUser editDatabaseUser(String environmentName, DatabaseUser databaseUser) {
-        return null;
+	    //TODO implement when improve the oracle support
+	    return null;
     }
 }
+

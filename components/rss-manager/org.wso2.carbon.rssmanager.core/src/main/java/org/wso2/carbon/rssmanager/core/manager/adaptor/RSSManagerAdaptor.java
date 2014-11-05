@@ -28,44 +28,176 @@ import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 
 public interface RSSManagerAdaptor {
 
-    Database addDatabase(Database database) throws RSSManagerException;
+	/**
+	 * Add database to meta repository and to rss instance
+	 *
+	 * @param database the database properties
+	 * @return database object
+	 * @throws RSSManagerException if something went wrong when adding database
+	 */
+	Database addDatabase(Database database) throws RSSManagerException;
 
-    void removeDatabase(String rssInstanceName, String databaseName, String type) throws RSSManagerException;
+	/**
+	 * Remove databsse from meta repository and rss instance
+	 *
+	 * @param rssInstanceName name of the rss instance
+	 * @param databaseName name of the database
+	 * @param type database type
+	 * @throws RSSManagerException if error occurred when removing database
+	 */
+	void removeDatabase(String rssInstanceName, String databaseName, String type) throws RSSManagerException;
 
-    DatabaseUser addDatabaseUser(DatabaseUser user) throws RSSManagerException;
+	/**
+	 * Add database user to rss instances
+	 *
+	 * @param user database user properties
+	 * @return database user object
+	 * @throws RSSManagerException if error occurred when adding database user
+	 */
+	DatabaseUser addDatabaseUser(DatabaseUser user) throws RSSManagerException;
 
 
-    void removeDatabaseUser(String rssInstanceName, String username, String type) throws RSSManagerException;
+	/**
+	 * Remove database user from rss instance
+	 * @param rssInstanceName name of the rss instance
+	 * @param username name of the database user
+	 * @param type instance type
+	 * @throws RSSManagerException if error occurred when removing databse user
+	 */
+	void removeDatabaseUser(String rssInstanceName, String username, String type) throws RSSManagerException;
 
-    void updateDatabaseUserPrivileges(DatabasePrivilegeSet privileges, DatabaseUser user,
-                                      String databaseName) throws RSSManagerException;
+	/**
+	 * Update database user privileges
+	 *
+	 * @param privileges set of privileges
+	 * @param user database user properties
+	 * @param databaseName name of the database
+	 * @throws RSSManagerException if error occurred when updating the database user privileges
+	 */
+	void updateDatabaseUserPrivileges(DatabasePrivilegeSet privileges, DatabaseUser user,
+	                                  String databaseName) throws RSSManagerException;
 
-    void attachUser(UserDatabaseEntry ude,
-                    DatabasePrivilegeTemplateEntry templateEntry) throws RSSManagerException;
+	/**
+	 * Attach user to database
+	 * @param userDatabaseEntry user database entry which hold the privilege template and database
+	 * @param templateEntry set of privileges
+	 * @throws RSSManagerException
+	 */
+	void attachUser(UserDatabaseEntry userDatabaseEntry,
+	                DatabasePrivilegeTemplateEntry templateEntry) throws RSSManagerException;
 
-    void detachUser(UserDatabaseEntry ude) throws RSSManagerException;
+	/**
+	 * Deattach user from database
+	 * @param userDatabaseEntry contains database user and database information
+	 * @throws RSSManagerException if error occurred when de attaching user
+	 */
+	void detachUser(UserDatabaseEntry userDatabaseEntry) throws RSSManagerException;
 
-    DatabaseUser getDatabaseUser(String rssInstanceName, String username, String type) throws RSSManagerException;
+	/**
+	 * Get database user information
+	 *
+	 * @param rssInstanceName name of the rss instance
+	 * @param username user name of the database user
+	 * @param type instance type
+	 * @return database user object
+	 * @throws RSSManagerException
+	 */
+	DatabaseUser getDatabaseUser(String rssInstanceName, String username, String type) throws RSSManagerException;
 
-    Database getDatabase(String rssInstanceName, String databaseName, String type) throws RSSManagerException;
+	/**
+	 * Get database information
+	 *
+	 * @param rssInstanceName name of the rss instance
+	 * @param databaseName name of the database
+	 * @param type instance type
+	 * @return database object
+	 * @throws RSSManagerException if error occurred when getting database information
+	 */
+	Database getDatabase(String rssInstanceName, String databaseName, String type) throws RSSManagerException;
 
-    DatabaseUser[] getAttachedUsers(String rssInstanceName,
-                                    String databaseName, String type) throws RSSManagerException;
+	/**
+	 * Get attached database users for database
+	 *
+	 * @param rssInstanceName name of the rss instance
+	 * @param databaseName name of the database
+	 * @param type instance type
+	 * @return array of database users
+	 * @throws RSSManagerException if error occurred when getting attached users
+	 */
+	DatabaseUser[] getAttachedUsers(String rssInstanceName,
+	                                String databaseName, String type) throws RSSManagerException;
 
-    DatabaseUser[] getAvailableUsers(String rssInstanceName,
-                                     String databaseName, String type) throws RSSManagerException;
+	/**
+	 * Get available users to attach to database
+	 *
+	 * @param rssInstanceName name of the rss instance
+	 * @param databaseName name of the database
+	 * @param type instance type
+	 * @return array of available database users
+	 * @throws RSSManagerException if error occurred while getting available database users to attached
+	 */
+	DatabaseUser[] getAvailableUsers(String rssInstanceName,
+	                                 String databaseName, String type) throws RSSManagerException;
 
-    DatabasePrivilegeSet getUserDatabasePrivileges(String rssInstanceName, String databaseName,
-                                                   String username, String type) throws RSSManagerException;
+	/**
+	 * Get database user privileges
+	 *
+	 * @param rssInstanceName name of the rss instance
+	 * @param databaseName name of the database
+	 * @param username of the database user
+	 * @param type
+	 * @return
+	 * @throws RSSManagerException
+	 */
+	DatabasePrivilegeSet getUserDatabasePrivileges(String rssInstanceName, String databaseName,
+	                                               String username, String type) throws RSSManagerException;
 
-    Database[] getDatabases() throws RSSManagerException;
+	/**
+	 * Get all databases information
+	 *
+	 * @return array of database
+	 * @throws RSSManagerException if error occur when getting databases
+	 */
+	Database[] getDatabases() throws RSSManagerException;
 
-    DatabaseUser[] getDatabaseUsers() throws RSSManagerException;
+	/**
+	 * Get database users information
+	 *
+	 * @return array of database users
+	 * @throws RSSManagerException if error occurred when getting database users
+	 */
+	DatabaseUser[] getDatabaseUsers() throws RSSManagerException;
 
-    boolean isDatabaseExist(String rssInstanceName, String databaseName, String type) throws RSSManagerException;
+	/**
+	 * Check database is exist
+	 *
+	 * @param rssInstanceName name of the rss instance
+	 * @param databaseName name of the database
+	 * @param type instance type
+	 * @return true if database is exist else false
+	 * @throws RSSManagerException if error occurred when checking the database existence
+	 */
+	boolean isDatabaseExist(String rssInstanceName, String databaseName, String type) throws RSSManagerException;
 
-    boolean isDatabaseUserExist(String rssInstanceName, String username, String type) throws RSSManagerException;
+	/**
+	 * Check database user is exist
+	 *
+	 * @param rssInstanceName name of the rss instance
+	 * @param username name of the database user
+	 * @param type instance type
+	 * @return true if database user is exist else false
+	 * @throws RSSManagerException if error occurred when checking the database user existence
+	 */
+	boolean isDatabaseUserExist(String rssInstanceName, String username, String type) throws RSSManagerException;
 
-    DatabaseUser editDatabaseUser(String environmentName,DatabaseUser databaseUser) throws RSSManagerException;
+	/**
+	 * Edit database user
+	 *
+	 * @param environmentName name of the environment
+	 * @param databaseUser database user properties
+	 * @return database user object
+	 * @throws RSSManagerException if error occurred when editing database user
+	 */
+	DatabaseUser editDatabaseUser(String environmentName, DatabaseUser databaseUser) throws RSSManagerException;
 
 }

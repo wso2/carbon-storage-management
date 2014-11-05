@@ -24,50 +24,50 @@ package org.wso2.carbon.rssmanager.core.dto.restricted;
  */
 public class DataSourceMetaData {
 
-    private String username;
-    private String password;
-    private String databaseName;
-    private String dataSourceName;
-    private String rssInstanceName;
+	private String username;
+	private String password;
+	private String databaseName;
+	private String dataSourceName;
+	private String rssInstanceName;
 
-    public String getDataSourceName() {
-        return dataSourceName;
-    }
+	public String getDataSourceName() {
+		return dataSourceName;
+	}
 
-    public void setDataSourceName(String dataSourceName) {
-        this.dataSourceName = dataSourceName;
-    }
+	public void setDataSourceName(String dataSourceName) {
+		this.dataSourceName = dataSourceName;
+	}
 
-    public String getRssInstanceName() {
-        return rssInstanceName;
-    }
+	public String getRssInstanceName() {
+		return rssInstanceName;
+	}
 
-    public void setRssInstanceName(String rssInstanceName) {
-        this.rssInstanceName = rssInstanceName;
-    }
+	public void setRssInstanceName(String rssInstanceName) {
+		this.rssInstanceName = rssInstanceName;
+	}
 
-    public String getDatabaseName() {
-        return databaseName;
-    }
+	public String getDatabaseName() {
+		return databaseName;
+	}
 
-    public void setDatabaseName(String databaseName) {
-        this.databaseName = databaseName;
-    }
+	public void setDatabaseName(String databaseName) {
+		this.databaseName = databaseName;
+	}
 
-    public String getUsername() {
-        return username;
-    }
+	public String getUsername() {
+		return username;
+	}
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 }

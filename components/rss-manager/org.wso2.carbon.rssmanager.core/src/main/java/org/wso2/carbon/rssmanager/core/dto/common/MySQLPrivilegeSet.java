@@ -19,108 +19,112 @@
 
 package org.wso2.carbon.rssmanager.core.dto.common;
 
+/**
+ * Class for hold MYSQL privileges set
+ */
 public class MySQLPrivilegeSet extends DatabasePrivilegeSet {
 
-    private String grantPriv = "N";
-    private String referencesPriv = "N";
-    private String createTmpTablePriv = "N";
-    private String lockTablesPriv = "N";
-    private String executePriv = "N";
-    private String createViewPriv = "N";
-    private String showViewPriv = "N";
-    private String createRoutinePriv = "N";
-    private String alterRoutinePriv = "N";
-    private String triggerPriv = "N";
-    private String eventPriv = "N";
+	private String grantPriv = "N";
+	private String referencesPriv = "N";
+	private String createTmpTablePriv = "N";
+	private String lockTablesPriv = "N";
+	private String executePriv = "N";
+	private String createViewPriv = "N";
+	private String showViewPriv = "N";
+	private String createRoutinePriv = "N";
+	private String alterRoutinePriv = "N";
+	private String triggerPriv = "N";
+	private String eventPriv = "N";
 
-    public MySQLPrivilegeSet() {}
+	public MySQLPrivilegeSet() {
+	}
 
-    public String getReferencesPriv() {
-        return referencesPriv;
-    }
+	public String getReferencesPriv() {
+		return referencesPriv;
+	}
 
-    public String getShowViewPriv() {
-        return showViewPriv;
-    }
+	public String getShowViewPriv() {
+		return showViewPriv;
+	}
 
-    public String getTriggerPriv() {
-        return triggerPriv;
-    }
+	public String getTriggerPriv() {
+		return triggerPriv;
+	}
 
-    public String getEventPriv() {
-        return eventPriv;
-    }
+	public String getEventPriv() {
+		return eventPriv;
+	}
 
-    public String getGrantPriv() {
-        return grantPriv;
-    }
+	public String getGrantPriv() {
+		return grantPriv;
+	}
 
-    public String getExecutePriv() {
-        return executePriv;
-    }
+	public String getExecutePriv() {
+		return executePriv;
+	}
 
-    public String getCreateTmpTablePriv() {
-        return createTmpTablePriv;
-    }
+	public String getCreateTmpTablePriv() {
+		return createTmpTablePriv;
+	}
 
-    public String getCreateViewPriv() {
-        return createViewPriv;
-    }
+	public String getCreateViewPriv() {
+		return createViewPriv;
+	}
 
-    public String getCreateRoutinePriv() {
-        return createRoutinePriv;
-    }
+	public String getCreateRoutinePriv() {
+		return createRoutinePriv;
+	}
 
-    public String getAlterRoutinePriv() {
-        return alterRoutinePriv;
-    }
+	public String getAlterRoutinePriv() {
+		return alterRoutinePriv;
+	}
 
-    public String getLockTablesPriv() {
-        return lockTablesPriv;
-    }
+	public String getLockTablesPriv() {
+		return lockTablesPriv;
+	}
 
-    public void setGrantPriv(String grantPriv) {
-        this.grantPriv = grantPriv;
-    }
+	public void setGrantPriv(String grantPriv) {
+		this.grantPriv = grantPriv;
+	}
 
-    public void setReferencesPriv(String referencesPriv) {
-        this.referencesPriv = referencesPriv;
-    }
+	public void setReferencesPriv(String referencesPriv) {
+		this.referencesPriv = referencesPriv;
+	}
 
-    public void setCreateTmpTablePriv(String createTmpTablePriv) {
-        this.createTmpTablePriv = createTmpTablePriv;
-    }
+	public void setCreateTmpTablePriv(String createTmpTablePriv) {
+		this.createTmpTablePriv = createTmpTablePriv;
+	}
 
-    public void setLockTablesPriv(String lockTablesPriv) {
-        this.lockTablesPriv = lockTablesPriv;
-    }
+	public void setLockTablesPriv(String lockTablesPriv) {
+		this.lockTablesPriv = lockTablesPriv;
+	}
 
-    public void setExecutePriv(String executePriv) {
-        this.executePriv = executePriv;
-    }
+	public void setExecutePriv(String executePriv) {
+		this.executePriv = executePriv;
+	}
 
-    public void setCreateViewPriv(String createViewPriv) {
-        this.createViewPriv = createViewPriv;
-    }
+	public void setCreateViewPriv(String createViewPriv) {
+		this.createViewPriv = createViewPriv;
+	}
 
-    public void setShowViewPriv(String showViewPriv) {
-        this.showViewPriv = showViewPriv;
-    }
+	public void setShowViewPriv(String showViewPriv) {
+		this.showViewPriv = showViewPriv;
+	}
 
-    public void setCreateRoutinePriv(String createRoutinePriv) {
-        this.createRoutinePriv = createRoutinePriv;
-    }
+	public void setCreateRoutinePriv(String createRoutinePriv) {
+		this.createRoutinePriv = createRoutinePriv;
+	}
 
-    public void setAlterRoutinePriv(String alterRoutinePriv) {
-        this.alterRoutinePriv = alterRoutinePriv;
-    }
+	public void setAlterRoutinePriv(String alterRoutinePriv) {
+		this.alterRoutinePriv = alterRoutinePriv;
+	}
 
-    public void setTriggerPriv(String triggerPriv) {
-        this.triggerPriv = triggerPriv;
-    }
+	public void setTriggerPriv(String triggerPriv) {
+		this.triggerPriv = triggerPriv;
+	}
 
-    public void setEventPriv(String eventPriv) {
-        this.eventPriv = eventPriv;
-    }
+	public void setEventPriv(String eventPriv) {
+		this.eventPriv = eventPriv;
+	}
 
 }

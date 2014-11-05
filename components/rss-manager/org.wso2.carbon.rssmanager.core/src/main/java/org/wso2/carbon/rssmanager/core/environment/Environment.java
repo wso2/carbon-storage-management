@@ -22,53 +22,30 @@ import org.wso2.carbon.rssmanager.core.RSSInstanceDSWrapperRepository;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
-import org.wso2.carbon.rssmanager.core.jpa.persistence.entity.AbstractEntity;
 import org.wso2.carbon.rssmanager.core.manager.adaptor.RSSManagerAdaptor;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
-
-import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Environment data holder
+ */
 @XmlRootElement(name = "Environment")
-@Entity
-@Table(name = "RM_ENVIRONMENT")
-public class Environment extends AbstractEntity<Integer, Environment> {
+public class Environment {
 
-	private static final long serialVersionUID = 1L;
-
-	@Version
-	@Column(name = "VERSION")
-	private Long version;
-
-	@Id
-	@TableGenerator(name = "ENVIRONMENT_TABLE_GEN", table = "ENVIRONMENT_SEQUENCE_TABLE", pkColumnName = "SEQ_NAME", valueColumnName = "SEQ_COUNT", pkColumnValue = "EMP_SEQ")
-	@Column(name = "ID", columnDefinition = "INTEGER")
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "ENVIRONMENT_TABLE_GEN")
 	private Integer id;
-
 	private String name;
-
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "environment", orphanRemoval = true)
-	private Set<RSSInstance> rssInstanceEntities;
-
-	@OneToMany(targetEntity = DatabasePrivilegeTemplate.class, cascade = CascadeType.ALL, mappedBy = "environment", orphanRemoval = true)
+	private Set<RSSInstance> rssInstanceEntities = new HashSet<RSSInstance>();
 	private Set<DatabasePrivilegeTemplate> privilegeTemplates;
-
-	@Transient
 	private RSSInstance[] rssInstances;
-	// TODO directly populate the map if possible
-	@Transient
 	private Map<String, RSSInstance> rssInstanceMap = new HashMap<String, RSSInstance>();
-	@Transient
 	private RSSInstanceDSWrapperRepository repository;
-	@Transient
 	private RSSManagerAdaptor adaptor;
-	@Transient
 	private String nodeAllocationStrategyType;
 
 	public synchronized void init(RSSManagerAdaptor adaptor) throws RSSManagerException {
@@ -111,37 +88,6 @@ public class Environment extends AbstractEntity<Integer, Environment> {
 
 	public RSSInstanceDSWrapperRepository getDSWrapperRepository() {
 		return repository;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Environment other = (Environment) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
 	}
 
 	private Map<String, RSSInstance> getRSSInstanceMap() {
@@ -188,15 +134,4 @@ public class Environment extends AbstractEntity<Integer, Environment> {
 	public void setPrivilegeTemplates(Set<DatabasePrivilegeTemplate> privilegeTemplates) {
 		this.privilegeTemplates = privilegeTemplates;
 	}
-	
-
-	public Long getVersion() {
-		return version;
-	}
-
-	public void setVersion(Long version) {
-		this.version = version;
-	}
-
-
 }

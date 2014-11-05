@@ -21,18 +21,61 @@ package org.wso2.carbon.rssmanager.core.environment.dao;
 
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate;
-import org.wso2.carbon.rssmanager.core.jpa.persistence.dao.EntityBaseDAO;
+import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 
-public interface DatabasePrivilegeTemplateDAO extends EntityBaseDAO<Integer, DatabasePrivilegeTemplate>{
+public interface DatabasePrivilegeTemplateDAO {
 
+	/**
+	 * Add database privilege template
+	 *
+	 * @param databasePrivilegeTemplate privilege template object with privileges
+	 * @param environmentId environment id
+	 * @throws RSSDAOException if error occur when adding database privilege template
+	 */
+	void addDatabasePrivilegeTemplate(DatabasePrivilegeTemplate databasePrivilegeTemplate, int environmentId) throws RSSDAOException;
 
-    DatabasePrivilegeTemplate getDatabasePrivilegesTemplate(String environmentName, String name,
-                                                            int tenantId) throws RSSDAOException;
+	/**
+	 * Get database privilege template
+	 *
+	 * @param environmentId environment id
+	 * @param name privilege template name
+	 * @param tenantId tenant id of template owner
+	 * @return database privilege template object
+	 * @throws RSSDAOException if error occur when getting database privilege template
+	 */
+	DatabasePrivilegeTemplate getDatabasePrivilegesTemplate(int environmentId, String name,
+	                                                        int tenantId) throws RSSDAOException;
 
-    DatabasePrivilegeTemplate[] getDatabasePrivilegesTemplates(
-            String environmentName, int tenantId) throws RSSDAOException;
+	/**
+	 * Get database privilege templates of environment
+	 * @param environmentId environment id
+	 * @param tenantId tenant id of template owner
+	 * @return database privilege template object
+	 * @throws RSSDAOException if error occur when getting database privilege templates
+	 */
+	DatabasePrivilegeTemplate[] getDatabasePrivilegesTemplates(
+			int environmentId, int tenantId) throws RSSDAOException;
 
-    boolean isDatabasePrivilegeTemplateExist(String environmentName, String templateName,
-                                             int tenantId) throws RSSDAOException;
+	/**
+	 * Check the exitence of a privilege template
+	 *
+	 * @param environmentId environment id
+	 * @param templateName name of the template
+	 * @param tenantId tenant id of template owner
+	 * @return true if matching database template found else false
+	 * @throws RSSDAOException if error occur when checking existence of database privilege template
+	 */
+	boolean isDatabasePrivilegeTemplateExist(int environmentId, String templateName,
+	                                         int tenantId) throws RSSDAOException;
 
+	/**
+	 * Remove dataabase privilege template
+	 *
+	 * @param environmentId environment id
+	 * @param templateName name of the template
+	 * @param tenantId tenant id of template owner
+	 * @throws RSSDAOException if error occur when removing database privilege template
+	 */
+	void removeDatabasePrivilegeTemplate(int environmentId, String templateName,
+	                                     int tenantId) throws RSSDAOException;
 }

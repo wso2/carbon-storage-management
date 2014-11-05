@@ -19,25 +19,52 @@
 
 package org.wso2.carbon.rssmanager.core.environment.dao;
 
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.environment.Environment;
-import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
-import org.wso2.carbon.rssmanager.core.jpa.persistence.dao.EntityBaseDAO;
 
 import java.util.Set;
 
-public interface EnvironmentDAO extends EntityBaseDAO<Integer, Environment>{
+public interface EnvironmentDAO {
 
-    void addEnvironment(Environment environment) throws RSSManagerException;
+	/**
+	 * Add new environment
+	 * @param environment configuration
+	 * @throws RSSDAOException if error occurred while adding new environment
+	 */
+	void addEnvironment(Environment environment) throws RSSDAOException;
 
-    @Deprecated
-    void removeEnvironment(String environmentName) throws RSSManagerException;
+	/**
+	 * Remove environment
+	 * @param environmentName name of the environment
+	 * @throws RSSDAOException if error occurred while removing the environment
+	 */
+	@Deprecated
+	void removeEnvironment(String environmentName) throws RSSDAOException;
 
-    boolean isEnvironmentExist(String environmentName) throws RSSManagerException;
-    
-    Environment getEnvironment(String environmentName) throws RSSManagerException;
-    
-    Set<Environment> getEnvironments(Set<String> names)throws RSSManagerException;
-    
-    Set<Environment> getAllEnvironments()throws RSSManagerException;
+	/**
+	 * Check whether environment is exist
+	 *
+	 * @param environmentName name of the environment
+	 * @return true if environment found else false
+	 * @throws RSSDAOException if error occurred while checking the existence of the environment
+	 */
+	boolean isEnvironmentExist(String environmentName) throws RSSDAOException;
+
+	/**
+	 * Get environment by name
+	 *
+	 * @param environmentName name of the environment
+	 * @return environment object
+	 * @throws RSSDAOException if error occureed when getting the environment
+	 */
+	Environment getEnvironment(String environmentName) throws RSSDAOException;
+
+	/**
+	 * Get all environments
+	 *
+	 * @return set of environments in the system
+	 * @throws RSSDAOException if error occurred while getting all environments
+	 */
+	Set<Environment> getAllEnvironments() throws RSSDAOException;
 
 }

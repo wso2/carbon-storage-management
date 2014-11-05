@@ -22,28 +22,31 @@ package org.wso2.carbon.rssmanager.core.config.datasource;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * Class for holding data source configuration in rss-config.xml at parsing with JAXB
+ */
 @XmlRootElement(name = "DataSourceConfiguration")
 public class DataSourceConfig {
 
-    private JNDILookupDefinition jndiLookupDefintion;
-    private RDBMSConfig rdbmsConfig;
+	private JNDILookupDefinition jndiLookupDefintion;
+	private RDBMSConfig rdbmsConfig;
 
-    @XmlElement(name = "JndiLookupDefinition", nillable = true)
-    public JNDILookupDefinition getJndiLookupDefintion() {
-        return jndiLookupDefintion;
-    }
+	@XmlElement(name = "JndiLookupDefinition", nillable = true)
+	public JNDILookupDefinition getJndiLookupDefintion() {
+		return jndiLookupDefintion;
+	}
 
-    public void setJndiLookupDefintion(JNDILookupDefinition jndiLookupDefintion) {
-        this.jndiLookupDefintion = jndiLookupDefintion;
-    }
+	public void setJndiLookupDefintion(JNDILookupDefinition jndiLookupDefintion) {
+		this.jndiLookupDefintion = jndiLookupDefintion;
+	}
 
-    @XmlElement(name = "Definition", nillable = true)
-    public RDBMSConfig getRdbmsConfiguration() {
-        return rdbmsConfig;
-    }
+	@XmlElement(name = "Definition", nillable = true)
+	public RDBMSConfig getRdbmsConfiguration() {
+		return rdbmsConfig;
+	}
 
-    public void setRdbmsConfiguration(RDBMSConfig rdbmsConfig) {
-        this.rdbmsConfig = rdbmsConfig;
-    }
+	public void setRdbmsConfiguration(RDBMSConfig rdbmsConfig) {
+		this.rdbmsConfig = rdbmsConfig;
+	}
 
 }

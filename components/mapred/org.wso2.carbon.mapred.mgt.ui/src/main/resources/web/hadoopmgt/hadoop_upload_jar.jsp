@@ -52,7 +52,6 @@
 	while (headerNames.hasMoreElements()) {
 		String headerName = (String)headerNames.nextElement();
 		String headerValue = request.getHeader(headerName);
-		//System.out.println(headerName+": "+headerValue);
 	}
 	boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 	if (isMultipart) {

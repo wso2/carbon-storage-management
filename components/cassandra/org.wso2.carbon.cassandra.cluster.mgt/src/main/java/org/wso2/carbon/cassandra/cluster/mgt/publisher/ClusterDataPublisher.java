@@ -18,6 +18,7 @@
 package org.wso2.carbon.cassandra.cluster.mgt.publisher;
 
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.cassandra.cluster.mgt.Util.ClusterMonitorConfig;
@@ -30,12 +31,12 @@ import org.wso2.carbon.cassandra.cluster.mgt.query.ClusterMBeanServiceHandler;
 import org.wso2.carbon.databridge.agent.thrift.DataPublisher;
 import org.wso2.carbon.databridge.agent.thrift.exception.AgentException;
 import org.wso2.carbon.databridge.commons.Event;
-import org.wso2.carbon.databridge.commons.exception.*;
+import org.wso2.carbon.databridge.commons.exception.AuthenticationException;
+import org.wso2.carbon.databridge.commons.exception.TransportException;
 import org.wso2.carbon.ntask.core.AbstractTask;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class ClusterDataPublisher extends AbstractTask {
     private static Log log = LogFactory.getLog(ClusterDataPublisher.class);
@@ -48,99 +49,49 @@ public class ClusterDataPublisher extends AbstractTask {
         String nodeStatsStreamId = null;
         String keyspaceStatsStreamId = null;
         DataPublisher dataPublisher = null;
-        try {
-            dataPublisher = getDataPublisher();
-        } catch (AgentException e) {
-            log.info(e);
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (AuthenticationException e) {
-            log.info(e);
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (TransportException e) {
-            log.info(e);
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (MalformedURLException e) {
-            log.info(e);
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+	    try {
+		    dataPublisher = getDataPublisher(); //Get data publisher
+		    //Define stream if not exists for the publish column family statistics
+		    try {
+			    columnFamilyStatsStreamId = dataPublisher.findStreamId(StreamsDefinitions.COLUMN_FAMILY_STATS, StreamsDefinitions.VERSION);
+			    if (StringUtils.isEmpty(columnFamilyStatsStreamId)) {
+				    columnFamilyStatsStreamId = dataPublisher.defineStream(StreamsDefinitions.COLUMN_FAMILY_STATS_STREAM_DEF);
+			    }
+		    } catch (AgentException e) {
+			    log.error("Error while getting stream id of" + StreamsDefinitions.COLUMN_FAMILY_STATS + "version+" + StreamsDefinitions.VERSION,
+			              e);
+		    } catch (Exception e) {
+			    log.error("Error while defining the stream" + StreamsDefinitions.COLUMN_FAMILY_STATS, e);
+		    }
 
-        try {
-            columnFamilyStatsStreamId = dataPublisher.findStream(StreamsDefinitions.COLUMN_FAMILY_STATS, StreamsDefinitions.VERSION);
-        } catch (StreamDefinitionException e) {
-            log.error(e);
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (NoStreamDefinitionExistException e) {
-            try {
-                columnFamilyStatsStreamId = dataPublisher.defineStream(StreamsDefinitions.COLUMN_FAMILY_STATS_STREAM_DEF);
-            } catch (MalformedStreamDefinitionException e1) {
-                log.error(e);
-                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            } catch (StreamDefinitionException e1) {
-                log.error(e);
-                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            } catch (DifferentStreamDefinitionAlreadyDefinedException e1) {
-                log.error(e);
-                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            } catch (AgentException e1) {
-                log.error(e);
-                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-        } catch (AgentException e) {
-            log.error(e);
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+		    //Define stream if not exists for the publish node statistics
+		    try {
+			    nodeStatsStreamId = dataPublisher.findStreamId(StreamsDefinitions.NODE_STATS, StreamsDefinitions.VERSION);
+			    if (StringUtils.isEmpty(nodeStatsStreamId)) {
+				    nodeStatsStreamId = dataPublisher.defineStream(StreamsDefinitions.NODE_STATS_STREAM_DEF);
+			    }
+		    } catch (AgentException e) {
+			    log.error("Error while getting stream id of" + StreamsDefinitions.NODE_STATS + "version+" + StreamsDefinitions.VERSION,
+			              e);
+		    } catch (Exception e) {
+			    log.error("Error while defining the stream" + StreamsDefinitions.NODE_STATS_STREAM_DEF, e);
+		    }
 
-        try {
-            nodeStatsStreamId = dataPublisher.findStream(StreamsDefinitions.NODE_STATS, StreamsDefinitions.VERSION);
-        } catch (AgentException e) {
-            log.error(e);
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (StreamDefinitionException e) {
-            log.error(e);
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (NoStreamDefinitionExistException e) {
-            try {
-                nodeStatsStreamId = dataPublisher.defineStream(StreamsDefinitions.NODE_STATS_STREAM_DEF);
-            } catch (AgentException e1) {
-                log.error(e);
-                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            } catch (MalformedStreamDefinitionException e1) {
-                log.error(e);
-                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            } catch (StreamDefinitionException e1) {
-                log.error(e);
-                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            } catch (DifferentStreamDefinitionAlreadyDefinedException e1) {
-                log.error(e);
-                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-        }
-
-        try {
-            keyspaceStatsStreamId = dataPublisher.findStream(StreamsDefinitions.KS_STATS, StreamsDefinitions.VERSION);
-        } catch (AgentException e) {
-            log.error(e);
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (StreamDefinitionException e) {
-            log.error(e);
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (NoStreamDefinitionExistException e) {
-            try {
-                keyspaceStatsStreamId = dataPublisher.defineStream(StreamsDefinitions.KS_STATS_STREAM_DEF);
-            } catch (AgentException e1) {
-                log.error(e);
-                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            } catch (MalformedStreamDefinitionException e1) {
-                log.error(e);
-                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            } catch (StreamDefinitionException e1) {
-                log.error(e);
-                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            } catch (DifferentStreamDefinitionAlreadyDefinedException e1) {
-                log.error(e);
-                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-        }
+		    //Define stream if not exists for the publish keyspace statistics
+		    try {
+			    keyspaceStatsStreamId = dataPublisher.findStreamId(StreamsDefinitions.KS_STATS, StreamsDefinitions.VERSION);
+			    if (StringUtils.isEmpty(nodeStatsStreamId)) {
+				    keyspaceStatsStreamId = dataPublisher.defineStream(StreamsDefinitions.KS_STATS_STREAM_DEF);
+			    }
+		    } catch (AgentException e) {
+			    log.error("Error while getting stream id of" + StreamsDefinitions.KS_STATS + "version+" + StreamsDefinitions.VERSION,
+			              e);
+		    } catch (Exception e) {
+			    log.error("Error while defining the stream" + StreamsDefinitions.KS_STATS_STREAM_DEF, e);
+		    }
+	    } catch (Exception e) {
+		    log.error("Error while getting data publisher", e);
+	    }
 
         String timeStamp = String.valueOf(System.currentTimeMillis());
 

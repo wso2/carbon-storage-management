@@ -20,97 +20,66 @@
 package org.wso2.carbon.rssmanager.core.dto.restricted;
 
 import org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry;
-import org.wso2.carbon.rssmanager.core.jpa.persistence.entity.AbstractEntity;
 
-import javax.persistence.*;
 import java.util.Set;
 
 /**
  * Class to represent a Database Instance created by an RSS Server.
  */
-@Entity
-@Table(name="RM_DATABASE")
-public class Database extends AbstractEntity<Integer, Database>{
+public class Database {
+	private Integer id;
+	private String url;
+	private String databaseType;
+	private String rssInstanceUrl;
+	private String name;
+	private String type;
+	private String rssInstanceName;
+	private RSSInstance rssInstance;
+	private Integer tenantId;
+	private Set<UserDatabaseEntry> userDatabaseEntries;
 
-    private static final long serialVersionUID = 184201657863456044L;
-    
-    
-    @Version
-    @Column(name="VERSION") 
-    private Long version;
+	public Database(int id, String name, String rssInstanceName, String url, String type) {
+		this.id = id;
+		this.url = url;
+		this.type = type;
+		this.name = name;
+		this.rssInstanceName = rssInstanceName;
+	}
 
-	@Id
-	@TableGenerator(name="DATABASE_TABLE_GEN", table="DATABASE_SEQUENCE_TABLE", pkColumnName="SEQ_NAME",
-    valueColumnName="SEQ_COUNT", pkColumnValue="EMP_SEQ")
-	@Column(name="ID", columnDefinition="INTEGER")
-	@GeneratedValue(strategy=GenerationType.TABLE, generator="DATABASE_TABLE_GEN")
-    private Integer id;
-	
-	@Transient
-    private String url;
-    
-    @Column(name = "NAME")
-    private String name;
-    
-    @Column(name = "TYPE")
-    private String type;
-    
-    @Transient
-    private String rssInstanceName;
-    
-    @ManyToOne(cascade={CascadeType.REFRESH}, fetch=FetchType.EAGER)
-    @JoinColumn(name = "RSS_INSTANCE_ID", nullable = false)
-    private RSSInstance rssInstance;
-    
-    @Column(name = "TENANT_ID")
-    private Integer tenantId;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "database", 
-            orphanRemoval = true, fetch=FetchType.EAGER)
-    private Set<UserDatabaseEntry> userDatabaseEntries; 
+	public Database() {
+	}
 
-    public Database(int id, String name, String rssInstanceName, String url, String type) {
-        this.id = id;
-        this.url = url;
-        this.type = type;
-        this.name = name;
-        this.rssInstanceName = rssInstanceName;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public Database() {}
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getUrl() {
+		return url;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setUrl(String url) {
+		this.url = url;
+	}
 
-    public String getUrl() {
-        return url;
-    }
+	public String getRssInstanceName() {
+		return rssInstanceName;
+	}
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+	public void setRssInstanceName(String rssInstanceName) {
+		this.rssInstanceName = rssInstanceName;
+	}
 
-    public String getRssInstanceName() {
-        return rssInstanceName;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public void setRssInstanceName(String rssInstanceName) {
-        this.rssInstanceName = rssInstanceName;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
+	public void setType(String type) {
+		this.type = type;
+	}
 
 
 	public RSSInstance getRssInstance() {
@@ -145,11 +114,19 @@ public class Database extends AbstractEntity<Integer, Database>{
 		return id;
 	}
 
-	public Long getVersion() {
-		return version;
+	public String getRssInstanceUrl() {
+		return rssInstanceUrl;
 	}
 
-	public void setVersion(Long version) {
-		this.version = version;
+	public void setRssInstanceUrl(String rssInstanceUrl) {
+		this.rssInstanceUrl = rssInstanceUrl;
+	}
+
+	public String getDatabaseType() {
+		return databaseType;
+	}
+
+	public void setDatabaseType(String databaseType) {
+		this.databaseType = databaseType;
 	}
 }

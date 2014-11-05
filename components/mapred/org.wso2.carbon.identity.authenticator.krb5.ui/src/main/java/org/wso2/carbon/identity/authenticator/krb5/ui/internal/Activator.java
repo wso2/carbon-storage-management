@@ -17,8 +17,6 @@
 */
 package org.wso2.carbon.identity.authenticator.krb5.ui.internal;
 
-import java.util.Hashtable;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleActivator;
@@ -26,6 +24,8 @@ import org.osgi.framework.BundleContext;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.identity.authenticator.krb5.ui.Krb5UIAuthenticator;
 import org.wso2.carbon.ui.CarbonUIAuthenticator;
+
+import java.util.Hashtable;
 
 /**
  * This is one of the first bundles that start in Carbon.

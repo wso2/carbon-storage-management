@@ -150,7 +150,8 @@
                                 </tr>
                                 <tr>
                                     <td><fmt:message
-                                            key="rss.manager.database.privileges.template"/></td>
+                                            key="rss.manager.database.privileges.template"/><font
+                                            color='red'>*</font></td>
                                     <td>
                                         <select id="privilegeTemplates" name="privilegeTemplates">
                                             <option id="SELECT" value="SELECT">---SELECT---</option>

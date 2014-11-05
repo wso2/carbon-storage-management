@@ -19,79 +19,82 @@
 
 package org.wso2.carbon.rssmanager.core.dto.common;
 
+/**
+ * Class for hold POSTGRES privilege set
+ */
 public class PostgresPrivilegeSet extends DatabasePrivilegeSet {
 
-    private String truncatePriv;
-    private String referencesPriv;
-    private String triggerPriv;
-    private String connectPriv;
-    private String temporaryPriv;
-    private String executePriv;
-    private String usagePriv;
-    private String tempPriv;
+	private String truncatePriv;
+	private String referencesPriv;
+	private String triggerPriv;
+	private String connectPriv;
+	private String temporaryPriv;
+	private String executePriv;
+	private String usagePriv;
+	private String tempPriv;
 
-    public String getTruncatePriv() {
-        return truncatePriv;
-    }
+	public String getTruncatePriv() {
+		return truncatePriv;
+	}
 
-    public void setTruncatePriv(String truncatePriv) {
-        this.truncatePriv = truncatePriv;
-    }
+	public void setTruncatePriv(String truncatePriv) {
+		this.truncatePriv = truncatePriv;
+	}
 
-    public String getReferencesPriv() {
-        return referencesPriv;
-    }
+	public String getReferencesPriv() {
+		return referencesPriv;
+	}
 
-    public void setReferencesPriv(String referencesPriv) {
-        this.referencesPriv = referencesPriv;
-    }
+	public void setReferencesPriv(String referencesPriv) {
+		this.referencesPriv = referencesPriv;
+	}
 
-    public String getTriggerPriv() {
-        return triggerPriv;
-    }
+	public String getTriggerPriv() {
+		return triggerPriv;
+	}
 
-    public void setTriggerPriv(String triggerPriv) {
-        this.triggerPriv = triggerPriv;
-    }
+	public void setTriggerPriv(String triggerPriv) {
+		this.triggerPriv = triggerPriv;
+	}
 
-    public String getConnectPriv() {
-        return connectPriv;
-    }
+	public String getConnectPriv() {
+		return connectPriv;
+	}
 
-    public void setConnectPriv(String connectPriv) {
-        this.connectPriv = connectPriv;
-    }
+	public void setConnectPriv(String connectPriv) {
+		this.connectPriv = connectPriv;
+	}
 
-    public String getTemporaryPriv() {
-        return temporaryPriv;
-    }
+	public String getTemporaryPriv() {
+		return temporaryPriv;
+	}
 
-    public void setTemporaryPriv(String temporaryPriv) {
-        this.temporaryPriv = temporaryPriv;
-    }
+	public void setTemporaryPriv(String temporaryPriv) {
+		this.temporaryPriv = temporaryPriv;
+	}
 
-    public String getExecutePriv() {
-        return executePriv;
-    }
+	public String getExecutePriv() {
+		return executePriv;
+	}
 
-    public void setExecutePriv(String executePriv) {
-        this.executePriv = executePriv;
-    }
+	public void setExecutePriv(String executePriv) {
+		this.executePriv = executePriv;
+	}
 
-    public String getUsagePriv() {
-        return usagePriv;
-    }
+	public String getUsagePriv() {
+		return usagePriv;
+	}
 
-    public void setUsagePriv(String usagePriv) {
-        this.usagePriv = usagePriv;
-    }
+	public void setUsagePriv(String usagePriv) {
+		this.usagePriv = usagePriv;
+	}
 
-    public String getTempPriv() {
-        return tempPriv;
-    }
+	public String getTempPriv() {
+		return tempPriv;
+	}
 
-    public void setTempPriv(String tempPriv) {
-        this.tempPriv = tempPriv;
-    }
-    
+	public void setTempPriv(String tempPriv) {
+		this.tempPriv = tempPriv;
+	}
+
 }

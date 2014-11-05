@@ -27,7 +27,6 @@ import org.wso2.carbon.rssmanager.core.dao.RSSDAOFactory;
 import org.wso2.carbon.rssmanager.core.environment.EnvironmentManager;
 import org.wso2.carbon.rssmanager.core.environment.EnvironmentManagerFactory;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
-import org.wso2.carbon.rssmanager.core.jpa.persistence.internal.PersistenceManager;
 import org.wso2.carbon.rssmanager.core.manager.adaptor.EnvironmentAdaptor;
 import org.wso2.carbon.rssmanager.core.util.RSSDbCreator;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
@@ -38,84 +37,84 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 
+/**
+ * Class responsible for the rss manager configuration initialization
+ */
 public class RSSConfigurationManager {
 
-    private EnvironmentAdaptor adaptor;
-    //private EnvironmentManager environmentManager;
-    private RSSConfig currentRSSConfig;
-    private static RSSConfigurationManager rssConfigManager = new RSSConfigurationManager();
-    private static final Log log = LogFactory.getLog(RSSConfigurationManager.class);
+	private EnvironmentAdaptor adaptor;
+	private RSSConfig currentRSSConfig;
+	private static RSSConfigurationManager rssConfigManager;
+	private static final Log log = LogFactory.getLog(RSSConfigurationManager.class);
+	private final String rssConfigXMLPath = CarbonUtils.getCarbonConfigDirPath() + File.separator + "etc" + File.separator +
+	                                        RSSManagerConstants.RSS_CONFIG_XML_NAME;
+	private final String rssSetupSql = CarbonUtils.getCarbonHome() + File.separator + "dbscripts" + File.separator +
+	                                   "rss-manager" + File.separator + "DBTYPE" + File.separator;
+	private RSSConfigurationManager() {
+	    /* Making the constructor of RSSConfigurationManager private as it is being used as a Singleton */
+	}
 
-    private RSSConfigurationManager() {
-        /* Making the constructor of RSSConfigurationManager private as it is being used as a
-         * Singleton */
-    }
+	public static RSSConfigurationManager getInstance() {
+		//Using double checked locking to avoid multiple initializations
+		if (rssConfigManager == null) {
+			synchronized (RSSConfigurationManager.class) {
+				if (rssConfigManager == null) {
+					rssConfigManager = new RSSConfigurationManager();
+				}
+			}
+		}
+		return rssConfigManager;
+	}
 
-    public static RSSConfigurationManager getInstance() {
-        return rssConfigManager;
-    }
-
-    public EnvironmentAdaptor getRSSManagerEnvironmentAdaptor() {
-        if (adaptor == null) {
-            /* The synchronize block is added to prevent a concurrent thread trying to access the
-            environment manager while it is being initialized. */
-            synchronized (this) {
-                return adaptor;
-            }
-        }
-        return adaptor;
-    }
+	public EnvironmentAdaptor getRSSManagerEnvironmentAdaptor() {
+		if (adaptor == null) {
+            /*
+            The synchronize block is added to prevent a concurrent thread trying to access the
+            environment manager while it is being initialized.
+            */
+			synchronized (this) {
+				return adaptor;
+			}
+		}
+		return adaptor;
+	}
 
 	public synchronized void initConfig() throws RSSManagerException {
-		String rssConfigXMLPath = CarbonUtils.getCarbonConfigDirPath() + File.separator + "etc" + File.separator + RSSManagerConstants.RSS_CONFIG_XML_NAME;
-		String jpaConfigXMLPatch = CarbonUtils.getCarbonConfigDirPath() +
-                File.separator + "etc" + File.separator + RSSManagerConstants.JPA_PERSISTENCE_XML_NAME;
-		String rssSetupSql= CarbonUtils.getCarbonHome() +  File.separator + "dbscripts" +  File.separator + "rss-manager" + File.separator + "DBTYPE" + File.separator;
-				
 		try {
 			File rssConfig = new File(rssConfigXMLPath);
 			Document doc = RSSManagerUtil.convertToDocument(rssConfig);
+			//rss-config supports secure vault as it needs to be resolve when parsing
 			RSSManagerUtil.secureResolveDocument(doc);
-            
-
 			/* Un-marshaling RSS configuration */
-			JAXBContext ctx = JAXBContext.newInstance(RSSConfig.class);
-			Unmarshaller unmarshaller = ctx.createUnmarshaller();
+			JAXBContext rssContext = JAXBContext.newInstance(RSSConfig.class);
+			Unmarshaller unmarshaller = rssContext.createUnmarshaller();
 			this.currentRSSConfig = (RSSConfig) unmarshaller.unmarshal(doc);
-		
-    		DataSource dataSource = RSSDAOFactory.resolveDataSource(this.currentRSSConfig.getRSSManagementRepository().getDataSourceConfig());
-
-        	String setup = System.getProperty("setup");
-        	if(setup!=null){
-        	log.info("Setup option specified");
-            RSSDbCreator dbCreator = new RSSDbCreator(dataSource);
-            dbCreator.dbDir = rssSetupSql;
-        	log.info("Creating Meta Data tables");
-            dbCreator.createRegistryDatabase();
-        	
-            
-        	}
-
-        	PersistenceManager.createEMF(jpaConfigXMLPatch, currentRSSConfig);
-
-			EnvironmentManager environmentManager = EnvironmentManagerFactory.getEnvironmentManager(this.getRSSConfiguration()
-			                                                                                            .getRSSEnvironments());
-			environmentManager.initEnvironments(this.getRSSConfig().getRSSProvider(),
-			                                    this.getRSSConfig().getRSSManagementRepository());
-
+			//set jndi data source name for future use
+			RSSManagerUtil.setJndiDataSourceName(currentRSSConfig.getRSSManagementRepository().getDataSourceConfig().
+					getJndiLookupDefintion().getJndiName());
+			DataSource dataSource = RSSDAOFactory.resolveDataSource(this.currentRSSConfig.getRSSManagementRepository()
+					                                                                            .getDataSourceConfig());
+			RSSManagerUtil.setDataSource(dataSource);
+			String setupOption = System.getProperty("setup");
+			//if -Dsetup option specified then create rss manager tables
+			if (setupOption != null) {
+				log.info("Setup option specified");
+				RSSDbCreator dbCreator = new RSSDbCreator(dataSource);
+				dbCreator.setRssDBScriptDirectory(rssSetupSql);
+				log.info("Creating Meta Data tables");
+				dbCreator.createRegistryDatabase();
+			}
+			//Initialization of environment manager
+			EnvironmentManager environmentManager = EnvironmentManagerFactory.getEnvironmentManager(currentRSSConfig.
+																									getRSSEnvironments());
+			environmentManager.initEnvironments(currentRSSConfig.getRSSProvider(), currentRSSConfig.getRSSManagementRepository());
 			this.adaptor = new EnvironmentAdaptor(environmentManager);
-
 		} catch (Exception e) {
 			throw new RSSManagerException("Error occurred while initializing RSS config", e);
 		}
 	}
 
-    private RSSConfig getRSSConfiguration() {
-        return currentRSSConfig;
-    }
-
-    public RSSConfig getRSSConfig() {
-        return currentRSSConfig;
-    }
-
+	public RSSConfig getCurrentRSSConfig() {
+		return currentRSSConfig;
+	}
 }
