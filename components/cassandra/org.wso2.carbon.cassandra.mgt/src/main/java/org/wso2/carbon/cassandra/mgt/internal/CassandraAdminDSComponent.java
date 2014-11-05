@@ -46,15 +46,20 @@ public class CassandraAdminDSComponent {
 
     private static Log log = LogFactory.getLog(CassandraAdminDSComponent.class);
 
-    protected void activate(ComponentContext componentContext) throws CassandraServerManagementException {
+    protected void activate(ComponentContext componentContext) {
         if (log.isDebugEnabled()) {
             log.debug("Cassandra Admin bundle is activated.");
         }
         EnvironmentManager environmentManager = new EnvironmentManager();
-        environmentManager.initEnvironments();
-        CassandraAdminDataHolder.getInstance().setEnvironmentManager(environmentManager);
-        if (log.isDebugEnabled()) {
-            log.debug("Cassandra Environments are initialized.");
+        try {
+            environmentManager.initEnvironments();
+            CassandraAdminDataHolder.getInstance().setEnvironmentManager(environmentManager);
+            if (log.isDebugEnabled()) {
+                log.debug("Cassandra Environments are initialized.");
+            }
+            CassandraAdminDataHolder.getInstance().setInitialized(true);
+        } catch (CassandraServerManagementException e) {
+            log.error("Cassandra Environments Initialization Failed.", e);
         }
     }
 
@@ -80,7 +85,7 @@ public class CassandraAdminDSComponent {
         CassandraAdminDataHolder.getInstance().setRealmService(null);
     }
 
-	protected void setConfigurationContext(ConfigurationContextService ctxService) {
+    protected void setConfigurationContext(ConfigurationContextService ctxService) {
         CassandraAdminDataHolder.getInstance().setConfigurationContextService(ctxService);
     }
 
@@ -88,11 +93,11 @@ public class CassandraAdminDSComponent {
         CassandraAdminDataHolder.getInstance().setConfigurationContextService(null);
     }
 
-    public void unsetServerConfiguration(ServerConfigurationService serverConfigService){
+    public void unsetServerConfiguration(ServerConfigurationService serverConfigService) {
         CassandraAdminDataHolder.getInstance().setServerConfigurationService(null);
     }
 
-    public void setServerConfiguration(ServerConfigurationService serverConfigService){
+    public void setServerConfiguration(ServerConfigurationService serverConfigService) {
         CassandraAdminDataHolder.getInstance().setServerConfigurationService(serverConfigService);
     }
 

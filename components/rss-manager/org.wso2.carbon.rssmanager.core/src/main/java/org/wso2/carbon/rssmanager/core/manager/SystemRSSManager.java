@@ -116,6 +116,9 @@ public abstract class SystemRSSManager extends AbstractRSSManager implements RSS
 		DatabaseUser[] users = new DatabaseUser[0];
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
+			//get actual rss instance name since this is a system database instance where we hide the real rss instance name from user
+			rssInstanceName = getDatabaseDAO().resolveRSSInstanceNameByDatabase(getEnvironmentName(), databaseName,
+			                                                                    RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, tenantId);
 			RSSInstance rssInstance = this.getEnvironment().getRSSInstance(rssInstanceName);
 			if (rssInstance == null) {
 				throw new RSSManagerException(
@@ -147,7 +150,10 @@ public abstract class SystemRSSManager extends AbstractRSSManager implements RSS
 		DatabaseUser[] users = new DatabaseUser[0];
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
-			DatabaseUser[] availableUsers = getUserDatabaseEntryDAO().getAvailableDatabaseUsers(getEnvironmentName(),
+			//get actual rss instance name since this is a system database instance where we hide the real rss instance name from user
+			rssInstanceName = getDatabaseDAO().resolveRSSInstanceNameByDatabase(getEnvironmentName(), databaseName,
+			                                                                    RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, tenantId);
+			DatabaseUser[] availableUsers = getUserDatabaseEntryDAO().getAvailableDatabaseUsers(getEnvironmentName(),rssInstanceName, databaseName,
 			                                                                                    tenantId, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
 			return availableUsers;
 		} catch (Exception e) {

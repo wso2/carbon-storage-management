@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2012, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,15 +13,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.wso2.carbon.cassandra.hector.datareader;
-
-import com.sun.corba.se.impl.naming.cosnaming.TransientBindingIterator;
-import me.prettyprint.cassandra.connection.LoadBalancingPolicy;
-import me.prettyprint.cassandra.service.CassandraHostConfigurator;
+package org.wso2.carbon.cassandra.datareader.hector;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement (name = "configuration")
 public class HectorConfiguration {

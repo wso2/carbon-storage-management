@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Represents Cassandra CassandraConstants configuration.
+ * Represents Cassandra Environment configuration.
  */
 @XmlRootElement(name = "CassandraEnvironmentConfig")
 public final class EnvironmentConfig {

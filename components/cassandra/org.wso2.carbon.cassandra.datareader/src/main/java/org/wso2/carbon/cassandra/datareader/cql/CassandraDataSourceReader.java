@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2012, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.wso2.carbon.cassandra.datareader.datasource;
+package org.wso2.carbon.cassandra.datareader.cql;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;
@@ -23,7 +23,7 @@ import javax.xml.bind.JAXBContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.cassandra.datareader.datasource.util.CassandraDatasourceUtils;
+import org.wso2.carbon.cassandra.datareader.cql.util.CassandraDatasourceUtils;
 import org.wso2.carbon.ndatasource.common.DataSourceException;
 import org.wso2.carbon.ndatasource.common.spi.DataSourceReader;
 import org.wso2.carbon.utils.CarbonUtils;
