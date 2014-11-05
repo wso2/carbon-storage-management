@@ -105,7 +105,7 @@ public class CassandraAdminDataHolder {
     }
 
     public void setRealmService(RealmService realmService) {
-        this.realmService = realmService;
+
     }
 
     public CassandraMBeanLocator getCassandraMBeanLocator() {
