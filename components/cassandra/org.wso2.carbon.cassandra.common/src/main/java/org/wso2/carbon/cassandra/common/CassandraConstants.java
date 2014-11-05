@@ -26,4 +26,14 @@ public class CassandraConstants {
     public static final String CASSANDRA_SYSTEM_CLUSTER = "SYSTEM";
     public static final String CASSANDRA_CLUSTERS = "clusters";
 
+    public static final String CASSANDRA_ACCESS_KEY_CACHE = "CASSANDRA_ACCESS_KEY_CACHE";
+    public static final String CASSANDRA_ACCESS_CACHE_MANAGER = "CASSANDRA_ACCESS_CACHE_MANAGER";
+
+    public class Configurations {
+        public static final String CLUSTER_NAME = "ClusterName";
+        public static final String DATASOURCE_NAME = "Datasource";
+        public static final String ENVIRONMENT_NAME = "EnvironmentName";
+        public static final String IS_EXTERNAL = "IsExternal";
+    }
+
 }
