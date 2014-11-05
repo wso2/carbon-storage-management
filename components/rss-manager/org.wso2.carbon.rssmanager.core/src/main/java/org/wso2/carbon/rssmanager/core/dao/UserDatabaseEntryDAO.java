@@ -92,17 +92,6 @@ public interface UserDatabaseEntryDAO {
 	                                                String databaseName, int tenantId, String instanceType) throws RSSDAOException;
 
 	/**
-	 * Get available database users to attached for a environment
-	 *
-	 * @param environmentName name of the environment
-	 * @param tenantId tenant id of user that added the database users
-	 * @param instanceType instance type
-	 * @return array of available database users to attach
-	 * @throws RSSDAOException if something went wrong when query available database users
-	 */
-	public DatabaseUser[] getAvailableDatabaseUsers(String environmentName, int tenantId, String instanceType) throws RSSDAOException;
-
-	/**
 	 * Method to remove database user entry configuration information from RSS metadata repository. This method takes an argument of native
 	 * remove database user from database prepared statement which needs to be executed along with the meta repository database entry removal as native
 	 * sql operations not transactional
@@ -114,4 +103,12 @@ public interface UserDatabaseEntryDAO {
 	 */
 	public void removeUserDatabaseEntry(PreparedStatement nativeDeattachUserStatement, int dbId, int userId) throws RSSDAOException;
 
+	/**
+	 * Check whether database user is attached to one or more databases
+	 *
+	 * @param userId database user id
+	 * @return true if user attached else false
+	 * @throws RSSDAOException if something went wrong when checking database user existence
+	 */
+	public boolean isDatabaseUserEntriesExist(int userId) throws RSSDAOException;
 }

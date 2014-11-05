@@ -346,48 +346,6 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 	}
 
 	/**
-	 * @see UserDatabaseEntryDAO#getAvailableDatabaseUsers(String, int, String)
-	 */
-	public DatabaseUser[] getAvailableDatabaseUsers(String environmentName, int tenantId, String instanceType) throws RSSDAOException {
-		Connection conn = null;
-		PreparedStatement statement = null;
-		ResultSet resultSet = null;
-		DatabaseUser databaseUser;
-		List<DatabaseUser> databaseUsers = new ArrayList<DatabaseUser>();
-		int environmentId = getEnvironmentIdByName(environmentName);
-		try {
-			conn = getDataSource().getConnection();//acquire data source connection
-			String getAvailableDatabaseUserQuery = "SELECT ID, USERNAME, TYPE, TENANT_ID FROM RM_DATABASE_USER " +
-			                              "WHERE ENVIRONMENT_ID=? AND TYPE=? AND TENANT_ID=? AND ID NOT IN (SELECT " +
-			                              "DATABASE_USER_ID FROM RM_USER_DATABASE_ENTRY)";
-			statement = conn.prepareStatement(getAvailableDatabaseUserQuery);
-			statement.setInt(1, environmentId);
-			statement.setString(2, instanceType);
-			statement.setInt(3, tenantId);
-			resultSet = statement.executeQuery();
-			while (resultSet.next()) {
-				//fill available database user list from result set data
-				databaseUser = new DatabaseUser();
-				databaseUser.setId(resultSet.getInt("ID"));
-				databaseUser.setName(resultSet.getString("USERNAME"));
-				databaseUser.setType(resultSet.getString("TYPE"));
-				databaseUser.setTenantId(resultSet.getInt("TENANT_ID"));
-				databaseUsers.add(databaseUser);
-			}
-		} catch (SQLException e) {
-			String msg = "Failed to retrieve database unassigned database users information in environment" + environmentName
-			             + "from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
-		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_UNASSIGNED_DATABASE_USER_ENTRIES);
-			close(statement, RSSManagerConstants.SELECT_UNASSIGNED_DATABASE_USER_ENTRIES);
-			close(conn, RSSManagerConstants.SELECT_UNASSIGNED_DATABASE_USER_ENTRIES);
-		}
-		return databaseUsers.toArray(new DatabaseUser[databaseUsers.size()]);
-	}
-
-	/**
 	 * @param connection database connection
 	 * @param task task which was executed before closing the connection
 	 */
@@ -544,6 +502,35 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 		return databaseId;
 	}
 
+	/**
+	 * @see  @see UserDatabaseEntryDAO#isDatabaseUserEntriesExist(int)
+	 */
+	public boolean isDatabaseUserEntriesExist(int userId) throws RSSDAOException {
+		Connection conn = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		boolean isExist = false;
+		try {
+			conn = getDataSource().getConnection();//acquire data source connection
+			String databaseUserEntriesExistenceQuery = "SELECT ID FROM RM_USER_DATABASE_ENTRY WHERE DATABASE_USER_ID=?";
+			statement = conn.prepareStatement(databaseUserEntriesExistenceQuery);
+			statement.setInt(1, userId);
+			resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				isExist = true;
+				break;
+			}
+		} catch (SQLException e) {
+			String msg = "Failed to check database user entries existence";
+			log.error(msg, e);
+			throw new RSSDAOException(msg, e);
+		} finally {
+			close(resultSet, RSSManagerConstants.CHECK_DATABASE_USER_ENTRIES_EXISTENCE);
+			close(statement, RSSManagerConstants.CHECK_DATABASE_USER_ENTRIES_EXISTENCE);
+			close(conn, RSSManagerConstants.CHECK_DATABASE_USER_ENTRIES_EXISTENCE);
+		}
+		return isExist;
+	}
 	/**
 	 * Get data source
 	 *

@@ -532,8 +532,8 @@ public abstract class AbstractRSSManager {
 				                              "in the RSS instance type'" + instanceType + "'");
 			}
 			dbUser = databaseUserDAO.getDatabaseUser(this.getEnvironmentName(), username, tenantId, instanceType);
-			List<UserDatabaseEntry> userDBEntries = dbUser.getUserDatabaseEntries();
-			if (userDBEntries != null && !userDBEntries.isEmpty()) {
+			boolean isUserEntriesExist = userDatabaseEntryDAO.isDatabaseUserEntriesExist(dbUser.getId());
+			if (isUserEntriesExist) {
 				String msg = "Database user '" + dbUser.getName() + "' already attached to a Database ";
 				throw new RSSManagerException(msg);
 			}

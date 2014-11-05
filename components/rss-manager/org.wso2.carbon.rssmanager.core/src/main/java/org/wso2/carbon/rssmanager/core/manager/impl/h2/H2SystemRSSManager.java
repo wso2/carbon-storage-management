@@ -403,7 +403,7 @@ public class H2SystemRSSManager extends SystemRSSManager {
             RSSManagerException {
         RSSManagerUtil.checkIfParameterSecured(databaseName);
         RSSManagerUtil.checkIfParameterSecured(userName);
-        PreparedStatement statement = conn.prepareStatement("revoke all on " + databaseName + " from " + userName);
+        PreparedStatement statement = conn.prepareStatement("revoke all on " + databaseName + "_" + userName + " from " + userName);
         statement.executeUpdate();
         statement.close();
     }

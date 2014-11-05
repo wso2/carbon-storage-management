@@ -154,7 +154,6 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
 			        this.getEnvironmentName(), MultitenantConstants.SUPER_TENANT_ID);
 	        checkConnections(rssInstances);
 	        user.setEnvironmentId(this.getEnvironment().getId());
-	        super.addDatabaseUser(null, user, qualifiedUsername, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
 	        //Iterate and add database user to each system rss instance
 	        for (RSSInstance rssInstance: rssInstances) {
                 try {
@@ -170,6 +169,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
 	        for (RSSInstance rssInstance: rssInstances) {
                 this.flushPrivileges(rssInstance);
             }
+	        super.addDatabaseUser(null, user, qualifiedUsername, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
         } catch (Exception e) {
             String msg = "Error occurred while creating the database " + "user '" + qualifiedUsername;
 	        if (!mapUserWithInstance.isEmpty()) {
