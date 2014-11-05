@@ -9,8 +9,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.wso2.carbon.cassandra.datareader.datasource.CassandraConfiguration;
-import org.wso2.carbon.cassandra.datareader.datasource.CassandraDataSourceConstants;
+import org.wso2.carbon.cassandra.datareader.cql.CassandraConfiguration;
+import org.wso2.carbon.cassandra.datareader.cql.CassandraDataSourceConstants;
 import org.xml.sax.SAXException;
 
 public class TestDataSourceReader {
