@@ -175,7 +175,7 @@ public class RSSManagerHelper {
         if (url != null) {
             String prefix = url.split(":")[1];
             if (RSSManagerConstants.MYSQL_PREFIX.equals(prefix)) {
-                return RSSManagerConstants.MYSQL_XA_DRIVER;
+                return RSSManagerConstants.MYSQL_DRIVER;
             } else if (RSSManagerConstants.ORACLE_PREFIX.equals(prefix)) {
                 return RSSManagerConstants.ORACLE_DRIVER;
             }
