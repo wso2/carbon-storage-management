@@ -36,7 +36,9 @@
             resourceBundle="org.wso2.carbon.rssmanager.ui.i18n.Resources"
             topPage="false"
             request="<%=request%>"/>
-
+	<carbon:jsi18n
+			resourceBundle="org.wso2.carbon.rssmanager.ui.i18n.JSResources"
+			request="<%=request%>" i18nObjectName="rssmanagerjsi18n"/>
     <%
         String rssInstanceName = request.getParameter("rssInstanceNameDS");
         String databaseName = request.getParameter("databaseNameDS");
