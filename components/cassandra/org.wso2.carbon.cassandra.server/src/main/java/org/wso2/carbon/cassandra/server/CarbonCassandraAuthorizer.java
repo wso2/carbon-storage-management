@@ -88,7 +88,7 @@ public class CarbonCassandraAuthorizer implements IAuthorizer {
                 cc.setTenantDomain(domainName);
                 cc.setTenantId(tenantID);
             }
-            UserRealm userRealm = getRealmForTenant(domainName);
+            UserRealm userRealm = CassandraServerUtil.getRealmForTenant(domainName);
             AuthorizationManager authorizationManager = userRealm.getAuthorizationManager();
             String tenantLessUsername = MultitenantUtils.getTenantAwareUsername(user);
 
@@ -165,7 +165,7 @@ public class CarbonCassandraAuthorizer implements IAuthorizer {
             cc.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
             cc.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
 
-            UserRealm userRealm = getRealmForTenant(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
+            UserRealm userRealm = CassandraServerUtil.getRealmForTenant(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
             AuthorizationManager authorizationManager = userRealm.getAuthorizationManager();
 
             for(String action : Action.ALL_ACTIONS_ARRAY){
@@ -199,13 +199,4 @@ public class CarbonCassandraAuthorizer implements IAuthorizer {
         throw new UnauthorizedException(msg);
     }
 
-    private UserRealm getRealmForTenant(String domainName) {
-        try {
-            UserRealmService realmService = CassandraServerDataHolder.getInstance().getRealmService();
-            int tenantID = realmService.getTenantManager().getTenantId(domainName);
-            return realmService.getTenantUserRealm(tenantID);
-        } catch (UserStoreException e) {
-            throw new CassandraServerException("Error accessing the UserRealm for tenant : " + e, log);
-        }
-    }
 }
