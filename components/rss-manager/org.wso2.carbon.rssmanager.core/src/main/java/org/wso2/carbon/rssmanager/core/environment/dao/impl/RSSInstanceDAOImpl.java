@@ -68,6 +68,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			statement.setLong(9, rssInstance.getTenantId());
 			statement.setString(10, rssInstance.getDriverClassName());
 			statement.executeUpdate();
+			conn.commit();
 		} catch (SQLException e) {
 			String msg = "Failed to add rss instance " + rssInstance.getName() + "in rssInstance in environment" + environmentName
 			             + "to meta repository";
@@ -125,6 +126,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			statement.setInt(1, environmentId);
 			statement.setString(2, rssInstanceName);
 			statement.executeUpdate();
+			conn.commit();
 		} catch (SQLException e) {
 			String msg = "Failed to delete rss instance" + rssInstanceName + "in rssInstance in environment" + environmentName +
 			             "from meta repository";
@@ -162,6 +164,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			entryUpdateStatement.setInt(10, environmentId);
 			entryUpdateStatement.setString(11, rssInstance.getName());
 			entryUpdateStatement.executeUpdate();
+			conn.commit();
 		} catch (SQLException e) {
 			String msg = "Failed to update rss instance entry " + rssInstance.getName() + " in the metadata repository";
 			log.error(msg, e);

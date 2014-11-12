@@ -25,7 +25,9 @@
     <carbon:breadcrumb resourceBundle="org.wso2.carbon.rssmanager.ui.i18n.Resources"
                        topPage="false" request="<%=request%>"
                        label="Create Database Privilege Template"/>
-
+	<carbon:jsi18n
+			resourceBundle="org.wso2.carbon.rssmanager.ui.i18n.JSResources"
+			request="<%=request%>" i18nObjectName="rssmanagerjsi18n"/>
     <%
         String[] environments = (String[]) session.getAttribute("environments");
         String envName = request.getParameter("envName");
