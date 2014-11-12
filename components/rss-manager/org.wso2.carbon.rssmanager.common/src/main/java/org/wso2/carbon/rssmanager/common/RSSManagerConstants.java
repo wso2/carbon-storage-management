@@ -82,6 +82,7 @@ public final class RSSManagerConstants {
     public static final String SQLSERVER = "SQLSERVER";
     public static final String ORACLE = "ORACLE";
     public static final String POSTGRES = "POSTGRES";
+    public static final String POSTGRESQL = "POSTGRESQL";
 
     /*RSS Manager operations*/
     public static final String ADD_DATABASE_ENTRY = "Add database entry";
@@ -133,6 +134,11 @@ public final class RSSManagerConstants {
     public static final String STANDARD_TRANSACTION_MANAGER_JNDI_NAME = "java:comp/TransactionManager";
     public static final String STANDARD_USER_TRANSACTION_JNDI_NAME = "java:comp/UserTransaction";
     public static final String RDBMS_DATA_SOURCE_TYPE = "RDBMS";
+
+	/**
+	 * Postgres connection properties
+	 */
+	public static final String POSTGRES_PROPERTY_DATABASE_NAME = "databaseName";
 
     public static final class DataSourceProperties {
         private DataSourceProperties() {
