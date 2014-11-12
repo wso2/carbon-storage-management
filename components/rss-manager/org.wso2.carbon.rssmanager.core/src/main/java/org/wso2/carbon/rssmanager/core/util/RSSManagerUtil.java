@@ -330,37 +330,11 @@ public final class RSSManagerUtil {
 	/**
 	 * Create database url
 	 * @param databaseName name of the database
-	 * @param databaseType database type
 	 * @param serverUrl server url
 	 * @return constructed database url
 	 */
-	private static String createDatabaseUrl(String databaseName, String databaseType, String serverUrl) {
-		if (serverUrl != null && !serverUrl.isEmpty()) {
-			String databaseUrl;
-			if (RSSManagerConstants.RSSManagerProviderTypes.RM_PROVIDER_TYPE_MYSQL.equals(databaseType) || RSSManagerConstants.
-					RSSManagerProviderTypes.RM_PROVIDER_TYPE_POSTGRES.equals(databaseType)
-			    || RSSManagerConstants.RSSManagerProviderTypes.RM_PROVIDER_TYPE_H2.equals(databaseType)) {
-				if (serverUrl.contains("?")) {
-					databaseUrl = serverUrl.substring(0, serverUrl.lastIndexOf("?")).concat("/" + databaseName + "?").
-							concat(serverUrl.substring(serverUrl.lastIndexOf("?") + 1));
-				} else if (serverUrl.endsWith("/")) {
-					databaseUrl = serverUrl.concat(databaseName);
-				} else {
-					databaseUrl = serverUrl.concat("/" + databaseName);
-				}
-			} else if (RSSManagerConstants.RSSManagerProviderTypes.RM_PROVIDER_TYPE_SQLSERVER.equals(databaseType)) {
-				if (serverUrl.contains(";")) {
-					databaseUrl = serverUrl.substring(0, serverUrl.indexOf(";")).concat(";databaseName=" + databaseName + ";").
-							concat(serverUrl.substring(serverUrl.indexOf(";") + 1));
-				} else {
-					databaseUrl = serverUrl.concat(";databaseName=" + databaseName);
-				}
-			} else {
-				databaseUrl = serverUrl;
-			}
-			return databaseUrl;
-		}
-		return serverUrl;
+	private static String createDatabaseUrl(String databaseName, String serverUrl) {
+		return RSSManagerUtil.createDBURL(databaseName, serverUrl);
 	}
 
 
@@ -461,18 +435,81 @@ public final class RSSManagerUtil {
 		        org.wso2.carbon.utils.multitenancy.MultitenantConstants.SUPER_TENANT_ID);
 	}
 
+	/**
+	 * This method will generate the database url for the given server instance by considering instance type
+	 * @param dbName name of the database
+	 * @param url rss server url
+	 * @return constructed database user
+	 */
 	public static String createDBURL(String dbName, String url) {
-		StringBuilder dbURL = new StringBuilder();
-		String trimedURL = url.trim();
-		dbURL.append(trimedURL);
-		boolean endWithSlash = trimedURL.endsWith("/");
-		if (endWithSlash) {
-			dbURL.append(dbName);
+		String dbURL;
+		String databaseServerType = getDatabaseServerType(url);
+		if(RSSManagerConstants.MYSQL.equalsIgnoreCase(databaseServerType)) {
+			dbURL = createDatabaseUrlForMySQL(url, dbName);
+		} else if(RSSManagerConstants.MYSQL.equalsIgnoreCase(databaseServerType)) {
+			dbURL = createDatabaseUrlForMySQL(url, dbName);
+		} else if(RSSManagerConstants.ORACLE.equalsIgnoreCase(databaseServerType)) {
+			dbURL = createDatabaseUrlForOracle(url, dbName);
+		} else if(RSSManagerConstants.H2.equalsIgnoreCase(databaseServerType)) {
+			dbURL = createDatabaseUrlForH2(url, dbName);
+		} else if(RSSManagerConstants.POSTGRESQL.equalsIgnoreCase(databaseServerType)) {
+			dbURL = createDatabaseUrlForPostgresSQL(url, dbName);
+		} else if(RSSManagerConstants.SQLSERVER.equalsIgnoreCase(databaseServerType)) {
+			dbURL = createDatabaseUrlForMSSQL(url, dbName);
 		} else {
-			dbURL.append("/").append(dbName.trim());
+			dbURL = url;
 		}
+		return dbURL;
+	}
 
-		return dbURL.toString();
+	private static String getDatabaseServerType(String url) {
+		return RSSManagerHelper.getDatabasePrefix(url);
+	}
+
+	private static String createDatabaseUrlForOracle(String url, String databaseName) {
+		return url;
+	}
+
+	private static String createDatabaseUrlForMySQL(String url, String databaseName) {
+		return createGenericDatabaseUrl(url, databaseName);
+	}
+
+	private static String createDatabaseUrlForPostgresSQL(String url, String databaseName) {
+		return createGenericDatabaseUrl(url, databaseName);
+	}
+
+	private static String createDatabaseUrlForMSSQL(String url, String databaseName) {
+		if(url.endsWith(";")) {
+			url = url + RSSManagerConstants.POSTGRES_PROPERTY_DATABASE_NAME+"="+databaseName+";";
+		} else {
+			url = url + ";" +RSSManagerConstants.POSTGRES_PROPERTY_DATABASE_NAME+"="+databaseName+";";
+		}
+		return url;
+	}
+
+	private static String createDatabaseUrlForH2(String url, String databaseName) {
+		if (url.contains("/?")) {
+			url = url.replace("/?", "/" + databaseName + "?");
+		} else if (url.contains("?")) {
+			url = url.replace("?", "/" + databaseName + "?");
+		} else if(url.lastIndexOf("/")!=(url.length()-1)) {
+			url = new StringBuilder(url).replace(url.lastIndexOf("/"), url.lastIndexOf("/")+1,
+					"/"+databaseName+";").toString();
+		} else {
+			url = url + "/" + databaseName;
+		}
+		return url;
+	}
+
+	private static String createGenericDatabaseUrl(String url, String databaseName) {
+		if (url.contains("/?")) {
+			url = url.replace("/?", "/" + databaseName + "?");
+		} else if (url.contains("?")) {
+			url = url.replace("?", "/" + databaseName + "?");
+		} else {
+			url = url + "/" + databaseName;
+		}
+		return url;
 	}
 
 	/**
@@ -543,8 +580,7 @@ public final class RSSManagerUtil {
 			databaseInfo.setRssInstanceName(database.getRssInstanceName());
 		}
 		databaseInfo.setType(database.getType());
-		databaseInfo.setUrl(createDatabaseUrl(database.getName(), database.getDatabaseType(), database.getRssInstanceUrl()));
-
+		databaseInfo.setUrl(createDatabaseUrl(database.getName(), database.getRssInstanceUrl()));
 	}
 
 	/**

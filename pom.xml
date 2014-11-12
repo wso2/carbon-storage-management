@@ -1010,6 +1010,12 @@
 		<version>${junit.version}</version>
 		<scope>test</scope>
 	    </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
     </dependencyManagement>
     <properties>
@@ -1066,6 +1072,7 @@
 	<xercesImpl.version>2.8.1</xercesImpl.version>
 	<juddi.wso2.version>3.0.3.wso2v2</juddi.wso2.version>
 	<junit.version>3.8.2</junit.version>
+	<testng.version>6.3.1</testng.version>
 	<xmlschema.version>1.4.3</xmlschema.version>
 	<version.javax.servlet>3.0.0.v201112011016</version.javax.servlet>
 	
