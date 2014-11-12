@@ -36,7 +36,6 @@ public class HadoopCarbonSecurityActivator implements BundleActivator {
 
     protected void activate(ComponentContext componentContext) {
         Krb5TicketCacheFinder krb5TktCacheFndr = new Krb5TicketCacheFinderImpl();
-        //  UserGroupInformation.setKrb5TicketCacheFinder(krb5TktCacheFndr);   // not adding as cache finder
         log.debug("Activated Hadoop Carbon security through " + Krb5TicketCacheFinderImpl.class.getName());
 
     }

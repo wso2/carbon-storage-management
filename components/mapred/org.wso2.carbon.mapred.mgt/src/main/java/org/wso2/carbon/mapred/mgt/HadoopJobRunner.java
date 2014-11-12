@@ -71,9 +71,9 @@ public class HadoopJobRunner extends AbstractAdmin {
 		try {
 			hadoopCarbonConfig.load(new FileReader(HADOOP_CONFIG));
 		} catch (FileNotFoundException e) {
-			log.error(e.getMessage());
+			log.error("Hadoop configuration file is not found", e);
 		} catch (IOException e) {
-			log.error(e.getMessage());
+			log.error("Error occurred whil loading the hadoop configuration file" + e.getMessage(), e);
 		}
 		hadoopCarbonConfigDir = hadoopCarbonConfig.getProperty("hadoop.config.dir");
 		conf = new Configuration();
@@ -104,7 +104,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 			try {
 				hadoopJobThread.wait();
 			} catch (InterruptedException e) {
-				log.error(e.getMessage());
+				log.error("Error occurred when waiting the Haddop job runner thread" + e.getMessage(), e);
 			}
 		}
 		CarbonJobReporter reporter = hadoopJobThread.getCarbonJobReporter();
@@ -113,7 +113,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 			try {
 				reporter.wait();
 			} catch (InterruptedException e) {
-				log.error(e.getMessage());
+				log.error("Error occurred when waiting the reporter thread" + e.getMessage(), e);
 			}
 		}
 		return threadUuid.toString();
@@ -142,8 +142,9 @@ public class HadoopJobRunner extends AbstractAdmin {
 			jsonObj.put("JobCompleted", reporter.isJobComplete());
 			jsonObj.put("JobSuccessful", reporter.isJobSuccessful());
 		} catch (Exception e) {
-			log.error(e.getMessage());
-			throw new MapredManagerException("Error while getting job status", e);
+			String msg = "Error while getting job status";
+			log.error(msg, e);
+			throw new MapredManagerException(msg, e);
 		}
 		return jsonObj.toString();
 	}
@@ -178,8 +179,9 @@ public class HadoopJobRunner extends AbstractAdmin {
 				registry.put(REG_JOB_STATS_PATH+jsonObj.getString("JobUser"), resource);
 			}
 		} catch (Exception e) {
-			log.error(e.getMessage());
-			throw new MapredManagerException("Error while attaching final report", e);
+			String msg = "Error while attaching final report";
+			log.error(msg, e);
+			throw new MapredManagerException(msg, e);
 		}
 	}
 	
@@ -210,7 +212,8 @@ public class HadoopJobRunner extends AbstractAdmin {
 			}
 			
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			String msg = "Error while getting final report list";
+			log.error(msg, e);
 			throw new MapredManagerException("Error while getting final report list", e);
 		}
 		return null;
@@ -230,7 +233,8 @@ public class HadoopJobRunner extends AbstractAdmin {
 			}
 			
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			String msg = "Error while getting final job report";
+			log.error(msg, e);
 			throw new MapredManagerException("Error while getting final job report", e);
 		}
 		return null;
@@ -253,7 +257,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 		try {
 			resource = reg.get(REG_JAR_PATH+getCurrentUser()+File.separator+jarPath);
 		} catch (RegistryException e) {
-			log.error(e.getMessage());
+			log.error("Error while geting the registry resource" + e.getMessage(), e);
 			return;
 		}
 		try {
@@ -271,8 +275,9 @@ public class HadoopJobRunner extends AbstractAdmin {
 			resIS.close();
 			fos.close();
 		} catch (Exception e) {
-			log.error(e.getMessage());
-			throw new MapredManagerException("Error while getting jar", e);
+			String msg = "Error while getting jar";
+			log.error(msg, e);
+			throw new MapredManagerException(msg, e);
 		}
 	}
 	
@@ -288,8 +293,9 @@ public class HadoopJobRunner extends AbstractAdmin {
 			resource.setContentStream(dataHandler.getInputStream());
 			String out = reg.put(REG_JAR_PATH+getCurrentUser()+ File.separator+friendlyName, resource);
 		} catch (Exception e) {
-			log.error(e.getMessage());
-			throw new MapredManagerException("Error while putting jar to the registry", e);
+			String msg = "Error while putting jar to the registry";
+			log.error(msg, e);
+			throw new MapredManagerException(msg, e);
 		}
 	}
 	
@@ -314,7 +320,8 @@ public class HadoopJobRunner extends AbstractAdmin {
 	        }
 	        result.discard();
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			String msg = "Error while getting jar list";
+			log.error(msg, e);
 			throw new MapredManagerException("Error while getting jar list", e);
 		}
 		return paths;
