@@ -188,7 +188,7 @@ public class CarbonJobReporter extends JobReporter {
 				try {
 					Thread.sleep(MAX_CACHED_TIME_MS * 2);
 				} catch (InterruptedException e) {
-					log.error(e.getMessage());
+					log.error(e.getMessage(), e);
 				}
 			}
 		}

@@ -34,7 +34,9 @@
 <fmt:bundle basename="org.wso2.carbon.rssmanager.ui.i18n.Resources">
 <carbon:breadcrumb resourceBundle="org.wso2.carbon.rssmanager.ui.i18n.Resources"
                    topPage="false" request="<%=request%>" label="Edit Privilege Template"/>
-
+<carbon:jsi18n
+		resourceBundle="org.wso2.carbon.rssmanager.ui.i18n.JSResources"
+		request="<%=request%>" i18nObjectName="rssmanagerjsi18n"/>
 <%
     String templateName = request.getParameter("privilegeTemplateName");
     RSSManagerClient client;

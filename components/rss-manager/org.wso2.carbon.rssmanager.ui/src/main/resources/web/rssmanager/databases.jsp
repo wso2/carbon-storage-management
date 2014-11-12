@@ -34,7 +34,9 @@
                    topPage="true"
                    request="<%=request%>"
                    label="Databases"/>
-
+<carbon:jsi18n
+		resourceBundle="org.wso2.carbon.rssmanager.ui.i18n.JSResources"
+		request="<%=request%>" i18nObjectName="rssmanagerjsi18n"/>
 <fmt:bundle basename="org.wso2.carbon.rssmanager.ui.i18n.Resources">
 
     <%

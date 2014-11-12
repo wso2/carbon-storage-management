@@ -25,10 +25,9 @@ import org.apache.cassandra.exceptions.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.base.MultitenantConstants;
-import org.wso2.carbon.cassandra.common.auth.Action;
-import org.wso2.carbon.cassandra.common.auth.AuthUtils;
 import org.wso2.carbon.cassandra.common.cache.UserAccessKeyCacheEntry;
 import org.wso2.carbon.cassandra.server.internal.CassandraServerDataHolder;
+import org.wso2.carbon.cassandra.server.util.CassandraServerUtil;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.identity.authentication.AuthenticationService;
 import org.wso2.carbon.user.api.*;
@@ -111,9 +110,7 @@ public class CarbonCassandraAuthenticator implements IAuthenticator {
     }
 
     private boolean isAuthenticated(String username, String keyAccess) {
-
         UserAccessKeyCacheEntry value = null;
-
         try {
             PrivilegedCarbonContext.startTenantFlow();
             PrivilegedCarbonContext cc = PrivilegedCarbonContext.getThreadLocalCarbonContext();
@@ -123,6 +120,9 @@ public class CarbonCassandraAuthenticator implements IAuthenticator {
             Cache<String, UserAccessKeyCacheEntry> cache = Caching.getCacheManagerFactory()
                     .getCacheManager(CASSANDRA_ACCESS_CACHE_MANAGER).getCache(CASSANDRA_ACCESS_KEY_CACHE);
             value = cache.get(keyAccess);
+        } catch (Exception ex) {
+            log.error("Error occurred while authenticating the user: " + username, ex);
+            return false;
         } finally {
             PrivilegedCarbonContext.endTenantFlow();
         }
@@ -130,6 +130,7 @@ public class CarbonCassandraAuthenticator implements IAuthenticator {
             if (log.isDebugEnabled()) {
                 log.debug("The key is not present in " + CASSANDRA_ACCESS_KEY_CACHE);
             }
+            return false;
         }
         if (keyAccess != null && value != null) {
             String sharedKey = value.getAccessKey();
@@ -152,10 +153,13 @@ public class CarbonCassandraAuthenticator implements IAuthenticator {
                     .getCacheManager(CASSANDRA_API_CREDENTIAL_CACHE_MANAGER).getCache(CASSANDRA_API_CREDENTIAL_CACHE);
             if (cache.get(username) != null && cache.get(username).getAccessKey().equals(password)) {
                 return true;
-            } else if (authenticationService.authenticate(username, password)) {
+            } else if (CassandraServerUtil.getRealmForTenant(MultitenantUtils.getTenantDomain(username))
+                    .getUserStoreManager().authenticate(username, password)) {
                 cache.put(username, new UserAccessKeyCacheEntry(password));
                 return true;
             }
+        } catch (Exception ex) {
+            log.error("Error occurred while authenticating the user: " + username, ex);
         } finally {
             PrivilegedCarbonContext.endTenantFlow();
         }

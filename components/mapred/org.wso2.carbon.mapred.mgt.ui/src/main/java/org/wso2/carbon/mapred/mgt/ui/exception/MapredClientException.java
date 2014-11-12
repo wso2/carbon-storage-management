@@ -16,12 +16,12 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.wso2.carbon.cassandra.mgt.ui;
+package org.wso2.carbon.mapred.mgt.ui;
 
 import org.apache.commons.logging.Log;
 
 /**
- * Represents errors on the cassandra admin client-side
+ * Represents errors on the mapred admin client-side
  */
 
 public class MapredClientException extends RuntimeException {
