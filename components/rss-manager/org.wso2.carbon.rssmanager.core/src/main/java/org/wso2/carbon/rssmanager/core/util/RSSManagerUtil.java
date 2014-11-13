@@ -56,7 +56,6 @@ import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.RSSManagerDataHolder;
-import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecretResolverFactory;
@@ -87,6 +86,7 @@ public final class RSSManagerUtil {
 	private static SecretResolver secretResolver;
 	private static String jndiDataSourceName;
 	private static DataSource dataSource;
+	private static final String DEFAULT_PRIVILEGE_TEMPLATE_NAME = "CRUD_PRIVILEGES_DEFAULT";
 
 	/**
 	 * Retrieves the tenant domain name for a given tenant ID
@@ -492,7 +492,7 @@ public final class RSSManagerUtil {
 			url = url.replace("/?", "/" + databaseName + "?");
 		} else if (url.contains("?")) {
 			url = url.replace("?", "/" + databaseName + "?");
-		} else if(url.lastIndexOf("/")!=(url.length()-1)) {
+		} else if(url.lastIndexOf("/")!=(url.length()-1) && url.contains(";")) {
 			url = new StringBuilder(url).replace(url.lastIndexOf("/"), url.lastIndexOf("/")+1,
 					"/"+databaseName+";").toString();
 		} else {
@@ -931,5 +931,37 @@ public final class RSSManagerUtil {
 
 	public static void setDataSource(DataSource dataSource) {
 		RSSManagerUtil.dataSource = dataSource;
+	}
+
+	/**
+	 * Create default database privilege template
+	 * @return DatabasePrivilegeTemplate
+	 */
+	public static DatabasePrivilegeTemplate createDeafultDBPrivilegeTemplate() {
+		DatabasePrivilegeTemplate privilegeTemplate = new DatabasePrivilegeTemplate();
+		privilegeTemplate.setName(DEFAULT_PRIVILEGE_TEMPLATE_NAME);
+		DatabasePrivilegeTemplateEntry entry = new DatabasePrivilegeTemplateEntry();
+		entry.setUpdatePriv("Y");
+		entry.setDeletePriv("Y");
+		entry.setSelectPriv("Y");
+		entry.setInsertPriv("Y");
+		entry.setCreatePriv("N");
+		entry.setAlterPriv("N");
+		entry.setDropPriv("N");
+		entry.setIndexPriv("N");
+		entry.setAlterRoutinePriv("N");
+		entry.setCreateRoutinePriv("N");
+		entry.setCreateTmpTablePriv("N");
+		entry.setCreateViewPriv("N");
+		entry.setEventPriv("N");
+		entry.setExecutePriv("N");
+		entry.setGrantPriv("N");
+		entry.setLockTablesPriv("N");
+		entry.setReferencesPriv("N");
+		entry.setAlterRoutinePriv("N");
+		entry.setShowViewPriv("N");
+		entry.setTriggerPriv("N");
+		privilegeTemplate.setEntry(entry);
+		return privilegeTemplate;
 	}
 }

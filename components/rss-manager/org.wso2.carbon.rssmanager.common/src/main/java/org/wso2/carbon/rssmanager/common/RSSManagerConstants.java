@@ -83,6 +83,7 @@ public final class RSSManagerConstants {
     public static final String ORACLE = "ORACLE";
     public static final String POSTGRES = "POSTGRES";
     public static final String POSTGRESQL = "POSTGRESQL";
+    public static final String DEFAULT_ENVIRONMENT_NAME = "DEFAULT";
 
     /*RSS Manager operations*/
     public static final String ADD_DATABASE_ENTRY = "Add database entry";
