@@ -34,7 +34,6 @@ public class CassandraAdminClientException extends RuntimeException {
      */
     public CassandraAdminClientException(String msg, Log log) {
         super(msg);
-        log.error(msg);
     }
 
     /**
@@ -46,6 +45,5 @@ public class CassandraAdminClientException extends RuntimeException {
      */
     public CassandraAdminClientException(String msg, Throwable throwable, Log log) {
         super(msg, throwable);
-        log.error(msg, throwable);
     }
 }
