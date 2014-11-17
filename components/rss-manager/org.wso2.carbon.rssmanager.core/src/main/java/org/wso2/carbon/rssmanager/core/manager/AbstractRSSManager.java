@@ -22,7 +22,6 @@ package org.wso2.carbon.rssmanager.core.manager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
-import org.wso2.carbon.rssmanager.core.config.RSSManagementRepository;
 import org.wso2.carbon.rssmanager.core.config.node.allocation.NodeAllocationStrategy;
 import org.wso2.carbon.rssmanager.core.config.node.allocation.NodeAllocationStrategyFactory;
 import org.wso2.carbon.rssmanager.core.dao.DatabaseDAO;
@@ -59,7 +58,7 @@ import java.util.Set;
  * Abstract class contains the common operations related to metadata handling
  * of both user defined and system RSS Instances
  */
-public abstract class AbstractRSSManager {
+public abstract class AbstractRSSManager implements RSSManager{
 
 	private static final Log log = LogFactory.getLog(AbstractRSSManager.class);
 	private RSSDAO rssDAO;
@@ -77,7 +76,6 @@ public abstract class AbstractRSSManager {
 	 */
 	public AbstractRSSManager(Environment environment) {
 		this.environment = environment;
-		/* Initializing entity manager used in RSS DAO */
 		this.environmentManagementDAO = EnvironmentManagementDAOFactory.getEnvironmentManagementDAO();
 		this.rssDAO = RSSDAOFactory.getRSSDAO(resolveDBMSType(environment));
 		databaseDAO = rssDAO.getDatabaseDAO();
@@ -678,4 +676,12 @@ public abstract class AbstractRSSManager {
 	public DatabaseDAO getDatabaseDAO() {
 		return databaseDAO;
 	}
+
+    /**
+     * Creates a database snapshot of a database.
+     *
+     * @param databaseName
+     * @throws RSSManagerException
+     */
+    public abstract void createSnapshot(String databaseName) throws RSSManagerException;
 }

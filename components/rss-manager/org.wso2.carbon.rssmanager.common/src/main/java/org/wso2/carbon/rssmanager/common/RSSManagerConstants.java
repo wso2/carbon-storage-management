@@ -198,4 +198,15 @@ public final class RSSManagerConstants {
         public static final String RM_TYPE_USER_DEFINED = "USER_DEFINED";
     }
 
+    public static final class Snapshots {
+        public static final String SNAPSHOT_DIRECTORY_NAME = "snapshots";
+        public static final String SNAPSHOT_FILE_POST_FIX = "snapshot.sql";
+
+        public static final String MYSQL_DUMP_TOOL = "mysqldump";
+
+        public static final String USERNAME_OPTION = "-u";
+        public static final String PASSWORD_OPTION = "-p";
+        public static final String OUTPUT_FILE_OPTION = "-r";
+    }
+
 }

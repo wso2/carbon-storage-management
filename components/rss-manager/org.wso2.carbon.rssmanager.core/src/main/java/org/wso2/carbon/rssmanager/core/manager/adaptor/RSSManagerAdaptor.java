@@ -145,8 +145,8 @@ public interface RSSManagerAdaptor {
 	 * @param rssInstanceName name of the rss instance
 	 * @param databaseName name of the database
 	 * @param username of the database user
-	 * @param type
-	 * @return
+     * @param type instance type
+	 * @return DatabasePrivilegeSet
 	 * @throws RSSManagerException
 	 */
 	DatabasePrivilegeSet getUserDatabasePrivileges(String rssInstanceName, String databaseName,
@@ -193,11 +193,19 @@ public interface RSSManagerAdaptor {
 	/**
 	 * Edit database user
 	 *
-	 * @param environmentName name of the environment
 	 * @param databaseUser database user properties
 	 * @return database user object
 	 * @throws RSSManagerException if error occurred when editing database user
 	 */
-	DatabaseUser editDatabaseUser(String environmentName, DatabaseUser databaseUser) throws RSSManagerException;
+	DatabaseUser editDatabaseUser(DatabaseUser databaseUser) throws RSSManagerException;
+
+    /**
+     * Creates a database snapshot of a database.
+     *
+     * @param databaseName name of the database
+     * @param type instance type
+     * @throws RSSManagerException
+     */
+    public void createSnapshot(String databaseName, String type) throws RSSManagerException;
 
 }

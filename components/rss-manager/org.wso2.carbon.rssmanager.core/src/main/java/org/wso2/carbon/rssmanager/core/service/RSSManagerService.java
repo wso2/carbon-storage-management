@@ -414,4 +414,14 @@ public interface RSSManagerService {
 	 * @return String
 	 */
 	String getRSSProvider();
+
+    /**
+     * Creates a database snapshot of a database.
+     *
+     * @param environmentName the name of the environment
+     * @param databaseName    name of the database
+     * @param type            RSS Instance type
+     * @throws RSSManagerException
+     */
+    public void createSnapshot(String environmentName, String databaseName, String type) throws RSSManagerException;
 }

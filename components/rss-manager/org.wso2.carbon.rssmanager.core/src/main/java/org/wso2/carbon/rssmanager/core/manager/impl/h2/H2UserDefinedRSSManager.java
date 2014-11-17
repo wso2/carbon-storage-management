@@ -23,8 +23,6 @@ package org.wso2.carbon.rssmanager.core.manager.impl.h2;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
-import org.wso2.carbon.rssmanager.core.config.RSSManagementRepository;
-import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.H2PrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry;
@@ -36,15 +34,17 @@ import org.wso2.carbon.rssmanager.core.environment.dao.RSSInstanceDAO;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.manager.RSSManager;
 import org.wso2.carbon.rssmanager.core.manager.UserDefinedRSSManager;
+import org.wso2.carbon.rssmanager.core.util.ProcessBuilderWrapper;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 
+import javax.sql.DataSource;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @see org.wso2.carbon.rssmanager.core.manager.RSSManager for the method java doc comments
@@ -276,7 +276,7 @@ public class H2UserDefinedRSSManager extends UserDefinedRSSManager {
 		TABLE
 	}
 
-	public DatabaseUser editDatabaseUser(String environmentName, DatabaseUser databaseUser) {
+	public DatabaseUser editDatabaseUser(DatabaseUser databaseUser) {
 		//TODO implement the edit database user for H2 if applicable
 		return null;
 	}
@@ -416,4 +416,48 @@ public class H2UserDefinedRSSManager extends UserDefinedRSSManager {
 		statement.executeUpdate();
 		statement.close();
 	}
+
+    /**
+     * @see org.wso2.carbon.rssmanager.core.manager.AbstractRSSManager#createSnapshot
+     */
+    @Override
+    public void createSnapshot(String databaseName) throws RSSManagerException {
+        Connection conn = null;
+        PreparedStatement snapshotStatement = null;
+        try {
+            RSSManagerUtil.createSnapshotDirectory();
+            int tenantId = RSSManagerUtil.getTenantId();
+            String rssInstanceName = this.getRSSDAO().getDatabaseDAO()
+                    .resolveRSSInstanceNameByDatabase(this.getEnvironmentName(),
+                                                      databaseName,
+                                                      RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED,
+                                                      tenantId);
+            DataSource dataSource = getDataSource(rssInstanceName, databaseName);
+            conn = dataSource.getConnection();
+            String snapshotQuery = "SCRIPT TO '?'";
+            snapshotStatement = conn.prepareStatement(snapshotQuery);
+            String filePath = RSSManagerUtil.getSnapshotFilePath(databaseName);
+            snapshotStatement.setString(1, filePath);
+            snapshotStatement.executeQuery();
+        } catch (Exception e) {
+            String errorMessage = "Error occurred while creating snapshot.";
+            log.error(errorMessage, e);
+            throw new RSSManagerException(errorMessage, e);
+        } finally {
+            if (snapshotStatement != null) {
+                try {
+                    snapshotStatement.close();
+                } catch (SQLException e) {
+                    log.error("Closing prepared statement failed after creating snapshot.", e);
+                }
+            }
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    log.error("Closing prepared statement failed after creating snapshot.", e);
+                }
+            }
+        }
+    }
 }

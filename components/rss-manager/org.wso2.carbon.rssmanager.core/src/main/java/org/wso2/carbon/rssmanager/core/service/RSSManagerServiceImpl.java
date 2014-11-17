@@ -536,5 +536,13 @@ public class RSSManagerServiceImpl implements RSSManagerService {
 	public String getRSSProvider() {
 		return RSSConfigurationManager.getInstance().getCurrentRSSConfig().getRSSProvider();
 	}
+
+    /**
+     * @see RSSManagerService#createSnapshot
+     */
+    @Override
+    public void createSnapshot(String environmentName, String databaseName, String type) throws RSSManagerException {
+        this.getEnvironmentAdaptor().createSnapshot(environmentName, databaseName, type);
+    }
 }
 
