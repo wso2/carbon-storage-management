@@ -22,9 +22,7 @@ package org.wso2.carbon.rssmanager.core.manager.impl.sqlserver;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
-import org.wso2.carbon.rssmanager.core.config.RSSManagementRepository;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.MySQLPrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.SQLServerPrivilegeSet;
@@ -35,17 +33,15 @@ import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
 import org.wso2.carbon.rssmanager.core.environment.Environment;
 import org.wso2.carbon.rssmanager.core.environment.dao.RSSInstanceDAO;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
-import org.wso2.carbon.rssmanager.core.manager.RSSManager;
 import org.wso2.carbon.rssmanager.core.manager.UserDefinedRSSManager;
+import org.wso2.carbon.rssmanager.core.util.ProcessBuilderWrapper;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @see org.wso2.carbon.rssmanager.core.manager.RSSManager for the method java doc comments
@@ -520,9 +516,39 @@ public class SQLServerUserDefinedRSSManager extends UserDefinedRSSManager {
 	}
 
 	@Override
-	public DatabaseUser editDatabaseUser(String environmentName, DatabaseUser databaseUser) {
+	public DatabaseUser editDatabaseUser(DatabaseUser databaseUser) {
 		//TODO implement if applicable
 		return null;
 	}
+
+    /**
+     * @see org.wso2.carbon.rssmanager.core.manager.AbstractRSSManager#createSnapshot
+     */
+    @Override
+    public void createSnapshot(String databaseName) throws RSSManagerException {
+        RSSInstance instance = resolveRSSInstanceByDatabase(databaseName,
+                                                            RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        RSSManagerUtil.createSnapshotDirectory();
+        ProcessBuilderWrapper processBuilder = new ProcessBuilderWrapper();
+        List command = new ArrayList();
+        command.add(RSSManagerConstants.Snapshots.MYSQL_DUMP_TOOL);
+        command.add(RSSManagerConstants.Snapshots.USERNAME_OPTION);
+        command.add(instance.getAdminUserName());
+        command.add(RSSManagerConstants.Snapshots.PASSWORD_OPTION + instance.getAdminPassword());
+        command.add(databaseName);
+        command.add(RSSManagerConstants.Snapshots.OUTPUT_FILE_OPTION);
+        command.add(RSSManagerUtil.getSnapshotFilePath(databaseName));
+        try {
+            processBuilder.execute(command);
+        } catch (Exception e) {
+            String errorMessage = "Error occurred while creating snapshot.";
+            log.error(errorMessage, e);
+            throw new RSSManagerException(errorMessage, e);
+        }
+        String errors = processBuilder.getErrors();
+        if (errors != null && !errors.isEmpty()) {
+            throw new RSSManagerException("Error occurred while creating Snapshot. " + errors);
+        }
+    }
 }
 

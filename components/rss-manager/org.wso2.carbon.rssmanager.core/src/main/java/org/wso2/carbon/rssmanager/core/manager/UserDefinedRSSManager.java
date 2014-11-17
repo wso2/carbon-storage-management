@@ -32,7 +32,7 @@ import org.wso2.carbon.rssmanager.core.environment.Environment;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 
-public abstract class UserDefinedRSSManager extends AbstractRSSManager implements RSSManager {
+public abstract class UserDefinedRSSManager extends AbstractRSSManager {
 
 	public UserDefinedRSSManager(Environment environment) {
 		super(environment);
