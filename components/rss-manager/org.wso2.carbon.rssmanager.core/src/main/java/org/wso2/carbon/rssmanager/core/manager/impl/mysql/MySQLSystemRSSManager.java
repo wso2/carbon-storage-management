@@ -21,7 +21,6 @@ package org.wso2.carbon.rssmanager.core.manager.impl.mysql;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
-import org.wso2.carbon.rssmanager.core.util.ProcessBuilderWrapper;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.MySQLPrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry;
@@ -33,14 +32,19 @@ import org.wso2.carbon.rssmanager.core.environment.dao.RSSInstanceDAO;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.manager.RSSManager;
 import org.wso2.carbon.rssmanager.core.manager.SystemRSSManager;
+import org.wso2.carbon.rssmanager.core.util.ProcessBuilderWrapper;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * @see org.wso2.carbon.rssmanager.core.manager.RSSManager for the method java doc comments
@@ -64,7 +68,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
         //get qualified name for database which specific to tenant
         final String qualifiedDatabaseName = RSSManagerUtil.getFullyQualifiedDatabaseName(database.getName());
         boolean isExist = super.isDatabaseExist(database.getRssInstanceName(), qualifiedDatabaseName,
-                RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+                                                RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
         if (isExist) {
             String msg = "Database '" + qualifiedDatabaseName + "' already exists";
             log.error(msg);
@@ -87,7 +91,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
             super.addDatabase(nativeAddDBStatement, database, rssInstance, qualifiedDatabaseName);
         } catch (Exception e) {
             String msg = "Error while creating the database '" + qualifiedDatabaseName +
-                    "' on RSS instance '" + rssInstance.getName() + "' : " + e.getMessage();
+                         "' on RSS instance '" + rssInstance.getName() + "' : " + e.getMessage();
             handleException(msg, e);
         } finally {
             RSSManagerUtil.cleanupResources(null, nativeAddDBStatement, conn);
@@ -115,11 +119,11 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
             String removeDBQuery = "DROP DATABASE `" + databaseName + "`";
             nativeRemoveDBStatement = conn.prepareStatement(removeDBQuery);
             super.removeDatabase(nativeRemoveDBStatement, rssInstance.getName(), databaseName, rssInstance,
-                    RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+                                 RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
         } catch (Exception e) {
             String msg = "Error while dropping the database '" + databaseName +
-                    "' on RSS " + "instance '" + rssInstance.getName() + "' : " +
-                    e.getMessage();
+                         "' on RSS " + "instance '" + rssInstance.getName() + "' : " +
+                         e.getMessage();
             handleException(msg, e);
         } finally {
             RSSManagerUtil.cleanupResources(null, nativeRemoveDBStatement, conn);
@@ -239,7 +243,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
             }
         } catch (Exception e) {
             String msg = "Error while dropping the database user '" + username +
-                    "' on RSS instances : " + e.getMessage();
+                         "' on RSS instances : " + e.getMessage();
             handleException(msg, e);
         }
     }
@@ -262,7 +266,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
             RSSInstance rssInstance = this.getEnvironment().getRSSInstance(rssInstanceName);
             if (rssInstance == null) {
                 String msg = "Database '" + databaseName + "' does not exist " +
-                        "in RSS instance '" + user.getRssInstanceName() + "'";
+                             "in RSS instance '" + user.getRssInstanceName() + "'";
                 throw new RSSManagerException(msg);
             }
             user.setRssInstanceName(rssInstance.getName());
@@ -270,7 +274,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
             //create update privilege statement
             updatePrivilegesStatement = updateUserPriviledgesPreparedStatement(conn, databaseName, user.getUsername(), privileges);
             super.updateDatabaseUserPrivileges(updatePrivilegesStatement, rssInstanceName, databaseName, privileges, user.getUsername(),
-                    RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+                                               RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
         } catch (Exception e) {
             String msg = "Error occurred while updating database user privileges: " + e.getMessage();
             handleException(msg, e);
@@ -280,9 +284,9 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
     }
 
     /**
-     * @see RSSManager#editDatabaseUser(String, org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser)
+     * @see RSSManager#editDatabaseUser(org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser)
      */
-    public DatabaseUser editDatabaseUser(String environmentName, DatabaseUser databaseUser) throws RSSManagerException {
+    public DatabaseUser editDatabaseUser(DatabaseUser databaseUser) throws RSSManagerException {
         Connection conn = null;
         PreparedStatement nativeEditDatabaseUserStatement = null;
             /* Validating user information to avoid any possible SQL injection attacks */
@@ -368,7 +372,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
             this.flushPrivileges(rssInstance);
         } catch (Exception e) {
             String msg = "Error occurred while attaching the database user '" + username + "' to " +
-                    "the database '" + databaseName + "' : " + e.getMessage();
+                         "the database '" + databaseName + "' : " + e.getMessage();
             handleException(msg, e);
         } finally {
             RSSManagerUtil.cleanupResources(null, nativeAttacheUserStatement, conn);
@@ -385,7 +389,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
         try {
             int tenantId = RSSManagerUtil.getTenantId();
             String rssInstanceName = getDatabaseDAO().resolveRSSInstanceNameByDatabase(this.getEnvironmentName(),
-                    entry.getDatabaseName(), entry.getType(), tenantId);
+                                                                                       entry.getDatabaseName(), entry.getType(), tenantId);
             RSSInstance rssInstance = rssInstanceDAO.getRSSInstance(this.getEnvironmentName(), rssInstanceName, tenantId);
             conn = getConnection(rssInstanceName);
             String sql = "DELETE FROM mysql.db WHERE host = ? AND user = ? AND db = ?";
@@ -397,8 +401,8 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
             this.flushPrivileges(rssInstance);
         } catch (Exception e) {
             String msg = "Error occurred while attaching the database user '" +
-                    entry.getUsername() + "' to " + "the database '" + entry.getDatabaseName() +
-                    "': " + e.getMessage();
+                         entry.getUsername() + "' to " + "the database '" + entry.getDatabaseName() +
+                         "': " + e.getMessage();
             handleException(msg, e);
         } finally {
             RSSManagerUtil.cleanupResources(null, stmt, conn);
@@ -462,17 +466,18 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
      */
     private PreparedStatement updateUserPriviledgesPreparedStatement(Connection conn, String databaseName,
                                                                      String username,
-                                                                     DatabasePrivilegeSet privileges) throws SQLException {
+                                                                     DatabasePrivilegeSet privileges)
+            throws SQLException {
         if (!(privileges instanceof MySQLPrivilegeSet)) {
             throw new RuntimeException("Invalid privilege set specified");
         }
         MySQLPrivilegeSet mysqlPrivs = (MySQLPrivilegeSet) privileges;
         String sql = "UPDATE mysql.db SET select_priv = ?," +
-                "insert_priv = ?,  update_priv = ?,  delete_priv = ?, " +
-                "create_priv = ? , drop_priv = ? , grant_priv = ?, references_priv = ?, " +
-                "index_priv = ?, alter_priv = ?, create_tmp_table_priv = ?, lock_tables_priv = ? ," +
-                "create_view_priv = ?, show_view_priv = ?, create_routine_priv = ?, alter_routine_priv = ?," +
-                "execute_priv = ?, event_priv = ?, trigger_priv = ? WHERE host = ? and db = ? and user = ? ";
+                     "insert_priv = ?,  update_priv = ?,  delete_priv = ?, " +
+                     "create_priv = ? , drop_priv = ? , grant_priv = ?, references_priv = ?, " +
+                     "index_priv = ?, alter_priv = ?, create_tmp_table_priv = ?, lock_tables_priv = ? ," +
+                     "create_view_priv = ?, show_view_priv = ?, create_routine_priv = ?, alter_routine_priv = ?," +
+                     "execute_priv = ?, event_priv = ?, trigger_priv = ? WHERE host = ? and db = ? and user = ? ";
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setString(1, mysqlPrivs.getSelectPriv());
         stmt.setString(2, mysqlPrivs.getInsertPriv());
@@ -508,7 +513,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
             isExist = super.isDatabaseExist(rssInstanceName, databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
         } catch (Exception ex) {
             String msg = "Error while check whether database '" + databaseName +
-                    "' on RSS instance : " + rssInstanceName + "exists" + ex.getMessage();
+                         "' on RSS instance : " + rssInstanceName + "exists" + ex.getMessage();
             handleException(msg, ex);
         }
         return isExist;
@@ -530,7 +535,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
             isExist = super.isDatabaseUserExist(rssInstanceName, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
         } catch (Exception ex) {
             String msg = "Error while check whether user '" + username +
-                    "' on RSS instance : " + rssInstanceName + "exists" + ex.getMessage();
+                         "' on RSS instance : " + rssInstanceName + "exists" + ex.getMessage();
             handleException(msg, ex);
         }
         return isExist;
@@ -559,22 +564,32 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
     }
 
     /**
-     * @see org.wso2.carbon.rssmanager.core.manager.AbstractRSSManager#createSnapshot(String)
+     * @see org.wso2.carbon.rssmanager.core.manager.AbstractRSSManager#createSnapshot
      */
     @Override
     public void createSnapshot(String databaseName) throws RSSManagerException {
+        RSSInstance instance = resolveRSSInstanceByDatabase(databaseName,
+                                                            RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        RSSManagerUtil.createSnapshotDirectory();
         ProcessBuilderWrapper processBuilder = new ProcessBuilderWrapper();
         List command = new ArrayList();
-        command.add("df");
+        command.add(RSSManagerConstants.Snapshots.MYSQL_DUMP_TOOL);
+        command.add(RSSManagerConstants.Snapshots.USERNAME_OPTION);
+        command.add(instance.getAdminUserName());
+        command.add(RSSManagerConstants.Snapshots.PASSWORD_OPTION + instance.getAdminPassword());
+        command.add(databaseName);
+        command.add(RSSManagerConstants.Snapshots.OUTPUT_FILE_OPTION);
+        command.add(RSSManagerUtil.getSnapshotFilePath(databaseName));
         try {
             processBuilder.execute(command);
         } catch (Exception e) {
-            throw new RSSManagerException("Error occurred while creating Snapshot.", e);
+            String errorMessage = "Error occurred while creating snapshot.";
+            log.error(errorMessage, e);
+            throw new RSSManagerException(errorMessage, e);
         }
         String errors = processBuilder.getErrors();
         if (errors != null && !errors.isEmpty()) {
             throw new RSSManagerException("Error occurred while creating Snapshot. " + errors);
         }
-        System.out.println("info: " + processBuilder.getInfo());
     }
 }

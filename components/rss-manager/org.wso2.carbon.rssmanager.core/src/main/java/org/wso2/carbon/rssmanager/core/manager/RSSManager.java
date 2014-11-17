@@ -207,11 +207,19 @@ public interface RSSManager {
 	 * If user is from the user define rss instance,user in that rss instance will be updated
 	 * If the user is from the system rss instance, the user which in the all the system rss instances will be updated
 	 *
-	 * @param environmentName name of the environment
 	 * @param databaseUser database user info
 	 * @return DatabaseUser
 	 * @throws RSSManagerException if error occurred while editing database user
 	 */
-	DatabaseUser editDatabaseUser(String environmentName, DatabaseUser databaseUser) throws RSSManagerException;
+	DatabaseUser editDatabaseUser(DatabaseUser databaseUser) throws RSSManagerException;
+
+
+    /**
+     * Creates a database snapshot of a database.
+     *
+     * @param databaseName    name of the database
+     * @throws RSSManagerException
+     */
+    public void createSnapshot(String databaseName) throws RSSManagerException;
 
 }

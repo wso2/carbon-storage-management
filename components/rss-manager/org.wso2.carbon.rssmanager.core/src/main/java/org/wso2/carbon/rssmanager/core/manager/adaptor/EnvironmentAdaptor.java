@@ -507,7 +507,7 @@ public class EnvironmentAdaptor implements RSSManagerService {
 	public DatabaseUserInfo editDatabaseUser(String environment, DatabaseUserInfo databaseUserInfo) throws RSSManagerException {
 		DatabaseUser entity = new DatabaseUser();
 		RSSManagerUtil.createDatabaseUser(databaseUserInfo, entity);
-		entity = this.getRSSManagerAdaptor(environment).editDatabaseUser(environment, entity);
+		entity = this.getRSSManagerAdaptor(environment).editDatabaseUser(entity);
 		RSSManagerUtil.createDatabaseUserInfo(databaseUserInfo, entity);
 		return databaseUserInfo;
 	}
@@ -518,5 +518,13 @@ public class EnvironmentAdaptor implements RSSManagerService {
 	public String getRSSProvider() {
 		return RSSConfigurationManager.getInstance().getCurrentRSSConfig().getRSSProvider();
 	}
+
+    /**
+     * @see RSSManagerService#createSnapshot
+     */
+    @Override
+    public void createSnapshot(String environmentName, String databaseName, String type) throws RSSManagerException {
+        this.getRSSManagerAdaptor(environmentName).createSnapshot(databaseName, type);
+    }
 
 }

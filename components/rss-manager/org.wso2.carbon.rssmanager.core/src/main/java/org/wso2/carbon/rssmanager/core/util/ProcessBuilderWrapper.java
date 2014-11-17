@@ -3,43 +3,34 @@ package org.wso2.carbon.rssmanager.core.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 
 public class ProcessBuilderWrapper {
     private static final Log log = LogFactory.getLog(ProcessBuilderWrapper.class);
-    private StringWriter info;
     private StringWriter errors;
-    private int status;
 
     public ProcessBuilderWrapper() {
-        info = new StringWriter();
         errors = new StringWriter();
     }
 
     public int execute(List command) throws IOException, InterruptedException {
         ProcessBuilder pb = new ProcessBuilder(command);
         Process process = pb.start();
-        StreamHandler infoSH = new StreamHandler(process.getInputStream(), new PrintWriter(info, true));
         StreamHandler errorSH = new StreamHandler(process.getErrorStream(), new PrintWriter(errors, true));
-        infoSH.start();
         errorSH.start();
-        status = process.waitFor();
-        infoSH.join();
+        int status = process.waitFor();
         errorSH.join();
         return status;
     }
 
     public String getErrors() {
         return errors.toString();
-    }
-
-    public String getInfo() {
-        return info.toString();
-    }
-
-    public int getStatus() {
-        return status;
     }
 
     class StreamHandler extends Thread {

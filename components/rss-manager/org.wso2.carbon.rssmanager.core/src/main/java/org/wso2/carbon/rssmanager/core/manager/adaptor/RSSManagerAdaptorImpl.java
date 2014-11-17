@@ -220,10 +220,18 @@ public class RSSManagerAdaptorImpl implements RSSManagerAdaptor {
 	}
 
 	/**
-	 * @see RSSManagerAdaptor#editDatabaseUser(String, org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser)
+	 * @see RSSManagerAdaptor#editDatabaseUser(org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser)
 	 */
-	public DatabaseUser editDatabaseUser(String environmentName, DatabaseUser databaseUser) throws RSSManagerException {
-		return this.resolveRM(databaseUser.getType()).editDatabaseUser(environmentName, databaseUser);
+	public DatabaseUser editDatabaseUser(DatabaseUser databaseUser) throws RSSManagerException {
+		return this.resolveRM(databaseUser.getType()).editDatabaseUser(databaseUser);
 	}
+
+    /**
+     * @see RSSManagerAdaptor#createSnapshot
+     */
+    @Override
+    public void createSnapshot(String databaseName, String type) throws RSSManagerException {
+        this.resolveRM(type).createSnapshot(databaseName);
+    }
 
 }
