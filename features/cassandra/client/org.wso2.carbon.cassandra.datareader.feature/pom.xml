@@ -90,9 +90,8 @@
         </dependency>
 
         <dependency>
-            <groupId>snappy-java.wso2</groupId>
+            <groupId>org.xerial.snappy</groupId>
             <artifactId>snappy-java</artifactId>
-            <version>${snappy-java.version}</version>
         </dependency>
 
         <dependency>
@@ -144,7 +143,7 @@
                                 <bundleDef>io.netty:netty</bundleDef>
                                 <bundleDef>org.slf4j:slf4j-api</bundleDef>
                                 <bundleDef>com.google.guava:guava</bundleDef>
-                                <bundleDef>snappy-java.wso2:snappy-java</bundleDef>
+                                <bundleDef>org.xerial.snappy:snappy-java</bundleDef>
                                 <bundleDef>metrics-core.wso2:metrics-core</bundleDef>
                                 <bundleDef>org.codehaus.jackson:jackson-core-asl</bundleDef>
                                 <bundleDef>org.codehaus.jackson:jackson-mapper-asl</bundleDef>
