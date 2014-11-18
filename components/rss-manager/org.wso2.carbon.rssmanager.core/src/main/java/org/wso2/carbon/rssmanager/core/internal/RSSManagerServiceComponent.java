@@ -29,8 +29,10 @@ import org.wso2.carbon.rssmanager.core.config.RSSConfigurationManager;
 import org.wso2.carbon.rssmanager.core.service.RSSManagerService;
 import org.wso2.carbon.rssmanager.core.service.RSSManagerServiceImpl;
 import org.wso2.carbon.securevault.SecretCallbackHandlerService;
+import org.wso2.carbon.identity.application.mgt.ApplicationManagementOSGIService;
 import org.wso2.carbon.transaction.manager.TransactionManagerDummyService;
 import org.wso2.carbon.user.core.service.RealmService;
+import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.naming.InitialContext;
@@ -64,6 +66,12 @@ import javax.transaction.TransactionManager;
  * policy="dynamic"
  * bind="setSecretCallbackHandlerService"
  * unbind="unsetSecretCallbackHandlerService"
+ * @scr.reference name="org.wso2.carbon.identity.application.mgt.ApplicationManagementOSGIService"
+ * interface="org.wso2.carbon.identity.application.mgt.ApplicationManagementOSGIService"
+ * cardinality="1..1"
+ * policy="dynamic"
+ * bind="setApplicationManagementOSGIService"
+ * unbind="unsetApplicationManagementOSGIService
  */
 public class RSSManagerServiceComponent {
 
@@ -82,12 +90,16 @@ public class RSSManagerServiceComponent {
 				MultitenantConstants.SUPER_TENANT_ID);
 		PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(
 				MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
+		PrivilegedCarbonContext.getThreadLocalCarbonContext().setUsername("admin");
 		try {
             /* Registers RSSManager service */
 			bundleContext.registerService(RSSManagerService.class.getName(),
 			                              new RSSManagerServiceImpl(), null);
 			bundleContext.registerService(TransactionManagerDummyService.class.getName(),
 			                              new TransactionManagerDummyService(), null);
+			/* Loading tenant specific data */
+			componentContext.getBundleContext().registerService(Axis2ConfigurationContextObserver.class.getName(),
+					new RSSManagerAxis2ConfigurationContextObserver(), null);
             /* Looks up for the JNDI registered transaction manager */
 			RSSManagerDataHolder.getInstance().setTransactionManager(this.lookupTransactionManager());
             /* Initializing RSS Configuration */
@@ -203,4 +215,17 @@ public class RSSManagerServiceComponent {
 		RSSManagerDataHolder.getInstance().setSecretCallbackHandlerService(null);
 	}
 
+	protected void setApplicationManagementOSGIService(ApplicationManagementOSGIService service){
+		if (log.isDebugEnabled()) {
+			log.debug("Setting ApplicationManagementService");
+		}
+		RSSManagerDataHolder.getInstance().setAppMgtOSGIService(service);
+	}
+
+	protected void unsetApplicationManagementOSGIService(ApplicationManagementOSGIService service){
+		if (log.isDebugEnabled()) {
+			log.debug("Unsetting ApplicationManagementService");
+		}
+		RSSManagerDataHolder.getInstance().setAppMgtOSGIService(null);
+	}
 }

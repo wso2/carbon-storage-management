@@ -23,6 +23,8 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.ndatasource.common.DataSourceException;
 import org.wso2.carbon.ndatasource.core.CarbonDataSource;
 import org.wso2.carbon.ndatasource.core.DataSourceMetaInfo;
+import org.wso2.carbon.rssmanager.core.authorize.RSSAuthorizationUtils;
+import org.wso2.carbon.rssmanager.core.authorize.RSSAuthorizer;
 import org.wso2.carbon.rssmanager.core.config.RSSConfigurationManager;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.DatabaseInfo;
@@ -66,6 +68,9 @@ public class EnvironmentAdaptor implements RSSManagerService {
 	 */
 	public void addRSSInstance(String environmentName, RSSInstanceInfo rssInstance)
 			throws RSSManagerException {
+		String instanceType = RSSManagerUtil.getCleanInstanceType(rssInstance.getInstanceType());
+ 		RSSAuthorizer.isUserAuthorize(RSSAuthorizationUtils.getPermissionResource(environmentName, instanceType,
+			    RSSAuthorizationUtils.RSSINSTANCE_RESOURCE, RSSAuthorizationUtils.ActionResource.ADD.getAction()));
 		RSSInstance entity = new RSSInstance();
 		RSSManagerUtil.createRSSInstance(rssInstance, entity);
 		try {
@@ -84,6 +89,9 @@ public class EnvironmentAdaptor implements RSSManagerService {
 	 */
 	public void removeRSSInstance(String environmentName, String rssInstanceName, String type)
 			throws RSSManagerException {
+		String instanceType = RSSManagerUtil.getCleanInstanceType(type);
+		RSSAuthorizer.isUserAuthorize(RSSAuthorizationUtils.getPermissionResource(environmentName, instanceType,
+				RSSAuthorizationUtils.RSSINSTANCE_RESOURCE, RSSAuthorizationUtils.ActionResource.DELETE.getAction()));
 		this.getEnvironmentManager().removeRSSInstance(environmentName, rssInstanceName);
 		environmentManager.getEnvironment(environmentName).getDSWrapperRepository().removeRSSInstanceDSWrapper(rssInstanceName);
 		environmentManager.getEnvironment(environmentName).removeRSSInstance(rssInstanceName);
@@ -94,6 +102,9 @@ public class EnvironmentAdaptor implements RSSManagerService {
 	 */
 	public void updateRSSInstance(String environmentName, RSSInstanceInfo rssInstance)
 			throws RSSManagerException {
+		String instanceType = RSSManagerUtil.getCleanInstanceType(rssInstance.getInstanceType());
+		RSSAuthorizer.isUserAuthorize(RSSAuthorizationUtils.getPermissionResource(environmentName, instanceType,
+				RSSAuthorizationUtils.RSSINSTANCE_RESOURCE, RSSAuthorizationUtils.ActionResource.EDIT.getAction()));
 		RSSInstance entity = new RSSInstance();
 		RSSManagerUtil.createRSSInstance(rssInstance, entity);
 		try {
@@ -154,6 +165,9 @@ public class EnvironmentAdaptor implements RSSManagerService {
 	 * @see RSSManagerService#addDatabase(String, org.wso2.carbon.rssmanager.core.dto.DatabaseInfo)
 	 */
 	public DatabaseInfo addDatabase(String environmentName, DatabaseInfo database) throws RSSManagerException {
+		String instanceType = RSSManagerUtil.getCleanInstanceType(database.getType());
+		RSSAuthorizer.isUserAuthorize(RSSAuthorizationUtils.getPermissionResource(environmentName, instanceType,
+				RSSAuthorizationUtils.DATABASE_RESOURCE, RSSAuthorizationUtils.ActionResource.ADD.getAction()));
 		Database entity = new Database();
 		RSSManagerUtil.createDatabase(database, entity);
 		Database returnEntity = this.getRSSManagerAdaptor(environmentName).addDatabase(entity);
@@ -166,6 +180,9 @@ public class EnvironmentAdaptor implements RSSManagerService {
 	 */
 	public void removeDatabase(String environmentName, String rssInstanceName, String databaseName,
 	                           String type) throws RSSManagerException {
+		String instanceType = RSSManagerUtil.getCleanInstanceType(type);
+		RSSAuthorizer.isUserAuthorize(RSSAuthorizationUtils.getPermissionResource(environmentName, instanceType,
+				RSSAuthorizationUtils.DATABASE_RESOURCE, RSSAuthorizationUtils.ActionResource.DELETE.getAction()));
 		this.getRSSManagerAdaptor(environmentName).removeDatabase(rssInstanceName, databaseName, type);
 	}
 
@@ -222,6 +239,9 @@ public class EnvironmentAdaptor implements RSSManagerService {
 	 */
 	public DatabaseUserInfo addDatabaseUser(String environmentName, DatabaseUserInfo user)
 			throws RSSManagerException {
+		String instanceType = RSSManagerUtil.getCleanInstanceType(user.getType());
+		RSSAuthorizer.isUserAuthorize(RSSAuthorizationUtils.getPermissionResource(environmentName, instanceType,
+				RSSAuthorizationUtils.DATABASE_USER_RESOURCE, RSSAuthorizationUtils.ActionResource.ADD.getAction()));
 		DatabaseUser entity = new DatabaseUser();
 		RSSManagerUtil.createDatabaseUser(user, entity);
 		entity = this.getRSSManagerAdaptor(environmentName).addDatabaseUser(entity);
@@ -234,6 +254,9 @@ public class EnvironmentAdaptor implements RSSManagerService {
 	 */
 	public void removeDatabaseUser(String environmentName, String rssInstanceName, String username,
 	                               String type) throws RSSManagerException {
+		String instanceType = RSSManagerUtil.getCleanInstanceType(type);
+		RSSAuthorizer.isUserAuthorize(RSSAuthorizationUtils.getPermissionResource(environmentName, instanceType,
+				RSSAuthorizationUtils.DATABASE_USER_RESOURCE, RSSAuthorizationUtils.ActionResource.DELETE.getAction()));
 		this.getRSSManagerAdaptor(environmentName).removeDatabaseUser(rssInstanceName, username, type);
 	}
 
@@ -284,6 +307,9 @@ public class EnvironmentAdaptor implements RSSManagerService {
 	 */
 	public void attachUser(String environmentName, UserDatabaseEntryInfo ude, String templateName)
 			throws RSSManagerException {
+		String instanceType = RSSManagerUtil.getCleanInstanceType(ude.getType());
+		RSSAuthorizer.isUserAuthorize(RSSAuthorizationUtils.getPermissionResource(environmentName, instanceType,
+				RSSAuthorizationUtils.ATTACH_DATABASE_USER_RESOURCE, RSSAuthorizationUtils.ActionResource.ADD.getAction()));
 		// TODO fix this with a proper DatabasePrivilegeTemplate
 		DatabasePrivilegeTemplate entity = null;
 		try {
@@ -304,6 +330,9 @@ public class EnvironmentAdaptor implements RSSManagerService {
 	 * @see RSSManagerService#detachUser(String, org.wso2.carbon.rssmanager.core.dto.UserDatabaseEntryInfo)
 	 */
 	public void detachUser(String environmentName, UserDatabaseEntryInfo databaseEntryInfo) throws RSSManagerException {
+		String instanceType = RSSManagerUtil.getCleanInstanceType(databaseEntryInfo.getType());
+		RSSAuthorizer.isUserAuthorize(RSSAuthorizationUtils.getPermissionResource(environmentName, instanceType,
+				RSSAuthorizationUtils.ATTACH_DATABASE_USER_RESOURCE, RSSAuthorizationUtils.ActionResource.DELETE.getAction()));
 		UserDatabaseEntry entity = new UserDatabaseEntry();
 		RSSManagerUtil.createDatabaseUserEntry(databaseEntryInfo, entity);
 		this.getRSSManagerAdaptor(environmentName).detachUser(entity);
@@ -564,6 +593,9 @@ public class EnvironmentAdaptor implements RSSManagerService {
 	 * @see RSSManagerService#editDatabaseUser(String, org.wso2.carbon.rssmanager.core.dto.DatabaseUserInfo)
 	 */
 	public DatabaseUserInfo editDatabaseUser(String environment, DatabaseUserInfo databaseUserInfo) throws RSSManagerException {
+		String instanceType = RSSManagerUtil.getCleanInstanceType(databaseUserInfo.getType());
+		RSSAuthorizer.isUserAuthorize(RSSAuthorizationUtils.getPermissionResource(environment, instanceType,
+				RSSAuthorizationUtils.DATABASE_USER_RESOURCE, RSSAuthorizationUtils.ActionResource.EDIT.getAction()));
 		DatabaseUser entity = new DatabaseUser();
 		RSSManagerUtil.createDatabaseUser(databaseUserInfo, entity);
 		entity = this.getRSSManagerAdaptor(environment).editDatabaseUser(entity);

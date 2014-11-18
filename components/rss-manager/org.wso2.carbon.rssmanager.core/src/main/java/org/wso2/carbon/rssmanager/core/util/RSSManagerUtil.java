@@ -1051,4 +1051,10 @@ public final class RSSManagerUtil {
                                       + ", in "
                                       + RSSManagerConstants.RSS_CONFIG_XML_NAME);
     }
+
+	public static String getCleanInstanceType(String instanceType) {
+		return (instanceType == null || "".equals(instanceType) || RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equals
+				(instanceType)) ? RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM : RSSManagerConstants.RSSManagerTypes
+				.RM_TYPE_USER_DEFINED;
+	}
 }

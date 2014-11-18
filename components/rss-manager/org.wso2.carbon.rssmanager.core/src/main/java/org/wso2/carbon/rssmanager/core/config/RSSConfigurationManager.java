@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
+import org.wso2.carbon.rssmanager.core.authorize.RSSAuthorizer;
 import org.wso2.carbon.rssmanager.core.dao.RSSDAOFactory;
 import org.wso2.carbon.rssmanager.core.environment.EnvironmentManager;
 import org.wso2.carbon.rssmanager.core.environment.EnvironmentManagerFactory;
@@ -104,6 +105,8 @@ public class RSSConfigurationManager {
 				log.info("Creating Meta Data tables");
 				dbCreator.createRegistryDatabase();
 			}
+			//Create service provider of the super tenant
+			RSSAuthorizer.createServiceProviderIfNotExist();
 			//Initialization of environment manager
 			EnvironmentManager environmentManager = EnvironmentManagerFactory.getEnvironmentManager(currentRSSConfig.
 																									getRSSEnvironments());

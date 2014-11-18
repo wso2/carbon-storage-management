@@ -63,7 +63,8 @@
                             org.wso2.carbon.rssmanager.common;
                             version="0.0.0",
                             org.wso2.carbon.context.*,
-                            org.wso2.carbon.transaction.manager.*
+                            org.wso2.carbon.transaction.manager.*,
+                            org.wso2.carbon.identity.application.mgt.*,
                         </Import-Package>
                         <Meta-Persistence>META-INF/persistence.xml</Meta-Persistence>
                         <Export-Package>
@@ -132,6 +133,16 @@
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
             <version>0.1.51</version>
+        </dependency>
+		<dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.identity.application.mgt</artifactId>
+            <version>${carbon.platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.identity.application.common</artifactId>
+            <version>${carbon.platform.version}</version>
         </dependency>
     </dependencies>
 </project>
