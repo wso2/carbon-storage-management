@@ -34,9 +34,11 @@ import org.wso2.carbon.rssmanager.core.environment.dao.RSSInstanceDAO;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.manager.RSSManager;
 import org.wso2.carbon.rssmanager.core.manager.SystemRSSManager;
+import org.wso2.carbon.rssmanager.core.util.ProcessBuilderWrapper;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
@@ -517,7 +519,7 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
 	}
 
 	@Override
-	public DatabaseUser editDatabaseUser(String environmentName, DatabaseUser databaseUser) {
+	public DatabaseUser editDatabaseUser(DatabaseUser databaseUser) {
 		//TODO implement edit database user if applicable
 		return null;
 	}
@@ -561,5 +563,35 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
 			return text;
 		}
 	}
+
+    /**
+     * @see org.wso2.carbon.rssmanager.core.manager.AbstractRSSManager#createSnapshot
+     */
+    @Override
+    public void createSnapshot(String databaseName) throws RSSManagerException {
+        RSSInstance instance = resolveRSSInstanceByDatabase(databaseName,
+                                                            RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        RSSManagerUtil.createSnapshotDirectory();
+        ProcessBuilderWrapper processBuilder = new ProcessBuilderWrapper();
+        List command = new ArrayList();
+        command.add(RSSManagerConstants.Snapshots.MYSQL_DUMP_TOOL);
+        command.add(RSSManagerConstants.Snapshots.USERNAME_OPTION);
+        command.add(instance.getAdminUserName());
+        command.add(RSSManagerConstants.Snapshots.PASSWORD_OPTION + instance.getAdminPassword());
+        command.add(databaseName);
+        command.add(RSSManagerConstants.Snapshots.OUTPUT_FILE_OPTION);
+        command.add(RSSManagerUtil.getSnapshotFilePath(databaseName));
+        try {
+            processBuilder.execute(command);
+        } catch (Exception e) {
+            String errorMessage = "Error occurred while creating snapshot.";
+            log.error(errorMessage, e);
+            throw new RSSManagerException(errorMessage, e);
+        }
+        String errors = processBuilder.getErrors();
+        if (errors != null && !errors.isEmpty()) {
+            throw new RSSManagerException("Error occurred while creating Snapshot. " + errors);
+        }
+    }
 }
 

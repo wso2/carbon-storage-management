@@ -482,4 +482,12 @@ public class RSSAdmin extends AbstractAdmin implements RSSManagerService {
 		return RSSConfigurationManager.getInstance().getCurrentRSSConfig().getRSSProvider();
 	}
 
+    /**
+     * @see RSSManagerService#createSnapshot
+     */
+    @Override
+    public void createSnapshot(String environmentName,String databaseName, String type) throws RSSManagerException {
+        this.getEnvironmentAdaptor().createSnapshot(environmentName, databaseName, type);
+    }
+
 }

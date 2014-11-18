@@ -33,6 +33,7 @@ import org.wso2.carbon.rssmanager.core.environment.dao.EnvironmentManagementDAO;
 import org.wso2.carbon.rssmanager.core.environment.dao.EnvironmentManagementDAOFactory;
 import org.wso2.carbon.rssmanager.core.environment.dao.RSSInstanceDAO;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
+import org.wso2.carbon.rssmanager.core.manager.RSSManager;
 import org.wso2.carbon.rssmanager.core.manager.adaptor.RSSManagerAdaptor;
 import org.wso2.carbon.rssmanager.core.manager.adaptor.RSSManagerAdaptorFactory;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
@@ -317,6 +318,10 @@ public class EnvironmentManager {
 			Map<String, RSSInstance> rssInstanceMapFromDB = new HashMap<String, RSSInstance>();//to hold rss instance from database
 			if (!isEvnExist) {
 				environmentDAO.addEnvironment(environment);
+				environment = environmentDAO.getEnvironment(environment.getName());
+				DatabasePrivilegeTemplate privilegeTemplate = RSSManagerUtil.createDeafultDBPrivilegeTemplate();
+				privilegeTemplate.setTenantId(RSSManagerUtil.getTenantId());
+				privilegeTemplateDAO.addDatabasePrivilegeTemplate(privilegeTemplate, environment.getId());
 				managedEnv = environment;
 			}
 
