@@ -395,11 +395,20 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="createSnapshot">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="databaseName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="detachUser">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"/>
-                        <xs:element minOccurs="0" name="ude" nillable="true" type="ax24:UserDatabaseEntryInfo"/>
+                        <xs:element minOccurs="0" name="databaseEntryInfo" nillable="true" type="ax24:UserDatabaseEntryInfo"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -610,6 +619,9 @@
     <wsdl:message name="addDatabaseUserResponse">
         <wsdl:part name="parameters" element="ns:addDatabaseUserResponse"/>
     </wsdl:message>
+    <wsdl:message name="createSnapshotRequest">
+        <wsdl:part name="parameters" element="ns:createSnapshot"/>
+    </wsdl:message>
     <wsdl:message name="addDatabasePrivilegeTemplateRequest">
         <wsdl:part name="parameters" element="ns:addDatabasePrivilegeTemplate"/>
     </wsdl:message>
@@ -779,6 +791,10 @@
             <wsdl:input message="ns:addDatabaseUserRequest" wsaw:Action="urn:addDatabaseUser"/>
             <wsdl:output message="ns:addDatabaseUserResponse" wsaw:Action="urn:addDatabaseUserResponse"/>
             <wsdl:fault message="ns:RSSManagerException" name="RSSManagerException" wsaw:Action="urn:addDatabaseUserRSSManagerException"/>
+        </wsdl:operation>
+        <wsdl:operation name="createSnapshot">
+            <wsdl:input message="ns:createSnapshotRequest" wsaw:Action="urn:createSnapshot"/>
+            <wsdl:fault message="ns:RSSManagerException" name="RSSManagerException" wsaw:Action="urn:createSnapshotRSSManagerException"/>
         </wsdl:operation>
         <wsdl:operation name="addDatabasePrivilegeTemplate">
             <wsdl:input message="ns:addDatabasePrivilegeTemplateRequest" wsaw:Action="urn:addDatabasePrivilegeTemplate"/>
@@ -996,6 +1012,15 @@
             <wsdl:output>
                 <soap:body use="literal"/>
             </wsdl:output>
+            <wsdl:fault name="RSSManagerException">
+                <soap:fault use="literal" name="RSSManagerException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="createSnapshot">
+            <soap:operation soapAction="urn:createSnapshot" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
             <wsdl:fault name="RSSManagerException">
                 <soap:fault use="literal" name="RSSManagerException"/>
             </wsdl:fault>
@@ -1402,6 +1427,15 @@
                 <soap12:fault use="literal" name="RSSManagerException"/>
             </wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="createSnapshot">
+            <soap12:operation soapAction="urn:createSnapshot" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RSSManagerException">
+                <soap12:fault use="literal" name="RSSManagerException"/>
+            </wsdl:fault>
+        </wsdl:operation>
         <wsdl:operation name="isDatabaseExist">
             <soap12:operation soapAction="urn:isDatabaseExist" style="document"/>
             <wsdl:input>
@@ -1782,6 +1816,12 @@
             <wsdl:output>
                 <mime:content type="text/xml" part="addDatabaseUser"/>
             </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createSnapshot">
+            <http:operation location="RSSAdmin/createSnapshot"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="createSnapshot"/>
+            </wsdl:input>
         </wsdl:operation>
         <wsdl:operation name="isDatabaseExist">
             <http:operation location="RSSAdmin/isDatabaseExist"/>

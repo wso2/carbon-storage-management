@@ -125,7 +125,7 @@ public class ConnectionManager {
         if (cluster != null) {
             return cluster;
         } else {
-            throw new CassandraExplorerException("Cannot find a cluster, Please connect");
+            throw new CassandraExplorerException("Cannot find a cluster, Please login again.");
         }
     }
 

@@ -20,10 +20,25 @@ package org.wso2.carbon.cassandra.common;
 
 public class CassandraConstants {
 
-    public static final String CASSANDRA_ENVIRONMENT_CONFIG_FILE = "cassandra-environments.xml";
-    public static final String CASSANDRA_ENVIRONMENT_REGISTRY_PATH = "/repository/components/org.wso2.carbon.cassandra.mgt.environment/environments";
-    public static final String CASSANDRA_DEFAULT_ENVIRONMENT = "DEFAULT";
-    public static final String CASSANDRA_SYSTEM_CLUSTER = "SYSTEM";
-    public static final String CASSANDRA_CLUSTERS = "clusters";
+    public class Environments {
+        public static final String CASSANDRA_ENVIRONMENT_CONFIG_FILE = "cassandra-environments.xml";
+        public static final String CASSANDRA_ENVIRONMENT_REGISTRY_PATH
+                = "/repository/components/org.wso2.carbon.cassandra.mgt.environment/environments";
+        public static final String CASSANDRA_DEFAULT_ENVIRONMENT = "DEFAULT";
+        public static final String CASSANDRA_SYSTEM_CLUSTER = "SYSTEM";
+        public static final String CASSANDRA_CLUSTERS = "clusters";
+    }
+
+    public class Cache {
+        public static final String CASSANDRA_ACCESS_KEY_CACHE = "CASSANDRA_ACCESS_KEY_CACHE";
+        public static final String CASSANDRA_ACCESS_CACHE_MANAGER = "CASSANDRA_ACCESS_CACHE_MANAGER";
+    }
+
+    public class Configurations {
+        public static final String CLUSTER_NAME = "ClusterName";
+        public static final String DATASOURCE_NAME = "Datasource";
+        public static final String ENVIRONMENT_NAME = "EnvironmentName";
+        public static final String IS_EXTERNAL = "IsExternal";
+    }
 
 }

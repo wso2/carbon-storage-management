@@ -25,9 +25,7 @@ import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplateEntry;
-import org.wso2.carbon.rssmanager.core.dto.common.MySQLPrivilegeSet;
 import org.wso2.carbon.rssmanager.core.environment.dao.DatabasePrivilegeTemplateDAO;
-import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 
 import javax.sql.DataSource;
@@ -229,6 +227,7 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 			statement.setString(2, templateName);
 			statement.setLong(3, tenantId);
 			statement.executeUpdate();
+			conn.commit();
 		} catch (SQLException e) {
 			String msg = "Failed to delete database privilege template" + templateName + "from meta repository";
 			log.error(msg, e);

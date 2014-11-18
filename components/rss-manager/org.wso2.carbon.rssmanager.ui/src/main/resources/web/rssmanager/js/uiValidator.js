@@ -61,7 +61,9 @@ function dispatchDropRSSInstanceRequest(rssInstanceName, evnName, instanceType) 
                 encodeURIComponent(rssInstanceName)+ "&envName="+ encodeURIComponent(evnName)+"&instanceType="+ encodeURIComponent(instanceType);
         jQuery('#connectionStatusDiv').load(url, displayMessages);
     }
-    CARBON.showConfirmationDialog('Do you want to delete Database Server Instance?', forwardToDrop);
+    sessionAwareFunction(function() {
+        CARBON.showConfirmationDialog('Do you want to delete Database Server Instance?', forwardToDrop);
+    }, rssmanagerjsi18n["rss.manager.session.expire.message"]);
 }
 
 function deleteInstance(obj) {
@@ -71,8 +73,9 @@ function deleteInstance(obj) {
         instanceTable.removeChild(delElement);
         document.location.href = "rssInstances.jsp";
     }
-    CARBON.showConfirmationDialog("Do you want to drop database server instance " + obj + "?",
-            forwardToDel);
+    sessionAwareFunction(function() {
+        CARBON.showConfirmationDialog("Do you want to drop database server instance " + obj + "?", forwardToDel);
+    }, rssmanagerjsi18n["rss.manager.session.expire.message"]);
 }
 
 function dispatchRSSInstanceCreateRequest(flag) {
@@ -92,7 +95,9 @@ function dispatchRSSInstanceCreateRequest(flag) {
             + '&serverUrl=' + encodeURIComponent(serverUrl) + '&username=' + encodeURIComponent(
             username) + '&password=' + encodeURIComponent(password) + '&flag=' + flag + '&serverEnvironment=' + encodeURIComponent(serverEnvironment)
         + '&databaseDriverClass=' + encodeURIComponent(databaseDriverClass) +'&instancetype=' + encodeURIComponent(instancetype);
-    jQuery('#connectionStatusDiv').load(url, displayMessages);
+    sessionAwareFunction(function() {
+        jQuery('#connectionStatusDiv').load(url, displayMessages);
+    }, rssmanagerjsi18n["rss.manager.session.expire.message"]);
 }
 
 function setHostRssInsname() {
@@ -191,7 +196,9 @@ function dispatchDatabaseManageAction(flag, rssInstanceName, username, databaseN
             encodeURIComponent(password) + '&privilegeTemplateName=' +
             encodeURIComponent(privilegeTemplate) + '&databaseName=' + 
             databaseName + '&envName=' + envName+ '&instanceType=' + instanceType;
-    jQuery('#connectionStatusDiv').load(url, displayDatabaseManageActionStatus);
+    sessionAwareFunction(function() {
+        jQuery('#connectionStatusDiv').load(url, displayDatabaseManageActionStatus);
+    }, rssmanagerjsi18n["rss.manager.session.expire.message"]);
 }
 
 function displayDatabaseManageActionStatus(msg, status, xmlhttp) {
@@ -328,7 +335,9 @@ function dispatchDatabaseUserEditActionRequest(flag, rssInstanceName, username, 
         encodeURIComponent(rssInstanceName) + '&flag=' + encodeURIComponent(flag) +
         '&username=' + encodeURIComponent(username) + '&password='+encodeURIComponent(password)+
         '&envName='+envName+'&instanceType='+instanceType;
-    jQuery('#connectionStatusDiv').load(url, displayMessagesForUser);
+    sessionAwareFunction(function() {
+        jQuery('#connectionStatusDiv').load(url, displayMessagesForUser);
+    }, rssmanagerjsi18n["rss.manager.session.expire.message"]);
     return false;
 }
 
@@ -376,7 +385,9 @@ function testConnection() {
                     driverClass) + '&serverUrl=' + encodeURIComponent(retrieveValidatedUrl(jdbcUrl)) +
                     '&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(
                     password);
-            jQuery('#connectionStatusDiv').load(url, displayMsg);
+            sessionAwareFunction(function() {
+                jQuery('#connectionStatusDiv').load(url, displayMsg);
+            }, rssmanagerjsi18n["rss.manager.session.expire.message"]);
         } else {
             CARBON.showErrorDialog("Invalid JDBC URL '" + jdbcUrl + "'. Please enter an appropriate JDBC URL.");
         }
@@ -446,7 +457,9 @@ function dispatchDatabaseUserActionRequest(flag, rssInstanceName, username, data
             '&username=' + encodeURIComponent(username) + '&password=' +
             encodeURIComponent(password) + '&privilegeTemplateName=' +
             encodeURIComponent(privilegeTemplate) + '&databaseName=' + databaseName + '&envName='+envName+'&instanceType='+instanceType;
-    jQuery('#connectionStatusDiv').load(url, displayMessagesForUser);
+    sessionAwareFunction(function() {
+        jQuery('#connectionStatusDiv').load(url, displayMessagesForUser);
+    }, rssmanagerjsi18n["rss.manager.session.expire.message"]);
     return false;
 }
 
@@ -503,7 +516,9 @@ function dispatchAttachedDatabaseUserActionRequest(flag, rssInstanceName, userna
             show_view_priv + '&create_routine_priv=' + create_routine_priv + '&alter_routine_priv='
             + alter_routine_priv + '&execute_priv=' + execute_priv + '&event_priv=' + event_priv +
             '&trigger_priv=' + trigger_priv +'&envName='+ envName+'&instanceType='+ instanceType;
-            jQuery('#connectionStatusDiv').load(url, displayMessagesForEditedUser);
+    sessionAwareFunction(function() {
+        jQuery('#connectionStatusDiv').load(url, displayMessagesForEditedUser);
+    }, rssmanagerjsi18n["rss.manager.session.expire.message"]);
 }
 
 function populateSelectedUsername() {
@@ -522,7 +537,9 @@ function dispatchDatabaseActionRequest(flag, rssInstanceName, databaseName, envN
     var url = 'databaseOps_ajaxprocessor.jsp?flag=' + flag + '&rssInstanceName=' +
             encodeURIComponent(rssInstanceName) + '&databaseName=' +
             encodeURIComponent(databaseName)+'&envName='+envName+'&instanceType='+instanceType;
-    jQuery('#connectionStatusDiv').load(url, displayDatabaseActionStatus);
+    sessionAwareFunction(function() {
+        jQuery('#connectionStatusDiv').load(url, displayDatabaseActionStatus);
+    }, rssmanagerjsi18n["rss.manager.session.expire.message"]);
 }
 
 function deleteUser(userId) {
@@ -610,8 +627,10 @@ function createDatabasePrivilegeTemplate(flag, envName) {
 	}
 	var url = composeDatabasePrivilegeTemplateActionUrl(flag, templateName,
 			envName);
-	jQuery('#connectionStatusDiv').load(url,
-			displayPrivilegeTemplateActionStatus);
+
+	sessionAwareFunction(function() {
+		jQuery('#connectionStatusDiv').load(url, displayPrivilegeTemplateActionStatus);
+	}, rssmanagerjsi18n["rss.manager.session.expire.message"]);
 }
 
 function validateDatabasePrivilegeTemplateName() {
@@ -714,10 +733,11 @@ function dispatchDropDatabasePrivilegeTemplateRequest(privilegeTemplateName, env
     function forwardToDel() {
         var url = 'databasePrivilegeTemplateOps_ajaxprocessor.jsp?privilegeTemplateName=' +
                 encodeURIComponent(privilegeTemplateName) + '&flag=drop'+ '&envName='+envName;
-        jQuery('#connectionStatusDiv').load(url, displayPrivilegeTemplateActionStatus);
+        sessionAwareFunction(function() {
+            jQuery('#connectionStatusDiv').load(url, displayPrivilegeTemplateActionStatus);
+        }, rssmanagerjsi18n["rss.manager.session.expire.message"]);
         return false;
     }
-
     CARBON.showConfirmationDialog('Do you want to drop database privilege template?', forwardToDel);
 }
 
@@ -1045,18 +1065,22 @@ function createDataSource(rssInstanceName, databaseName, username, envName,
 			+ '&databaseName=' + databaseName + '&username=' + username
 			+ '&rssInstanceName=' + rssInstanceName + '&flag=createDS'
 			+ '&envName=' + envName + '&instanceType=' + instanceType;
-	jQuery('#connectionStatusDiv').load(url, displayMessagesForCarbonDS);
+
+	sessionAwareFunction(function() {
+		jQuery('#connectionStatusDiv').load(url, displayMessagesForCarbonDS);
+	}, rssmanagerjsi18n["rss.manager.session.expire.message"]);
 }
 
 function detachDatabaseUser(rssInstanceName, databaseName, username, envnName,instanceType) {
-    function forwardToDetach() {
-        var url = 'databaseUserOps_ajaxprocessor.jsp?databaseName=' + databaseName + '&username=' +
-                username + '&rssInstanceName=' + rssInstanceName + '&flag=detach' + '&envName=' +envnName+ '&instanceType=' +instanceType;
-        jQuery('#connectionStatusDiv').load(url, displayMessagesForDatabaseUserActions);
-    }
-
-    CARBON.showConfirmationDialog("Do you want to detach the database user '" + username +
-            "' from the database '" + databaseName + "'?", forwardToDetach);
+	function forwardToDetach() {
+		var url = 'databaseUserOps_ajaxprocessor.jsp?databaseName=' + databaseName + '&username=' +
+			username + '&rssInstanceName=' + rssInstanceName + '&flag=detach' + '&envName=' +envnName+ '&instanceType=' +instanceType;
+		jQuery('#connectionStatusDiv').load(url, displayMessagesForDatabaseUserActions);
+	}
+	sessionAwareFunction(function() {
+		CARBON.showConfirmationDialog("Do you want to detach the database user '" + username +
+										"' from the database '" + databaseName + "'?", forwardToDetach);
+	}, rssmanagerjsi18n["rss.manager.session.expire.message"]);
 }
 
 function displayMessagesForDatabaseUserActions(msg,status, xmlhttp) {

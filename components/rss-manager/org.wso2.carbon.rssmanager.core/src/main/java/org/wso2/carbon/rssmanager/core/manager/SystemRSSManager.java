@@ -31,7 +31,7 @@ import org.wso2.carbon.rssmanager.core.environment.Environment;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 
-public abstract class SystemRSSManager extends AbstractRSSManager implements RSSManager{
+public abstract class SystemRSSManager extends AbstractRSSManager{
 
 	public SystemRSSManager(Environment environment) {
 		super(environment);
@@ -47,9 +47,10 @@ public abstract class SystemRSSManager extends AbstractRSSManager implements RSS
 		Database[] databases = new Database[0];
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
-			databases = getDatabaseDAO().getDatabases(this.getEnvironmentName(), tenantId,
-					                                          RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
-		} catch (RSSDAOException e) {
+            databases = getDatabaseDAO().getDatabases(this.getEnvironmentName(),
+                                                      tenantId,
+                                                      RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        } catch (RSSDAOException e) {
 			String msg = "Error occurred while retrieving metadata " +
 			             "corresponding to databases, from RSS metadata repository : " +
 			             e.getMessage();
@@ -68,9 +69,10 @@ public abstract class SystemRSSManager extends AbstractRSSManager implements RSS
 		DatabaseUser[] users = new DatabaseUser[0];
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
-			users = getDatabaseUserDAO().getDatabaseUsers(getEnvironmentName(),
-			                                                          tenantId, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
-		} catch (RSSDAOException e) {
+            users = getDatabaseUserDAO().getDatabaseUsers(getEnvironmentName(),
+                                                          tenantId,
+                                                          RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        } catch (RSSDAOException e) {
 			String msg = "Error occurred while retrieving metadata " +
 			             "corresponding to database users, from RSS metadata repository : " +
 			             e.getMessage();
@@ -92,8 +94,10 @@ public abstract class SystemRSSManager extends AbstractRSSManager implements RSS
 		DatabaseUser user = null;
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
-			user = getDatabaseUserDAO().getDatabaseUser(getEnvironmentName(), username,
-			                                            tenantId, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+			user = getDatabaseUserDAO().getDatabaseUser(getEnvironmentName(),
+                                                        username,
+			                                            tenantId,
+                                                        RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
 		} catch (RSSDAOException e) {
 			String msg = "Error occurred while retrieving metadata " + "corresponding to the " +
 			             "database user '" + username + "' from RSS metadata " + "repository : " +
@@ -116,6 +120,11 @@ public abstract class SystemRSSManager extends AbstractRSSManager implements RSS
 		DatabaseUser[] users = new DatabaseUser[0];
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
+			//get actual rss instance name since this is a system database instance where we hide
+			// the real rss instance name from user
+            rssInstanceName = getDatabaseDAO().resolveRSSInstanceNameByDatabase(
+                    getEnvironmentName(), databaseName,
+                    RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, tenantId);
 			RSSInstance rssInstance = this.getEnvironment().getRSSInstance(rssInstanceName);
 			if (rssInstance == null) {
 				throw new RSSManagerException(
@@ -123,9 +132,12 @@ public abstract class SystemRSSManager extends AbstractRSSManager implements RSS
 						rssInstanceName + "'"
 				);
 			}
-			users = getUserDatabaseEntryDAO().getAssignedDatabaseUsers(getEnvironmentName(),rssInstance.getName(),
-			                                                           databaseName, tenantId, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
-		} catch (RSSDAOException e) {
+            users = getUserDatabaseEntryDAO().getAssignedDatabaseUsers(
+                    getEnvironmentName(),
+                    rssInstance.getName(),
+                    databaseName, tenantId,
+                    RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        } catch (RSSDAOException e) {
 			String msg = "Error occurred while retrieving metadata " + "corresponding to the " +
 			             "database users attached to the database '" + databaseName +
 			             "' from RSS metadata repository : " + e.getMessage();
@@ -147,12 +159,23 @@ public abstract class SystemRSSManager extends AbstractRSSManager implements RSS
 		DatabaseUser[] users = new DatabaseUser[0];
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
-			DatabaseUser[] availableUsers = getUserDatabaseEntryDAO().getAvailableDatabaseUsers(getEnvironmentName(),
-			                                                                                    tenantId, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
-			return availableUsers;
+			//get actual rss instance name since this is a system database instance where
+			// we hide the real rss instance name from user
+			rssInstanceName = getDatabaseDAO().resolveRSSInstanceNameByDatabase(
+                    getEnvironmentName(),
+                    databaseName,
+                    RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM,
+                    tenantId);
+            return getUserDatabaseEntryDAO().getAvailableDatabaseUsers(
+                    getEnvironmentName(),
+                    rssInstanceName, databaseName,
+                    tenantId,
+                    RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
 		} catch (Exception e) {
-			String msg = "Error occurred while retrieving metadata corresponding to available " + "database users to be attached " +
-			             "to the database'" + databaseName + "' from RSS metadata repository : " + e.getMessage();
+			String msg = "Error occurred while retrieving metadata corresponding to available "
+                         + "database users to be attached "
+                         + "to the database'" + databaseName + "' from RSS metadata repository : "
+                         + e.getMessage();
 			handleException(msg, e);
 		}
 		return users;
@@ -173,7 +196,8 @@ public abstract class SystemRSSManager extends AbstractRSSManager implements RSS
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
 			rssInstanceName = getRSSDAO().getDatabaseDAO()
-					.resolveRSSInstanceNameByDatabase(getEnvironmentName(), databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM,
+					.resolveRSSInstanceNameByDatabase(getEnvironmentName(), databaseName,
+                                                      RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM,
 					                                  tenantId);
 			RSSInstance rssInstance = this.getEnvironment().getRSSInstance(rssInstanceName);
 			if (rssInstance == null) {
@@ -182,13 +206,16 @@ public abstract class SystemRSSManager extends AbstractRSSManager implements RSS
 						rssInstanceName + "'"
 				);
 			}
-			Database database = getDatabaseDAO().getDatabase(this.getEnvironmentName(), rssInstanceName,
-			                                                             databaseName, tenantId,
-			                                                             RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
-			DatabaseUser databaseUser = getDatabaseUserDAO().getDatabaseUser(this.getEnvironmentName(),
-			                                                                             username, tenantId,
-			                                                                             RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
-			UserDatabaseEntry userDatabaseEntry = getRSSDAO().getUserDatabaseEntryDAO().getUserDatabaseEntry(database.getId(), databaseUser.getId());
+            Database database = getDatabaseDAO().getDatabase(this.getEnvironmentName(),
+                                                             rssInstanceName,
+                                                             databaseName, tenantId,
+                                                             RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            DatabaseUser databaseUser = getDatabaseUserDAO().getDatabaseUser(
+                    this.getEnvironmentName(),
+                    username, tenantId,
+                    RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+			UserDatabaseEntry userDatabaseEntry = getRSSDAO().getUserDatabaseEntryDAO()
+                    .getUserDatabaseEntry(database.getId(), databaseUser.getId());
 			UserDatabasePrivilege privileges = userDatabaseEntry.getUserPrivileges();
 			 if (privileges != null) {
 			    privilegesSet = new MySQLPrivilegeSet();

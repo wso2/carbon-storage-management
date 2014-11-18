@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "Cluster")
 public class Cluster {
 
-    private String clusterName = CassandraConstants.CASSANDRA_SYSTEM_CLUSTER;
+    private String clusterName = CassandraConstants.Environments.CASSANDRA_SYSTEM_CLUSTER;
     private String dataSourceJndiName;
 
     @XmlElement(name = "Name", nillable = false, required = true)

@@ -36,7 +36,9 @@
 <fmt:bundle basename="org.wso2.carbon.rssmanager.ui.i18n.Resources">
     <carbon:breadcrumb resourceBundle="org.wso2.carbon.rssmanager.ui.i18n.Resources"
                        topPage="true" request="<%=request%>" label="Edit Database User"/>
-
+    <carbon:jsi18n
+		    resourceBundle="org.wso2.carbon.rssmanager.ui.i18n.JSResources"
+		    request="<%=request%>" i18nObjectName="rssmanagerjsi18n"/>
     <%
         String rssInstanceName = request.getParameter("rssInstanceName");
         String username = request.getParameter("username");

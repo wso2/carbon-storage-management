@@ -35,7 +35,9 @@
 <fmt:bundle basename="org.wso2.carbon.rssmanager.ui.i18n.Resources">
     <carbon:breadcrumb resourceBundle="org.wso2.carbon.rssmanager.ui.i18n.Resources"
                        topPage="true" request="<%=request%>" label="Create Database User"/>
-
+	<carbon:jsi18n
+			resourceBundle="org.wso2.carbon.rssmanager.ui.i18n.JSResources"
+			request="<%=request%>" i18nObjectName="rssmanagerjsi18n"/>
     <%
         String username = request.getParameter("username");
         String password = request.getParameter("password");

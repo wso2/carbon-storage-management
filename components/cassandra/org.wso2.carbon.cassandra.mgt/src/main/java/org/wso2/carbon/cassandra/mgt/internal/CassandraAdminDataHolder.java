@@ -47,6 +47,9 @@ public class CassandraAdminDataHolder {
     /* For accessing cassandra(component) server configuration */
     private RealmService realmService;
 
+    /*whether the components initialized property or not*/
+    private boolean isInitialized = false;
+
     private CassandraMBeanLocator mbeanLocator;
 
     private ConfigurationContextService configCtxService;
@@ -60,6 +63,14 @@ public class CassandraAdminDataHolder {
 
     public void setEnvironmentManager(EnvironmentManager environmentManager) {
         this.environmentManager = environmentManager;
+    }
+
+    public boolean isInitialized() {
+        return isInitialized;
+    }
+
+    public void setInitialized(boolean isInitialized) {
+        this.isInitialized = isInitialized;
     }
 
     public static CassandraAdminDataHolder getInstance() {
@@ -86,7 +97,7 @@ public class CassandraAdminDataHolder {
         this.configCtxService = configCtxService;
     }
 
-    public ServerConfigurationService getServerConfigurationService(){
+    public ServerConfigurationService getServerConfigurationService() {
         return serverConfigurationService;
     }
 
@@ -105,7 +116,7 @@ public class CassandraAdminDataHolder {
     }
 
     public void setRealmService(RealmService realmService) {
-
+			this.realmService = realmService;
     }
 
     public CassandraMBeanLocator getCassandraMBeanLocator() {

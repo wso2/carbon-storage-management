@@ -82,6 +82,8 @@ public final class RSSManagerConstants {
     public static final String SQLSERVER = "SQLSERVER";
     public static final String ORACLE = "ORACLE";
     public static final String POSTGRES = "POSTGRES";
+    public static final String POSTGRESQL = "POSTGRESQL";
+    public static final String DEFAULT_ENVIRONMENT_NAME = "DEFAULT";
 
     /*RSS Manager operations*/
     public static final String ADD_DATABASE_ENTRY = "Add database entry";
@@ -114,7 +116,7 @@ public final class RSSManagerConstants {
     public static final String SELECT_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY = "Select database privilege set entry";
     public static final String DELETE_PRIVILEGE_TEMPLATE_ENTRY = "Delete database privilege entry";
     public static final String SELECT_ENVIRONMENT_ID_BY_NAME = "Select environment id by name";
-    public static final String SELECT_ENVIRONMENT_NAME_BY_ID = "Select environment id by name";
+    public static final String SELECT_ENVIRONMENT_NAME_BY_ID = "Select environment name by id";
     public static final String SELECT_RSS_INSTANCE_ID_BY_NAME = "Select rss instance id by name";
     public static final String ADD_RSS_INSTANCE_ENTRY = "Add rss instance entry";
     public static final String CHECK_RSS_INSTANCE_ENTRY_EXIST = "Check rss instance entry existence";
@@ -126,12 +128,18 @@ public final class RSSManagerConstants {
     public static final String SELECT_SYSTEM_RSS_INSTANCES_ENTRIES_OF_ENVIRONMENT = "Get system rss instances of a environment";
     public static final String SELECT_USER_DEFINED_RSS_INSTANCES_ENTRIES_OF_ENVIRONMENT = "Get user defined rss instances of a environment";
     public static final String SELECT_ALL_USER_DEFINED_RSS_INSTANCES = "Get all user defined rss instances";
-    public static final String SELECT_ALL_SYSTEM_RSS_INSTANCES = "Get all user defined rss instances";
+    public static final String SELECT_ALL_SYSTEM_RSS_INSTANCES = "Get all system rss instances";
     public static final String RESOLVE_RSS_INSTANCE_BY_DATABASE = "Resolve rss instance name by database";
+    public static final String CHECK_DATABASE_USER_ENTRIES_EXISTENCE = "Check database user entries exist";
 
     public static final String STANDARD_TRANSACTION_MANAGER_JNDI_NAME = "java:comp/TransactionManager";
     public static final String STANDARD_USER_TRANSACTION_JNDI_NAME = "java:comp/UserTransaction";
     public static final String RDBMS_DATA_SOURCE_TYPE = "RDBMS";
+
+	/**
+	 * Postgres connection properties
+	 */
+	public static final String POSTGRES_PROPERTY_DATABASE_NAME = "databaseName";
 
     public static final class DataSourceProperties {
         private DataSourceProperties() {
@@ -188,6 +196,17 @@ public final class RSSManagerConstants {
         }
         public static final String RM_TYPE_SYSTEM = "SYSTEM";
         public static final String RM_TYPE_USER_DEFINED = "USER_DEFINED";
+    }
+
+    public static final class Snapshots {
+        public static final String SNAPSHOT_DIRECTORY_NAME = "snapshots";
+        public static final String SNAPSHOT_FILE_POST_FIX = "snapshot.sql";
+
+        public static final String MYSQL_DUMP_TOOL = "mysqldump";
+
+        public static final String USERNAME_OPTION = "-u";
+        public static final String PASSWORD_OPTION = "-p";
+        public static final String OUTPUT_FILE_OPTION = "-r";
     }
 
 }

@@ -24,19 +24,36 @@ import me.prettyprint.hector.api.ddl.ColumnDefinition;
 import me.prettyprint.hector.api.ddl.ColumnFamilyDefinition;
 import me.prettyprint.hector.api.ddl.ColumnIndexType;
 import org.apache.cassandra.db.ColumnFamilyStoreMBean;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
+import org.wso2.carbon.cassandra.common.CassandraConstants;
+import org.wso2.carbon.cassandra.common.cache.UserAccessKeyCacheEntry;
+import org.wso2.carbon.cassandra.dataaccess.ClusterInformation;
+import org.wso2.carbon.cassandra.dataaccess.DataAccessService;
 import org.wso2.carbon.cassandra.mgt.*;
+import org.wso2.carbon.cassandra.mgt.environment.Environment;
+import org.wso2.carbon.cassandra.mgt.internal.CassandraAdminDataHolder;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.core.util.CryptoException;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
+import javax.cache.Cache;
+import javax.cache.Caching;
 import javax.naming.InitialContext;
-import javax.sql.DataSource;
+import javax.servlet.http.HttpSession;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.UUID;
 
 public class CassandraManagementUtils {
+
+    private static final Log log = LogFactory.getLog(CassandraManagementUtils.class);
 
     public static void validateColumnInformation(ColumnInformation information)
             throws CassandraServerManagementException {
@@ -85,8 +102,6 @@ public class CassandraManagementUtils {
         information.setRowCacheSavePeriodInSeconds(definition.getRowCacheSavePeriodInSeconds());
         information.setType(definition.getColumnType().getValue());
         information.setRowCacheSize(definition.getRowCacheSize());
-        //return null with 1.0.2 cassandra
-        //   information.setSubComparatorType(definition.getSubComparatorType().getClassName());
         information.setDefaultValidationClass(definition.getDefaultValidationClass());
         information.setKeyValidationClass(definition.getKeyValidationClass());
 
@@ -166,9 +181,9 @@ public class CassandraManagementUtils {
         }
     }
 
-    public static Cluster lookupCluster(String jndiName, final Hashtable<Object,Object> jndiProperties) {
+    public static Cluster lookupCluster(String jndiName, final Hashtable<Object, Object> jndiProperties) {
         try {
-            if(jndiProperties == null || jndiProperties.isEmpty()){
+            if (jndiProperties == null || jndiProperties.isEmpty()) {
                 return (Cluster) InitialContext.doLookup(jndiName);
             }
             final InitialContext context = new InitialContext(jndiProperties);
@@ -178,8 +193,97 @@ public class CassandraManagementUtils {
         }
     }
 
-    public static void checkAuthorization(String envName, String resourcePath) throws CassandraServerManagementException {
+    public static void checkAuthorization(String envName, String resourcePath)
+            throws CassandraServerManagementException {
         //throw new CassandraServerManagementException("User is not authorized for this action.");
     }
 
+    /**
+     * Util method to get Cassandra cluster object
+     *
+     * @param envName     Environment Name
+     * @param clusterName Cluster name
+     * @param clusterInfo Cluster information such as credentials
+     * @param session     HttpSession
+     * @return Cluster Object
+     * @throws CassandraServerManagementException
+     */
+    public static Cluster getCluster(String envName, String clusterName, ClusterInformation clusterInfo,
+                                     HttpSession session) throws CassandraServerManagementException {
+        DataAccessService dataAccessService =
+                CassandraAdminDataHolder.getInstance().getDataAccessService();
+        Cluster cluster = null;
+        if (CassandraConstants.Environments.CASSANDRA_DEFAULT_ENVIRONMENT.equalsIgnoreCase(envName)) {
+            boolean resetConnection = true;
+            try {
+                if (clusterInfo != null) {
+                    cluster = dataAccessService.getCluster(clusterInfo, resetConnection);
+                } else {
+                    //Create a key for a user and store it in a distributed cache.
+                    //Distributed cache is visible to all Cassandra cluster
+                    //TODO: add cache related configuration to a common cassandra config file
+                    String tenantDomain = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain();
+                    String tenantUserName = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
+                    if (!tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+                        tenantUserName = tenantUserName + "@" + tenantDomain;
+                    }
+                    String sharedKey = getCachedSharedKey(tenantUserName);
+                    cluster = dataAccessService.getClusterForCurrentUser(sharedKey, resetConnection);
+                }
+            } catch (Throwable e) {
+                session.removeAttribute(
+                        CassandraManagementConstants.AuthorizationActions.USER_ACCESSKEY_ATTR_NAME); //this allows to get a new key
+                handleException("Error getting cluster");
+            }
+        } else {
+            try {
+                PrivilegedCarbonContext.startTenantFlow();
+                PrivilegedCarbonContext cc = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+                cc.setTenantDomain(org.wso2.carbon.base.MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
+                cc.setTenantId(org.wso2.carbon.base.MultitenantConstants.SUPER_TENANT_ID);
+                Environment env = CassandraAdminDataHolder.getInstance().getEnvironmentManager().getEnvironment(envName);
+                String dataSourceName = env.getDatasourceJndiName(clusterName);
+                cluster = CassandraManagementUtils.lookupCluster(dataSourceName, null);
+            } finally {
+                PrivilegedCarbonContext.endTenantFlow();
+            }
+        }
+        return cluster;
+    }
+
+    private static String getCachedSharedKey(String username) throws CryptoException, UnsupportedEncodingException {
+        String sharedKey;
+        String cacheKey = null;
+        try {
+            PrivilegedCarbonContext.startTenantFlow();
+            PrivilegedCarbonContext cc = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+            cc.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
+            cc.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
+            Cache<String, UserAccessKeyCacheEntry> cache = Caching.getCacheManagerFactory()
+                    .getCacheManager(CassandraConstants.Cache.CASSANDRA_ACCESS_CACHE_MANAGER)
+                    .getCache(CassandraConstants.Cache.CASSANDRA_ACCESS_KEY_CACHE);
+            cacheKey = UUID.randomUUID().toString();
+            sharedKey = username + cacheKey;
+            cache.put(cacheKey, new UserAccessKeyCacheEntry(sharedKey));
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
+        }
+        return cacheKey;
+    }
+
+    public static void handleException(String msg, Exception e) throws CassandraServerManagementException {
+        log.error(msg, e);
+        throw new CassandraServerManagementException(msg, e);
+    }
+
+    public static void handleException(String msg) throws CassandraServerManagementException {
+        log.error(msg);
+        throw new CassandraServerManagementException(msg);
+    }
+
+    public static void checkComponentInitializationStatus() throws CassandraServerManagementException {
+        if (!CassandraAdminDataHolder.getInstance().isInitialized()) {
+            throw new CassandraServerManagementException("Cassandra bundle is not initialized properly");
+        }
+    }
 }
