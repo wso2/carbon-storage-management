@@ -31,6 +31,8 @@ public final class RSSManagerConstants {
 
     public static final String JDBC_PREFIX = "jdbc";
 
+    public static final String SPACE = " ";
+
     /* Prefixes of supported database types */
     public static final String MYSQL_PREFIX = "mysql";
     public static final String ORACLE_PREFIX = "oracle";
@@ -203,10 +205,14 @@ public final class RSSManagerConstants {
         public static final String SNAPSHOT_FILE_POST_FIX = "snapshot.sql";
 
         public static final String MYSQL_DUMP_TOOL = "mysqldump";
+        public static final String MYSQL_USERNAME_OPTION = "-u";
+        public static final String MYSQL_PASSWORD_OPTION = "-p";
+        public static final String MYSQL_OUTPUT_FILE_OPTION = "-r";
 
-        public static final String USERNAME_OPTION = "-u";
-        public static final String PASSWORD_OPTION = "-p";
-        public static final String OUTPUT_FILE_OPTION = "-r";
+        public static final String POSTGRE_DUMP_TOOL = "pg_dump";
+        public static final String POSTGRE_USERNAME_OPTION = "-U";
+        public static final String POSTGRE_OUTPUT_FILE_OPTION = "-f";
+        public static final String POSTGRE_INSERTS_OPTION = "--inserts";
     }
 
 }

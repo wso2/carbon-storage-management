@@ -1,4 +1,4 @@
-package org.wso2.carbon.rssmanager.core.util;
+package org.wso2.carbon.rssmanager.core.util.databasemanagement;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
