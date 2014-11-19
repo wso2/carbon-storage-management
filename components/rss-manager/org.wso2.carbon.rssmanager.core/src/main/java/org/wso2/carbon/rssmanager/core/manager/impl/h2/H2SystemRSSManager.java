@@ -22,6 +22,7 @@ package org.wso2.carbon.rssmanager.core.manager.impl.h2;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
+import org.wso2.carbon.rssmanager.core.config.databasemanagement.SnapshotConfig;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.H2PrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry;
@@ -85,8 +86,9 @@ public class H2SystemRSSManager extends SystemRSSManager {
             conn = this.getConnection(rssInstance.getName(), qualifiedDatabaseName);
             super.addDatabase(null, database, rssInstance, qualifiedDatabaseName);
         } catch (Exception e) {
-            String msg = "Error while creating the database '" + qualifiedDatabaseName +
-                         "' on RSS instance '" + rssInstance.getName() + "' : " + e.getMessage();
+            String msg = "Error while creating the database '" + qualifiedDatabaseName
+                         + "' on RSS instance '" + (rssInstance != null ? rssInstance.getName() : null)
+                         + "' : " + e.getMessage();
             handleException(msg, e);
         } finally {
             RSSManagerUtil.cleanupResources(null, null, conn);
@@ -325,9 +327,8 @@ public class H2SystemRSSManager extends SystemRSSManager {
         if (privilegesString == null) {
             return;
         }
-        StringBuilder sql = new StringBuilder(
-                "GRANT " + privilegesString + " ON " + databaseName + "_" + username + " TO " + username);
-        PreparedStatement stmt = con.prepareStatement(sql.toString());
+        PreparedStatement stmt = con.prepareStatement("GRANT " + privilegesString + " ON " + databaseName +
+                                                      "_" + username + " TO " + username);
         stmt.executeUpdate();
         stmt.close();
     }
@@ -431,7 +432,6 @@ public class H2SystemRSSManager extends SystemRSSManager {
         Connection conn = null;
         PreparedStatement snapshotStatement = null;
         try {
-            RSSManagerUtil.createSnapshotDirectory();
             int tenantId = RSSManagerUtil.getTenantId();
             String rssInstanceName = this.getRSSDAO().getDatabaseDAO()
                     .resolveRSSInstanceNameByDatabase(this.getEnvironmentName(),
@@ -440,7 +440,9 @@ public class H2SystemRSSManager extends SystemRSSManager {
                                                       tenantId);
             DataSource dataSource = getDataSource(rssInstanceName, databaseName);
             conn = dataSource.getConnection();
-            String filePath = RSSManagerUtil.getSnapshotFilePath(databaseName);
+            SnapshotConfig snapshotConfig = RSSManagerUtil.getSnapshotConfigOfServerInstance(rssInstanceName);
+            RSSManagerUtil.createSnapshotDirectory(snapshotConfig.getTargetDirectory());
+            String filePath = RSSManagerUtil.getSnapshotFilePath(snapshotConfig.getTargetDirectory(), databaseName);
             String snapshotQuery = "SCRIPT TO '" + filePath + "'";
             snapshotStatement = conn.prepareStatement(snapshotQuery);
             snapshotStatement.executeQuery();
