@@ -19,7 +19,9 @@
 
 package org.wso2.carbon.rssmanager.core.dto.restricted;
 
+import org.wso2.carbon.rssmanager.core.config.databasemanagement.SnapshotConfig;
 import org.wso2.carbon.rssmanager.core.config.datasource.DataSourceConfig;
+import org.wso2.carbon.rssmanager.core.config.ssh.SSHInformationConfig;
 import org.wso2.carbon.rssmanager.core.environment.Environment;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -31,195 +33,218 @@ import java.util.List;
  */
 @XmlRootElement(name = "RSSInstance")
 public class RSSInstance {
-	private Integer id;
-	private String name;
-	private String dbmsType;
-	private String instanceType;
-	private String serverCategory;
-	private DataSourceConfig dataSourceConfig;
-	private String serverURL;
-	private String adminUserName;
-	private String adminPassword;
-	private Long tenantId;
-	private String driverClassName;
-	private Environment environment;
-	private List<Database> databases;
-	private String environmentName;
-	private int environmentId;
+    private Integer id;
+    private String name;
+    private String dbmsType;
+    private String instanceType;
+    private String serverCategory;
+    private DataSourceConfig dataSourceConfig;
+    private String serverURL;
+    private String adminUserName;
+    private String adminPassword;
+    private Long tenantId;
+    private String driverClassName;
+    private Environment environment;
+    private List<Database> databases;
+    private String environmentName;
+    private int environmentId;
+    private SSHInformationConfig sshInformationConfig;
+    private SnapshotConfig snapshotConfig;
 
-	public RSSInstance(int id, String name, String dbmsType, String instanceType,
-	                   String serverCategory, DataSourceConfig dataSourceConfig,
-	                   String environmentName) {
-		this.id = id;
-		this.name = name;
-		this.dbmsType = dbmsType;
-		this.instanceType = instanceType;
-		this.serverCategory = serverCategory;
-		this.dataSourceConfig = dataSourceConfig;
-		this.environmentName = environmentName;
-	}
+    public RSSInstance(int id, String name, String dbmsType, String instanceType,
+                       String serverCategory, DataSourceConfig dataSourceConfig,
+                       String environmentName, SSHInformationConfig sshInformationConfig,
+                       SnapshotConfig snapshotConfig) {
+        this.id = id;
+        this.name = name;
+        this.dbmsType = dbmsType;
+        this.instanceType = instanceType;
+        this.serverCategory = serverCategory;
+        this.dataSourceConfig = dataSourceConfig;
+        this.environmentName = environmentName;
+        this.sshInformationConfig = sshInformationConfig;
+        this.snapshotConfig = snapshotConfig;
+    }
 
-	public RSSInstance() {
-	}
+    public RSSInstance() {
+    }
 
-	@XmlElement(name = "Name")
-	public String getName() {
-		return name;
-	}
+    @XmlElement(name = "Name")
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	@XmlElement(name = "DbmsType")
-	public String getDbmsType() {
-		return dbmsType;
-	}
+    @XmlElement(name = "DbmsType")
+    public String getDbmsType() {
+        return dbmsType;
+    }
 
-	public void setDbmsType(String dbmsType) {
-		this.dbmsType = dbmsType;
-	}
+    public void setDbmsType(String dbmsType) {
+        this.dbmsType = dbmsType;
+    }
 
-	@XmlElement(name = "InstanceType")
-	public String getInstanceType() {
-		return instanceType;
-	}
+    @XmlElement(name = "InstanceType")
+    public String getInstanceType() {
+        return instanceType;
+    }
 
-	public void setInstanceType(String instanceType) {
-		this.instanceType = instanceType;
-	}
+    public void setInstanceType(String instanceType) {
+        this.instanceType = instanceType;
+    }
 
-	@XmlElement(name = "ServerCategory")
-	public String getServerCategory() {
-		return serverCategory;
-	}
+    @XmlElement(name = "ServerCategory")
+    public String getServerCategory() {
+        return serverCategory;
+    }
 
-	public void setServerCategory(String serverCategory) {
-		this.serverCategory = serverCategory;
-	}
+    public void setServerCategory(String serverCategory) {
+        this.serverCategory = serverCategory;
+    }
 
-	@XmlElement(name = "DataSourceConfiguration")
-	public DataSourceConfig getDataSourceConfig() {
-		return dataSourceConfig;
-	}
+    @XmlElement(name = "DataSourceConfiguration")
+    public DataSourceConfig getDataSourceConfig() {
+        return dataSourceConfig;
+    }
 
-	public void setDataSourceConfig(DataSourceConfig dataSourceConfig) {
-		this.dataSourceConfig = dataSourceConfig;
-	}
+    public void setDataSourceConfig(DataSourceConfig dataSourceConfig) {
+        this.dataSourceConfig = dataSourceConfig;
+    }
 
-	public Integer getId() {
-		return id;
-	}
+    @XmlElement(name = "SSHInformation")
+    public SSHInformationConfig getSshInformationConfig() {
+        return sshInformationConfig;
+    }
 
-	public String getEnvironmentName() {
-		return environmentName;
-	}
+    public void setSshInformationConfig(SSHInformationConfig sshInformationConfig) {
+        this.sshInformationConfig = sshInformationConfig;
+    }
 
-	public void setEnvironmentName(String environmentName) {
-		this.environmentName = environmentName;
-	}
+    @XmlElement(name = "SnapshotConfiguration")
+    public SnapshotConfig getSnapshotConfig() {
+        return snapshotConfig;
+    }
 
-	public String getServerURL() {
-		return serverURL;
-	}
+    public void setSnapshotConfig(SnapshotConfig snapshotConfig) {
+        this.snapshotConfig = snapshotConfig;
+    }
 
-	public void setServerURL(String serverURL) {
-		this.serverURL = serverURL;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public String getAdminUserName() {
-		return adminUserName;
-	}
+    public String getEnvironmentName() {
+        return environmentName;
+    }
 
-	public void setAdminUserName(String adminUserName) {
-		this.adminUserName = adminUserName;
-	}
+    public void setEnvironmentName(String environmentName) {
+        this.environmentName = environmentName;
+    }
 
-	public String getAdminPassword() {
-		return adminPassword;
-	}
+    public String getServerURL() {
+        return serverURL;
+    }
 
-	public void setAdminPassword(String adminPassword) {
-		this.adminPassword = adminPassword;
-	}
+    public void setServerURL(String serverURL) {
+        this.serverURL = serverURL;
+    }
 
-	public Long getTenantId() {
-		return tenantId;
-	}
+    public String getAdminUserName() {
+        return adminUserName;
+    }
 
-	public void setTenantId(Long tenantId) {
-		this.tenantId = tenantId;
-	}
+    public void setAdminUserName(String adminUserName) {
+        this.adminUserName = adminUserName;
+    }
 
-	public Environment getEnvironment() {
-		return environment;
-	}
+    public String getAdminPassword() {
+        return adminPassword;
+    }
 
-	public void setEnvironment(Environment environment) {
-		this.environment = environment;
-	}
+    public void setAdminPassword(String adminPassword) {
+        this.adminPassword = adminPassword;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public Long getTenantId() {
+        return tenantId;
+    }
 
-	public List<Database> getDatabases() {
-		return databases;
-	}
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
+    }
 
-	public void setDatabases(List<Database> databases) {
-		this.databases = databases;
-	}
+    public Environment getEnvironment() {
+        return environment;
+    }
 
-	public String getDriverClassName() {
-		return driverClassName;
-	}
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
 
-	public void setDriverClassName(String driverClassName) {
-		this.driverClassName = driverClassName;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public List<Database> getDatabases() {
+        return databases;
+    }
+
+    public void setDatabases(List<Database> databases) {
+        this.databases = databases;
+    }
+
+    public String getDriverClassName() {
+        return driverClassName;
+    }
+
+    public void setDriverClassName(String driverClassName) {
+        this.driverClassName = driverClassName;
+    }
 
 
-	@Override
-	public String toString() {
-		return "RSSInstance [id=" + id + ", name=" + name + ", dbmsType=" + dbmsType + ", instanceType=" + instanceType + ", serverCategory=" + serverCategory + ", serverURL=" + serverURL + ", adminUserName=" + adminUserName + ", adminPassword=" + adminPassword + ", environmentName=" + environmentName + "]";
-	}
+    @Override
+    public String toString() {
+        return "RSSInstance [id=" + id + ", name=" + name + ", dbmsType=" + dbmsType + ", instanceType=" + instanceType + ", serverCategory=" + serverCategory + ", serverURL=" + serverURL + ", adminUserName=" + adminUserName + ", adminPassword=" + adminPassword + ", environmentName=" + environmentName + "]";
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!super.equals(obj)) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		RSSInstance other = (RSSInstance) obj;
-		if (name == null) {
-			if (other.name != null) {
-				return false;
-			}
-		} else if (!name.equals(other.name)) {
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        RSSInstance other = (RSSInstance) obj;
+        if (name == null) {
+            if (other.name != null) {
+                return false;
+            }
+        } else if (!name.equals(other.name)) {
+            return false;
+        }
+        return true;
+    }
 
-	public int getEnvironmentId() {
-		return environmentId;
-	}
+    public int getEnvironmentId() {
+        return environmentId;
+    }
 
-	public void setEnvironmentId(int environmentId) {
-		this.environmentId = environmentId;
-	}
+    public void setEnvironmentId(int environmentId) {
+        this.environmentId = environmentId;
+    }
 }
