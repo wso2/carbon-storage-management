@@ -36,7 +36,10 @@ import org.wso2.carbon.ndatasource.rdbms.RDBMSDataSource;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.common.RSSManagerHelper;
 import org.wso2.carbon.rssmanager.common.exception.RSSManagerCommonException;
+import org.wso2.carbon.rssmanager.core.config.RSSConfigurationManager;
+import org.wso2.carbon.rssmanager.core.config.databasemanagement.SnapshotConfig;
 import org.wso2.carbon.rssmanager.core.config.datasource.RDBMSConfig;
+import org.wso2.carbon.rssmanager.core.config.ssh.SSHInformationConfig;
 import org.wso2.carbon.rssmanager.core.dto.DatabaseInfo;
 import org.wso2.carbon.rssmanager.core.dto.DatabasePrivilegeSetInfo;
 import org.wso2.carbon.rssmanager.core.dto.DatabasePrivilegeTemplateInfo;
@@ -54,9 +57,11 @@ import org.wso2.carbon.rssmanager.core.dto.common.UserDatabasePrivilege;
 import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
+import org.wso2.carbon.rssmanager.core.environment.Environment;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.RSSManagerDataHolder;
 import org.wso2.carbon.user.core.tenant.TenantManager;
+import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecretResolverFactory;
 
@@ -984,8 +989,13 @@ public final class RSSManagerUtil {
         return privilegeTemplate;
     }
 
-    public static void createSnapshotDirectory() throws RSSManagerException {
-        File snapshotDir = new File(RSSManagerConstants.Snapshots.SNAPSHOT_DIRECTORY_NAME);
+    public static void createSnapshotDirectory(String directory) throws RSSManagerException {
+        if (directory == null || directory.isEmpty()) {
+            log.warn("Target snapshot directory is null or empty. Creating snapshot in default directory: "
+            + CarbonUtils.getCarbonHome() + File.separator + RSSManagerConstants.Snapshots.SNAPSHOT_DIRECTORY_NAME);
+            directory = RSSManagerConstants.Snapshots.SNAPSHOT_DIRECTORY_NAME;
+        }
+        File snapshotDir = new File(directory);
         if (!snapshotDir.exists()) {
             try {
                 snapshotDir.mkdir();
@@ -995,13 +1005,50 @@ public final class RSSManagerUtil {
         }
     }
 
-    public static String getSnapshotFilePath(String databaseName) {
+    public static String getSnapshotFilePath(String directory, String databaseName) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("_yyyy-MM-dd_hh-mm-ss_");
         String date = simpleDateFormat.format(new Date());
-        return RSSManagerConstants.Snapshots.SNAPSHOT_DIRECTORY_NAME
-               + File.separator
+        if (directory == null || directory.isEmpty()) {
+            directory = RSSManagerConstants.Snapshots.SNAPSHOT_DIRECTORY_NAME;
+        }
+        if (!directory.endsWith(File.pathSeparator)) {
+            directory = directory + File.separator;
+        }
+        return directory
                + databaseName
                + date
                + RSSManagerConstants.Snapshots.SNAPSHOT_FILE_POST_FIX;
+    }
+
+    public static SSHInformationConfig getSSHInformationOfServerInstance(String instanceName)
+            throws RSSManagerException {
+        Environment[] environments = RSSConfigurationManager.getInstance().getCurrentRSSConfig().getRSSEnvironments();
+        for (Environment environment : environments) {
+            for (RSSInstance rssInstance : environment.getRSSInstances()) {
+                if (instanceName.equalsIgnoreCase(rssInstance.getName())) {
+                    return rssInstance.getSshInformationConfig();
+                }
+            }
+        }
+        throw new RSSManagerException("SSH Information is not available for RSS Instance: "
+                                      + instanceName
+                                      + ", in "
+                                      + RSSManagerConstants.RSS_CONFIG_XML_NAME);
+    }
+
+    public static SnapshotConfig getSnapshotConfigOfServerInstance(String instanceName)
+            throws RSSManagerException {
+        Environment[] environments = RSSConfigurationManager.getInstance().getCurrentRSSConfig().getRSSEnvironments();
+        for (Environment environment : environments) {
+            for (RSSInstance rssInstance : environment.getRSSInstances()) {
+                if (instanceName.equalsIgnoreCase(rssInstance.getName())) {
+                    return rssInstance.getSnapshotConfig();
+                }
+            }
+        }
+        throw new RSSManagerException("Snapshot Configuration is not available for RSS Instance: "
+                                      + instanceName
+                                      + ", in "
+                                      + RSSManagerConstants.RSS_CONFIG_XML_NAME);
     }
 }

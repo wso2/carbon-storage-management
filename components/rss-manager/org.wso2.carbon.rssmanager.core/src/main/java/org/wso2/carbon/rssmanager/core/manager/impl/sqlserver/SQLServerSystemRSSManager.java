@@ -22,6 +22,7 @@ package org.wso2.carbon.rssmanager.core.manager.impl.sqlserver;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
+import org.wso2.carbon.rssmanager.core.config.databasemanagement.SnapshotConfig;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.MySQLPrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.SQLServerPrivilegeSet;
@@ -34,13 +35,13 @@ import org.wso2.carbon.rssmanager.core.environment.dao.RSSInstanceDAO;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.manager.RSSManager;
 import org.wso2.carbon.rssmanager.core.manager.SystemRSSManager;
-import org.wso2.carbon.rssmanager.core.util.ProcessBuilderWrapper;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
-import java.io.File;
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -569,28 +570,38 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
      */
     @Override
     public void createSnapshot(String databaseName) throws RSSManagerException {
-        RSSInstance instance = resolveRSSInstanceByDatabase(databaseName,
-                                                            RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
-        RSSManagerUtil.createSnapshotDirectory();
-        ProcessBuilderWrapper processBuilder = new ProcessBuilderWrapper();
-        List command = new ArrayList();
-        command.add(RSSManagerConstants.Snapshots.MYSQL_DUMP_TOOL);
-        command.add(RSSManagerConstants.Snapshots.USERNAME_OPTION);
-        command.add(instance.getAdminUserName());
-        command.add(RSSManagerConstants.Snapshots.PASSWORD_OPTION + instance.getAdminPassword());
-        command.add(databaseName);
-        command.add(RSSManagerConstants.Snapshots.OUTPUT_FILE_OPTION);
-        command.add(RSSManagerUtil.getSnapshotFilePath(databaseName));
+        Connection conn = null;
+        PreparedStatement snapshotStatement = null;
         try {
-            processBuilder.execute(command);
+            RSSInstance instance = resolveRSSInstanceByDatabase(
+                    databaseName,
+                    RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            DataSource dataSource = getDataSource(instance.getName(), databaseName);
+            conn = dataSource.getConnection();
+            SnapshotConfig snapshotConfig = RSSManagerUtil.getSnapshotConfigOfServerInstance(instance.getName());
+            String filePath = RSSManagerUtil.getSnapshotFilePath(snapshotConfig.getTargetDirectory(), databaseName);
+            String snapshotQuery = "BACKUP DATABASE adventure TO DISK='" + filePath + "'";
+            snapshotStatement = conn.prepareStatement(snapshotQuery);
+            snapshotStatement.executeQuery();
         } catch (Exception e) {
             String errorMessage = "Error occurred while creating snapshot.";
             log.error(errorMessage, e);
             throw new RSSManagerException(errorMessage, e);
-        }
-        String errors = processBuilder.getErrors();
-        if (errors != null && !errors.isEmpty()) {
-            throw new RSSManagerException("Error occurred while creating Snapshot. " + errors);
+        } finally {
+            if (snapshotStatement != null) {
+                try {
+                    snapshotStatement.close();
+                } catch (SQLException e) {
+                    log.error("Closing prepared statement failed after creating snapshot.", e);
+                }
+            }
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    log.error("Closing prepared statement failed after creating snapshot.", e);
+                }
+            }
         }
     }
 }
