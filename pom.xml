@@ -1059,7 +1059,7 @@
         <derby.version>10.4.2.0</derby.version>
         <activation.version>1.1</activation.version>
         <javamail.version>1.4</javamail.version>
-        <wss4j.version>1.5.11.wso2v1</wss4j.version>
+        <wss4j.version>1.5.11.wso2v7</wss4j.version>
         <wsdl4j.wso2.version>1.6.2.wso2v2</wsdl4j.wso2.version>
         <jetty.version>6.1.26.wso2v1</jetty.version>
         <jetty-util.version>6.1.26.wso2v1</jetty-util.version>
@@ -1079,7 +1079,7 @@
 
 
         <!-- Orbits -->
-        <orbit.version.xmlschema>1.4.7.wso2v2</orbit.version.xmlschema>
+        <orbit.version.xmlschema>1.4.7.wso2v3</orbit.version.xmlschema>
         <orbit.version.infinispan>5.1.2.wso2v1</orbit.version.infinispan>
         <orbit.version.h2.engine>1.2.140.wso2v3</orbit.version.h2.engine>
 
