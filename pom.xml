@@ -1089,12 +1089,6 @@
         <exp.pkg.version.abdera>1.0.0.wso2v2</exp.pkg.version.abdera>
         <imp.pkg.version.abdera>[1.0.0.wso2v2, 2)</imp.pkg.version.abdera>
 
-        <!--Apache Geronimo-->
-        <version.geronimo.specs.geronimo-jpa_2.0_spec>1.0</version.geronimo.specs.geronimo-jpa_2.0_spec>
-
-        <!--OpenJPA -->
-        <openjpa.version>2.2.0-wso2v1</openjpa.version>
-
         <!--SCM-->
         <orbit.version.maven-scm>1.7.0.wso2v1</orbit.version.maven-scm>
 
