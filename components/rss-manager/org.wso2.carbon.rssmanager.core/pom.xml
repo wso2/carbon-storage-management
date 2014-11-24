@@ -66,7 +66,6 @@
                             org.wso2.carbon.transaction.manager.*
                         </Import-Package>
                         <Meta-Persistence>META-INF/persistence.xml</Meta-Persistence>
-                        <JPA-PersistenceUnits>sample</JPA-PersistenceUnits>
                         <Export-Package>
                             !org.wso2.carbon.rssmanager.core.internal,
                             org.wso2.carbon.rssmanager.core.*
@@ -135,10 +134,5 @@
             <version>0.1.51</version>
         </dependency>
     </dependencies>
-
-    <properties>
-        <openjpa.wso2.version>2.2.0.wso2v2</openjpa.wso2.version>
-    </properties>
-
 </project>
 

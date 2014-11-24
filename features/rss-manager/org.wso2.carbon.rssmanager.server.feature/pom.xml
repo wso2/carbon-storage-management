@@ -29,62 +29,11 @@
             <artifactId>org.wso2.carbon.rssmanager.common</artifactId>
             <version>${carbon.platform.version}</version>
         </dependency>
-        
-	<dependency>
-	       <groupId>org.eclipse.persistence</groupId>
-	       <artifactId>org.eclipse.persistence.antlr</artifactId>
-	       <version>${org.eclipse.persistence.wso2.version}</version>
-	</dependency>
-	<dependency>
-	       <groupId>org.eclipse.persistence</groupId>
-	       <artifactId>org.eclipse.persistence.asm</artifactId>
-	       <version>${org.eclipse.persistence.wso2.version}</version>
-	</dependency>
-	<dependency>
-	       <groupId>org.eclipse.persistence</groupId>
-	       <artifactId>org.eclipse.persistence.core</artifactId>
-	       <version>${org.eclipse.persistence.wso2.version}</version>
-	</dependency>
-	<dependency>
-	       <groupId>org.eclipse.persistence</groupId>
-	       <artifactId>org.eclipse.persistence.jpa</artifactId>
-	       <version>${org.eclipse.persistence.wso2.version}</version>
-	</dependency>
-	<dependency>
-	       <groupId>org.eclipse.persistence</groupId>
-	       <artifactId>org.eclipse.persistence.equinox</artifactId>
-	       <version>${org.eclipse.persistence.wso2.version}</version>
-	</dependency>
-	<dependency>
-	       <groupId>org.eclipse.persistence</groupId>
-	       <artifactId>org.eclipse.persistence.jpa.jpql</artifactId>
-	       <version>${org.eclipse.persistence.wso2.version}</version>
-	</dependency>
-	<dependency>
-	       <groupId>org.eclipse.persistence</groupId>
-	       <artifactId>org.eclipse.persistence.osgi</artifactId>
-	       <version>${org.eclipse.persistence.wso2.version}</version>
-	</dependency>
-	<dependency>
-	       <groupId>org.eclipse.persistence</groupId>
-	       <artifactId>org.eclipse.persistence.weaving</artifactId>
-	       <version>${org.eclipse.persistence.wso2.version}</version>
-	</dependency>
-	<dependency>
-	       <groupId>org.eclipse.persistence</groupId>
-	       <artifactId>javax.persistence</artifactId>
-	       <version>${javax.persistence.version}</version>
-	</dependency>
-	<dependency>
-	       <groupId>org.eclipse.persistence.wso2</groupId>
-	       <artifactId>transactions-eclipselink</artifactId>
-	       <version>${atomikos.eclipse.version}</version>
-	</dependency>
-	<dependency>
+	    <dependency>
 	       <groupId>asm.wso2</groupId>
 	       <artifactId>asm</artifactId>
 	       <version>${asm.wso2.version}</version>
-	</dependency>
+	    </dependency>
     </dependencies>
 
     <build>
