@@ -18,81 +18,81 @@
  */
 package org.wso2.carbon.rssmanager.core.authorize;
 
-import org.apache.commons.lang3.StringUtils;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.identity.application.mgt.ApplicationMgtOSGIUtil;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
-import org.wso2.carbon.rssmanager.core.manager.RSSManager;
-import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RSSAuthorizationUtils {
 
 	public static final String DATABASE_RESOURCE = "Database";
 
-	public static final String RSSINSTANCE_RESOURCE = "Rss Instance";
+	public static final String RSSINSTANCE_RESOURCE = "RSS Instance";
 
 	public static final String DATABASE_USER_RESOURCE = "Database User";
 
 	public static final String ATTACH_DATABASE_USER_RESOURCE = "Attach Database User";
 
-	public static final String ENVIRONMENT_RESOURCE = "Environment";
+	public static final String ALL_ENVIRONMENT_RESOURCE = "All Environments";
 
-	public static final String SYSTEM_RESOURCE = "System";
+	public static final String SYSTEM_RESOURCE = "System Instance";
 
-	public static final String USER_DEFINED_RESOURCE = "User Defined";
+	public static final String USER_DEFINED_RESOURCE = "User Defined Instance";
 
-	public static final String SERVICE_PROVIDER_NAME = "rssmanager";
+	public static final String SERVICE_PROVIDER_NAME = "RSSManager";
 
 	public static final String UI_EXECUTE = "ui.execute";
 
-	public static String[] getPermissionListForEnvironment(String envionmentName) {
-		String[] permissions = new String[24];
+	/**
+	 * Create the permission list for the application per environment
+	 *
+	 * @param environmentName name of the environment
+	 * @return permission list
+	 */
+	public static String[] getPermissionListForEnvironment(String environmentName) {
+		List<String> permissions = new ArrayList<String>();
 		//create permission resource set for system instances
-		permissions[0] = buildAddActionResource(ENVIRONMENT_RESOURCE, SYSTEM_RESOURCE, envionmentName, RSSINSTANCE_RESOURCE);
-		permissions[1] = buildEditActionResource(ENVIRONMENT_RESOURCE, SYSTEM_RESOURCE, envionmentName, RSSINSTANCE_RESOURCE);
-		permissions[2] = buildDeleteActionResource(ENVIRONMENT_RESOURCE, SYSTEM_RESOURCE, envionmentName, RSSINSTANCE_RESOURCE);
-		permissions[3] = buildAddActionResource(ENVIRONMENT_RESOURCE, SYSTEM_RESOURCE, envionmentName, DATABASE_RESOURCE);
-		permissions[4] = buildEditActionResource(ENVIRONMENT_RESOURCE, SYSTEM_RESOURCE, envionmentName, DATABASE_RESOURCE);
-		permissions[5] = buildDeleteActionResource(ENVIRONMENT_RESOURCE, SYSTEM_RESOURCE, envionmentName, DATABASE_RESOURCE);
-		permissions[6] = buildAddActionResource(ENVIRONMENT_RESOURCE, SYSTEM_RESOURCE, envionmentName, DATABASE_USER_RESOURCE);
-		permissions[7] = buildEditActionResource(ENVIRONMENT_RESOURCE, SYSTEM_RESOURCE, envionmentName,
-							DATABASE_USER_RESOURCE);
-		permissions[8] = buildDeleteActionResource(ENVIRONMENT_RESOURCE, SYSTEM_RESOURCE, envionmentName,
-							DATABASE_USER_RESOURCE);
-		permissions[9] = buildAddActionResource(ENVIRONMENT_RESOURCE, SYSTEM_RESOURCE, envionmentName,
-							ATTACH_DATABASE_USER_RESOURCE);
-		permissions[10] = buildEditActionResource(ENVIRONMENT_RESOURCE, SYSTEM_RESOURCE, envionmentName,
-							ATTACH_DATABASE_USER_RESOURCE);
-		permissions[11] = buildDeleteActionResource(ENVIRONMENT_RESOURCE, SYSTEM_RESOURCE, envionmentName,
-							ATTACH_DATABASE_USER_RESOURCE);
+		permissions.addAll(createPermissionSetOfInstanceType(SYSTEM_RESOURCE, environmentName));
 		//create permission resource set for user defined instances
-		permissions[12] = buildAddActionResource(ENVIRONMENT_RESOURCE, USER_DEFINED_RESOURCE, envionmentName,
-							RSSINSTANCE_RESOURCE);
-		permissions[13] = buildEditActionResource(ENVIRONMENT_RESOURCE, USER_DEFINED_RESOURCE, envionmentName,
-							RSSINSTANCE_RESOURCE);
-		permissions[14] = buildDeleteActionResource(ENVIRONMENT_RESOURCE, USER_DEFINED_RESOURCE, envionmentName,
-							RSSINSTANCE_RESOURCE);
-		permissions[15] = buildAddActionResource(ENVIRONMENT_RESOURCE, USER_DEFINED_RESOURCE, envionmentName, DATABASE_RESOURCE);
-		permissions[16] = buildEditActionResource(ENVIRONMENT_RESOURCE, USER_DEFINED_RESOURCE, envionmentName, DATABASE_RESOURCE);
-		permissions[17] = buildDeleteActionResource(ENVIRONMENT_RESOURCE, USER_DEFINED_RESOURCE, envionmentName,
-							DATABASE_RESOURCE);
-		permissions[18] = buildAddActionResource(ENVIRONMENT_RESOURCE, USER_DEFINED_RESOURCE, envionmentName,
-							DATABASE_USER_RESOURCE);
-		permissions[19] = buildEditActionResource(ENVIRONMENT_RESOURCE, USER_DEFINED_RESOURCE, envionmentName,
-							DATABASE_USER_RESOURCE);
-		permissions[20] = buildDeleteActionResource(ENVIRONMENT_RESOURCE, USER_DEFINED_RESOURCE, envionmentName,
-							DATABASE_USER_RESOURCE);
-		permissions[21] = buildAddActionResource(ENVIRONMENT_RESOURCE, USER_DEFINED_RESOURCE, envionmentName,
-							ATTACH_DATABASE_USER_RESOURCE);
-		permissions[22] = buildEditActionResource(ENVIRONMENT_RESOURCE, USER_DEFINED_RESOURCE, envionmentName,
-							ATTACH_DATABASE_USER_RESOURCE);
-		permissions[23] = buildDeleteActionResource(ENVIRONMENT_RESOURCE, USER_DEFINED_RESOURCE, envionmentName,
-							ATTACH_DATABASE_USER_RESOURCE);
-		return permissions;
+		permissions.addAll(createPermissionSetOfInstanceType(USER_DEFINED_RESOURCE, environmentName));
+		return permissions.toArray(new String[permissions.size()]);
 	}
 
+	private static List<String> createPermissionSetOfInstanceType(String resourceType, String environmentName) {
+		List<String> permissions = new ArrayList<String>();
+		permissions.add(buildAddActionResource(ALL_ENVIRONMENT_RESOURCE, environmentName, resourceType,
+				RSSINSTANCE_RESOURCE));
+		permissions.add(buildEditActionResource(ALL_ENVIRONMENT_RESOURCE, environmentName, resourceType,
+				RSSINSTANCE_RESOURCE));
+		permissions.add(buildDeleteActionResource(ALL_ENVIRONMENT_RESOURCE, environmentName, resourceType,
+				RSSINSTANCE_RESOURCE));
+		permissions.add(buildAddActionResource(ALL_ENVIRONMENT_RESOURCE, environmentName, resourceType,
+				DATABASE_RESOURCE));
+		permissions.add(buildEditActionResource(ALL_ENVIRONMENT_RESOURCE, environmentName, resourceType,
+				DATABASE_RESOURCE));
+		permissions.add(buildDeleteActionResource(ALL_ENVIRONMENT_RESOURCE, environmentName, resourceType,
+				DATABASE_RESOURCE));
+		permissions.add(buildAddActionResource(ALL_ENVIRONMENT_RESOURCE, environmentName, resourceType,
+				DATABASE_USER_RESOURCE));
+		permissions.add(buildEditActionResource(ALL_ENVIRONMENT_RESOURCE, environmentName, resourceType,
+				DATABASE_USER_RESOURCE));
+		permissions.add(buildDeleteActionResource(ALL_ENVIRONMENT_RESOURCE, environmentName, resourceType,
+				DATABASE_USER_RESOURCE));
+		permissions.add(buildAddActionResource(ALL_ENVIRONMENT_RESOURCE, environmentName, resourceType,
+				ATTACH_DATABASE_USER_RESOURCE));
+		permissions.add(buildEditActionResource(ALL_ENVIRONMENT_RESOURCE, environmentName, resourceType,
+				ATTACH_DATABASE_USER_RESOURCE));
+		permissions.add(buildDeleteActionResource(ALL_ENVIRONMENT_RESOURCE, environmentName, resourceType,
+				ATTACH_DATABASE_USER_RESOURCE));
+		return permissions;
+	}
+	/**
+	 * RSS action resources
+	 */
 	public enum ActionResource {
 		ADD("Add"), EDIT("Edit"), DELETE("Delete");
 
@@ -107,30 +107,56 @@ public class RSSAuthorizationUtils {
 		}
 	}
 
+	/**
+	 * Build the add permission resource from given resource list
+	 * @param resources set of resources
+	 * @return permission string
+	 */
 	public static String buildAddActionResource(String... resources) {
-		String completePermissionResource = StringUtils.EMPTY;
+		StringBuilder addPermissionResource = new StringBuilder();
 		for(String resource : resources) {
-			completePermissionResource += resource + "/";
+			addPermissionResource.append(resource);
+			addPermissionResource.append("/");
 		}
-		return completePermissionResource + ActionResource.ADD.getAction();
+		addPermissionResource.append(ActionResource.ADD.getAction());
+		return addPermissionResource.toString();
 	}
 
+	/**
+	 * Build the edit permission resource from given resource list
+	 * @param resources set of resources
+	 * @return permission string
+	 */
 	public static String buildEditActionResource(String... resources) {
-		String completePermissionResource = StringUtils.EMPTY;
+		StringBuilder editPermissionResource = new StringBuilder();
 		for(String resource : resources) {
-			completePermissionResource += resource + "/";
+			editPermissionResource.append(resource);
+			editPermissionResource.append("/");
 		}
-		return completePermissionResource + ActionResource.EDIT.getAction();
+		editPermissionResource.append(ActionResource.EDIT.getAction());
+		return editPermissionResource.toString();
 	}
 
+	/**
+	 * Build the delete permission resource from given resource list
+	 * @param resources set of resources
+	 * @return permission string
+	 */
 	public static String buildDeleteActionResource(String... resources) {
-		String completePermissionResource = StringUtils.EMPTY;
+		StringBuilder deletePermissionResource = new StringBuilder();
 		for(String resource : resources) {
-			completePermissionResource += resource + "/";
+			deletePermissionResource.append(resource);
+			deletePermissionResource.append("/");
 		}
-		return completePermissionResource + ActionResource.DELETE.getAction();
+		deletePermissionResource.append(ActionResource.DELETE.getAction());
+		return deletePermissionResource.toString();
 	}
 
+	/**
+	 * Get service provider application path
+	 *
+	 * @return application resource path
+	 */
 	public static String getApplicationResourcePath() {
 		StringBuilder applicationResourcePath = new StringBuilder();
 		applicationResourcePath.append(CarbonConstants.UI_PERMISSION_NAME);
@@ -142,19 +168,29 @@ public class RSSAuthorizationUtils {
 		return applicationResourcePath.toString();
 	}
 
+	/**
+	 * Build permission resource for given resources
+	 *
+	 * @param environmentName name of the environment
+	 * @param instanceType rss instance type
+	 * @param resource  sub resource under the environment
+	 * @param action action to perform on resource
+	 * @return permission resource path
+	 * @throws RSSManagerException if something went wrong when building the permission path
+	 */
 	public static String getPermissionResource(String environmentName, String instanceType, String resource, String action)
 			throws RSSManagerException {
 		StringBuilder applicationResourcePath = new StringBuilder();
 		applicationResourcePath.append(getApplicationResourcePath());
-		applicationResourcePath.append(ENVIRONMENT_RESOURCE);
+		applicationResourcePath.append(ALL_ENVIRONMENT_RESOURCE);
+		applicationResourcePath.append(RegistryConstants.PATH_SEPARATOR);
+		applicationResourcePath.append(environmentName);
 		applicationResourcePath.append(RegistryConstants.PATH_SEPARATOR);
 		if(RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equals(instanceType)) {
 			applicationResourcePath.append(SYSTEM_RESOURCE);
 		} else {
 			applicationResourcePath.append(USER_DEFINED_RESOURCE);
 		}
-		applicationResourcePath.append(RegistryConstants.PATH_SEPARATOR);
-		applicationResourcePath.append(environmentName);
 		applicationResourcePath.append(RegistryConstants.PATH_SEPARATOR);
 		if(DATABASE_RESOURCE.equals(resource)) {
 			applicationResourcePath.append(DATABASE_RESOURCE);
@@ -165,7 +201,7 @@ public class RSSAuthorizationUtils {
 		} else if (ATTACH_DATABASE_USER_RESOURCE.equals(resource)) {
 			applicationResourcePath.append(resource);
 		} else {
-			throw new RSSManagerException("No resource specified for build the permission path");
+			throw new RSSManagerException("No sub resource specified for build the permission path");
 		}
 		applicationResourcePath.append(RegistryConstants.PATH_SEPARATOR);
 		applicationResourcePath.append(action);

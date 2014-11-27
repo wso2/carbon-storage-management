@@ -21,6 +21,7 @@ package org.wso2.carbon.rssmanager.core.internal;
 
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.identity.application.mgt.ApplicationManagementOSGIService;
+import org.wso2.carbon.identity.application.mgt.ApplicationManagementService;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.rssmanager.common.exception.RSSManagerCommonException;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
@@ -47,7 +48,7 @@ public class RSSManagerDataHolder {
 
 	private static RSSManagerDataHolder thisInstance = new RSSManagerDataHolder();
 
-	private ApplicationManagementOSGIService appMgtOSGIService;
+	private ApplicationManagementService applicationManagementService;
 
 	private RSSManagerDataHolder() {
 	}
@@ -148,11 +149,11 @@ public class RSSManagerDataHolder {
 		}
 	}
 
-	public ApplicationManagementOSGIService getAppMgtOSGIService() {
-		return appMgtOSGIService;
+	public ApplicationManagementService getApplicationManagementService() {
+		return applicationManagementService;
 	}
 
-	public void setAppMgtOSGIService(ApplicationManagementOSGIService appMgtService) {
-		this.appMgtOSGIService = appMgtService;
+	public void setApplicationManagementService(ApplicationManagementService applicationManagementService) {
+		this.applicationManagementService = applicationManagementService;
 	}
 }

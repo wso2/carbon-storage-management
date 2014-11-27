@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.identity.application.mgt.ApplicationManagementService;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.config.RSSConfigurationManager;
@@ -66,12 +67,12 @@ import javax.transaction.TransactionManager;
  * policy="dynamic"
  * bind="setSecretCallbackHandlerService"
  * unbind="unsetSecretCallbackHandlerService"
- * @scr.reference name="org.wso2.carbon.identity.application.mgt.ApplicationManagementOSGIService"
- * interface="org.wso2.carbon.identity.application.mgt.ApplicationManagementOSGIService"
+ * @scr.reference name="org.wso2.carbon.identity.application.mgt.ApplicationManagementService"
+ * interface="org.wso2.carbon.identity.application.mgt.ApplicationManagementService"
  * cardinality="1..1"
  * policy="dynamic"
- * bind="setApplicationManagementOSGIService"
- * unbind="unsetApplicationManagementOSGIService
+ * bind="setApplicationManagementService"
+ * unbind="unsetApplicationManagementService"
  */
 public class RSSManagerServiceComponent {
 
@@ -215,17 +216,17 @@ public class RSSManagerServiceComponent {
 		RSSManagerDataHolder.getInstance().setSecretCallbackHandlerService(null);
 	}
 
-	protected void setApplicationManagementOSGIService(ApplicationManagementOSGIService service){
+	protected void setApplicationManagementService(ApplicationManagementService service){
 		if (log.isDebugEnabled()) {
 			log.debug("Setting ApplicationManagementService");
 		}
-		RSSManagerDataHolder.getInstance().setAppMgtOSGIService(service);
+		RSSManagerDataHolder.getInstance().setApplicationManagementService(service);
 	}
 
-	protected void unsetApplicationManagementOSGIService(ApplicationManagementOSGIService service){
+	protected void unsetApplicationManagementService(ApplicationManagementService service){
 		if (log.isDebugEnabled()) {
 			log.debug("Unsetting ApplicationManagementService");
 		}
-		RSSManagerDataHolder.getInstance().setAppMgtOSGIService(null);
+		RSSManagerDataHolder.getInstance().setApplicationManagementService(null);
 	}
 }

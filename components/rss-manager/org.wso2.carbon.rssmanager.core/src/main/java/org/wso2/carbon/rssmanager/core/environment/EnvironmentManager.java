@@ -323,7 +323,7 @@ public class EnvironmentManager {
 			Map<String, RSSInstance> rssInstanceMapFromDB = new HashMap<String, RSSInstance>();//to hold rss instance from database
 			if (!isEvnExist) {
 				environmentDAO.addEnvironment(environment);
-				RSSAuthorizer.definePermissionToServiceProvider(environment.getName());
+				RSSAuthorizer.definePermissions(environment.getName());
 				environment = environmentDAO.getEnvironment(environment.getName());
 				DatabasePrivilegeTemplate privilegeTemplate = RSSManagerUtil.createDeafultDBPrivilegeTemplate();
 				privilegeTemplate.setTenantId(RSSManagerUtil.getTenantId());

@@ -106,7 +106,7 @@ public class RSSConfigurationManager {
 				dbCreator.createRegistryDatabase();
 			}
 			//Create service provider of the super tenant
-			RSSAuthorizer.createServiceProviderIfNotExist();
+			RSSAuthorizer.createServiceProvider();
 			//Initialization of environment manager
 			EnvironmentManager environmentManager = EnvironmentManagerFactory.getEnvironmentManager(currentRSSConfig.
 																									getRSSEnvironments());
