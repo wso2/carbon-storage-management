@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.dao.UserPrivilegesDAO;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.common.UserDatabasePrivilege;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 
@@ -45,11 +46,11 @@ public class MySQLUserPrivilegesDAOImpl implements UserPrivilegesDAO {
 	 * @see UserPrivilegesDAO#updateUserPrivileges(PreparedStatement, UserDatabasePrivilege)
 	 */
 	public void updateUserPrivileges(PreparedStatement nativePrivilegeUpdateStatement, UserDatabasePrivilege privileges)
-			throws RSSDAOException {
+			throws RSSDAOException, RSSDatabaseConnectionException {
 		Connection conn = null;
 		PreparedStatement userPrivilegeEntryStatement = null;
 		try {
-			conn = getDataSource().getConnection(); //acquire data source connection
+			conn = getDataSourceConnection(); //acquire data source connection
 			//start transaction with setting auto commit value to false
 			conn.setAutoCommit(false);
 			String updateTemplateEntryQuery = "UPDATE RM_USER_DATABASE_PRIVILEGE SET " +
@@ -147,11 +148,16 @@ public class MySQLUserPrivilegesDAOImpl implements UserPrivilegesDAO {
 	}
 
 	/**
-	 * Get data source
+	 * Get data source connection
 	 *
-	 * @return DataSource the data source configured in the component
+	 * @return the data source connection
 	 */
-	private DataSource getDataSource() {
-		return dataSource;
+	private Connection getDataSourceConnection() throws RSSDatabaseConnectionException {
+		try{
+			return dataSource.getConnection();//acquire data source connection
+		} catch (SQLException e) {
+			String msg = "Error while acquiring the database connection. Meta Repository Database server may down";
+			throw new RSSDatabaseConnectionException(msg, e);
+		}
 	}
 }

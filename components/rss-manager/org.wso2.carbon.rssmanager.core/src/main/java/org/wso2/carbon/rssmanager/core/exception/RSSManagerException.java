@@ -71,4 +71,7 @@ public class RSSManagerException extends Exception {
 		this.errorMessage = errorMessage;
 	}
 
+	public String getErrorMessage() {
+		return errorMessage;
+	}
 }

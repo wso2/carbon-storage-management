@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplateEntry;
 import org.wso2.carbon.rssmanager.core.environment.dao.DatabasePrivilegeTemplateDAO;
@@ -51,14 +52,15 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 	/**
 	 * @see DatabasePrivilegeTemplateDAO#addDatabasePrivilegeTemplate(org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate, int)
 	 */
-	public void addDatabasePrivilegeTemplate(DatabasePrivilegeTemplate databasePrivilegeTemplate, int environmentId) throws RSSDAOException {
+	public void addDatabasePrivilegeTemplate(DatabasePrivilegeTemplate databasePrivilegeTemplate, int environmentId)
+			throws RSSDAOException, RSSDatabaseConnectionException {
 		Connection conn = null;
 		PreparedStatement templateStatement = null;
 		PreparedStatement templateEntryStatement = null;
 		ResultSet result = null;
 		int templateId;
 		try {
-			conn = getDataSource().getConnection();//acquire data source connection
+			conn = getDataSourceConnection();//acquire data source connection
 			conn.setAutoCommit(false);
 			String insertTemplateQuery = "INSERT INTO RM_DB_PRIVILEGE_TEMPLATE(ENVIRONMENT_ID, NAME, TENANT_ID) VALUES(?,?,?)";
 			templateStatement = conn.prepareStatement(insertTemplateQuery, Statement.RETURN_GENERATED_KEYS);
@@ -116,14 +118,15 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 	/**
 	 * @see DatabasePrivilegeTemplateDAO#getDatabasePrivilegesTemplate(int, String, int)
 	 */
-	public DatabasePrivilegeTemplate getDatabasePrivilegesTemplate(int environmentId, String templateName, int tenantId) throws RSSDAOException {
+	public DatabasePrivilegeTemplate getDatabasePrivilegesTemplate(int environmentId, String templateName, int tenantId)
+			throws RSSDAOException, RSSDatabaseConnectionException {
 
 		Connection conn = null;
 		PreparedStatement statement = null;
 		ResultSet result = null;
 		DatabasePrivilegeTemplate privilegeTemplate = new DatabasePrivilegeTemplate();
 		try {
-			conn = getDataSource().getConnection();//acquire data source connection
+			conn = getDataSourceConnection();//acquire data source connection
 			String selectTemplateQuery = "SELECT * FROM RM_DB_PRIVILEGE_TEMPLATE WHERE ENVIRONMENT_ID = ? AND NAME = ? AND TENANT_ID = ?";
 			statement = conn.prepareStatement(selectTemplateQuery);
 			statement.setInt(1, environmentId);
@@ -149,7 +152,8 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 	/**
 	 * @see DatabasePrivilegeTemplateDAO#getDatabasePrivilegesTemplates(int, int)
 	 */
-	public DatabasePrivilegeTemplate[] getDatabasePrivilegesTemplates(int environmentId, int tenantId) throws RSSDAOException {
+	public DatabasePrivilegeTemplate[] getDatabasePrivilegesTemplates(int environmentId, int tenantId)
+			throws RSSDAOException, RSSDatabaseConnectionException {
 
 		Connection conn = null;
 		PreparedStatement statement = null;
@@ -157,7 +161,7 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 		List<DatabasePrivilegeTemplate> privilegeTemplates = new ArrayList<DatabasePrivilegeTemplate>();
 		DatabasePrivilegeTemplate privilegeTemplate;
 		try {
-			conn = getDataSource().getConnection();//acquire data source connection
+			conn = getDataSourceConnection();//acquire data source connection
 			String selectTemplateQuery = "SELECT * FROM RM_DB_PRIVILEGE_TEMPLATE WHERE ENVIRONMENT_ID = ? AND TENANT_ID = ?";
 			statement = conn.prepareStatement(selectTemplateQuery);
 			statement.setInt(1, environmentId);
@@ -185,14 +189,15 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 	 * @see DatabasePrivilegeTemplateDAO#isDatabasePrivilegeTemplateExist(int, String, int)
 	 */
 	public boolean isDatabasePrivilegeTemplateExist(int environmentId, String templateName,
-	                                                int tenantId) throws RSSDAOException {
+	                                                int tenantId)
+			throws RSSDAOException, RSSDatabaseConnectionException {
 
 		Connection conn = null;
 		PreparedStatement statement = null;
 		ResultSet result = null;
 		boolean isExist = false;
 		try {
-			conn = getDataSource().getConnection();//acquire data source connection
+			conn = getDataSourceConnection();//acquire data source connection
 			String existenceTemplateQuery = "SELECT * FROM RM_DB_PRIVILEGE_TEMPLATE WHERE ENVIRONMENT_ID = ? AND NAME = ? AND TENANT_ID = ?";
 			statement = conn.prepareStatement(existenceTemplateQuery);
 			statement.setInt(1, environmentId);
@@ -216,11 +221,12 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 	/**
 	 * @see DatabasePrivilegeTemplateDAO#removeDatabasePrivilegeTemplate(int, String, int)
 	 */
-	public void removeDatabasePrivilegeTemplate(int environmentId, String templateName, int tenantId) throws RSSDAOException {
+	public void removeDatabasePrivilegeTemplate(int environmentId, String templateName, int tenantId)
+			throws RSSDAOException, RSSDatabaseConnectionException {
 		Connection conn = null;
 		PreparedStatement statement = null;
 		try {
-			conn = getDataSource().getConnection();//acquire data source connection
+			conn = getDataSourceConnection();//acquire data source connection
 			String removePrivilegeTemplateQuery = "DELETE FROM RM_DB_PRIVILEGE_TEMPLATE WHERE ENVIRONMENT_ID=? AND NAME=? AND TENANT_ID=?";
 			statement = conn.prepareStatement(removePrivilegeTemplateQuery);
 			statement.setInt(1, environmentId);
@@ -301,11 +307,16 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 	}
 
 	/**
-	 * Get data source
+	 * Get data source connection
 	 *
-	 * @return data source
+	 * @return the data source connection
 	 */
-	private DataSource getDataSource() {
-		return this.dataSource;
+	private Connection getDataSourceConnection() throws RSSDatabaseConnectionException {
+		try{
+			return dataSource.getConnection();//acquire data source connection
+		} catch (SQLException e) {
+			String msg = "Error while acquiring the database connection. Meta Repository Database server may down";
+			throw new RSSDatabaseConnectionException(msg, e);
+		}
 	}
 }

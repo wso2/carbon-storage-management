@@ -24,6 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.config.databasemanagement.SnapshotConfig;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.MySQLPrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.SQLServerPrivilegeSet;
@@ -65,8 +66,14 @@ public class SQLServerUserDefinedRSSManager extends UserDefinedRSSManager {
 		PreparedStatement addDBNativeQuery = null;
 		final String qualifiedDatabaseName = database.getName().trim();
 		int tenantId = RSSManagerUtil.getTenantId();
-		boolean isExist = super.isDatabaseExist(database.getRssInstanceName(), qualifiedDatabaseName,
-		                                        RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+		boolean isExist = false;
+		try {
+			isExist = super.isDatabaseExist(database.getRssInstanceName(), qualifiedDatabaseName,
+			                                        RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+		} catch (RSSDatabaseConnectionException e) {
+			String msg = "Database server error at adding database " + database.getName() + e.getMessage();
+			handleException(msg, e);
+		}
 		if (isExist) {
 			String msg = "Database '" + qualifiedDatabaseName + "' already exists";
 			log.error(msg);
@@ -105,7 +112,13 @@ public class SQLServerUserDefinedRSSManager extends UserDefinedRSSManager {
 	                           String databaseName) throws RSSManagerException {
 		Connection conn = null;
 		PreparedStatement dropDBNativeStmt = null;
-		RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+		RSSInstance rssInstance = null;
+		try {
+			rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+		} catch (RSSDatabaseConnectionException e) {
+			String msg = "Database server error at removing database " + databaseName + e.getMessage();
+			handleException(msg, e);
+		}
 		if (rssInstance == null) {
 			String msg = "Unresolvable RSS Instance. Database " + databaseName + " does not exist";
 			log.error(msg);
@@ -269,7 +282,13 @@ public class SQLServerUserDefinedRSSManager extends UserDefinedRSSManager {
 		String databaseName = entry.getDatabaseName();
 		String username = entry.getUsername();
 		//resolve rss instance by database
-		RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+		RSSInstance rssInstance = null;
+		try {
+			rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+		} catch (RSSDatabaseConnectionException e) {
+			String msg = "Database server error at attach database user" + username + e.getMessage();
+			handleException(msg, e);
+		}
 		try {
 			conn = this.getConnection(rssInstance.getName());
 			if (privileges == null) {

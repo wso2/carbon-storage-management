@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.environment.Environment;
 import org.wso2.carbon.rssmanager.core.environment.dao.EnvironmentDAO;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
@@ -49,11 +50,11 @@ public class EnvironmentDAOImpl implements EnvironmentDAO {
 	/**
 	 * @see EnvironmentDAO#addEnvironment(Environment)
 	 */
-	public void addEnvironment(Environment environment) throws RSSDAOException {
+	public void addEnvironment(Environment environment) throws RSSDAOException, RSSDatabaseConnectionException {
 		Connection conn = null;
 		PreparedStatement statement = null;
 		try {
-			conn = getDataSource().getConnection();
+			conn = getDataSourceConnection();
 			String createEnvironmentQuery = "INSERT INTO RM_ENVIRONMENT(NAME) VALUES (?)";
 			statement = conn.prepareStatement(createEnvironmentQuery);
 			statement.setString(1, environment.getName());
@@ -71,13 +72,14 @@ public class EnvironmentDAOImpl implements EnvironmentDAO {
 	/**
 	 * @see EnvironmentDAO#isEnvironmentExist(String)
 	 */
-	public boolean isEnvironmentExist(String environmentName) throws RSSDAOException {
+	public boolean isEnvironmentExist(String environmentName)
+			throws RSSDAOException, RSSDatabaseConnectionException {
 		boolean isExist = false;
 		Connection conn = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
-			conn = getDataSource().getConnection();
+			conn = getDataSourceConnection();
 			String checkEnvironmentExistQuery = "SELECT ID FROM RM_ENVIRONMENT WHERE NAME = ?";
 			statement = conn.prepareStatement(checkEnvironmentExistQuery);
 			statement.setString(1, environmentName);
@@ -100,13 +102,14 @@ public class EnvironmentDAOImpl implements EnvironmentDAO {
 	/**
 	 * @see EnvironmentDAO#getEnvironment(String)
 	 */
-	public Environment getEnvironment(String environmentName) throws RSSDAOException {
+	public Environment getEnvironment(String environmentName)
+			throws RSSDAOException, RSSDatabaseConnectionException {
 		Environment environment = new Environment();
 		Connection conn = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
-			conn = getDataSource().getConnection();
+			conn = getDataSourceConnection();
 			String selectEnvironmentQuery = "SELECT * FROM RM_ENVIRONMENT WHERE NAME = ?";
 			statement = conn.prepareStatement(selectEnvironmentQuery);
 			statement.setString(1, environmentName);
@@ -130,14 +133,14 @@ public class EnvironmentDAOImpl implements EnvironmentDAO {
 	/**
 	 * @see EnvironmentDAO#getAllEnvironments()
 	 */
-	public Set<Environment> getAllEnvironments() throws RSSDAOException {
+	public Set<Environment> getAllEnvironments() throws RSSDAOException, RSSDatabaseConnectionException {
 		Set<Environment> environments = new HashSet<Environment>();
 		Connection conn = null;
 		Environment environment;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
-			conn = getDataSource().getConnection();
+			conn = getDataSourceConnection();
 			String selectAllEnvironmentsQuery = "SELECT * FROM RM_ENVIRONMENT";
 			statement = conn.prepareStatement(selectAllEnvironmentsQuery);
 			resultSet = statement.executeQuery();
@@ -162,11 +165,12 @@ public class EnvironmentDAOImpl implements EnvironmentDAO {
 	/**
 	 * @see EnvironmentDAO#removeEnvironment(String)
 	 */
-	public void removeEnvironment(String environmentName) throws RSSDAOException {
+	public void removeEnvironment(String environmentName) throws RSSDAOException,
+			RSSDatabaseConnectionException {
 		Connection conn = null;
 		PreparedStatement statement = null;
 		try {
-			conn = getDataSource().getConnection();
+			conn = getDataSourceConnection();
 			String removeEnvironmentQuery = "DELETE FROM RM_ENVIRONMENT WHERE NAME = ? ";
 			statement = conn.prepareStatement(removeEnvironmentQuery);
 			statement.setString(1, environmentName);
@@ -244,12 +248,17 @@ public class EnvironmentDAOImpl implements EnvironmentDAO {
 	}
 
 	/**
-	 * Get data source
+	 * Get data source connection
 	 *
-	 * @return data source
+	 * @return the data source connection
 	 */
-	private DataSource getDataSource() {
-		return this.dataSource;
+	private Connection getDataSourceConnection() throws RSSDatabaseConnectionException {
+		try{
+			return dataSource.getConnection();//acquire data source connection
+		} catch (SQLException e) {
+			String msg = "Error while acquiring the database connection. Meta Repository Database server may down";
+			throw new RSSDatabaseConnectionException(msg, e);
+		}
 	}
 
 }

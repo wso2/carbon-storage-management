@@ -20,6 +20,7 @@
 package org.wso2.carbon.rssmanager.core.dao;
 
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 
 import java.sql.PreparedStatement;
@@ -38,7 +39,8 @@ public interface DatabaseUserDAO {
 	 * @param user database user configuration
 	 * @throws RSSDAOException if something went wrong when adding database configuration details to the meta repository
 	 */
-	void addDatabaseUser(PreparedStatement nativeAddUserStatement, DatabaseUser user) throws RSSDAOException;
+	void addDatabaseUser(PreparedStatement nativeAddUserStatement, DatabaseUser user)
+			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Method to remove database user configuration information from RSS metadata repository. This method takes an argument of native
@@ -49,7 +51,8 @@ public interface DatabaseUserDAO {
 	 * @param user database user configuration to removed
 	 * @throws RSSDAOException if something went wrong when remove database configuration details from the meta repository
 	 */
-	void removeDatabaseUser(PreparedStatement nativeRemoveUserStatement, DatabaseUser user) throws RSSDAOException;
+	void removeDatabaseUser(PreparedStatement nativeRemoveUserStatement, DatabaseUser user)
+			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Check whether database user exist
@@ -62,7 +65,8 @@ public interface DatabaseUserDAO {
 	 * @throws RSSDAOException  if something went wrong when checking database user existence
 	 */
 	boolean isDatabaseUserExist(String environmentName, String username,
-	                            int tenantId, String instanceType) throws RSSDAOException;
+	                            int tenantId, String instanceType)
+			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Get database user
@@ -75,7 +79,8 @@ public interface DatabaseUserDAO {
 	 * @throws RSSDAOException if something went wrong when fetch database user data
 	 */
 	DatabaseUser getDatabaseUser(String environmentName, String rssInstanceName, String username,
-	                             int tenantId, String instanceType) throws RSSDAOException;
+	                             int tenantId, String instanceType)
+			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Get database user without specifying rss instance name
@@ -87,7 +92,8 @@ public interface DatabaseUserDAO {
 	 * @throws RSSDAOException if something went wrong when fetch database user data
 	 */
 	DatabaseUser getDatabaseUser(String environmentName,
-	                             String username, int tenantId, String instanceType) throws RSSDAOException;
+	                             String username, int tenantId, String instanceType)
+			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Get all database users belongs to a tenant in a environment for given instance type
@@ -97,7 +103,8 @@ public interface DatabaseUserDAO {
 	 * @return array of all the database users match with given data
 	 * @throws RSSDAOException if something went wrong when fetch database users data for tenant
 	 */
-	DatabaseUser[] getDatabaseUsers(String environmentName, int tenantId, String instanceType) throws RSSDAOException;
+	DatabaseUser[] getDatabaseUsers(String environmentName, int tenantId, String instanceType)
+			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Resolve rss instance name by database user
@@ -110,5 +117,5 @@ public interface DatabaseUserDAO {
 	 * @throws RSSDAOException if something went wrong when resolving rss instance name from database user name
 	 */
 	String resolveRSSInstanceNameByUser(String environmentName, String rssInstanceType, String username,
-	                                    int tenantId) throws RSSDAOException;
+	                                    int tenantId) throws RSSDAOException, RSSDatabaseConnectionException;
 }

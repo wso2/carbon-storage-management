@@ -16,13 +16,9 @@
  *  under the License.
  *
  */
-
 package org.wso2.carbon.rssmanager.core.dao.exception;
 
-/**
- * Custom exception class for data access related exceptions
- */
-public class RSSDAOException extends Exception {
+public class RSSDatabaseConnectionException extends Exception{
 
 	private String message;
 	private static final long serialVersionUID = 2021891706072918864L;
@@ -33,7 +29,7 @@ public class RSSDAOException extends Exception {
 	 * @param message error message
 	 * @param nestedException exception
 	 */
-	public RSSDAOException(String message, Exception nestedException) {
+	public RSSDatabaseConnectionException(String message, Exception nestedException) {
 		super(message, nestedException);
 		setErrorMessage(message);
 	}
@@ -44,7 +40,7 @@ public class RSSDAOException extends Exception {
 	 * @param message the detail message.
 	 * @param cause   the cause of this exception.
 	 */
-	public RSSDAOException(String message, Throwable cause) {
+	public RSSDatabaseConnectionException(String message, Throwable cause) {
 		super(message, cause);
 		setErrorMessage(message);
 	}
@@ -54,7 +50,7 @@ public class RSSDAOException extends Exception {
 	 *
 	 * @param message the detail message.
 	 */
-	public RSSDAOException(String message) {
+	public RSSDatabaseConnectionException(String message) {
 		super(message);
 		setErrorMessage(message);
 	}
@@ -64,7 +60,7 @@ public class RSSDAOException extends Exception {
 	 *
 	 * @param cause   the cause of this exception.
 	 */
-	public RSSDAOException(Throwable cause) {
+	public RSSDatabaseConnectionException(Throwable cause) {
 		super(cause);
 	}
 
@@ -75,5 +71,4 @@ public class RSSDAOException extends Exception {
 	public void setErrorMessage(String errorMessage) {
 		this.message = errorMessage;
 	}
-
 }

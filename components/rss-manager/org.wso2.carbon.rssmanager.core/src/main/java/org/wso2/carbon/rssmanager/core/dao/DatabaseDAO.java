@@ -20,6 +20,7 @@
 package org.wso2.carbon.rssmanager.core.dao;
 
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
 
 import java.sql.PreparedStatement;
@@ -39,7 +40,8 @@ public interface DatabaseDAO {
 	 * @throws RSSDAOException If some error occurs while adding database configuration
 	 *                         information to RSS meta data repository
 	 */
-	void addDatabase(PreparedStatement nativeAddDBStatement, Database database) throws RSSDAOException;
+	void addDatabase(PreparedStatement nativeAddDBStatement, Database database)
+			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Method to remove database configuration information from RSS metadata repository. This method takes an argument of native
@@ -51,7 +53,8 @@ public interface DatabaseDAO {
 	 * @throws RSSDAOException If some error occurs while removing database configuration
 	 *                         information from RSS meta data repository
 	 */
-	void removeDatabase(PreparedStatement nativeRemoveDBStatement, Database database) throws RSSDAOException;
+	void removeDatabase(PreparedStatement nativeRemoveDBStatement, Database database)
+			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Check database existence
@@ -65,7 +68,8 @@ public interface DatabaseDAO {
 	 * @throws RSSDAOException if some error occurred during checking the existence
 	 */
 	 boolean isDatabaseExist(String environmentName, String rssInstanceName, String databaseName,
-	                               int tenantId, String instanceType) throws RSSDAOException;
+	                               int tenantId, String instanceType)
+			 throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Method to get configuration information of a particular database.
@@ -79,7 +83,7 @@ public interface DatabaseDAO {
 	 *                         information of a given database
 	 */
 	Database getDatabase(String environmentName, String rssInstanceName, String databaseName, int tenantId, String instanceType)
-			throws RSSDAOException;
+			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Method to get configuration information of a particular database without specifying rss instance name
@@ -91,7 +95,8 @@ public interface DatabaseDAO {
 	 * @throws RSSDAOException If some error occurs while retrieving the configuration
 	 *                         information of a given database
 	 */
-	Database getDatabase(String environmentName, String databaseName, int tenantId, String instanceType) throws RSSDAOException;
+	Database getDatabase(String environmentName, String databaseName, int tenantId, String instanceType)
+			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Method to retrieve all the database configurations belong to a particular tenant in environment for given instance type
@@ -103,7 +108,8 @@ public interface DatabaseDAO {
 	 * @throws RSSDAOException If some error occurs while retrieving the configurations of
 	 *                         the databases belong to a tenant in given instance type and environment
 	 */
-	public Database[] getDatabases(String environmentName, int tenantId, String instanceType) throws RSSDAOException;
+	public Database[] getDatabases(String environmentName, int tenantId, String instanceType)
+			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Method to retrieve all the database configurations belong to a particular tenant in environment
@@ -114,7 +120,8 @@ public interface DatabaseDAO {
 	 * @throws RSSDAOException If some error occurs while retrieving the configurations of
 	 *                         the databases belong to a tenant in environment
 	 */
-	Database[] getAllDatabases(String environmentName, int tenantId) throws RSSDAOException;
+	Database[] getAllDatabases(String environmentName, int tenantId)
+			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Resolve rss instance name by database
@@ -127,7 +134,8 @@ public interface DatabaseDAO {
 	 */
 	public String resolveRSSInstanceNameByDatabase(String environmentName,
 	                                               String databaseName, String type,
-	                                               int tenantId) throws RSSDAOException;
+	                                               int tenantId)
+			throws RSSDAOException, RSSDatabaseConnectionException;
 
 
 }

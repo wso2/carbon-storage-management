@@ -23,17 +23,16 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.config.RSSManagementRepository;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplateEntry;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
 import org.wso2.carbon.rssmanager.core.environment.dao.DatabasePrivilegeTemplateDAO;
 import org.wso2.carbon.rssmanager.core.environment.dao.EnvironmentDAO;
-import org.wso2.carbon.rssmanager.core.environment.dao.EnvironmentManagementDAO;
 import org.wso2.carbon.rssmanager.core.environment.dao.EnvironmentManagementDAOFactory;
 import org.wso2.carbon.rssmanager.core.environment.dao.RSSInstanceDAO;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
-import org.wso2.carbon.rssmanager.core.manager.RSSManager;
 import org.wso2.carbon.rssmanager.core.manager.adaptor.RSSManagerAdaptor;
 import org.wso2.carbon.rssmanager.core.manager.adaptor.RSSManagerAdaptorFactory;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
@@ -71,7 +70,8 @@ public class EnvironmentManager {
 	 * @return valid environment
 	 * @throws RSSManagerException if error occurred when checking environment validity
 	 */
-	private Environment validateEnvironment(String environmentName) throws RSSManagerException {
+	private Environment validateEnvironment(String environmentName)
+			throws RSSManagerException, RSSDatabaseConnectionException {
 		if (environmentName == null || environmentName.trim().length() == 0) {
 			throw new RSSManagerException(" Environment name is null ");
 		}
@@ -94,7 +94,8 @@ public class EnvironmentManager {
 	 * @throws RSSManagerException if error occurred when removing environment
 	 */
 	@Deprecated
-	public void removeEnvironment(String environmentName) throws RSSManagerException {
+	public void removeEnvironment(String environmentName)
+			throws RSSManagerException, RSSDatabaseConnectionException {
 		try {
 			environmentDAO.removeEnvironment(environmentName);
 		} catch (RSSDAOException e) {
@@ -110,7 +111,8 @@ public class EnvironmentManager {
 	 * @return rss instance
 	 * @throws RSSManagerException if error occured when adding rss instance
 	 */
-	public RSSInstance addRSSInstance(RSSInstance rssInstance) throws RSSManagerException {
+	public RSSInstance addRSSInstance(RSSInstance rssInstance)
+			throws RSSManagerException, RSSDatabaseConnectionException {
 		try {
 			int tenantId = RSSManagerUtil.getTenantId();
 			Environment environment = validateEnvironment(rssInstance.getEnvironmentName());
@@ -154,7 +156,8 @@ public class EnvironmentManager {
 	 * @param rssInstance rss instance configuration
 	 * @throws RSSManagerException if error occur when updating rss instance
 	 */
-	public void updateRSSInstance(String environmentName, RSSInstance rssInstance) throws RSSManagerException {
+	public void updateRSSInstance(String environmentName, RSSInstance rssInstance)
+			throws RSSManagerException, RSSDatabaseConnectionException {
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
 			Environment env = validateEnvironment(environmentName);
@@ -268,7 +271,8 @@ public class EnvironmentManager {
 	 * @param repository rss management repository
 	 * @throws RSSManagerException if error occurred when initializing environments
 	 */
-	public void initEnvironments(String rssProvider, RSSManagementRepository repository) throws RSSManagerException {
+	public void initEnvironments(String rssProvider, RSSManagementRepository repository)
+			throws RSSManagerException, RSSDatabaseConnectionException {
 		//Add environments to the meta repository
 		for (Environment environment : this.getEnvironments()) {
 			this.addEnvironment(environment);
@@ -392,7 +396,7 @@ public class EnvironmentManager {
 	 * @throws RSSManagerException if error occurred when checking the privilege template existence
 	 */
 	public boolean isDatabasePrivilegeTemplateExist(String environmentName, String templateName)
-			throws RSSManagerException {
+			throws RSSManagerException, RSSDatabaseConnectionException {
 		boolean isExist = false;
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
@@ -414,7 +418,7 @@ public class EnvironmentManager {
 	 * @throws RSSManagerException if error occurs when drop privilege template
 	 */
 	public void dropDatabasePrivilegesTemplate(String environmentName, String templateName)
-			throws RSSManagerException {
+			throws RSSManagerException, RSSDatabaseConnectionException {
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
 			Environment env = validateEnvironment(environmentName);
@@ -434,7 +438,7 @@ public class EnvironmentManager {
 	 * @throws RSSManagerException if error occurred when getting privilege templates
 	 */
 	public DatabasePrivilegeTemplate[] getDatabasePrivilegeTemplates(String environmentName)
-			throws RSSManagerException {
+			throws RSSManagerException, RSSDatabaseConnectionException {
 		DatabasePrivilegeTemplate[] templates = new DatabasePrivilegeTemplate[0];
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
@@ -456,7 +460,7 @@ public class EnvironmentManager {
 	 * @throws RSSManagerException if error occur when getting database privilege template
 	 */
 	public DatabasePrivilegeTemplate getDatabasePrivilegeTemplate(String environmentName, String templateName)
-			throws RSSManagerException {
+			throws RSSManagerException, RSSDatabaseConnectionException {
 		DatabasePrivilegeTemplate template = null;
 		try {
 			Environment env = validateEnvironment(environmentName);
@@ -480,7 +484,7 @@ public class EnvironmentManager {
 	 * @throws RSSManagerException if error occurred adding template
 	 */
 	public void createDatabasePrivilegesTemplate(String environmentName, DatabasePrivilegeTemplate template)
-			throws RSSManagerException {
+			throws RSSManagerException, RSSDatabaseConnectionException {
 		try {
 			if (template == null) {
 				String msg = "Database privilege template information cannot be null";
@@ -519,7 +523,7 @@ public class EnvironmentManager {
 	 * @throws RSSManagerException if error occurs when editing database privilege template
 	 */
 	public void editDatabasePrivilegesTemplate(String environmentName, DatabasePrivilegeTemplate template)
-			throws RSSManagerException {
+			throws RSSManagerException, RSSDatabaseConnectionException {
 		try {
 			if (template == null) {
 				String msg = "Database privilege template information cannot be null";

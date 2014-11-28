@@ -18,10 +18,13 @@
 
 package org.wso2.carbon.rssmanager.core.manager.adaptor;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.ndatasource.common.DataSourceException;
 import org.wso2.carbon.ndatasource.core.CarbonDataSource;
 import org.wso2.carbon.ndatasource.core.DataSourceMetaInfo;
 import org.wso2.carbon.rssmanager.core.config.RSSConfigurationManager;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.DatabaseInfo;
 import org.wso2.carbon.rssmanager.core.dto.DatabasePrivilegeSetInfo;
 import org.wso2.carbon.rssmanager.core.dto.DatabasePrivilegeTemplateInfo;
@@ -51,7 +54,7 @@ import java.util.List;
 import java.util.Set;
 
 public class EnvironmentAdaptor implements RSSManagerService {
-
+	private static final Log log = LogFactory.getLog(EnvironmentAdaptor.class);
 	private EnvironmentManager environmentManager;
 
 	public EnvironmentAdaptor(EnvironmentManager environmentManager) {
@@ -65,7 +68,13 @@ public class EnvironmentAdaptor implements RSSManagerService {
 			throws RSSManagerException {
 		RSSInstance entity = new RSSInstance();
 		RSSManagerUtil.createRSSInstance(rssInstance, entity);
-		entity = this.getEnvironmentManager().addRSSInstance(entity);
+		try {
+			entity = this.getEnvironmentManager().addRSSInstance(entity);
+		}
+		catch (RSSDatabaseConnectionException e) {
+			String msg = "Database server error at adding rss instance " + rssInstance.getName() + e.getMessage();
+			handleException(msg, e);
+		}
 		environmentManager.getEnvironment(rssInstance.getEnvironmentName()).getDSWrapperRepository().addRSSInstanceDSWrapper(entity);
 		environmentManager.getEnvironment(rssInstance.getEnvironmentName()).addRSSInstance(entity);
 	}
@@ -87,7 +96,13 @@ public class EnvironmentAdaptor implements RSSManagerService {
 			throws RSSManagerException {
 		RSSInstance entity = new RSSInstance();
 		RSSManagerUtil.createRSSInstance(rssInstance, entity);
-		this.environmentManager.updateRSSInstance(environmentName, entity);
+		try {
+			this.environmentManager.updateRSSInstance(environmentName, entity);
+		}
+		catch (RSSDatabaseConnectionException e) {
+			String msg = "Database server error at updating rss instance" + rssInstance.getName() + e.getMessage();
+			handleException(msg, e);
+		}
 		environmentManager.getEnvironment(environmentName).getDSWrapperRepository().removeRSSInstanceDSWrapper(rssInstance.getName());
 		environmentManager.getEnvironment(environmentName).removeRSSInstance(rssInstance.getName());
 		environmentManager.getEnvironment(rssInstance.getEnvironmentName()).getDSWrapperRepository().addRSSInstanceDSWrapper(entity);
@@ -270,8 +285,15 @@ public class EnvironmentAdaptor implements RSSManagerService {
 	public void attachUser(String environmentName, UserDatabaseEntryInfo ude, String templateName)
 			throws RSSManagerException {
 		// TODO fix this with a proper DatabasePrivilegeTemplate
-		DatabasePrivilegeTemplate entity = this.getEnvironmentManager()
-				.getDatabasePrivilegeTemplate(environmentName, templateName);
+		DatabasePrivilegeTemplate entity = null;
+		try {
+			entity = this.getEnvironmentManager()
+					.getDatabasePrivilegeTemplate(environmentName, templateName);
+		}
+		catch (RSSDatabaseConnectionException e) {
+			String msg = "Database server error attach database user" + ude.getUsername() + e.getMessage();
+			handleException(msg, e);
+		}
 		DatabasePrivilegeTemplateEntry entry = entity.getEntry();
 		UserDatabaseEntry userEntity = new UserDatabaseEntry();
 		RSSManagerUtil.createDatabaseUserEntry(ude, userEntity);
@@ -367,7 +389,15 @@ public class EnvironmentAdaptor implements RSSManagerService {
 	 */
 	public boolean isDatabasePrivilegeTemplateExist(String environmentName, String templateName)
 			throws RSSManagerException {
-		return this.getEnvironmentManager().isDatabasePrivilegeTemplateExist(environmentName, templateName);
+		try {
+			return this.getEnvironmentManager().isDatabasePrivilegeTemplateExist(environmentName, templateName);
+		}
+		catch (RSSDatabaseConnectionException e) {
+			String msg = "Database server error when checking database privilege template existence of" +templateName+ e
+					.getMessage();
+			handleException(msg, e);
+		}
+		return false;
 	}
 
 	/**
@@ -386,7 +416,13 @@ public class EnvironmentAdaptor implements RSSManagerService {
 			throws RSSManagerException {
 		DatabasePrivilegeTemplate entity = new DatabasePrivilegeTemplate();
 		RSSManagerUtil.createDatabasePrivilegeTemplate(template, entity);
-		this.environmentManager.createDatabasePrivilegesTemplate(environmentName, entity);
+		try {
+			this.environmentManager.createDatabasePrivilegesTemplate(environmentName, entity);
+		}
+		catch (RSSDatabaseConnectionException e) {
+			String msg = "Database server error when adding privilege template" +template.getName()+ e.getMessage();
+			handleException(msg, e);
+		}
 	}
 
 	/**
@@ -394,7 +430,13 @@ public class EnvironmentAdaptor implements RSSManagerService {
 	 */
 	public void removeDatabasePrivilegeTemplate(String environmentName, String templateName)
 			throws RSSManagerException {
-		this.environmentManager.dropDatabasePrivilegesTemplate(environmentName, templateName);
+		try {
+			this.environmentManager.dropDatabasePrivilegesTemplate(environmentName, templateName);
+		}
+		catch (RSSDatabaseConnectionException e) {
+			String msg = "Database server error at removing database privilege template " +templateName+ e.getMessage();
+			handleException(msg, e);
+		}
 	}
 
 	/**
@@ -404,7 +446,12 @@ public class EnvironmentAdaptor implements RSSManagerService {
 			throws RSSManagerException {
 		DatabasePrivilegeTemplate entity = new DatabasePrivilegeTemplate();
 		RSSManagerUtil.createDatabasePrivilegeTemplate(template, entity);
-		this.environmentManager.editDatabasePrivilegesTemplate(environmentName, entity);
+		try {
+			this.environmentManager.editDatabasePrivilegesTemplate(environmentName, entity);
+		} catch (RSSDatabaseConnectionException e) {
+			String msg = "Database server error when updating privilege template" +template.getName()+ e.getMessage();
+			handleException(msg, e);
+		}
 	}
 
 	/**
@@ -412,8 +459,14 @@ public class EnvironmentAdaptor implements RSSManagerService {
 	 */
 	public DatabasePrivilegeTemplateInfo[] getDatabasePrivilegeTemplates(String environmentName)
 			throws RSSManagerException {
-		DatabasePrivilegeTemplate[] entities = this.getEnvironmentManager()
-				.getDatabasePrivilegeTemplates(environmentName);
+		DatabasePrivilegeTemplate[] entities = new DatabasePrivilegeTemplate[0];
+		try {
+			entities = this.getEnvironmentManager()
+					.getDatabasePrivilegeTemplates(environmentName);
+		} catch (RSSDatabaseConnectionException e) {
+			String msg = "Database server error at get privilege templates" + e.getMessage();
+			handleException(msg, e);
+		}
 		List<DatabasePrivilegeTemplate> entityList = Arrays.asList(entities);
 		List<DatabasePrivilegeTemplateInfo> infoList = new ArrayList<DatabasePrivilegeTemplateInfo>();
 		for (DatabasePrivilegeTemplate entity : entityList) {
@@ -430,8 +483,14 @@ public class EnvironmentAdaptor implements RSSManagerService {
 	public DatabasePrivilegeTemplateInfo getDatabasePrivilegeTemplate(String environmentName,
 	                                                                  String templateName)
 			throws RSSManagerException {
-		DatabasePrivilegeTemplate entity = this.getEnvironmentManager()
-				.getDatabasePrivilegeTemplate(environmentName, templateName);
+		DatabasePrivilegeTemplate entity = null;
+		try {
+			entity = this.getEnvironmentManager()
+					.getDatabasePrivilegeTemplate(environmentName, templateName);
+		} catch (RSSDatabaseConnectionException e) {
+			String msg = "Database server error when getting privilege template" +templateName+ e.getMessage();
+			handleException(msg, e);
+		}
 		DatabasePrivilegeTemplateInfo info = new DatabasePrivilegeTemplateInfo();
 		RSSManagerUtil.createDatabasePrivilegeTemplateInfo(info, entity);
 		return info;
@@ -527,4 +586,8 @@ public class EnvironmentAdaptor implements RSSManagerService {
         this.getRSSManagerAdaptor(environmentName).createSnapshot(databaseName, type);
     }
 
+	public void handleException(String msg, Exception e) throws RSSManagerException {
+		log.error(msg, e);
+		throw new RSSManagerException(msg, e);
+	}
 }

@@ -20,6 +20,7 @@
 package org.wso2.carbon.rssmanager.core.dao;
 
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 
@@ -40,7 +41,7 @@ public interface UserDatabaseEntryDAO {
 	 * @throws RSSDAOException if something went wrong when adding database user data to meta repository
 	 */
 	int addUserDatabaseEntry(PreparedStatement nativeAttachUserStatement, String environmentName, UserDatabaseEntry entry,
-	                         int tenantId) throws RSSDAOException;
+	                         int tenantId) throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Method to remove database user configuration information from RSS metadata repository. This method takes an argument of native
@@ -50,7 +51,8 @@ public interface UserDatabaseEntryDAO {
 	 * @param databaseId database id
 	 * @throws RSSDAOException if something went wrong when remove database entries by database id
 	 */
-	void removeUserDatabaseEntriesByDatabase(Integer databaseId) throws RSSDAOException;
+	void removeUserDatabaseEntriesByDatabase(Integer databaseId)
+			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Det user database entry
@@ -60,7 +62,8 @@ public interface UserDatabaseEntryDAO {
 	 * @return user database entry object with required fields
 	 * @throws RSSDAOException if something went wrong when querying user database entry
 	 */
-	UserDatabaseEntry getUserDatabaseEntry(int databaseId, int userId) throws RSSDAOException;
+	UserDatabaseEntry getUserDatabaseEntry(int databaseId, int userId)
+			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Get assigned database users for particular database
@@ -75,7 +78,8 @@ public interface UserDatabaseEntryDAO {
 	 */
 	DatabaseUser[] getAssignedDatabaseUsers(String environmentName, String rssInstanceName,
 	                                               String databaseName,
-	                                               int tenantId, String instanceType) throws RSSDAOException;
+	                                               int tenantId, String instanceType)
+			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Get available database users to attached for a database
@@ -89,7 +93,8 @@ public interface UserDatabaseEntryDAO {
 	 * @throws RSSDAOException if something went wrong when query available database users
 	 */
 	public DatabaseUser[] getAvailableDatabaseUsers(String environmentName, String rssInstanceName,
-	                                                String databaseName, int tenantId, String instanceType) throws RSSDAOException;
+	                                                String databaseName, int tenantId, String instanceType)
+			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Method to remove database user entry configuration information from RSS metadata repository. This method takes an argument of native
@@ -101,7 +106,8 @@ public interface UserDatabaseEntryDAO {
 	 * @param userId database user if
 	 * @throws RSSDAOException if something went wrong when removing database user entry
 	 */
-	public void removeUserDatabaseEntry(PreparedStatement nativeDeattachUserStatement, int dbId, int userId) throws RSSDAOException;
+	public void removeUserDatabaseEntry(PreparedStatement nativeDeattachUserStatement, int dbId, int userId)
+			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Check whether database user is attached to one or more databases
@@ -110,5 +116,5 @@ public interface UserDatabaseEntryDAO {
 	 * @return true if user attached else false
 	 * @throws RSSDAOException if something went wrong when checking database user existence
 	 */
-	public boolean isDatabaseUserEntriesExist(int userId) throws RSSDAOException;
+	public boolean isDatabaseUserEntriesExist(int userId) throws RSSDAOException, RSSDatabaseConnectionException;
 }

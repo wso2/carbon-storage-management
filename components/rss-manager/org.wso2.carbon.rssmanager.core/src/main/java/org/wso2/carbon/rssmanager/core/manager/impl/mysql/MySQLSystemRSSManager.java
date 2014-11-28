@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.config.databasemanagement.SnapshotConfig;
 import org.wso2.carbon.rssmanager.core.config.ssh.SSHInformationConfig;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.MySQLPrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry;
@@ -41,9 +42,7 @@ import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -69,8 +68,14 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
         PreparedStatement nativeAddDBStatement = null;
         //get qualified name for database which specific to tenant
         final String qualifiedDatabaseName = RSSManagerUtil.getFullyQualifiedDatabaseName(database.getName());
-        boolean isExist = super.isDatabaseExist(database.getRssInstanceName(), qualifiedDatabaseName,
-                                                RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        boolean isExist = false;
+        try {
+            isExist = super.isDatabaseExist(database.getRssInstanceName(), qualifiedDatabaseName,
+                                                    RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        } catch (RSSDatabaseConnectionException e) {
+            String msg = "Database server error at adding database " + database.getName() + e.getMessage();
+            handleException(msg, e);
+        }
         if (isExist) {
             String msg = "Database '" + qualifiedDatabaseName + "' already exists";
             log.error(msg);
@@ -109,7 +114,13 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
                                String databaseName) throws RSSManagerException {
         Connection conn = null;
         PreparedStatement nativeRemoveDBStatement = null;
-        RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        RSSInstance rssInstance = null;
+        try {
+            rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        } catch (RSSDatabaseConnectionException e) {
+            String msg = "Database server error at removing database " + databaseName + e.getMessage();
+            handleException(msg, e);
+        }
         if (rssInstance == null) {
             String msg = "Unresolvable RSS Instance. Database " + databaseName + " does not exist";
             log.error(msg);
@@ -362,7 +373,13 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
         String databaseName = entry.getDatabaseName();
         String username = entry.getUsername();
         //resolve rss instance by database
-        RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        RSSInstance rssInstance = null;
+        try {
+            rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        } catch (RSSDatabaseConnectionException e) {
+            String msg = "Database server error at attach database user" + username + e.getMessage();
+            handleException(msg, e);
+        }
         try {
             conn = this.getConnection(rssInstance.getName());
             if (privileges == null) {
@@ -559,6 +576,10 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
         } catch (SQLException e) {
             String msg = "Error while flushing privileges '" + rssInstance.getName() + "exists" + e.getMessage();
             handleException(msg, e);
+        } catch (RSSDatabaseConnectionException e) {
+            String msg = "Database server error occurred while flushing privileges '" + rssInstance.getName() + "exists" + e
+                    .getMessage();
+            handleException(msg, e);
         } finally {
             RSSManagerUtil.cleanupResources(null, stmt, conn);
         }
@@ -569,8 +590,14 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
      */
     @Override
     public void createSnapshot(String databaseName) throws RSSManagerException {
-        RSSInstance instance = resolveRSSInstanceByDatabase(databaseName,
-                                                            RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        RSSInstance instance = null;
+        try {
+            instance = resolveRSSInstanceByDatabase(databaseName,
+                                                                RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        } catch (RSSDatabaseConnectionException e) {
+            String msg = "Database server error at create snapshot of database " + databaseName + e.getMessage();
+            handleException(msg, e);
+        }
         SSHInformationConfig sshInformation = RSSManagerUtil.getSSHInformationOfServerInstance(instance.getName());
         SnapshotConfig snapshotConfig = RSSManagerUtil.getSnapshotConfigOfServerInstance(instance.getName());
         SSHConnection sshConnection = new SSHConnection(sshInformation.getHost(),
@@ -589,7 +616,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
         try {
             sshConnection.executeCommand(command);
         } catch (Exception e) {
-            String errorMessage = "Error occurred while creating snapshot.";
+            String errorMessage = "Error occurred while creating snapshot." + e.getMessage();
             log.error(errorMessage, e);
             throw new RSSManagerException(errorMessage, e);
         }
