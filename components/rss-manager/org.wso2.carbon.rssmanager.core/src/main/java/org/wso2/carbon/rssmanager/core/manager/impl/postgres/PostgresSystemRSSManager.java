@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.config.databasemanagement.SnapshotConfig;
 import org.wso2.carbon.rssmanager.core.config.ssh.SSHInformationConfig;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.MySQLPrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.PostgresPrivilegeSet;
@@ -35,13 +36,11 @@ import org.wso2.carbon.rssmanager.core.environment.dao.RSSInstanceDAO;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.manager.RSSManager;
 import org.wso2.carbon.rssmanager.core.manager.SystemRSSManager;
-import org.wso2.carbon.rssmanager.core.util.ProcessBuilderWrapper;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 import org.wso2.carbon.rssmanager.core.util.databasemanagement.SSHConnection;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.utils.xml.StringUtils;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -75,8 +74,14 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
         PreparedStatement nativeAddDBStatement = null;
         //get qualified name for database which specific to tenant
         final String qualifiedDatabaseName = RSSManagerUtil.getFullyQualifiedDatabaseName(database.getName());
-        boolean isExist = super.isDatabaseExist(database.getRssInstanceName(), qualifiedDatabaseName,
-                                                RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        boolean isExist = false;
+        try {
+            isExist = super.isDatabaseExist(database.getRssInstanceName(), qualifiedDatabaseName,
+                                                    RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        } catch (RSSDatabaseConnectionException e) {
+            String msg = "Database server error at adding database " + database.getName() + e.getMessage();
+            handleException(msg, e);
+        }
         if (isExist) {
             String msg = "Database '" + qualifiedDatabaseName + "' already exists";
             log.error(msg);
@@ -115,7 +120,13 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
                                String databaseName) throws RSSManagerException {
         Connection conn = null;
         PreparedStatement nativeRemoveDBStatement = null;
-        RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        RSSInstance rssInstance = null;
+        try {
+            rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        } catch (RSSDatabaseConnectionException e) {
+            String msg = "Database server error at removing database " + databaseName + e.getMessage();
+            handleException(msg, e);
+        }
         if (rssInstance == null) {
             String msg = "Unresolvable RSS Instance. Database " + databaseName + " does not exist";
             log.error(msg);
@@ -346,7 +357,13 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
         String databaseName = entry.getDatabaseName();
         String username = entry.getUsername();
         //resolve rss instance by database
-        RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        RSSInstance rssInstance = null;
+        try {
+            rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        } catch (RSSDatabaseConnectionException e) {
+            String msg = "Database server error at adding database user" + username + e.getMessage();
+            handleException(msg, e);
+        }
         try {
             conn = this.getConnection(rssInstance.getName());
             if (privileges == null) {
@@ -590,7 +607,7 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
      * @see RSSManager#getDatabase(String, String)
      */
     public Database getDatabase(String rssInstanceName, String databaseName) throws RSSManagerException {
-        return super.getDatabase(RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, databaseName);
+          return super.getDatabase(RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, databaseName);
     }
 
     /**
@@ -629,8 +646,14 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
      */
     @Override
     public void createSnapshot(String databaseName) throws RSSManagerException {
-        RSSInstance instance = resolveRSSInstanceByDatabase(databaseName,
-                                                            RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        RSSInstance instance = null;
+        try {
+            instance = resolveRSSInstanceByDatabase(databaseName,
+                                                                RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        } catch (RSSDatabaseConnectionException e) {
+            String msg = "Database server error at creating snapshot of database " + databaseName + e.getMessage();
+            handleException(msg, e);
+        }
         SSHInformationConfig sshInformation = RSSManagerUtil.getSSHInformationOfServerInstance(instance.getName());
         SnapshotConfig snapshotConfig = RSSManagerUtil.getSnapshotConfigOfServerInstance(instance.getName());
         SSHConnection sshConnection = new SSHConnection(sshInformation.getHost(),

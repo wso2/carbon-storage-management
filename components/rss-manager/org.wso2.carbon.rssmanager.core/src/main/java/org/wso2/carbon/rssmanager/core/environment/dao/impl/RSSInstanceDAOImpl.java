@@ -53,7 +53,8 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		PreparedStatement statement = null;
 		int environmentID = getEnvionmentIdByName(environmentName);
 		try {
-			conn = getDataSource().getConnection();
+			conn = getDataSourceConnection();
+			conn.setAutoCommit(false);
 			String createInstanceQuery = "INSERT INTO RM_SERVER_INSTANCE (ENVIRONMENT_ID, NAME, SERVER_URL, DBMS_TYPE, INSTANCE_TYPE, " +
 			                       "SERVER_CATEGORY, ADMIN_USERNAME, ADMIN_PASSWORD, TENANT_ID, DRIVER_CLASS) VALUES (?,?,?,?,?,?,?,?,?,?)";
 			statement = conn.prepareStatement(createInstanceQuery);
@@ -90,7 +91,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		boolean isExist = false;
 		int environmentId = getEnvionmentIdByName(environmentName);
 		try {
-			conn = getDataSource().getConnection();
+			conn = getDataSourceConnection();
 			String instanceExistenceQuery = "SELECT ID FROM RM_SERVER_INSTANCE WHERE ENVIRONMENT_ID = ? AND NAME = ?";
 			statement = conn.prepareStatement(instanceExistenceQuery);
 			statement.setInt(1, environmentId);
@@ -120,7 +121,8 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		PreparedStatement statement = null;
 		int environmentId = getEnvionmentIdByName(environmentName);
 		try {
-			conn = getDataSource().getConnection();
+			conn = getDataSourceConnection();
+			conn.setAutoCommit(false);
 			String removeInstanceQuery = "DELETE FROM RM_SERVER_INSTANCE WHERE ENVIRONMENT_ID = ? AND NAME = ?";
 			statement = conn.prepareStatement(removeInstanceQuery);
 			statement.setInt(1, environmentId);
@@ -147,7 +149,8 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		PreparedStatement entryUpdateStatement = null;
 		int environmentId = getEnvionmentIdByName(environmentName);
 		try {
-			conn = getDataSource().getConnection();
+			conn = getDataSourceConnection();
+			conn.setAutoCommit(false);
 			String updateInstanceEntryQuery = "UPDATE RM_SERVER_INSTANCE SET NAME =?," +
 			                                  "SERVER_URL=?, DBMS_TYPE=?, INSTANCE_TYPE=?, SERVER_CATEGORY=?, ADMIN_USERNAME=?, ADMIN_PASSWORD=?," +
 			                                  "TENANT_ID=?, DRIVER_CLASS=? WHERE ENVIRONMENT_ID=? AND NAME=?";
@@ -185,7 +188,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		ResultSet resultSet = null;
 		RSSInstance rssInstance = null;
 		try {
-			conn = getDataSource().getConnection();
+			conn = getDataSourceConnection();
 			String selectInstancesQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, RM_SERVER_INSTANCE.ID AS RSS_INSTANCE_ID, " +
 			                              "RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME, RM_SERVER_INSTANCE.SERVER_URL, RM_SERVER_INSTANCE.DBMS_TYPE, " +
 			                              "RM_SERVER_INSTANCE.INSTANCE_TYPE, RM_SERVER_INSTANCE.SERVER_CATEGORY, RM_SERVER_INSTANCE.ADMIN_USERNAME, " +
@@ -235,7 +238,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		List<RSSInstance> rssInstances = new ArrayList<RSSInstance>();
 		RSSInstance rssInstance = null;
 		try {
-			conn = getDataSource().getConnection();
+			conn = getDataSourceConnection();
 			String selectInstancesQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, RM_SERVER_INSTANCE.ID AS RSS_INSTANCE_ID, " +
 			                              "RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME, RM_SERVER_INSTANCE.SERVER_URL, RM_SERVER_INSTANCE.DBMS_TYPE, " +
 			                              "RM_SERVER_INSTANCE.INSTANCE_TYPE, RM_SERVER_INSTANCE.SERVER_CATEGORY, RM_SERVER_INSTANCE.ADMIN_USERNAME, " +
@@ -285,7 +288,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		List<RSSInstance> rssInstances = new ArrayList<RSSInstance>();
 		RSSInstance rssInstance = null;
 		try {
-			conn = getDataSource().getConnection();
+			conn = getDataSourceConnection();
 			String selectInstancesQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, RM_SERVER_INSTANCE.ID AS RSS_INSTANCE_ID, " +
 			                              "RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME, RM_SERVER_INSTANCE.SERVER_URL, RM_SERVER_INSTANCE.DBMS_TYPE, " +
 			                              "RM_SERVER_INSTANCE.INSTANCE_TYPE, RM_SERVER_INSTANCE.SERVER_CATEGORY, RM_SERVER_INSTANCE.ADMIN_USERNAME, " +
@@ -333,7 +336,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		List<RSSInstance> rssInstances = new ArrayList<RSSInstance>();
 		RSSInstance rssInstance;
 		try {
-			conn = getDataSource().getConnection();
+			conn = getDataSourceConnection();
 			String selectInstancesQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, RM_SERVER_INSTANCE.ID AS RSS_INSTANCE_ID, " +
 			                              "RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME, RM_SERVER_INSTANCE.SERVER_URL, RM_SERVER_INSTANCE.DBMS_TYPE, " +
 			                              "RM_SERVER_INSTANCE.INSTANCE_TYPE, RM_SERVER_INSTANCE.SERVER_CATEGORY, RM_SERVER_INSTANCE.ADMIN_USERNAME, " +
@@ -384,7 +387,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		List<RSSInstance> rssInstances = new ArrayList<RSSInstance>();
 		RSSInstance rssInstance;
 		try {
-			conn = getDataSource().getConnection();
+			conn = getDataSourceConnection();
 			String selectInstancesQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, RM_SERVER_INSTANCE.ID AS RSS_INSTANCE_ID, " +
 			                              "RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME, RM_SERVER_INSTANCE.SERVER_URL, RM_SERVER_INSTANCE.DBMS_TYPE, " +
 			                              "RM_SERVER_INSTANCE.INSTANCE_TYPE, RM_SERVER_INSTANCE.SERVER_CATEGORY, RM_SERVER_INSTANCE.ADMIN_USERNAME, " +
@@ -435,7 +438,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		List<RSSInstance> rssInstances = new ArrayList<RSSInstance>();
 		RSSInstance rssInstance;
 		try {
-			conn = getDataSource().getConnection();
+			conn = getDataSourceConnection();
 			String selectInstancesQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, RM_SERVER_INSTANCE.ID AS RSS_INSTANCE_ID, " +
 			                        "RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME, RM_SERVER_INSTANCE.SERVER_URL, RM_SERVER_INSTANCE.DBMS_TYPE, " +
 			                        "RM_SERVER_INSTANCE.INSTANCE_TYPE, RM_SERVER_INSTANCE.SERVER_CATEGORY, RM_SERVER_INSTANCE.ADMIN_USERNAME, " +
@@ -485,7 +488,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		List<RSSInstance> rssInstances = new ArrayList<RSSInstance>();
 		RSSInstance rssInstance;
 		try {
-			conn = getDataSource().getConnection();
+			conn = getDataSourceConnection();
 			String selectInstanceQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, RM_SERVER_INSTANCE.ID AS RSS_INSTANCE_ID, " +
 			                        "RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME, RM_SERVER_INSTANCE.SERVER_URL, RM_SERVER_INSTANCE.DBMS_TYPE, " +
 			                        "RM_SERVER_INSTANCE.INSTANCE_TYPE, RM_SERVER_INSTANCE.SERVER_CATEGORY, RM_SERVER_INSTANCE.ADMIN_USERNAME, " +
@@ -536,7 +539,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		ResultSet resultSet = null;
 		int environmentId = 0;
 		try {
-			conn = getDataSource().getConnection();
+			conn = getDataSourceConnection();
 			String selectEnvQuery = "SELECT ID FROM RM_ENVIRONMENT WHERE NAME = ?";
 			statement = conn.prepareStatement(selectEnvQuery);
 			statement.setString(1, environmentName);
@@ -621,12 +624,17 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 	}
 
 	/**
-	 * Get data source
+	 * Get data source connection
 	 *
-	 * @return data source
+	 * @return the data source connection
 	 */
-	private DataSource getDataSource() {
-		return this.dataSource;
+	private Connection getDataSourceConnection() throws RSSDAOException {
+		try{
+			return dataSource.getConnection();//acquire data source connection
+		} catch (SQLException e) {
+			String msg = "Error while acquiring the database connection. Meta Repository Database server may down";
+			throw new RSSDAOException(msg, e);
+		}
 	}
 
 }

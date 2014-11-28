@@ -20,6 +20,7 @@
 package org.wso2.carbon.rssmanager.core.environment.dao;
 
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.environment.Environment;
 
 import java.util.Set;
@@ -31,7 +32,7 @@ public interface EnvironmentDAO {
 	 * @param environment configuration
 	 * @throws RSSDAOException if error occurred while adding new environment
 	 */
-	void addEnvironment(Environment environment) throws RSSDAOException;
+	void addEnvironment(Environment environment) throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Remove environment
@@ -39,7 +40,7 @@ public interface EnvironmentDAO {
 	 * @throws RSSDAOException if error occurred while removing the environment
 	 */
 	@Deprecated
-	void removeEnvironment(String environmentName) throws RSSDAOException;
+	void removeEnvironment(String environmentName) throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Check whether environment is exist
@@ -48,7 +49,7 @@ public interface EnvironmentDAO {
 	 * @return true if environment found else false
 	 * @throws RSSDAOException if error occurred while checking the existence of the environment
 	 */
-	boolean isEnvironmentExist(String environmentName) throws RSSDAOException;
+	boolean isEnvironmentExist(String environmentName) throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Get environment by name
@@ -57,7 +58,7 @@ public interface EnvironmentDAO {
 	 * @return environment object
 	 * @throws RSSDAOException if error occureed when getting the environment
 	 */
-	Environment getEnvironment(String environmentName) throws RSSDAOException;
+	Environment getEnvironment(String environmentName) throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Get all environments
@@ -65,6 +66,6 @@ public interface EnvironmentDAO {
 	 * @return set of environments in the system
 	 * @throws RSSDAOException if error occurred while getting all environments
 	 */
-	Set<Environment> getAllEnvironments() throws RSSDAOException;
+	Set<Environment> getAllEnvironments() throws RSSDAOException, RSSDatabaseConnectionException;
 
 }
