@@ -54,7 +54,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		int environmentID = getEnvionmentIdByName(environmentName);
 		try {
 			conn = getDataSourceConnection();
-			conn.setAutoCommit(false);
+			conn.setAutoCommit(true);//there may be connections in the pool which have the auto commit state as false
 			String createInstanceQuery = "INSERT INTO RM_SERVER_INSTANCE (ENVIRONMENT_ID, NAME, SERVER_URL, DBMS_TYPE, INSTANCE_TYPE, " +
 			                       "SERVER_CATEGORY, ADMIN_USERNAME, ADMIN_PASSWORD, TENANT_ID, DRIVER_CLASS) VALUES (?,?,?,?,?,?,?,?,?,?)";
 			statement = conn.prepareStatement(createInstanceQuery);
@@ -69,7 +69,6 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			statement.setLong(9, rssInstance.getTenantId());
 			statement.setString(10, rssInstance.getDriverClassName());
 			statement.executeUpdate();
-			conn.commit();
 		} catch (SQLException e) {
 			String msg = "Failed to add rss instance " + rssInstance.getName() + "in rssInstance in environment" + environmentName
 			             + "to meta repository";
@@ -122,13 +121,12 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		int environmentId = getEnvionmentIdByName(environmentName);
 		try {
 			conn = getDataSourceConnection();
-			conn.setAutoCommit(false);
+			conn.setAutoCommit(true);//there may be connections in the pool which have the auto commit state as false
 			String removeInstanceQuery = "DELETE FROM RM_SERVER_INSTANCE WHERE ENVIRONMENT_ID = ? AND NAME = ?";
 			statement = conn.prepareStatement(removeInstanceQuery);
 			statement.setInt(1, environmentId);
 			statement.setString(2, rssInstanceName);
 			statement.executeUpdate();
-			conn.commit();
 		} catch (SQLException e) {
 			String msg = "Failed to delete rss instance" + rssInstanceName + "in rssInstance in environment" + environmentName +
 			             "from meta repository";
@@ -150,7 +148,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		int environmentId = getEnvionmentIdByName(environmentName);
 		try {
 			conn = getDataSourceConnection();
-			conn.setAutoCommit(false);
+			conn.setAutoCommit(true);//there may be connections in the pool which have the auto commit state as false
 			String updateInstanceEntryQuery = "UPDATE RM_SERVER_INSTANCE SET NAME =?," +
 			                                  "SERVER_URL=?, DBMS_TYPE=?, INSTANCE_TYPE=?, SERVER_CATEGORY=?, ADMIN_USERNAME=?, ADMIN_PASSWORD=?," +
 			                                  "TENANT_ID=?, DRIVER_CLASS=? WHERE ENVIRONMENT_ID=? AND NAME=?";
@@ -167,7 +165,6 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			entryUpdateStatement.setInt(10, environmentId);
 			entryUpdateStatement.setString(11, rssInstance.getName());
 			entryUpdateStatement.executeUpdate();
-			conn.commit();
 		} catch (SQLException e) {
 			String msg = "Failed to update rss instance entry " + rssInstance.getName() + " in the metadata repository";
 			log.error(msg, e);
