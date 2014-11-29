@@ -96,8 +96,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 			RSSDAOUtil.rollback(conn, RSSManagerConstants.ADD_DATABASE_USER_ENTRY);
 			String msg = "Failed to add database user" + user.getName() + "in rssInstance" + user.getRssInstanceName()
 			             + "to meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(result, createUserStatement, conn, RSSManagerConstants.ADD_DATABASE_USER_ENTRY);
 		}
@@ -128,8 +127,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 			RSSDAOUtil.rollback(conn, RSSManagerConstants.DELETE_DATABASE_USER_ENTRY);
 			String msg = "Failed to delete database user" + user.getName() + "in rssInstance" + user.getRssInstanceName()
 			             + "from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(null, removeUserStatement, conn, RSSManagerConstants.DELETE_DATABASE_USER_ENTRY);
 		}
@@ -163,8 +161,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 		} catch (SQLException e) {
 			String msg = "Failed to check database user existence information of" + username + "in environment" + environmentName
 			             + "from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.CHECK_DATABASE_USER_ENTRY_EXIST);
 		}
@@ -209,8 +206,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 		} catch (SQLException e) {
 			String msg = "Failed to retrieve database user information of" + username + "in rssInstance" + rssInstanceName
 			             + "from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_DATABASE_USER_ENTRY);
 		}
@@ -249,8 +245,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 		} catch (SQLException e) {
 			String msg = "Failed to retrieve database user information of" + username + "in environment" + environmentName
 			             + "from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_DATABASE_USER_ENTRY);
 		}
@@ -296,8 +291,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 		} catch (SQLException e) {
 			String msg = "Failed to retrieve database users information in environment" + environmentName
 			             + "from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_DATABASE_USER_ENTRIES);
 		}
@@ -343,8 +337,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 		} catch (SQLException e) {
 			String msg = "Failed to resolve rss instance name by database user" + username
 			             + "from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(null, resolveInstanceNameStatement, null, RSSManagerConstants
 					.RESOLVE_RSS_INSTANCE_NAME_BY_USER);
@@ -376,8 +369,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Error while getting environment id by name" + environmentName;
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_ENVIRONMENT_ID_BY_NAME);
 		}
@@ -407,8 +399,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Error while getting rss instance id by name" + rssInstanceName;
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_RSS_INSTANCE_ID_BY_NAME);
 		}
@@ -427,5 +418,16 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 			String msg = "Error while acquiring the database connection. Meta Repository Database server may down";
 			throw new RSSDatabaseConnectionException(msg, e);
 		}
+	}
+
+	/**
+	 * Log and throw a rss manager data access exception
+	 * @param msg high level exception message
+	 * @param e error
+	 * @throws RSSDAOException throw RSS DAO exception
+	 */
+	public void handleException(String msg, Exception e) throws RSSDAOException {
+		log.error(msg, e);
+		throw new RSSDAOException(msg, e);
 	}
 }

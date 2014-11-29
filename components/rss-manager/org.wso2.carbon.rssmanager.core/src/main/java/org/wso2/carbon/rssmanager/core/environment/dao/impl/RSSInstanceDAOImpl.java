@@ -73,8 +73,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		} catch (SQLException e) {
 			String msg = "Failed to add rss instance " + rssInstance.getName() + "in rssInstance in environment" + environmentName
 			             + "to meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(null, statement, conn, RSSManagerConstants.ADD_RSS_INSTANCE_ENTRY);
 		}
@@ -101,8 +100,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Error while checking rss instance existence" + rssInstanceName;
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.CHECK_RSS_INSTANCE_ENTRY_EXIST);
 		}
@@ -128,8 +126,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		} catch (SQLException e) {
 			String msg = "Failed to delete rss instance" + rssInstanceName + "in rssInstance in environment" + environmentName +
 			             "from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(null, statement, conn, RSSManagerConstants.DELETE_RSS_INSTANCE_ENTRY);
 		}
@@ -164,8 +161,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			entryUpdateStatement.executeUpdate();
 		} catch (SQLException e) {
 			String msg = "Failed to update rss instance entry " + rssInstance.getName() + " in the metadata repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(null, entryUpdateStatement, conn, RSSManagerConstants.UPDATE_RSS_INSTANCE_ENTRY);
 		}
@@ -211,8 +207,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Error while getting rss instance info of" + rssInstanceName;
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_RSS_INSTANCE_ENTRY);
 		}
@@ -259,8 +254,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Error while getting rss instances information of a environment";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants
 					.SELECT_RSS_INSTANCES_ENTRIES_OF_ENVIRONMENT);
@@ -306,8 +300,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Error while getting rss instances information of a environment";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants
 					.SELECT_ALL_RSS_INSTANCES_ENTRIES_OF_ENVIRONMENT);
@@ -356,8 +349,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Error while getting system rss instances information of a environment";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants
 					.SELECT_SYSTEM_RSS_INSTANCES_ENTRIES_OF_ENVIRONMENT);
@@ -406,8 +398,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Error while getting user defined rss instances information of a environment";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants
 					.SELECT_USER_DEFINED_RSS_INSTANCES_ENTRIES_OF_ENVIRONMENT);
@@ -455,8 +446,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Error while getting all system rss instances information";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_ALL_SYSTEM_RSS_INSTANCES);
 		}
@@ -503,8 +493,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Error while getting all system rss instances information";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants
 					.SELECT_ALL_USER_DEFINED_RSS_INSTANCES);
@@ -533,8 +522,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Error while getting environment id by name" + environmentName;
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_ENVIRONMENT_ID_BY_NAME);
 		}
@@ -555,4 +543,14 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		}
 	}
 
+	/**
+	 * Log and throw a rss manager data access exception
+	 * @param msg high level exception message
+	 * @param e error
+	 * @throws RSSDAOException throw RSS DAO exception
+	 */
+	public void handleException(String msg, Exception e) throws RSSDAOException {
+		log.error(msg, e);
+		throw new RSSDAOException(msg, e);
+	}
 }

@@ -86,8 +86,7 @@ public class DatabasePrivilegeTemplateEntryDAOImpl implements DatabasePrivilegeT
 			conn.commit();
 		} catch (SQLException e) {
 			String msg = "Failed to add database template entry to the metadata repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(null, templateEntryStatement, conn, RSSManagerConstants
 					.ADD_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
@@ -135,8 +134,7 @@ public class DatabasePrivilegeTemplateEntryDAOImpl implements DatabasePrivilegeT
 			}
 		} catch (SQLException e) {
 			String msg = "Failed to retrieve database privilege entry information from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants
 					.SELECT_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
@@ -183,8 +181,7 @@ public class DatabasePrivilegeTemplateEntryDAOImpl implements DatabasePrivilegeT
 			conn.commit();
 		} catch (SQLException e) {
 			String msg = "Failed to update database template entry in the metadata repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(null, entryUpdateStatement, conn, RSSManagerConstants
 					.UPDATE_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
@@ -202,5 +199,16 @@ public class DatabasePrivilegeTemplateEntryDAOImpl implements DatabasePrivilegeT
 			String msg = "Error while acquiring the database connection. Meta Repository Database server may down";
 			throw new RSSDatabaseConnectionException(msg, e);
 		}
+	}
+
+	/**
+	 * Log and throw a rss manager data access exception
+	 * @param msg high level exception message
+	 * @param e error
+	 * @throws RSSDAOException throw RSS DAO exception
+	 */
+	public void handleException(String msg, Exception e) throws RSSDAOException {
+		log.error(msg, e);
+		throw new RSSDAOException(msg, e);
 	}
 }

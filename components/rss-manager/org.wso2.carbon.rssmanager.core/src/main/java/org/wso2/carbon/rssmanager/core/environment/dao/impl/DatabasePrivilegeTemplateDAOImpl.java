@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
+import org.wso2.carbon.rssmanager.core.dao.util.RSSDAOUtil;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplateEntry;
 import org.wso2.carbon.rssmanager.core.environment.dao.DatabasePrivilegeTemplateDAO;
@@ -103,15 +104,13 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 			}
 			conn.commit();
 		} catch (SQLException e) {
-			rollback(conn, RSSManagerConstants.ADD_PRIVILEGE_TEMPLATE_ENTRY);
+			RSSDAOUtil.rollback(conn, RSSManagerConstants.ADD_PRIVILEGE_TEMPLATE_ENTRY);
 			String msg = "Failed to add database template" + databasePrivilegeTemplate.getName() + "to the metadata repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
-			close(templateStatement, RSSManagerConstants.ADD_PRIVILEGE_TEMPLATE_ENTRY);
-			close(templateEntryStatement, RSSManagerConstants.ADD_PRIVILEGE_TEMPLATE_ENTRY);
-			close(result, RSSManagerConstants.ADD_PRIVILEGE_TEMPLATE_ENTRY);
-			close(conn, RSSManagerConstants.ADD_PRIVILEGE_TEMPLATE_ENTRY);
+			RSSDAOUtil.cleanupResources(null, templateEntryStatement, null, RSSManagerConstants.ADD_PRIVILEGE_TEMPLATE_ENTRY);
+			RSSDAOUtil.cleanupResources(result, templateEntryStatement, conn, RSSManagerConstants
+					.ADD_PRIVILEGE_TEMPLATE_ENTRY);
 		}
 	}
 
@@ -140,11 +139,9 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 			}
 		} catch (SQLException e) {
 			String msg = "Failed to get data of privilege template " + templateName + "from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
-			close(statement, RSSManagerConstants.SELECT_PRIVILEGE_TEMPLATE);
-			close(conn, RSSManagerConstants.SELECT_PRIVILEGE_TEMPLATE);
+			RSSDAOUtil.cleanupResources(null, statement, conn, RSSManagerConstants.SELECT_PRIVILEGE_TEMPLATE);
 		}
 		return privilegeTemplate;
 	}
@@ -176,11 +173,9 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 			}
 		} catch (SQLException e) {
 			String msg = "Failed to get data of privilege templates from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
-			close(statement, RSSManagerConstants.SELECT_PRIVILEGE_TEMPLATES);
-			close(conn, RSSManagerConstants.SELECT_PRIVILEGE_TEMPLATES);
+			RSSDAOUtil.cleanupResources(null, statement, conn, RSSManagerConstants.SELECT_PRIVILEGE_TEMPLATES);
 		}
 		return privilegeTemplates.toArray(new DatabasePrivilegeTemplate[privilegeTemplates.size()]);
 	}
@@ -209,11 +204,9 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 			}
 		} catch (SQLException e) {
 			String msg = "Failed check privilege template existence of " + templateName + "in meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
-			close(statement, RSSManagerConstants.CHECK_PRIVILEGE_TEMPLATE_ENTRY_EXIST);
-			close(conn, RSSManagerConstants.CHECK_PRIVILEGE_TEMPLATE_ENTRY_EXIST);
+			RSSDAOUtil.cleanupResources(result, statement, conn, RSSManagerConstants.CHECK_PRIVILEGE_TEMPLATE_ENTRY_EXIST);
 		}
 		return isExist;
 	}
@@ -236,73 +229,9 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 			conn.commit();
 		} catch (SQLException e) {
 			String msg = "Failed to delete database privilege template" + templateName + "from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
-			close(statement, RSSManagerConstants.DELETE_PRIVILEGE_TEMPLATE_ENTRY);
-			close(conn, RSSManagerConstants.DELETE_PRIVILEGE_TEMPLATE_ENTRY);
-		}
-	}
-
-	/**
-	 * @param connection database connection
-	 * @param task task which was executed before closing connection
-	 */
-	private void close(Connection connection, String task) {
-		if (connection != null) {
-			try {
-				connection.close();
-			} catch (SQLException e) {
-				log.error("Failed to close connection after " + task);
-			}
-		}
-	}
-
-	/**
-	 * Roll back database updates on error
-	 *
-	 * @param connection database connection
-	 * @param task       task which was executing at the error.
-	 */
-	private void rollback(Connection connection, String task) {
-		if (connection != null) {
-			try {
-				connection.rollback();
-			} catch (SQLException e) {
-				log.error("Rollback failed on " + task, e);
-			}
-		}
-	}
-
-	/**
-	 * Close the prepared statement
-	 *
-	 * @param preparedStatement PreparedStatement
-	 * @param task              task which was executed before closing the prepared statement.
-	 */
-	private void close(PreparedStatement preparedStatement, String task) {
-		if (preparedStatement != null) {
-			try {
-				preparedStatement.close();
-			} catch (SQLException e) {
-				log.error("Closing prepared statement failed after " + task, e);
-			}
-		}
-	}
-
-	/**
-	 * Closes the result set
-	 *
-	 * @param resultSet ResultSet
-	 * @param task      task which was executed before closing the result set.
-	 */
-	private void close(ResultSet resultSet, String task) {
-		if (resultSet != null) {
-			try {
-				resultSet.close();
-			} catch (SQLException e) {
-				log.error("Closing result set failed after " + task, e);
-			}
+			RSSDAOUtil.cleanupResources(null, statement, conn, RSSManagerConstants.DELETE_PRIVILEGE_TEMPLATE_ENTRY);
 		}
 	}
 
@@ -318,5 +247,16 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 			String msg = "Error while acquiring the database connection. Meta Repository Database server may down";
 			throw new RSSDatabaseConnectionException(msg, e);
 		}
+	}
+
+	/**
+	 * Log and throw a rss manager data access exception
+	 * @param msg high level exception message
+	 * @param e error
+	 * @throws RSSDAOException throw RSS DAO exception
+	 */
+	public void handleException(String msg, Exception e) throws RSSDAOException {
+		log.error(msg, e);
+		throw new RSSDAOException(msg, e);
 	}
 }

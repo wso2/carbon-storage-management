@@ -119,8 +119,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 		} catch (SQLException e) {
 			RSSDAOUtil.rollback(conn, RSSManagerConstants.ADD_USER_PRIVILEGE_TEMPLATE_ENTRY);
 			String msg = "Failed to add database user entry to meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(null, userPrivilegeEntryStatement, null,
 					RSSManagerConstants.ADD_USER_PRIVILEGE_TEMPLATE_ENTRY);
@@ -145,8 +144,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			String msg = "Failed to delete database user entry from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(null, statement, conn, RSSManagerConstants.DELETE_USER_DATABASE_ENTRY);
 		}
@@ -177,8 +175,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 		} catch (SQLException e) {
 			RSSDAOUtil.rollback(conn, RSSManagerConstants.DELETE_USER_DATABASE_ENTRY);
 			String msg = "Failed to delete database user entry from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(null, removeUserEntryStatement, conn, RSSManagerConstants
 					.DELETE_USER_DATABASE_ENTRY);
@@ -242,8 +239,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 			databaseEntry.setUserId(userId);
 		} catch (SQLException e) {
 			String msg = "Failed to retrieve database user entry information of from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(null, entryStatement, null, RSSManagerConstants.SELECT_DATABASE_USER_ENTRY);
 			RSSDAOUtil.cleanupResources(resultSet, entryIdStatement, conn, RSSManagerConstants.SELECT_DATABASE_USER_ENTRY);
@@ -290,8 +286,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 		} catch (SQLException e) {
 			String msg = "Failed to retrieve assigned database users information in environment" + environmentName
 			             + "from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants
 					.SELECT_ASSIGNED_DATABASE_USER_ENTRIES);
@@ -339,8 +334,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 		} catch (SQLException e) {
 			String msg = "Failed to retrieve database unassigned database users information in environment" + environmentName
 			             + "from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants
 					.SELECT_UNASSIGNED_DATABASE_USER_ENTRIES);
@@ -370,8 +364,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Error while getting environment id by name" + environmentName;
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_ENVIRONMENT_ID_BY_NAME);
 		}
@@ -401,8 +394,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Error while getting rss instance id by name" + rssInstanceName;
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_RSS_INSTANCE_ID_BY_NAME);
 		}
@@ -432,8 +424,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Failed to retrieve database information of" + databaseName + "from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.CHECK_DATABASE_ENTRY_EXIST);
 		}
@@ -461,8 +452,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Failed to check database user entries existence";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants
 					.CHECK_DATABASE_USER_ENTRIES_EXISTENCE);
@@ -482,5 +472,16 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 			String msg = "Error while acquiring the database connection. Meta Repository Database server may down";
 			throw new RSSDatabaseConnectionException(msg, e);
 		}
+	}
+
+	/**
+	 * Log and throw a rss manager data access exception
+	 * @param msg high level exception message
+	 * @param e error
+	 * @throws RSSDAOException throw RSS DAO exception
+	 */
+	public void handleException(String msg, Exception e) throws RSSDAOException {
+		log.error(msg, e);
+		throw new RSSDAOException(msg, e);
 	}
 }

@@ -62,8 +62,7 @@ public class EnvironmentDAOImpl implements EnvironmentDAO {
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			String msg = "Failed to add environment " + environment.getName() + "to meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(null, statement, conn, RSSManagerConstants.ADD_ENVIRONMENT_ENTRY);
 		}
@@ -89,8 +88,7 @@ public class EnvironmentDAOImpl implements EnvironmentDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Failed to check environment existence of " + environmentName + "from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.CHECK_ENVIRONMENT_ENTRY_EXIST);
 		}
@@ -118,8 +116,7 @@ public class EnvironmentDAOImpl implements EnvironmentDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Failed to query environment information of " + environmentName + "from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_ENVIRONMENT_ENTRY);
 		}
@@ -148,8 +145,7 @@ public class EnvironmentDAOImpl implements EnvironmentDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Failed to query all environment entries from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_ALL_ENVIRONMENT_ENTRIES);
 		}
@@ -171,8 +167,7 @@ public class EnvironmentDAOImpl implements EnvironmentDAO {
 			statement.execute();
 		} catch (SQLException e) {
 			String msg = "Error occurred while deleting metadata related to RSS environment '" + environmentName;
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(null, statement, conn, RSSManagerConstants.REMOVE_ENVIRONMENT_ENTRY);
 		}
@@ -192,4 +187,14 @@ public class EnvironmentDAOImpl implements EnvironmentDAO {
 		}
 	}
 
+	/**
+	 * Log and throw a rss manager data access exception
+	 * @param msg high level exception message
+	 * @param e error
+	 * @throws RSSDAOException throw RSS DAO exception
+	 */
+	public void handleException(String msg, Exception e) throws RSSDAOException {
+		log.error(msg, e);
+		throw new RSSDAOException(msg, e);
+	}
 }
