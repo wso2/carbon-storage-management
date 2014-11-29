@@ -25,6 +25,7 @@ import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.dao.DatabaseDAO;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
+import org.wso2.carbon.rssmanager.core.dao.util.RSSDAOUtil;
 import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 
@@ -72,14 +73,13 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 			}
 			conn.commit();
 		} catch (SQLException e) {
-			rollback(conn, RSSManagerConstants.ADD_DATABASE_ENTRY);
+			RSSDAOUtil.rollback(conn, RSSManagerConstants.ADD_DATABASE_ENTRY);
 			String msg = "Failed to add database " + database.getName() + " in rssInstance " + database.getRssInstanceName()
 			             + " to meta repository";
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(addDBStatement, RSSManagerConstants.ADD_DATABASE_ENTRY);
-			close(conn, RSSManagerConstants.ADD_DATABASE_ENTRY);
+			RSSDAOUtil.cleanupResources(null, addDBStatement, conn, RSSManagerConstants.ADD_DATABASE_ENTRY);
 		}
 	}
 
@@ -103,14 +103,13 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 			nativeRemoveDBStatement.executeUpdate();
 			conn.commit();
 		} catch (SQLException e) {
-			rollback(conn, RSSManagerConstants.DELETE_DATABASE_ENTRY);
+			RSSDAOUtil.rollback(conn, RSSManagerConstants.DELETE_DATABASE_ENTRY);
 			String msg = "Failed to delete database" + database.getName() + "in rssInstance" + database.getRssInstanceName()
 			             + "from meta repository";
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(removeDBStatement, RSSManagerConstants.DELETE_DATABASE_ENTRY);
-			close(conn, RSSManagerConstants.DELETE_DATABASE_ENTRY);
+			RSSDAOUtil.cleanupResources(null, removeDBStatement, conn, RSSManagerConstants.DELETE_DATABASE_ENTRY);
 		}
 	}
 
@@ -147,9 +146,7 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.CHECK_DATABASE_ENTRY_EXIST);
-			close(statement, RSSManagerConstants.CHECK_DATABASE_ENTRY_EXIST);
-			close(conn, RSSManagerConstants.CHECK_DATABASE_ENTRY_EXIST);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.CHECK_DATABASE_ENTRY_EXIST);
 		}
 		return isExist;
 	}
@@ -195,9 +192,7 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_DATABASE_ENTRY);
-			close(statement, RSSManagerConstants.SELECT_DATABASE_ENTRY);
-			close(conn, RSSManagerConstants.SELECT_DATABASE_ENTRY);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_DATABASE_ENTRY);
 		}
 		return database;
 	}
@@ -240,9 +235,7 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_DATABASE_ENTRY);
-			close(statement, RSSManagerConstants.SELECT_DATABASE_ENTRY);
-			close(conn, RSSManagerConstants.SELECT_DATABASE_ENTRY);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_DATABASE_ENTRY);
 		}
 		return database;
 	}
@@ -288,9 +281,7 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_DATABASE_ENTRIES);
-			close(statement, RSSManagerConstants.SELECT_DATABASE_ENTRIES);
-			close(conn, RSSManagerConstants.SELECT_DATABASE_ENTRIES);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_DATABASE_ENTRIES);
 		}
 		return databases.toArray(new Database[databases.size()]);
 	}
@@ -334,9 +325,8 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_DATABASE_ENTRIES_OF_ENVIRONMENT);
-			close(statement, RSSManagerConstants.SELECT_DATABASE_ENTRIES_OF_ENVIRONMENT);
-			close(conn, RSSManagerConstants.SELECT_DATABASE_ENTRIES_OF_ENVIRONMENT);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants
+					.SELECT_DATABASE_ENTRIES_OF_ENVIRONMENT);
 		}
 		return databases.toArray(new Database[databases.size()]);
 	}
@@ -373,9 +363,7 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.RESOLVE_RSS_INSTANCE_BY_DATABASE);
-			close(statement, RSSManagerConstants.RESOLVE_RSS_INSTANCE_BY_DATABASE);
-			close(conn, RSSManagerConstants.RESOLVE_RSS_INSTANCE_BY_DATABASE);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.RESOLVE_RSS_INSTANCE_BY_DATABASE);
 		}
 		return rssInstanceName;
 	}
@@ -391,54 +379,6 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 				connection.close();
 			} catch (SQLException e) {
 				log.error("Failed to close connection after " + task, e);
-			}
-		}
-	}
-
-	/**
-	 * Roll back database updates on error
-	 *
-	 * @param connection database connection
-	 * @param task       task which was executing at the error.
-	 */
-	private void rollback(Connection connection, String task) {
-		if (connection != null) {
-			try {
-				connection.rollback();
-			} catch (SQLException e1) {
-				log.warn("Rollback failed on " + task);
-			}
-		}
-	}
-
-	/**
-	 * Close the prepared statement
-	 *
-	 * @param preparedStatement PreparedStatement
-	 * @param task              task which was executed before closing the prepared statement.
-	 */
-	private void close(PreparedStatement preparedStatement, String task) {
-		if (preparedStatement != null) {
-			try {
-				preparedStatement.close();
-			} catch (SQLException e) {
-				log.error("Closing prepared statement failed after " + task, e);
-			}
-		}
-	}
-
-	/**
-	 * Closes the result set
-	 *
-	 * @param resultSet ResultSet
-	 * @param task      task which was executed before closing the result set.
-	 */
-	private void close(ResultSet resultSet, String task) {
-		if (resultSet != null) {
-			try {
-				resultSet.close();
-			} catch (SQLException e) {
-				log.error("Closing result set failed after " + task);
 			}
 		}
 	}
@@ -467,9 +407,7 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_ENVIRONMENT_ID_BY_NAME);
-			close(statement, RSSManagerConstants.SELECT_ENVIRONMENT_ID_BY_NAME);
-			close(conn, RSSManagerConstants.SELECT_ENVIRONMENT_ID_BY_NAME);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_ENVIRONMENT_ID_BY_NAME);
 		}
 		return environmentId;
 	}

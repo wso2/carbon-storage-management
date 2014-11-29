@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
+import org.wso2.carbon.rssmanager.core.dao.util.RSSDAOUtil;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplateEntry;
 import org.wso2.carbon.rssmanager.core.environment.DatabasePrivilegeTemplateEntryDAO;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
@@ -88,8 +89,8 @@ public class DatabasePrivilegeTemplateEntryDAOImpl implements DatabasePrivilegeT
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(templateEntryStatement, RSSManagerConstants.ADD_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
-			close(conn, RSSManagerConstants.ADD_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
+			RSSDAOUtil.cleanupResources(null, templateEntryStatement, conn, RSSManagerConstants
+					.ADD_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
 		}
 	}
 
@@ -137,9 +138,8 @@ public class DatabasePrivilegeTemplateEntryDAOImpl implements DatabasePrivilegeT
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
-			close(statement, RSSManagerConstants.SELECT_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
-			close(conn, RSSManagerConstants.SELECT_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants
+					.SELECT_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
 		}
 		return entry;
 	}
@@ -186,74 +186,10 @@ public class DatabasePrivilegeTemplateEntryDAOImpl implements DatabasePrivilegeT
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(entryUpdateStatement, RSSManagerConstants.UPDATE_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
-			close(conn, RSSManagerConstants.UPDATE_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
+			RSSDAOUtil.cleanupResources(null, entryUpdateStatement, conn, RSSManagerConstants
+					.UPDATE_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
 		}
 	}
-
-
-	/**
-	 * @param connection database connection
-	 * @param task task which was executed before closing connection
-	 */
-	private void close(Connection connection, String task) {
-		if (connection != null) {
-			try {
-				connection.close();
-			} catch (SQLException e) {
-				log.error("Failed to close connection after " + task, e);
-			}
-		}
-	}
-
-	/**
-	 * Roll back database updates on error
-	 *
-	 * @param connection database connection
-	 * @param task       task which was executing at the error.
-	 */
-	private void rollback(Connection connection, String task) {
-		if (connection != null) {
-			try {
-				connection.rollback();
-			} catch (SQLException e) {
-				log.warn("Rollback failed on " + task, e);
-			}
-		}
-	}
-
-	/**
-	 * Close the prepared statement
-	 *
-	 * @param preparedStatement PreparedStatement
-	 * @param task              task which was executed before closing the prepared statement.
-	 */
-	private void close(PreparedStatement preparedStatement, String task) {
-		if (preparedStatement != null) {
-			try {
-				preparedStatement.close();
-			} catch (SQLException e) {
-				log.error("Closing prepared statement failed after " + task, e);
-			}
-		}
-	}
-
-	/**
-	 * Closes the result set
-	 *
-	 * @param resultSet ResultSet
-	 * @param task      task which was executed before closing the result set.
-	 */
-	private void close(ResultSet resultSet, String task) {
-		if (resultSet != null) {
-			try {
-				resultSet.close();
-			} catch (SQLException e) {
-				log.error("Closing result set failed after " + task, e);
-			}
-		}
-	}
-
 	/**
 	 * Get data source connection
 	 *

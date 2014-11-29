@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
+import org.wso2.carbon.rssmanager.core.dao.util.RSSDAOUtil;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
 import org.wso2.carbon.rssmanager.core.environment.dao.RSSInstanceDAO;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
@@ -75,8 +76,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(statement, RSSManagerConstants.ADD_RSS_INSTANCE_ENTRY);
-			close(conn, RSSManagerConstants.ADD_RSS_INSTANCE_ENTRY);
+			RSSDAOUtil.cleanupResources(null, statement, conn, RSSManagerConstants.ADD_RSS_INSTANCE_ENTRY);
 		}
 	}
 
@@ -104,9 +104,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.CHECK_RSS_INSTANCE_ENTRY_EXIST);
-			close(statement, RSSManagerConstants.CHECK_RSS_INSTANCE_ENTRY_EXIST);
-			close(conn, RSSManagerConstants.CHECK_RSS_INSTANCE_ENTRY_EXIST);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.CHECK_RSS_INSTANCE_ENTRY_EXIST);
 		}
 		return isExist;
 	}
@@ -133,8 +131,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(statement, RSSManagerConstants.DELETE_RSS_INSTANCE_ENTRY);
-			close(conn, RSSManagerConstants.DELETE_RSS_INSTANCE_ENTRY);
+			RSSDAOUtil.cleanupResources(null, statement, conn, RSSManagerConstants.DELETE_RSS_INSTANCE_ENTRY);
 		}
 	}
 
@@ -170,8 +167,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(entryUpdateStatement, RSSManagerConstants.UPDATE_RSS_INSTANCE_ENTRY);
-			close(conn, RSSManagerConstants.UPDATE_RSS_INSTANCE_ENTRY);
+			RSSDAOUtil.cleanupResources(null, entryUpdateStatement, conn, RSSManagerConstants.UPDATE_RSS_INSTANCE_ENTRY);
 		}
 
 	}
@@ -218,9 +214,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_RSS_INSTANCE_ENTRY);
-			close(statement, RSSManagerConstants.SELECT_RSS_INSTANCE_ENTRY);
-			close(conn, RSSManagerConstants.SELECT_RSS_INSTANCE_ENTRY);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_RSS_INSTANCE_ENTRY);
 		}
 		return rssInstance;
 	}
@@ -268,9 +262,8 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_RSS_INSTANCES_ENTRIES_OF_ENVIRONMENT);
-			close(statement, RSSManagerConstants.SELECT_RSS_INSTANCES_ENTRIES_OF_ENVIRONMENT);
-			close(conn, RSSManagerConstants.SELECT_RSS_INSTANCES_ENTRIES_OF_ENVIRONMENT);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants
+					.SELECT_RSS_INSTANCES_ENTRIES_OF_ENVIRONMENT);
 		}
 		return rssInstances.toArray(new RSSInstance[rssInstances.size()]);
 	}
@@ -316,9 +309,8 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_ALL_RSS_INSTANCES_ENTRIES_OF_ENVIRONMENT);
-			close(statement, RSSManagerConstants.SELECT_ALL_RSS_INSTANCES_ENTRIES_OF_ENVIRONMENT);
-			close(conn, RSSManagerConstants.SELECT_ALL_RSS_INSTANCES_ENTRIES_OF_ENVIRONMENT);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants
+					.SELECT_ALL_RSS_INSTANCES_ENTRIES_OF_ENVIRONMENT);
 		}
 		return rssInstances.toArray(new RSSInstance[rssInstances.size()]);
 	}
@@ -367,9 +359,8 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_SYSTEM_RSS_INSTANCES_ENTRIES_OF_ENVIRONMENT);
-			close(statement, RSSManagerConstants.SELECT_SYSTEM_RSS_INSTANCES_ENTRIES_OF_ENVIRONMENT);
-			close(conn, RSSManagerConstants.SELECT_SYSTEM_RSS_INSTANCES_ENTRIES_OF_ENVIRONMENT);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants
+					.SELECT_SYSTEM_RSS_INSTANCES_ENTRIES_OF_ENVIRONMENT);
 		}
 		return rssInstances.toArray(new RSSInstance[rssInstances.size()]);
 	}
@@ -418,9 +409,8 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_USER_DEFINED_RSS_INSTANCES_ENTRIES_OF_ENVIRONMENT);
-			close(statement, RSSManagerConstants.SELECT_USER_DEFINED_RSS_INSTANCES_ENTRIES_OF_ENVIRONMENT);
-			close(conn, RSSManagerConstants.SELECT_USER_DEFINED_RSS_INSTANCES_ENTRIES_OF_ENVIRONMENT);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants
+					.SELECT_USER_DEFINED_RSS_INSTANCES_ENTRIES_OF_ENVIRONMENT);
 		}
 		return rssInstances.toArray(new RSSInstance[rssInstances.size()]);
 	}
@@ -468,9 +458,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_ALL_SYSTEM_RSS_INSTANCES);
-			close(statement, RSSManagerConstants.SELECT_ALL_SYSTEM_RSS_INSTANCES);
-			close(conn, RSSManagerConstants.SELECT_ALL_SYSTEM_RSS_INSTANCES);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_ALL_SYSTEM_RSS_INSTANCES);
 		}
 		return rssInstances.toArray(new RSSInstance[rssInstances.size()]);
 	}
@@ -518,9 +506,8 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_ALL_USER_DEFINED_RSS_INSTANCES);
-			close(statement, RSSManagerConstants.SELECT_ALL_USER_DEFINED_RSS_INSTANCES);
-			close(conn, RSSManagerConstants.SELECT_ALL_USER_DEFINED_RSS_INSTANCES);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants
+					.SELECT_ALL_USER_DEFINED_RSS_INSTANCES);
 		}
 		return rssInstances.toArray(new RSSInstance[rssInstances.size()]);
 	}
@@ -549,75 +536,9 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_ENVIRONMENT_ID_BY_NAME);
-			close(statement, RSSManagerConstants.SELECT_ENVIRONMENT_ID_BY_NAME);
-			close(conn, RSSManagerConstants.SELECT_ENVIRONMENT_ID_BY_NAME);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_ENVIRONMENT_ID_BY_NAME);
 		}
 		return environmentId;
-	}
-
-	/**
-	 * Close the connection
-	 *
-	 * @param connection database connection
-	 * @param task task which was executed before closing the connection
-	 */
-	private void close(Connection connection, String task) {
-		if (connection != null) {
-			try {
-				connection.close();
-			} catch (SQLException e) {
-				log.error("Failed to close connection after " + task);
-			}
-		}
-	}
-
-	/**
-	 * Roll back database updates on error
-	 *
-	 * @param connection database connection
-	 * @param task       task which was executing at the error.
-	 */
-	private void rollback(Connection connection, String task) {
-		if (connection != null) {
-			try {
-				connection.rollback();
-			} catch (SQLException e1) {
-				log.warn("Rollback failed on " + task);
-			}
-		}
-	}
-
-	/**
-	 * Close the prepared statement
-	 *
-	 * @param preparedStatement PreparedStatement
-	 * @param task              task which was executed before closing the prepared statement.
-	 */
-	private void close(PreparedStatement preparedStatement, String task) {
-		if (preparedStatement != null) {
-			try {
-				preparedStatement.close();
-			} catch (SQLException e) {
-				log.error("Closing prepared statement failed after " + task);
-			}
-		}
-	}
-
-	/**
-	 * Closes the result set
-	 *
-	 * @param resultSet ResultSet
-	 * @param task      task which was executed before closing the result set.
-	 */
-	private void close(ResultSet resultSet, String task) {
-		if (resultSet != null) {
-			try {
-				resultSet.close();
-			} catch (SQLException e) {
-				log.error("Closing result set failed after " + task);
-			}
-		}
 	}
 
 	/**

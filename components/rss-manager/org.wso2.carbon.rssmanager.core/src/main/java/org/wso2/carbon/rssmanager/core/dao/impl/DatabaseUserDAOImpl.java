@@ -25,6 +25,7 @@ import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.dao.DatabaseUserDAO;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
+import org.wso2.carbon.rssmanager.core.dao.util.RSSDAOUtil;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
@@ -92,15 +93,13 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 			}
 			conn.commit();
 		} catch (SQLException e) {
-			rollback(conn, RSSManagerConstants.ADD_DATABASE_USER_ENTRY);
+			RSSDAOUtil.rollback(conn, RSSManagerConstants.ADD_DATABASE_USER_ENTRY);
 			String msg = "Failed to add database user" + user.getName() + "in rssInstance" + user.getRssInstanceName()
 			             + "to meta repository";
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(result, RSSManagerConstants.ADD_DATABASE_USER_ENTRY);
-			close(createUserStatement, RSSManagerConstants.ADD_DATABASE_USER_ENTRY);
-			close(conn, RSSManagerConstants.ADD_DATABASE_USER_ENTRY);
+			RSSDAOUtil.cleanupResources(result, createUserStatement, conn, RSSManagerConstants.ADD_DATABASE_USER_ENTRY);
 		}
 	}
 
@@ -126,14 +125,13 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 			}
 			conn.commit();
 		} catch (SQLException e) {
-			rollback(conn, RSSManagerConstants.DELETE_DATABASE_USER_ENTRY);
+			RSSDAOUtil.rollback(conn, RSSManagerConstants.DELETE_DATABASE_USER_ENTRY);
 			String msg = "Failed to delete database user" + user.getName() + "in rssInstance" + user.getRssInstanceName()
 			             + "from meta repository";
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(removeUserStatement, RSSManagerConstants.DELETE_DATABASE_USER_ENTRY);
-			close(conn, RSSManagerConstants.DELETE_DATABASE_USER_ENTRY);
+			RSSDAOUtil.cleanupResources(null, removeUserStatement, conn, RSSManagerConstants.DELETE_DATABASE_USER_ENTRY);
 		}
 	}
 
@@ -168,9 +166,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.CHECK_DATABASE_USER_ENTRY_EXIST);
-			close(statement, RSSManagerConstants.CHECK_DATABASE_USER_ENTRY_EXIST);
-			close(conn, RSSManagerConstants.CHECK_DATABASE_USER_ENTRY_EXIST);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.CHECK_DATABASE_USER_ENTRY_EXIST);
 		}
 		return isExist;
 	}
@@ -216,9 +212,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_DATABASE_USER_ENTRY);
-			close(statement, RSSManagerConstants.SELECT_DATABASE_USER_ENTRY);
-			close(conn, RSSManagerConstants.SELECT_DATABASE_USER_ENTRY);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_DATABASE_USER_ENTRY);
 		}
 		return databaseUser;
 	}
@@ -258,9 +252,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_DATABASE_USER_ENTRY);
-			close(statement, RSSManagerConstants.SELECT_DATABASE_USER_ENTRY);
-			close(conn, RSSManagerConstants.SELECT_DATABASE_USER_ENTRY);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_DATABASE_USER_ENTRY);
 		}
 		return databaseUser;
 	}
@@ -307,9 +299,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_DATABASE_USER_ENTRIES);
-			close(statement, RSSManagerConstants.SELECT_DATABASE_USER_ENTRIES);
-			close(conn, RSSManagerConstants.SELECT_DATABASE_USER_ENTRIES);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_DATABASE_USER_ENTRIES);
 		}
 		return databaseUsers.toArray(new DatabaseUser[databaseUsers.size()]);
 	}
@@ -356,74 +346,12 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.RESOLVE_RSS_INSTANCE_NAME_BY_USER);
-			close(selectDatabaseUserIdstatement, RSSManagerConstants.RESOLVE_RSS_INSTANCE_NAME_BY_USER);
-			close(resolveInstanceNameStatement, RSSManagerConstants.RESOLVE_RSS_INSTANCE_NAME_BY_USER);
-			close(conn, RSSManagerConstants.RESOLVE_RSS_INSTANCE_NAME_BY_USER);
+			RSSDAOUtil.cleanupResources(null, resolveInstanceNameStatement, null, RSSManagerConstants
+					.RESOLVE_RSS_INSTANCE_NAME_BY_USER);
+			RSSDAOUtil.cleanupResources(resultSet, selectDatabaseUserIdstatement, conn, RSSManagerConstants
+					.RESOLVE_RSS_INSTANCE_NAME_BY_USER);
 		}
 		return rssInstanceName;
-	}
-
-	/**
-	 * @param connection database connection
-	 * @param task which was executed before closing the connection
-	 */
-	private void close(Connection connection, String task) {
-		if (connection != null) {
-			try {
-				connection.close();
-			} catch (SQLException e) {
-				log.error("Failed to close connection after " + task, e);
-			}
-		}
-	}
-
-	/**
-	 * Roll back database updates on error
-	 *
-	 * @param connection database connection
-	 * @param task       task which was executing at the error.
-	 */
-	private void rollback(Connection connection, String task) {
-		if (connection != null) {
-			try {
-				connection.rollback();
-			} catch (SQLException e) {
-				log.warn("Rollback failed on " + task, e);
-			}
-		}
-	}
-
-	/**
-	 * Close the prepared statement
-	 *
-	 * @param preparedStatement PreparedStatement
-	 * @param task              task which was executed before closing the prepared statement.
-	 */
-	private void close(PreparedStatement preparedStatement, String task) {
-		if (preparedStatement != null) {
-			try {
-				preparedStatement.close();
-			} catch (SQLException e) {
-				log.error("Closing prepared statement failed after " + task, e);
-			}
-		}
-	}
-
-	/**
-	 * Closes the result set
-	 *
-	 * @param resultSet ResultSet
-	 * @param task      task which was executed before closing the result set.
-	 */
-	private void close(ResultSet resultSet, String task) {
-		if (resultSet != null) {
-			try {
-				resultSet.close();
-			} catch (SQLException e) {
-				log.error("Closing result set failed after " + task, e);
-			}
-		}
 	}
 
 	/**
@@ -451,9 +379,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_ENVIRONMENT_ID_BY_NAME);
-			close(statement, RSSManagerConstants.SELECT_ENVIRONMENT_ID_BY_NAME);
-			close(conn, RSSManagerConstants.SELECT_ENVIRONMENT_ID_BY_NAME);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_ENVIRONMENT_ID_BY_NAME);
 		}
 		return environmentId;
 	}
@@ -484,9 +410,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 			log.error(msg, e);
 			throw new RSSDAOException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_RSS_INSTANCE_ID_BY_NAME);
-			close(statement, RSSManagerConstants.SELECT_RSS_INSTANCE_ID_BY_NAME);
-			close(conn, RSSManagerConstants.SELECT_RSS_INSTANCE_ID_BY_NAME);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_RSS_INSTANCE_ID_BY_NAME);
 		}
 		return environmentId;
 	}
