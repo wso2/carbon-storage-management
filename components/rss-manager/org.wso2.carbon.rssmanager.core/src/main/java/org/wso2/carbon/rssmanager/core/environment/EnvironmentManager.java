@@ -21,6 +21,7 @@ package org.wso2.carbon.rssmanager.core.environment;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
+import org.wso2.carbon.rssmanager.core.authorize.RSSAuthorizer;
 import org.wso2.carbon.rssmanager.core.config.RSSManagementRepository;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
@@ -322,6 +323,7 @@ public class EnvironmentManager {
 			Map<String, RSSInstance> rssInstanceMapFromDB = new HashMap<String, RSSInstance>();//to hold rss instance from database
 			if (!isEvnExist) {
 				environmentDAO.addEnvironment(environment);
+				RSSAuthorizer.definePermissions(environment.getName());
 				environment = environmentDAO.getEnvironment(environment.getName());
 				DatabasePrivilegeTemplate privilegeTemplate = RSSManagerUtil.createDeafultDBPrivilegeTemplate();
 				privilegeTemplate.setTenantId(RSSManagerUtil.getTenantId());
