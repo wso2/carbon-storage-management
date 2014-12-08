@@ -29,8 +29,16 @@ import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
 import org.wso2.carbon.rssmanager.core.environment.Environment;
+import org.wso2.carbon.rssmanager.core.environment.dao.EnvironmentManagementDAO;
+import org.wso2.carbon.rssmanager.core.environment.dao.EnvironmentManagementDAOFactory;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+
+import java.sql.PreparedStatement;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class SystemRSSManager extends AbstractRSSManager{
 
@@ -243,5 +251,38 @@ public abstract class SystemRSSManager extends AbstractRSSManager{
 			handleException(msg, e);
 		}
 		return privilegesSet;
+	}
+
+	/**
+	 * Add database user
+	 *
+	 * @param statement         Atomic boolean value for the distributed transaction
+	 * @param user              database user properties
+	 * @param qualifiedUsername fully qualified username
+	 * @param instanceType      rss instance type
+	 * @return DatabaseUser
+	 * @throws RSSManagerException
+	 * @throws RSSDAOException
+	 */
+	protected DatabaseUser addDatabaseUser(PreparedStatement statement, DatabaseUser user,
+	                                       String qualifiedUsername, String instanceType)
+			throws RSSManagerException, RSSDAOException, RSSDatabaseConnectionException {
+
+		boolean isExist = this.isDatabaseUserExist(user.getRssInstanceName(), qualifiedUsername, instanceType);
+		if (isExist) {
+			String msg = "Database user '" + qualifiedUsername + "' already exists";
+			throw new RSSManagerException(msg);
+		}
+		/* Sets the fully qualified username */
+		final int tenantId = RSSManagerUtil.getTenantId();
+		user.setName(qualifiedUsername);
+		EnvironmentManagementDAO entityDAO = EnvironmentManagementDAOFactory.getEnvironmentManagementDAO();
+		Set<RSSInstance> servers = new HashSet<RSSInstance>(Arrays.asList(
+				entityDAO.getRSSInstanceDAO().getSystemRSSInstances(
+						this.getEnvironmentName(), MultitenantConstants.SUPER_TENANT_ID)));
+		user.setInstances(servers);
+		user.setTenantId(tenantId);
+		this.getRSSDAO().getDatabaseUserDAO().addDatabaseUser(statement, user);
+		return user;
 	}
 }
