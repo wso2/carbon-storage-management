@@ -36,6 +36,7 @@ import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.manager.RSSManager;
 import org.wso2.carbon.rssmanager.core.manager.SystemRSSManager;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -235,9 +236,9 @@ public class H2SystemRSSManager extends SystemRSSManager {
 
         try {
             int tenantId = RSSManagerUtil.getTenantId();
-            String rssInstanceName = getDatabaseDAO().resolveRSSInstanceNameByDatabase(this.getEnvironmentName(),
-                                                                                       entry.getDatabaseName(), entry.getType(), tenantId);
-            RSSInstance rssInstance = rssInstanceDAO.getRSSInstance(this.getEnvironmentName(), rssInstanceName, tenantId);
+            String rssInstanceName = getDatabaseDAO().resolveRSSInstanceNameByDatabase(this.getEnvironmentName(), entry
+                    .getDatabaseName(), entry.getType(), tenantId);
+            RSSInstance rssInstance = rssInstanceDAO.getRSSInstance(this.getEnvironmentName(), rssInstanceName, MultitenantConstants.SUPER_TENANT_ID);
             conn = this.getConnection(rssInstance.getName(), entry.getDatabaseName());
             String removeUserQuery = "drop user " + entry.getUsername();
             removeUserStatement = conn.prepareStatement(removeUserQuery);
