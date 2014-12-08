@@ -1,43 +1,51 @@
+/*
+ *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
 package org.wso2.carbon.mapred.reporting;
+
+import org.apache.hadoop.mapred.Counters;
+import org.apache.hadoop.mapred.JobStatus;
+import org.apache.hadoop.mapred.RunningJob;
+import org.apache.hadoop.mapreduce.JobReporter;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
-
-import org.apache.hadoop.mapreduce.JobID;
-import org.apache.hadoop.mapred.JobStatus;
-import org.apache.hadoop.mapred.JobTracker;
-import org.apache.hadoop.mapred.RunningJob;
-import org.apache.hadoop.mapred.Counters;
-import org.apache.hadoop.mapreduce.JobReporter;
-import org.apache.log4j.Logger;
-import org.compass.core.executor.workmanager.RunnableCallableAdapter;
 
 public class CarbonJobReporter extends JobReporter {
 
 	private final Logger log = Logger.getLogger(CarbonJobReporter.class);
 	private String jobId = null;
 	private String jobName = null;
-	//private Counters counters = null;
 	RunningJob runningJob = null;
 	private long lastAccessed = System.currentTimeMillis();
 
 	public void init() {
 		runningJob = getRunningJob();
-		//try {
 			jobId = runningJob.getID().getJtIdentifier();
 			jobName = runningJob.getJobName();
-			//counters = runningJob.getCounters();
 			updateTimestap();
 			synchronized (this) {
 				this.notify();
 			}
-		//} catch (IOException e) {
-			//log.warn(e.getMessage());
-		//}
 	}
 
 	public float getMapProgress() {
@@ -71,11 +79,6 @@ public class CarbonJobReporter extends JobReporter {
 		updateTimestap();
 		return this.jobName;
 	}
-
-	/*public long getCounter(Enum key) {
-		updateTimestap();
-		return this.counters.getCounter(key);
-	}*/
 
 	public boolean isJobComplete() {
 		boolean status = false;
@@ -185,7 +188,7 @@ public class CarbonJobReporter extends JobReporter {
 				try {
 					Thread.sleep(MAX_CACHED_TIME_MS * 2);
 				} catch (InterruptedException e) {
-					log.warn(e.getMessage());
+					log.error(e.getMessage(), e);
 				}
 			}
 		}

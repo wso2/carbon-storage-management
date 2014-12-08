@@ -20,13 +20,40 @@
 package org.wso2.carbon.rssmanager.core.environment;
 
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
-import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplateEntry;
-import org.wso2.carbon.rssmanager.core.jpa.persistence.dao.EntityBaseDAO;
 
-public interface DatabasePrivilegeTemplateEntryDAO extends EntityBaseDAO<Integer, DatabasePrivilegeTemplateEntry>{
+public interface DatabasePrivilegeTemplateEntryDAO {
 
-    void addPrivilegeTemplateEntries(String environmentName,
-                                     int templateId, DatabasePrivilegeSet privileges,
-                                     int tenantId) throws RSSDAOException;
+	/**
+	 * Add privilege template entry
+	 *
+	 * @param environmentId environment id
+	 * @param templateId database privilege template id
+	 * @param entry privilege template entry with privileges
+	 * @throws RSSDAOException if error occur while adding database privilege template entry
+	 */
+	void addPrivilegeTemplateEntry(int environmentId, int templateId, DatabasePrivilegeTemplateEntry entry)
+			throws RSSDAOException, RSSDatabaseConnectionException;
+
+	/**
+	 * Get privilege template entry
+	 *
+	 * @param templateId database privilege template id
+	 * @return database privilege template entry object
+	 * @throws RSSDAOException if error occurred when getting privilege template entry
+	 */
+	DatabasePrivilegeTemplateEntry getPrivilegeTemplateEntry(int templateId)
+			throws RSSDAOException, RSSDatabaseConnectionException;
+
+	/**
+	 * update database privilege template entry
+	 *
+	 * @param environmentId the environment id
+	 * @param templateId database privilege template id
+	 * @param updatedEntry  privilege template entry with updated privileges
+	 * @throws RSSDAOException if error occurred when updating privilege template entry
+	 */
+	void updatePrivilegeTemplateEntry(int environmentId, int templateId, DatabasePrivilegeTemplateEntry updatedEntry)
+			throws RSSDAOException, RSSDatabaseConnectionException;
 }

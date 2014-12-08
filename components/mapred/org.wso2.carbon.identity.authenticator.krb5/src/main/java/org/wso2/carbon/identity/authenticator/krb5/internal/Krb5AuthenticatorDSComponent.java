@@ -23,7 +23,6 @@ import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.base.ServerConfiguration;
-import org.wso2.carbon.core.services.authentication.CarbonServerAuthenticator;
 import org.wso2.carbon.core.services.authentication.ServerAuthenticator;
 import org.wso2.carbon.identity.authenticator.krb5.Krb5Authenticator;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -34,25 +33,25 @@ import java.util.Hashtable;
 /**
  * @scr.component name="krb5.authenticator.dscomponent" immediate="true"
  * @scr.reference name="registry.service"
- *                interface="org.wso2.carbon.registry.core.service.RegistryService"
- *                cardinality="1..1" policy="dynamic" bind="setRegistryService"
- *                unbind="unsetRegistryService"
+ * interface="org.wso2.carbon.registry.core.service.RegistryService"
+ * cardinality="1..1" policy="dynamic" bind="setRegistryService"
+ * unbind="unsetRegistryService"
  * @scr.reference name="user.realmservice.default"
- *                interface="org.wso2.carbon.user.core.service.RealmService"
- *                cardinality="1..1" policy="dynamic" bind="setRealmService"
- *                unbind="unsetRealmService"
+ * interface="org.wso2.carbon.user.core.service.RealmService"
+ * cardinality="1..1" policy="dynamic" bind="setRealmService"
+ * unbind="unsetRealmService"
  * @scr.reference name="server.configuration"
- *                interface="org.wso2.carbon.base.ServerConfiguration"
- *                cardinality="1..1" policy="dynamic"
- *                bind="setServerConfiguration"
- *                unbind="unsetServerConfiguration"
+ * interface="org.wso2.carbon.base.ServerConfiguration"
+ * cardinality="1..1" policy="dynamic"
+ * bind="setServerConfiguration"
+ * unbind="unsetServerConfiguration"
  */
 public class Krb5AuthenticatorDSComponent {
 
     private static final Log log = LogFactory.getLog(Krb5AuthenticatorDSComponent.class);
     private static RealmService realmService;
-    private static String DISABLE_HDFS_STARTUP = "disable.hdfs.startup";
-    
+    private static final String DISABLE_HDFS_STARTUP = "disable.hdfs.startup";
+
     protected void activate(ComponentContext ctxt) {
 
         String disableHdfsStartup = System.getProperty(DISABLE_HDFS_STARTUP);
@@ -76,7 +75,7 @@ public class Krb5AuthenticatorDSComponent {
     protected void deactivate(ComponentContext ctxt) {
         log.debug("Carbon Core Services bundle is deactivated ");
     }
-   
+
     protected void setRegistryService(RegistryService registryService) {
         Krb5AuthBEDataHolder.getInstance().setRegistryService(registryService);
     }
@@ -92,7 +91,7 @@ public class Krb5AuthenticatorDSComponent {
     protected void unsetRealmService(RealmService realmService) {
         Krb5AuthBEDataHolder.getInstance().setRealmService(null);
     }
-    
+
     public static BundleContext getBundleContext() throws Exception {
         return Krb5AuthBEDataHolder.getInstance().getBundleContext();
     }
@@ -105,36 +104,15 @@ public class Krb5AuthenticatorDSComponent {
         return Krb5AuthBEDataHolder.getInstance().getRegistryService();
     }
 
-    /*public static LoginSubscriptionManagerServiceImpl getLoginSubscriptionManagerServiceImpl() {
-        return loginSubscriptionManagerServiceImpl;
-    }*/
-
     protected void setServerConfiguration(ServerConfiguration configuration) {
         Krb5AuthBEDataHolder.getInstance().setServerConfiguration(configuration);
     }
-    
+
     public static ServerConfiguration getServerConfiguration() throws Exception {
         return Krb5AuthBEDataHolder.getInstance().getServerConfiguration();
     }
-    
+
     protected void unsetServerConfiguration(ServerConfiguration configuration) {
-    	Krb5AuthBEDataHolder.getInstance().setServerConfiguration(null);
+        Krb5AuthBEDataHolder.getInstance().setServerConfiguration(null);
     }
-
-    /*protected void setConfigurationContextService(ConfigurationContextService contextService) {
-        CarbonServicesServiceComponent.configContextService = contextService;
-    }*/
-
-    /*protected void unsetConfigurationContextService(ConfigurationContextService contextService) {
-        CarbonServicesServiceComponent.configContextService = null;
-    }
-
-    public static ConfigurationContextService getConfigurationContextService() throws Exception{
-        if (serverConfiguration == null) {
-            String msg = "Axis configuration is null. Some bundles in the system have not started";
-            log.error(msg);
-            throw new Exception(msg);
-        }
-        return CarbonServicesServiceComponent.configContextService;
-    }*/
 }

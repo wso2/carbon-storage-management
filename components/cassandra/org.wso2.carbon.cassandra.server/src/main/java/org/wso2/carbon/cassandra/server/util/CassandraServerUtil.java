@@ -19,7 +19,8 @@
 
 package org.wso2.carbon.cassandra.server.util;
 
-import org.wso2.carbon.cassandra.server.CassandraServerConstants;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.cassandra.server.CassandraServerException;
 import org.wso2.carbon.cassandra.server.internal.CassandraServerDataHolder;
 import org.wso2.carbon.user.api.UserRealm;
@@ -29,8 +30,11 @@ import org.wso2.carbon.utils.CarbonUtils;
 
 public class CassandraServerUtil {
 
+    private static final Log log = LogFactory.getLog(CassandraServerUtil.class);
+
     /**
      * Read Carbon Server port offset
+     *
      * @return offset number
      */
     public static int getPortOffset() {
@@ -41,9 +45,10 @@ public class CassandraServerUtil {
 
     /**
      * Return Cassandra server ports with carbon offset
-     * @param defaultPort  default port
-     * @param offset Carbon server offset
-     * @param systemVar System variable name
+     *
+     * @param defaultPort default port
+     * @param offset      Carbon server offset
+     * @param systemVar   System variable name
      * @return final port with or without carbon offset.
      */
     public static int readPortFromSystemVar(int defaultPort, int offset, String systemVar) {
@@ -53,5 +58,15 @@ public class CassandraServerUtil {
             portNum = Integer.parseInt(port);
         }
         return (65537 > portNum && portNum > 0) ? (portNum + offset) : (defaultPort + offset);
+    }
+
+    public static UserRealm getRealmForTenant(String domainName) {
+        try {
+            UserRealmService realmService = CassandraServerDataHolder.getInstance().getRealmService();
+            int tenantID = realmService.getTenantManager().getTenantId(domainName);
+            return realmService.getTenantUserRealm(tenantID);
+        } catch (UserStoreException e) {
+            throw new CassandraServerException("Error accessing the UserRealm for tenant : " + e, log);
+        }
     }
 }

@@ -1,34 +1,44 @@
+/*
+ *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
 package org.wso2.carbon.mapred.reporting;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.rmi.RemoteException;
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.context.ConfigurationContextFactory;
-import org.apache.axis2.deployment.FileSystemConfigurator;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapred.Counters;
-import org.apache.hadoop.mapred.JobInProgress;
-import org.apache.hadoop.mapred.Task;
 import org.apache.hadoop.mapred.JobCoreReporter;
 import org.apache.hadoop.mapred.Task.Counter;
-import org.apache.tools.ant.types.resources.comparators.FileSystem;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.mapred.mgt.stub.HadoopJobRunnerStub;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.rmi.RemoteException;
 
 public class CarbonJobCoreReporter extends JobCoreReporter {
 
@@ -52,9 +62,7 @@ public class CarbonJobCoreReporter extends JobCoreReporter {
 		try {
 			authAdminStub = new AuthenticationAdminStub(confCtx, serviceUrl+"AuthenticationAdmin");
 		} catch (AxisFault e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			log.warn(e.getMessage());
+			log.error(e.getMessage(), e);
 		}
         authAdminStub._getServiceClient().getOptions().setManageSession(true);
         try {
@@ -64,20 +72,13 @@ public class CarbonJobCoreReporter extends JobCoreReporter {
 			cookie = (String)authAdminStub._getServiceClient().getServiceContext().getProperty(HTTPConstants.COOKIE_STRING);
 			log.info("Logging in as admin");
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			log.warn(e.getMessage());
-		} catch (LoginAuthenticationExceptionException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			log.warn(e.getMessage());
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			log.warn(e.getMessage());
-		}
+	        log.error(e.getMessage(), e);
+        } catch (LoginAuthenticationExceptionException e) {
+	        log.error(e.getMessage(), e);
+        } catch (URISyntaxException e) {
+	        log.error(e.getMessage(), e);
+        }
 		try {
-			//confCtx = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
 			jobRunnerStub = new HadoopJobRunnerStub(confCtx, serviceUrl+"HadoopJobRunner");
 			ServiceClient client = jobRunnerStub._getServiceClient();
             Options options = client.getOptions();
@@ -87,14 +88,12 @@ public class CarbonJobCoreReporter extends JobCoreReporter {
 			jobRunnerStub.attachFinalReport(JSONEncode());
 			authAdminStub.logout();
 		} catch (AxisFault e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			log.warn(e.getMessage());
+			log.error(e.getMessage(), e);
 		} catch (RemoteException e) {
-			log.warn(e.getMessage());
+			log.error(e.getMessage(), e);
 		}
 		catch (Exception e) {
-			log.warn(e.getMessage());
+			log.error(e.getMessage(), e);
 		}
 	}
 

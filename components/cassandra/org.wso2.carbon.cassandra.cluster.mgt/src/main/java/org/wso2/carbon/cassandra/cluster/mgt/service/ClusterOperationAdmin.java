@@ -23,9 +23,10 @@ import org.wso2.carbon.cassandra.cluster.mgt.data.NodeInitialInfo;
 import org.wso2.carbon.cassandra.cluster.mgt.exception.ClusterDataAdminException;
 import org.wso2.carbon.cassandra.cluster.mgt.mbean.ClusterColumnFamilyMBeanService;
 import org.wso2.carbon.cassandra.cluster.mgt.mbean.ClusterMBeanProxy;
-import org.wso2.carbon.cassandra.cluster.mgt.operation.ClearSnapshot;
-import org.wso2.carbon.cassandra.cluster.mgt.operation.MoveNode;
-import org.wso2.carbon.cassandra.cluster.mgt.operation.TakeSnapshot;
+import org.wso2.carbon.cassandra.cluster.mgt.operation.NodeMover;
+import org.wso2.carbon.cassandra.cluster.mgt.operation.OperationsThreadPool;
+import org.wso2.carbon.cassandra.cluster.mgt.operation.SnapshotCleaner;
+import org.wso2.carbon.cassandra.cluster.mgt.operation.SnapshotHandler;
 import org.wso2.carbon.cassandra.cluster.mgt.registry.RegistryStore;
 import org.wso2.carbon.core.AbstractAdmin;
 
@@ -57,8 +58,8 @@ public class ClusterOperationAdmin extends AbstractAdmin{
      * @throws org.wso2.carbon.cassandra.cluster.mgt.exception.ClusterDataAdminException for unable to move node due to exception
      */
     public void moveNode(String newToken) throws ClusterDataAdminException {
-        MoveNode moveNode=new MoveNode(newToken);
-        new Thread(moveNode).start();
+        NodeMover nodeMover=new NodeMover(newToken);
+        OperationsThreadPool.getInstance().runOperation(nodeMover);
     }
 
     /**
@@ -213,8 +214,8 @@ public class ClusterOperationAdmin extends AbstractAdmin{
      */
     public void takeSnapshotOfNode(String snapShotName) throws
                                                            ClusterDataAdminException {
-        TakeSnapshot takeSnapshot=new TakeSnapshot(snapShotName,null,null);
-        new Thread(takeSnapshot).start();
+        SnapshotHandler snapshot=new SnapshotHandler(snapShotName);
+        OperationsThreadPool.getInstance().runOperation(snapshot);
     }
 
     /**
@@ -225,8 +226,8 @@ public class ClusterOperationAdmin extends AbstractAdmin{
      */
     public void takeSnapshotOfKeyspace(String snapShotName,String keyspace) throws
                                                                                ClusterDataAdminException {
-        TakeSnapshot takeSnapshot=new TakeSnapshot(snapShotName,keyspace,null);
-        new Thread(takeSnapshot).start();
+        SnapshotHandler snapshot=new SnapshotHandler(snapShotName,keyspace);
+        OperationsThreadPool.getInstance().runOperation(snapshot);
     }
 
     /**
@@ -238,8 +239,8 @@ public class ClusterOperationAdmin extends AbstractAdmin{
      */
     public void takeSnapshotOfColumnFamily(String snapShotName,String keyspace,String columnFamily)
             throws ClusterDataAdminException {
-        TakeSnapshot takeSnapshot=new TakeSnapshot(snapShotName,keyspace,columnFamily);
-        new Thread(takeSnapshot).start();
+        SnapshotHandler snapshot=new SnapshotHandler(snapShotName,keyspace,columnFamily);
+        OperationsThreadPool.getInstance().runOperation(snapshot);
     }
 
     /**
@@ -250,8 +251,8 @@ public class ClusterOperationAdmin extends AbstractAdmin{
      */
     public void clearSnapshotOfNode(String snapShotName) throws
                                                             ClusterDataAdminException {
-        ClearSnapshot clearSnapshot=new ClearSnapshot(snapShotName,null);
-        new Thread(clearSnapshot).start();
+        SnapshotCleaner snapshotCleaner=new SnapshotCleaner(snapShotName);
+        OperationsThreadPool.getInstance().runOperation(snapshotCleaner);
     }
 
     /**
@@ -263,8 +264,8 @@ public class ClusterOperationAdmin extends AbstractAdmin{
      */
     public void clearSnapshotOfKeyspace(String snapShotName,String keyspace) throws
                                                                                 ClusterDataAdminException {
-        ClearSnapshot clearSnapshot=new ClearSnapshot(snapShotName,keyspace);
-        new Thread(clearSnapshot).start();
+        SnapshotCleaner snapshotCleaner=new SnapshotCleaner(snapShotName,keyspace);
+        OperationsThreadPool.getInstance().runOperation(snapshotCleaner);
     }
 
     /**

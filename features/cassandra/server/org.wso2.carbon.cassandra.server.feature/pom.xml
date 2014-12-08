@@ -134,7 +134,7 @@
             <artifactId>antlr-runtime</artifactId>
         </dependency>
         <dependency>
-            <groupId>snappy-java.wso2</groupId>
+            <groupId>org.xerial.snappy</groupId>
             <artifactId>snappy-java</artifactId>
         </dependency>
         <dependency>
@@ -231,7 +231,7 @@
                                 <bundleDef>org.github.wso2:jamm</bundleDef>
                                 <bundleDef>antlr.wso2:antlr</bundleDef>
                                 <bundleDef>org.antlr.wso2:antlr-runtime</bundleDef>
-                                <bundleDef>snappy-java.wso2:snappy-java</bundleDef>
+                                <bundleDef>org.xerial.snappy:snappy-java</bundleDef>
                                 <bundleDef>snaptree.wso2:snaptree</bundleDef>
                                 <bundleDef>metrics-core.wso2:metrics-core</bundleDef>
 				<bundleDef>com.ning:compress-lzf</bundleDef>

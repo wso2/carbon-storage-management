@@ -21,14 +21,33 @@ package org.wso2.carbon.rssmanager.core.environment.dao;
 
 import org.wso2.carbon.rssmanager.core.environment.DatabasePrivilegeTemplateEntryDAO;
 
+/**
+ * Environment management DAO interface
+ */
 public interface EnvironmentManagementDAO {
 
-    EnvironmentDAO getEnvironmentDAO();
+	/**
+	 * Get environment DAO implementation
+	 * @return EnvironmentDAO
+	 */
+	EnvironmentDAO getEnvironmentDAO();
 
-    RSSInstanceDAO getRSSInstanceDAO();
+	/**
+	 * Get rss instance DAO implementation
+	 * @return RSSInstanceDAO
+	 */
+	RSSInstanceDAO getRSSInstanceDAO();
 
-    DatabasePrivilegeTemplateDAO getDatabasePrivilegeTemplateDAO();
+	/**
+	 * Get database privilege template DAO implementation
+	 * @return DatabasePrivilegeTemplateDAO
+	 */
+	DatabasePrivilegeTemplateDAO getDatabasePrivilegeTemplateDAO();
 
-    DatabasePrivilegeTemplateEntryDAO getDatabasePrivilegeTemplateEntryDAO();
+	/**
+	 * Get database privilege template entry DAO implementation
+	 * @return DatabasePrivilegeTemplateEntryDAO
+	 */
+	DatabasePrivilegeTemplateEntryDAO getDatabasePrivilegeTemplateEntryDAO();
 
 }

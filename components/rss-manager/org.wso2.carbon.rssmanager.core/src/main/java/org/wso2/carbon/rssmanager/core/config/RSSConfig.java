@@ -30,36 +30,36 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "RSSConfiguration")
 public final class RSSConfig {
 
-    private String rssProvider;
-    private Environment[] environments;
-    private RSSManagementRepository rssMgtRepository;
+	private String rssProvider;
+	private Environment[] environments;
+	private RSSManagementRepository rssMgtRepository;
 
-    @XmlElement(name = "ManagementRepository", nillable = false)
-    public RSSManagementRepository getRSSManagementRepository() {
-        return rssMgtRepository;
-    }
+	@XmlElement(name = "ManagementRepository", nillable = false)
+	public RSSManagementRepository getRSSManagementRepository() {
+		return rssMgtRepository;
+	}
 
-    public void setRSSManagementRepository(RSSManagementRepository rssMgtRepository) {
-        this.rssMgtRepository = rssMgtRepository;
-    }
+	public void setRSSManagementRepository(RSSManagementRepository rssMgtRepository) {
+		this.rssMgtRepository = rssMgtRepository;
+	}
 
-    @XmlElementWrapper(name = "Environments", nillable = false)
-    @XmlElement(name = "Environment", nillable = false)
-    public Environment[] getRSSEnvironments() {
-        return environments;
-    }
+	@XmlElementWrapper(name = "Environments", nillable = false)
+	@XmlElement(name = "Environment", nillable = false)
+	public Environment[] getRSSEnvironments() {
+		return environments;
+	}
 
-    public void setRSSEnvironments(Environment[] environments) {
-        this.environments = environments;
-    }
+	public void setRSSEnvironments(Environment[] environments) {
+		this.environments = environments;
+	}
 
-    @XmlElement(name = "Provider", nillable = false)
-    public String getRSSProvider() {
-        return rssProvider;
-    }
+	@XmlElement(name = "Provider", nillable = false)
+	public String getRSSProvider() {
+		return rssProvider;
+	}
 
-    public void setRSSProvider(String rssProvider) {
-        this.rssProvider = rssProvider;
-    }
+	public void setRSSProvider(String rssProvider) {
+		this.rssProvider = rssProvider;
+	}
 
 }

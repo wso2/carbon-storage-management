@@ -20,6 +20,7 @@
 package org.wso2.carbon.rssmanager.core.dto.restricted;
 
 import org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 
@@ -29,128 +30,151 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * RSS Instance wrapper class access database source configurations of rss instances
+ */
 public class RSSInstanceDSWrapper {
 
-    private String name;
-    private DataSource dataSource;
-    private RSSInstance rssInstance;
+	private String name;
+	private DataSource dataSource;
+	private RSSInstance rssInstance;
 
-    private final ConcurrentHashMap<String, RSSDatabaseDSWrapper> dbDSMap = new ConcurrentHashMap<String,RSSDatabaseDSWrapper>();
+	private final ConcurrentHashMap<String, RSSDatabaseDSWrapper> dbDSMap = new ConcurrentHashMap<String, RSSDatabaseDSWrapper>();
 
-    public RSSInstanceDSWrapper(RSSInstance rssInstance) {
-        this.name = rssInstance.getName();
-        this.rssInstance = rssInstance;
-        this.dataSource = initDataSource();
-    }
+	public RSSInstanceDSWrapper(RSSInstance rssInstance) {
+		this.name = rssInstance.getName();
+		this.rssInstance = rssInstance;
+		this.dataSource = initDataSource();
+	}
 
-    public Connection getConnection() throws RSSManagerException {
-        try {
-            return getDataSource().getConnection();
-        } catch (SQLException e) {
-            throw new RSSManagerException("Error while acquiring datasource connection : " +
-                    e.getMessage(), e);
-        }
-    }
+	/**
+	 * Get data source connection from the data source configured in the class
+	 *
+	 * @return data source connection
+	 * @throws RSSManagerException if something went wrong when acquire the connection
+	 */
+	public Connection getConnection() throws RSSDatabaseConnectionException {
+		try {
+			return getDataSource().getConnection();
+		} catch (SQLException e) {
+			throw new RSSDatabaseConnectionException("Error while acquiring data source connection : Database Server may"
+					+ "unavailable" + e.getMessage(), e);
+		}
+	}
 
-    public Connection getConnection(String dbName) throws RSSManagerException {
-        try {
-            return getDataSource(dbName).getConnection();
-        } catch (SQLException e) {
-            throw new RSSManagerException("Error while acquiring datasource connection : " +
-                    e.getMessage(), e);
-        }
-    }
+	/**
+	 * Get source connection for database from data source in the class
+	 *
+	 * @param databaseName name of the database
+	 * @return data source connection
+	 * @throws RSSManagerException if something went wrong when acquiring the connection
+	 */
+	public Connection getConnection(String databaseName) throws RSSManagerException {
+		try {
+			return getDataSource(databaseName).getConnection();
+		} catch (SQLException e) {
+			throw new RSSManagerException("Error while acquiring datasource connection : " +
+			                              e.getMessage(), e);
+		}
+	}
 
-    private DataSource initDataSource() {
-        org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration config = new RDBMSConfiguration();
-        /*config.setUrl(getRssInstance().getDataSourceConfig().getRdbmsConfiguration().getUrl());
-        config.setUsername(getRssInstance().getDataSourceConfig().getRdbmsConfiguration().getUsername());
-        config.setPassword(getRssInstance().getDataSourceConfig().getRdbmsConfiguration().getPassword());
-        config.setDriverClassName(getRssInstance().getDataSourceConfig().getRdbmsConfiguration().getDriverClassName());*/
-        config.setUrl(getRssInstance().getServerURL());
-        config.setUsername(getRssInstance().getAdminUserName());
-        config.setPassword(getRssInstance().getAdminPassword());
-        config.setDriverClassName(getRssInstance().getDriverClassName());
-        config.setTestOnBorrow(true);
-        config.setJdbcInterceptors("org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer;org.wso2.carbon.ndatasource.rdbms.ConnectionRollbackOnReturnInterceptor");
-        return RSSManagerUtil.createDataSource(config);
-    }
+	/**
+	 * Initialize data source from properties
+	 *
+	 * @return data source
+	 */
+	private DataSource initDataSource() {
+		org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration config = new RDBMSConfiguration();
+		config.setUrl(getRssInstance().getServerURL());
+		config.setUsername(getRssInstance().getAdminUserName());
+		config.setPassword(getRssInstance().getAdminPassword());
+		config.setDriverClassName(getRssInstance().getDriverClassName());
+		config.setTestOnBorrow(true);
+		config.setJdbcInterceptors("org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;" +
+		                           "org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer;" +
+		                           "org.wso2.carbon.ndatasource.rdbms.ConnectionRollbackOnReturnInterceptor");
+		return RSSManagerUtil.createDataSource(config);
+	}
 
-    public void closeDataSource() {
-        ((org.apache.tomcat.jdbc.pool.DataSource) getDataSource()).close();
-    }
+	public void closeDataSource() {
+		((org.apache.tomcat.jdbc.pool.DataSource) getDataSource()).close();
+	}
 
-    public void closeAllDBDataSources(){
-    	if(!dbDSMap.isEmpty()){
-    		Collection<RSSDatabaseDSWrapper>  wrappers = dbDSMap.values();
-    		for(RSSDatabaseDSWrapper wrapper : wrappers){
-    			((org.apache.tomcat.jdbc.pool.DataSource) wrapper.getDataSource()).close();
-    		}
-    	}
-    }
+	public void closeAllDBDataSources() {
+		if (!dbDSMap.isEmpty()) {
+			Collection<RSSDatabaseDSWrapper> wrappers = dbDSMap.values();
+			for (RSSDatabaseDSWrapper wrapper : wrappers) {
+				((org.apache.tomcat.jdbc.pool.DataSource) wrapper.getDataSource()).close();
+			}
+		}
+	}
 
-    private DataSource getDataSource() {
-        return dataSource;
-    }
+	private DataSource getDataSource() {
+		return dataSource;
+	}
 
-    public DataSource getDataSource(String dbName) {
-    	DataSource dbDataSource = null;
-    	if(!dbDSMap.contains(dbName)){
-    		synchronized(dbDSMap){
-    			RSSDatabaseDSWrapper wrapper = new RSSDatabaseDSWrapper(dbName);
-    			dbDSMap.putIfAbsent(dbName, wrapper);
-    			RSSDatabaseDSWrapper returnWrapper = dbDSMap.get(dbName);
-    			dbDataSource = returnWrapper.getDataSource();
-    		}
-    	}else{
-    		RSSDatabaseDSWrapper returnWrapper = dbDSMap.get(dbName);
+	/**
+	 * Get data source configured for database
+	 *
+	 * @param databaseName name of the database
+	 * @return data source
+	 */
+	public DataSource getDataSource(String databaseName) {
+		DataSource dbDataSource = null;
+		if (!dbDSMap.contains(databaseName)) {
+			synchronized (dbDSMap) {
+				RSSDatabaseDSWrapper wrapper = new RSSDatabaseDSWrapper(databaseName);
+				dbDSMap.putIfAbsent(databaseName, wrapper);
+				RSSDatabaseDSWrapper returnWrapper = dbDSMap.get(databaseName);
+				dbDataSource = returnWrapper.getDataSource();
+			}
+		} else {
+			RSSDatabaseDSWrapper returnWrapper = dbDSMap.get(databaseName);
 			dbDataSource = returnWrapper.getDataSource();
-    	}
-        return dbDataSource;
-    }
+		}
+		return dbDataSource;
+	}
 
-    public RSSInstance getRssInstance() {
-        return rssInstance;
-    }
+	public RSSInstance getRssInstance() {
+		return rssInstance;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public class RSSDatabaseDSWrapper {
+	/**
+	 * Inner class for data source wrapper to handle data source connections for database
+	 */
+	public class RSSDatabaseDSWrapper {
 
-    	private String dbName;
-    	private DataSource dataSource;
+		private DataSource dataSource;
 
-    	public RSSDatabaseDSWrapper(String dbName){
-    		this.dbName = dbName;
-    		this.dataSource = initDataSource(dbName);
-    	}
+		public RSSDatabaseDSWrapper(String databaseName) {
+			this.dataSource = initDataSource(databaseName);
+		}
 
-    	private DataSource initDataSource(String dbName) {
-            org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration config = new RDBMSConfiguration();
-/*            config.setUrl(createDBURL(dbName, getRssInstance().getDataSourceConfig().getRdbmsConfiguration().getUrl()));
-            config.setUsername(getRssInstance().getDataSourceConfig().getRdbmsConfiguration().getUsername());
-            config.setPassword(getRssInstance().getDataSourceConfig().getRdbmsConfiguration().getPassword());*/
-            config.setUrl(RSSManagerUtil.createDBURL(dbName, getRssInstance().getServerURL()));
-            config.setUsername(getRssInstance().getAdminUserName());
-            config.setPassword(getRssInstance().getAdminPassword());
-            config.setDriverClassName(getRssInstance().getDriverClassName());
-            config.setTestOnBorrow(true);
-            config.setJdbcInterceptors("org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer;org.wso2.carbon.ndatasource.rdbms.ConnectionRollbackOnReturnInterceptor");
-            return RSSManagerUtil.createDataSource(config);
-        }
-
-
-		public String getDbName() {
-			return dbName;
+		/**
+		 * Initialize data source for database
+		 *
+		 * @param databaseName name of the database
+		 * @return data source configured for the database
+		 */
+		private DataSource initDataSource(String databaseName) {
+			org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration config = new RDBMSConfiguration();
+			config.setUrl(RSSManagerUtil.createDBURL(databaseName, getRssInstance().getServerURL()));
+			config.setUsername(getRssInstance().getAdminUserName());
+			config.setPassword(getRssInstance().getAdminPassword());
+			config.setDriverClassName(getRssInstance().getDriverClassName());
+			config.setTestOnBorrow(true);
+			config.setJdbcInterceptors("org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;" +
+			                           "org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer;" +
+			                           "org.wso2.carbon.ndatasource.rdbms.ConnectionRollbackOnReturnInterceptor");
+			return RSSManagerUtil.createDataSource(config);
 		}
 
 		public DataSource getDataSource() {
 			return dataSource;
 		}
-
-    }
-    
-
+	}
 }

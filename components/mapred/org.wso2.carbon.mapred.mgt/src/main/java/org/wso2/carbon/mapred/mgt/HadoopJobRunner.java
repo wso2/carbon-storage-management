@@ -1,25 +1,22 @@
+/*
+ *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
 package org.wso2.carbon.mapred.mgt;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.activation.DataHandler;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
@@ -30,18 +27,26 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import org.wso2.carbon.context.CarbonContext;
+import org.wso2.carbon.context.RegistryType;
 import org.wso2.carbon.core.AbstractAdmin;
-import org.wso2.carbon.context.*;
-import org.wso2.carbon.mapred.reporting.CarbonJobReporter.CarbonJobReporterMap;
-import org.wso2.carbon.mapred.reporting.CarbonJobReporter;
-import org.wso2.carbon.registry.api.Registry;
-import org.wso2.carbon.registry.api.Resource;
-import org.wso2.carbon.registry.api.RegistryException;
-import org.wso2.carbon.registry.core.RegistryConstants;
-import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.hadoop.security.HadoopCarbonMessageContext;
 import org.wso2.carbon.identity.authenticator.krb5.Krb5AuthenticatorConstants;
+import org.wso2.carbon.mapred.mgt.exception.MapredManagerException;
+import org.wso2.carbon.mapred.reporting.CarbonJobReporter;
+import org.wso2.carbon.mapred.reporting.CarbonJobReporter.CarbonJobReporterMap;
+import org.wso2.carbon.registry.api.Registry;
+import org.wso2.carbon.registry.api.RegistryException;
+import org.wso2.carbon.registry.api.Resource;
+import org.wso2.carbon.registry.core.RegistryConstants;
+import org.wso2.carbon.utils.ServerConstants;
+
+import javax.activation.DataHandler;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class HadoopJobRunner extends AbstractAdmin {
 	private static Log log = LogFactory.getLog(HadoopJobRunner.class);
@@ -51,8 +56,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 	public static final String DEFAULT_HADOOP_JAR_PATH = ".";
 	public static final int MAX_FINAL_REPORTS = 20;
 	public static int DEFAULT_READ_LENGTH = 1024;
-	//private static final String JOB_CONTEXT_UUID = "jobConttextUuid";
-	
+
 	private static final String MAPRED_SITE = "mapred-site.xml";
 	private static final String CORE_SITE = "core-site.xml";
 	private static final String HDFS_SITE = "hdfs-site.xml";
@@ -67,9 +71,9 @@ public class HadoopJobRunner extends AbstractAdmin {
 		try {
 			hadoopCarbonConfig.load(new FileReader(HADOOP_CONFIG));
 		} catch (FileNotFoundException e) {
-			log.error(e.getMessage());
+			log.error("Hadoop configuration file is not found", e);
 		} catch (IOException e) {
-			log.error(e.getMessage());
+			log.error("Error occurred whil loading the hadoop configuration file" + e.getMessage(), e);
 		}
 		hadoopCarbonConfigDir = hadoopCarbonConfig.getProperty("hadoop.config.dir");
 		conf = new Configuration();
@@ -100,7 +104,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 			try {
 				hadoopJobThread.wait();
 			} catch (InterruptedException e) {
-				log.warn(e.getMessage());
+				log.error("Error occurred when waiting the Haddop job runner thread" + e.getMessage(), e);
 			}
 		}
 		CarbonJobReporter reporter = hadoopJobThread.getCarbonJobReporter();
@@ -109,13 +113,13 @@ public class HadoopJobRunner extends AbstractAdmin {
 			try {
 				reporter.wait();
 			} catch (InterruptedException e) {
-				log.warn(e.getMessage());
+				log.error("Error occurred when waiting the reporter thread" + e.getMessage(), e);
 			}
 		}
 		return threadUuid.toString();
 	}
 	
-	public String getJobStatus(String key) {
+	public String getJobStatus(String key) throws MapredManagerException {
 		CarbonContext cc = CarbonContext.getCurrentContext();
 		if (key == null)
 			return null;
@@ -137,13 +141,15 @@ public class HadoopJobRunner extends AbstractAdmin {
 			jsonObj.put("JobStatus", reporter.getStatus());
 			jsonObj.put("JobCompleted", reporter.isJobComplete());
 			jsonObj.put("JobSuccessful", reporter.isJobSuccessful());
-		} catch (JSONException e) {
-			log.info(e.getMessage());
+		} catch (Exception e) {
+			String msg = "Error while getting job status";
+			log.error(msg, e);
+			throw new MapredManagerException(msg, e);
 		}
 		return jsonObj.toString();
 	}
 	
-	public void attachFinalReport(String jsonEncodedReport) {
+	public void attachFinalReport(String jsonEncodedReport) throws MapredManagerException {
 		CarbonContext cc = CarbonContext.getCurrentContext();
 		String name = cc.getUsername();
 		Registry registry = cc.getRegistry(RegistryType.USER_CONFIGURATION);
@@ -172,19 +178,14 @@ public class HadoopJobRunner extends AbstractAdmin {
 				resource.setContent(serializedUserJobMap);
 				registry.put(REG_JOB_STATS_PATH+jsonObj.getString("JobUser"), resource);
 			}
-		} catch (RegistryException e) {
-			log.warn(e.getMessage());
-		} catch (JSONException e) {
-			log.warn(e.getMessage());
-			e.printStackTrace();
-		} catch (IOException e) {
-			log.warn(e.getMessage());
-		} catch (ClassNotFoundException e) {
-			log.warn(e.getMessage());
-		} 
+		} catch (Exception e) {
+			String msg = "Error while attaching final report";
+			log.error(msg, e);
+			throw new MapredManagerException(msg, e);
+		}
 	}
 	
-	public String[] getFinalReportsList(int offset) {
+	public String[] getFinalReportsList(int offset) throws MapredManagerException {
 		CarbonContext cc = CarbonContext.getCurrentContext();
 		Registry registry = cc.getRegistry(RegistryType.USER_CONFIGURATION);
 		String user = cc.getUsername();
@@ -210,18 +211,15 @@ public class HadoopJobRunner extends AbstractAdmin {
 				return partialJobIDArray;
 			}
 			
-		} catch (RegistryException e) {
-			log.warn(e.getMessage());
-		} catch (IOException e) {
-			log.warn(e.getMessage());
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			log.warn(e.getMessage());
+		} catch (Exception e) {
+			String msg = "Error while getting final report list";
+			log.error(msg, e);
+			throw new MapredManagerException("Error while getting final report list", e);
 		}
 		return null;
 	}
 	
-	public String getJobFinalReport(String jobID) {
+	public String getJobFinalReport(String jobID) throws MapredManagerException {
 		CarbonContext cc = CarbonContext.getCurrentContext();
 		Registry registry = cc.getRegistry(RegistryType.USER_CONFIGURATION);
 		try {
@@ -234,12 +232,10 @@ public class HadoopJobRunner extends AbstractAdmin {
 				return  jobMap.get(jobID);
 			}
 			
-		} catch (RegistryException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			log.warn(e.getMessage());
-		} catch (ClassNotFoundException e) {
-			log.warn(e.getMessage());
+		} catch (Exception e) {
+			String msg = "Error while getting final job report";
+			log.error(msg, e);
+			throw new MapredManagerException("Error while getting final job report", e);
 		}
 		return null;
 	}
@@ -254,14 +250,14 @@ public class HadoopJobRunner extends AbstractAdmin {
 		CarbonJobReporterMap.removecarbonJobReporter(threadUuid);
 	}
 	
-	public void getJar(String jarPath) {
+	public void getJar(String jarPath) throws MapredManagerException {
 		CarbonContext cc = CarbonContext.getCurrentContext();
 		Registry reg = cc.getRegistry(RegistryType.USER_CONFIGURATION);
 		Resource resource = null;
 		try {
 			resource = reg.get(REG_JAR_PATH+getCurrentUser()+File.separator+jarPath);
 		} catch (RegistryException e) {
-			log.warn(e.getMessage());
+			log.error("Error while geting the registry resource" + e.getMessage(), e);
 			return;
 		}
 		try {
@@ -279,12 +275,13 @@ public class HadoopJobRunner extends AbstractAdmin {
 			resIS.close();
 			fos.close();
 		} catch (Exception e) {
-			log.warn(e.getMessage());
-			return;
+			String msg = "Error while getting jar";
+			log.error(msg, e);
+			throw new MapredManagerException(msg, e);
 		}
 	}
 	
-	public void putJar(String friendlyName, DataHandler dataHandler) {
+	public void putJar(String friendlyName, DataHandler dataHandler) throws MapredManagerException {
 		CarbonContext cc = CarbonContext.getCurrentContext();
 		Registry reg = cc.getRegistry(RegistryType.USER_CONFIGURATION);
 		try {
@@ -294,15 +291,15 @@ public class HadoopJobRunner extends AbstractAdmin {
 			}
 			Resource resource = reg.newResource();
 			resource.setContentStream(dataHandler.getInputStream());
-			String out = reg.put(REG_JAR_PATH+getCurrentUser()+File.separator+friendlyName, resource);
-		} catch (RegistryException e) {
-			log.warn(e.getMessage());
-		} catch (IOException e) {
-			log.warn(e.getMessage());
+			String out = reg.put(REG_JAR_PATH+getCurrentUser()+ File.separator+friendlyName, resource);
+		} catch (Exception e) {
+			String msg = "Error while putting jar to the registry";
+			log.error(msg, e);
+			throw new MapredManagerException(msg, e);
 		}
 	}
 	
-	public String[] getJarList() {
+	public String[] getJarList() throws MapredManagerException {
 		CarbonContext cc = CarbonContext.getCurrentContext();
 		Registry reg = cc.getRegistry(RegistryType.USER_CONFIGURATION);
 		String sql1 = "SELECT REG_PATH_ID,REG_NAME FROM REG_RESOURCE WHERE REG_NAME LIKE ?";
@@ -322,8 +319,10 @@ public class HadoopJobRunner extends AbstractAdmin {
 	        	paths[i] = subStrs[subStrs.length - 1];
 	        }
 	        result.discard();
-		} catch (RegistryException e) {
-			log.warn(e.getMessage());
+		} catch (Exception e) {
+			String msg = "Error while getting jar list";
+			log.error(msg, e);
+			throw new MapredManagerException("Error while getting jar list", e);
 		}
 		return paths;
 	}

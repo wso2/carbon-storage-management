@@ -335,7 +335,7 @@ margin-left:2px;
 margin-right:2px;
 }
 .pageLinks-selected{
-    background:#e8e9ae none repeat scroll 0%;
+    background:pink none repeat scroll 0%;
 border:1px solid #DDDDDD;
 padding:2px 3px;
 text-decoration:none;

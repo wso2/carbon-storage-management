@@ -35,6 +35,8 @@ public class EnvironmentManager {
     private static final Log log = LogFactory.getLog(EnvironmentManager.class);
     private RegistryAccessor registry = new RegistryAccessor();
     private EnvironmentConfig environmentConfig;
+    private final String envConfigXMLPath = CarbonUtils.getEtcCarbonConfigDirPath() + File.separator
+            + CassandraConstants.Environments.CASSANDRA_ENVIRONMENT_CONFIG_FILE;
 
     public EnvironmentConfig getEnvironmentConfig() {
         return environmentConfig;
@@ -42,11 +44,11 @@ public class EnvironmentManager {
 
     public Environment validateEnvironment(String envName) throws CassandraServerManagementException {
         if (envName == null || envName.trim().length() == 0) {
-            throw new CassandraServerManagementException("Cassandra CassandraConstants name is null ");
+            throw new CassandraServerManagementException("Cassandra Environment name is null ");
         }
         Environment env = registry.getEnvironmentFromRegistry(envName);
         if (env == null) {
-            throw new CassandraServerManagementException("Cassandra CassandraConstants doesn't exist ");
+            throw new CassandraServerManagementException("Cassandra Environment doesn't exist ");
         }
         return env;
     }
@@ -68,7 +70,6 @@ public class EnvironmentManager {
     }
 
     public void initEnvironments() throws CassandraServerManagementException {
-        String envConfigXMLPath = CarbonUtils.getCarbonConfigDirPath() + File.separator + "etc" + File.separator + CassandraConstants.CASSANDRA_ENVIRONMENT_CONFIG_FILE;
         File config = new File(envConfigXMLPath);
         try {
             Document doc = CassandraManagementUtils.convertToDocument(config);
@@ -78,7 +79,7 @@ public class EnvironmentManager {
             Unmarshaller unmarshaller = ctx.createUnmarshaller();
             environmentConfig = (EnvironmentConfig) unmarshaller.unmarshal(doc);
             Environment[] environments = environmentConfig.getCassandraEnvironments();
-            if(environments == null){
+            if (environments == null) {
                 String msg = "Cassandra environments can't be read from " + envConfigXMLPath;
                 log.error(msg);
                 throw new CassandraServerManagementException(msg);
@@ -87,7 +88,7 @@ public class EnvironmentManager {
                 addEnvironment(env);
             }
         } catch (Exception ex) {
-            handleException("Exception Occurred while initializing Cassandra environments", ex);
+            handleException("Exception occurred while initializing Cassandra environments", ex);
         }
     }
 

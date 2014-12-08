@@ -30,7 +30,11 @@ import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 import org.wso2.carbon.rssmanager.core.environment.Environment;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
-import org.wso2.carbon.rssmanager.core.manager.*;
+import org.wso2.carbon.rssmanager.core.manager.RSSManager;
+import org.wso2.carbon.rssmanager.core.manager.RSSManagerFactory;
+import org.wso2.carbon.rssmanager.core.manager.RSSManagerFactoryLoader;
+import org.wso2.carbon.rssmanager.core.manager.SystemRSSManager;
+import org.wso2.carbon.rssmanager.core.manager.UserDefinedRSSManager;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 
 import java.util.ArrayList;
@@ -53,9 +57,9 @@ public class RSSManagerAdaptorImpl implements RSSManagerAdaptor {
 			throw new IllegalArgumentException(msg);
 		}
 		if (userDefinedRM == null) {
-			String msg = "Configured User Defined RSS Manager is null. RSS Manager " + 
-					"initialization will not be interrupted as a proper System RSS Manager is " + 
-					"available. But any task related to User Defined RSS Manager would not be " + "functional";
+			String msg = "Configured User Defined RSS Manager is null. RSS Manager " +
+			             "initialization will not be interrupted as a proper System RSS Manager is " +
+			             "available. But any task related to User Defined RSS Manager would not be " + "functional";
 			log.warn(msg);
 		}
 	}
@@ -69,9 +73,8 @@ public class RSSManagerAdaptorImpl implements RSSManagerAdaptor {
 	}
 
 	public RSSManager resolveRM(String typeName) {
-		String type = (typeName == null || "".equals(typeName) || RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equals(typeName)) 
-						? RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM : RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED;
-
+		String type = (typeName == null || "".equals(typeName) || RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equals(typeName))
+		              ? RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM : RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED;
 		if (RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equals(type)) {
 			return this.getSystemRM();
 		} else if (RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED.equals(type)) {
@@ -81,95 +84,154 @@ public class RSSManagerAdaptorImpl implements RSSManagerAdaptor {
 		}
 	}
 
+	/**
+	 * @see RSSManagerAdaptor#addDatabaseUser(org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser)
+	 */
 	public Database addDatabase(Database database) throws RSSManagerException {
 		return this.resolveRM(database.getType()).addDatabase(database);
 	}
 
+	/**
+	 * @see RSSManagerAdaptor#removeDatabase(String, String, String)
+	 */
 	public void removeDatabase(String rssInstanceName, String databaseName, String type)
-	                                                                                    throws RSSManagerException {
+			throws RSSManagerException {
 		this.resolveRM(type).removeDatabase(rssInstanceName, databaseName);
 	}
 
+	/**
+	 * @see RSSManagerAdaptor#addDatabaseUser(org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser)
+	 */
 	public DatabaseUser addDatabaseUser(DatabaseUser user) throws RSSManagerException {
 		return this.resolveRM(user.getType()).addDatabaseUser(user);
 	}
 
+	/**
+	 * @see RSSManagerAdaptor#removeDatabaseUser(String, String, String)
+	 */
 	public void removeDatabaseUser(String rssInstanceName, String username, String type)
-	                                                                                    throws RSSManagerException {
+			throws RSSManagerException {
 		this.resolveRM(type).removeDatabaseUser(rssInstanceName, username);
 	}
 
+	/**
+	 * @see RSSManagerAdaptor#updateDatabaseUserPrivileges(DatabasePrivilegeSet, DatabaseUser, String)
+	 */
 	public void updateDatabaseUserPrivileges(DatabasePrivilegeSet privileges, DatabaseUser user,
 	                                         String databaseName) throws RSSManagerException {
 		this.resolveRM(user.getType()).updateDatabaseUserPrivileges(privileges, user, databaseName);
 	}
 
-	public void attachUser(UserDatabaseEntry ude, DatabasePrivilegeTemplateEntry templateEntry) throws RSSManagerException {
+	/**
+	 * @see RSSManagerAdaptor#attachUser(UserDatabaseEntry, DatabasePrivilegeTemplateEntry)
+	 */
+	public void attachUser(UserDatabaseEntry userDatabaseEntry, DatabasePrivilegeTemplateEntry templateEntry) throws RSSManagerException {
 		DatabasePrivilegeSet privileges = new MySQLPrivilegeSet();
 		RSSManagerUtil.createDatabasePrivilegeSet(privileges, templateEntry);
-		this.resolveRM(ude.getType()).attachUser(ude, privileges);
+		this.resolveRM(userDatabaseEntry.getType()).attachUser(userDatabaseEntry, privileges);
 	}
 
-	public void detachUser(UserDatabaseEntry ude) throws RSSManagerException {
-		this.resolveRM(ude.getType()).detachUser(ude);
+	/**
+	 * @see RSSManagerAdaptor#detachUser(org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry)
+	 */
+	public void detachUser(UserDatabaseEntry userDatabaseEntry) throws RSSManagerException {
+		this.resolveRM(userDatabaseEntry.getType()).detachUser(userDatabaseEntry);
 	}
 
+	/**
+	 * @see RSSManagerAdaptor#getDatabaseUser(String, String, String)
+	 */
 	public DatabaseUser getDatabaseUser(String rssInstanceName, String username, String type)
-	                                                                                         throws RSSManagerException {
+			throws RSSManagerException {
 		return this.resolveRM(type).getDatabaseUser(rssInstanceName, username);
 	}
 
+	/**
+	 * @see RSSManagerAdaptor#getDatabase(String, String, String)
+	 */
 	public Database getDatabase(String rssInstanceName, String databaseName, String type)
-	                                                                                     throws RSSManagerException {
+			throws RSSManagerException {
 		return this.resolveRM(type).getDatabase(type, databaseName);
 	}
 
+	/**
+	 * @see RSSManagerAdaptor#getAttachedUsers(String, String, String)
+	 */
 	public DatabaseUser[] getAttachedUsers(String rssInstanceName, String databaseName, String type)
-	                                                                                                throws RSSManagerException {
+			throws RSSManagerException {
 		return this.resolveRM(type).getAttachedUsers(rssInstanceName, databaseName);
 	}
 
+	/**
+	 * @see RSSManagerAdaptor#getAvailableUsers(String, String, String)
+	 */
 	public DatabaseUser[] getAvailableUsers(String rssInstanceName, String databaseName, String type)
-	                                                                                                 throws RSSManagerException {
+			throws RSSManagerException {
 		return this.resolveRM(type).getAvailableUsers(rssInstanceName, databaseName);
 	}
 
+	/**
+	 * @see RSSManagerAdaptor#getUserDatabasePrivileges(String, String, String, String)
+	 */
 	public DatabasePrivilegeSet getUserDatabasePrivileges(String rssInstanceName, String databaseName,
 	                                                      String username, String type)
-	                                                                                   throws RSSManagerException {
+			throws RSSManagerException {
 		return this.resolveRM(type).getUserDatabasePrivileges(rssInstanceName, databaseName, username);
 	}
 
+	/**
+	 * @see RSSManagerAdaptor#getDatabases()
+	 */
 	public Database[] getDatabases() throws RSSManagerException {
 		List<Database> databases = new ArrayList<Database>();
 		databases.addAll(Arrays.asList(this.resolveRM(RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM)
-		                                   .getDatabases()));
+				                               .getDatabases()));
 		databases.addAll(Arrays.asList(this.resolveRM(RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED)
-		                                   .getDatabases()));
+				                               .getDatabases()));
 		return databases.toArray(new Database[databases.size()]);
 	}
 
+	/**
+	 * @see RSSManagerAdaptor#getDatabaseUsers()
+	 */
 	public DatabaseUser[] getDatabaseUsers() throws RSSManagerException {
 		List<DatabaseUser> users = new ArrayList<DatabaseUser>();
 		users.addAll(Arrays.asList(this.resolveRM(RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM)
-		                               .getDatabaseUsers()));
+				                           .getDatabaseUsers()));
 		users.addAll(Arrays.asList(this.resolveRM(RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED)
-		                               .getDatabaseUsers()));
+				                           .getDatabaseUsers()));
 		return users.toArray(new DatabaseUser[users.size()]);
 	}
 
+	/**
+	 * @see RSSManagerAdaptor#isDatabaseExist(String, String, String)
+	 */
 	public boolean isDatabaseExist(String rssInstanceName, String databaseName, String type)
-	                                                                                        throws RSSManagerException {
+			throws RSSManagerException {
 		return this.resolveRM(type).isDatabaseExist(rssInstanceName, databaseName);
 	}
 
+	/**
+	 * @see RSSManagerAdaptor#isDatabaseExist(String, String, String)
+	 */
 	public boolean isDatabaseUserExist(String rssInstanceName, String username, String type)
-	                                                                                        throws RSSManagerException {
+			throws RSSManagerException {
 		return this.resolveRM(type).isDatabaseUserExist(rssInstanceName, username);
 	}
 
-    public DatabaseUser editDatabaseUser(String environmentName,DatabaseUser databaseUser) throws RSSManagerException {
-        return this.resolveRM(databaseUser.getType()).editDatabaseUser(environmentName, databaseUser);
+	/**
+	 * @see RSSManagerAdaptor#editDatabaseUser(org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser)
+	 */
+	public DatabaseUser editDatabaseUser(DatabaseUser databaseUser) throws RSSManagerException {
+		return this.resolveRM(databaseUser.getType()).editDatabaseUser(databaseUser);
+	}
+
+    /**
+     * @see RSSManagerAdaptor#createSnapshot
+     */
+    @Override
+    public void createSnapshot(String databaseName, String type) throws RSSManagerException {
+        this.resolveRM(type).createSnapshot(databaseName);
     }
 
 }

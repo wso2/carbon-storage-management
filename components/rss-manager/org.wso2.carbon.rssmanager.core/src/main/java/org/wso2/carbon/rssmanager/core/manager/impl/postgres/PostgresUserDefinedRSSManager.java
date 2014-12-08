@@ -17,31 +17,38 @@
  *
  */
 
+
 package org.wso2.carbon.rssmanager.core.manager.impl.postgres;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
-import org.wso2.carbon.rssmanager.core.config.RSSManagementRepository;
-import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
-import org.wso2.carbon.rssmanager.core.dto.common.*;
+import org.wso2.carbon.rssmanager.core.config.databasemanagement.SnapshotConfig;
+import org.wso2.carbon.rssmanager.core.config.ssh.SSHInformationConfig;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
+import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
+import org.wso2.carbon.rssmanager.core.dto.common.MySQLPrivilegeSet;
+import org.wso2.carbon.rssmanager.core.dto.common.PostgresPrivilegeSet;
+import org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry;
 import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
 import org.wso2.carbon.rssmanager.core.environment.Environment;
-import org.wso2.carbon.rssmanager.core.exception.EntityAlreadyExistsException;
-import org.wso2.carbon.rssmanager.core.exception.EntityNotFoundException;
+import org.wso2.carbon.rssmanager.core.environment.dao.RSSInstanceDAO;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
+import org.wso2.carbon.rssmanager.core.manager.RSSManager;
 import org.wso2.carbon.rssmanager.core.manager.UserDefinedRSSManager;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.carbon.rssmanager.core.util.databasemanagement.SSHConnection;
 import org.wso2.carbon.utils.xml.StringUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 
 /**
  * @see org.wso2.carbon.rssmanager.core.manager.RSSManager for the method java doc comments
@@ -49,345 +56,200 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class PostgresUserDefinedRSSManager extends UserDefinedRSSManager {
 
     Log log = LogFactory.getLog(PostgresUserDefinedRSSManager.class);
-    public PostgresUserDefinedRSSManager(Environment environment, RSSManagementRepository config) {
-        super(environment, config);
-    }
+	private RSSInstanceDAO rssInstanceDAO;
 
-    public Database addDatabase(Database database) throws RSSManagerException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        AtomicBoolean isInTx = new AtomicBoolean(false);
-        String qualifiedDatabaseName = database.getName().trim();
-        RSSManagerUtil.checkIfParameterSecured(qualifiedDatabaseName);
-        RSSInstance rssInstance = null;
+	public PostgresUserDefinedRSSManager(Environment environment) {
+		super(environment);
+		rssInstanceDAO = getEnvironmentManagementDAO().getRSSInstanceDAO();
+	}
 
-        try {
-            rssInstance = this.getNextAllocationNode();
-            if (rssInstance == null) {
-                throw new EntityNotFoundException(
-                        "RSS instance " + database.getRssInstanceName() + " does not exist");
-            }
-            super.addDatabase(isInTx, database, rssInstance, qualifiedDatabaseName);
-            conn = getConnection(rssInstance.getName());
-            conn.setAutoCommit(false);
-            String sql = "CREATE DATABASE " + qualifiedDatabaseName;
-            stmt = conn.prepareStatement(sql);
+	/**
+	 * @see RSSManager#addDatabase(org.wso2.carbon.rssmanager.core.dto.restricted.Database)
+	 */
+	public Database addDatabase(Database database) throws RSSManagerException {
+		Connection conn = null;
+		PreparedStatement addDBNativeQuery = null;
+		final String qualifiedDatabaseName = database.getName().trim();
+		int tenantId = RSSManagerUtil.getTenantId();
+		boolean isExist = false;
+		try {
+			isExist = super.isDatabaseExist(database.getRssInstanceName(), qualifiedDatabaseName,
+			                                        RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+		} catch (RSSDatabaseConnectionException e) {
+			String msg = "Database server error at adding database " + database.getName() + e.getMessage();
+			handleException(msg, e);
+		}
+		if (isExist) {
+			String msg = "Database '" + qualifiedDatabaseName + "' already exists";
+			log.error(msg);
+			throw new RSSManagerException(msg);
+		}
 
-			/*
-             * Actual database creation is committed just before committing the
-			 * meta info into RSS
-			 * management repository. This is done as it is not possible to
-			 * control CREATE, DROP,
-			 * ALTER operations within a JTA transaction since those operations
-			 * are committed
-			 * implicitly
-			 */
-            stmt.execute();
-            disAllowedConnect(conn, qualifiedDatabaseName, "PUBLIC");
-            if (isInTx.get()) {
-                this.getEntityManager().endJPATransaction();
-            }
-            conn.commit();
-            return database;
-        } catch (SQLException e) {
-            if (isInTx.get()) {
-                this.getEntityManager().rollbackJPATransaction();
-            }
-            throw new RSSManagerException(
-                    "Error while creating the database '" + qualifiedDatabaseName + "' on RSS instance '" + rssInstance.getName() + "' : " + e.getMessage(),
-                    e);
-        } catch (RSSDAOException e) {
-            if (isInTx.get()) {
-                this.getEntityManager().rollbackJPATransaction();
-            }
-            try {
-                conn.rollback();
-            } catch (Exception e1) {
-                log.error(e1);
-            }
-            throw new RSSManagerException(
-                    "Error while creating the database '" + qualifiedDatabaseName + "' on RSS instance '" + rssInstance.getName() + "' : " + e.getMessage(),
-                    e);
-        } finally {
-            RSSManagerUtil.cleanupResources(null, stmt, conn);
-            closeJPASession();
-        }
-    }
+		RSSInstance rssInstance = null;
+		try {
+			rssInstance = rssInstanceDAO.getRSSInstance(this.getEnvironmentName(), database.getRssInstanceName(), tenantId);
+			if (rssInstance == null) {
+				String msg = "RSS instance " + database.getRssInstanceName() + " does not exist";
+				log.error(msg);
+				throw new RSSManagerException(msg);
+			}
 
-    public void removeDatabase(String rssInstanceName, String databaseName) throws RSSManagerException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        AtomicBoolean isInTx = new AtomicBoolean(false);
-        PreparedStatement delStmt = null;
-        RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
-        if (rssInstance == null) {
-            throw new EntityNotFoundException(
-                    "Unresolvable RSS Instance. Database " + databaseName + " does not exist");
-        }
+            /* Validating database name to avoid any possible SQL injection attack */
+			RSSManagerUtil.checkIfParameterSecured(qualifiedDatabaseName);
+			conn = this.getConnection(rssInstance.getName());
+			String addDBQuery = "CREATE DATABASE " + qualifiedDatabaseName;
+			addDBNativeQuery = conn.prepareStatement(addDBQuery);
+			super.addDatabase(addDBNativeQuery, database, rssInstance, qualifiedDatabaseName);
+			disAllowedConnect(conn, qualifiedDatabaseName, "PUBLIC");
 
-        RSSManagerUtil.checkIfParameterSecured(databaseName);
-        try {
-            super.removeDatabase(isInTx, rssInstance.getName(), databaseName, rssInstance, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
-            conn = getConnection(rssInstance.getName());
-            conn.setAutoCommit(false);
-            String sql = "DROP DATABASE " + databaseName;
-            stmt = conn.prepareStatement(sql);
-			/*
-             * Actual database creation is committed just before committing the
-			 * meta info into RSS
-			 * management repository. This is done as it is not possible to
-			 * control CREATE, DROP,
-			 * ALTER operations within a JTA transaction since those operations
-			 * are committed
-			 * implicitly
-			 */
-            stmt.execute();
-            if (isInTx.get()) {
-                this.getEntityManager().endJPATransaction();
-            }
-            conn.commit();
-        } catch (SQLException e) {
-            if (isInTx.get()) {
-                this.getEntityManager().rollbackJPATransaction();
-            }
-            throw new RSSManagerException(
-                    "Error while dropping the database '" + databaseName + "' on RSS " + "instance '" + rssInstance.getName() + "' : " + e.getMessage(),
-                    e);
-        } catch (RSSDAOException e) {
-            if (isInTx.get()) {
-                this.getEntityManager().rollbackJPATransaction();
-            }
-            throw new RSSManagerException(
-                    "Error while dropping the database '" + databaseName + "' on RSS " + "instance '" + rssInstance.getName() + "' : " + e.getMessage(),
-                    e);
-        } finally {
-            RSSManagerUtil.cleanupResources(null, delStmt, null);
-            RSSManagerUtil.cleanupResources(null, stmt, conn);
-            closeJPASession();
-        }
-    }
+		} catch (Exception e) {
+			String msg = "Error while creating the database '" + qualifiedDatabaseName +
+			             "' on RSS instance '" + rssInstance.getName() + "' : " + e.getMessage();
+			handleException(msg, e);
+		} finally {
+			RSSManagerUtil.cleanupResources(null, addDBNativeQuery, conn);
+		}
+		return database;
+	}
 
-    public DatabaseUser addDatabaseUser(DatabaseUser user) throws RSSManagerException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        String qualifiedUsername = null;
-        AtomicBoolean isInTx = new AtomicBoolean(false);
-        Map<String,String> mapUserwithInstance = new HashMap<String,String>();
-        qualifiedUsername = user.getName().trim();
-        user.setName(qualifiedUsername);
-        user.setRssInstanceName(user.getRssInstanceName());
-        user.setType(RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
-        RSSManagerUtil.checkIfParameterSecured(qualifiedUsername);
-        int tenantId = RSSManagerUtil.getTenantId();
-        try {
-			/* Committing distributed transaction */
-            RSSInstance rssInstance = this.getEnvironmentManagementDAO().getRSSInstanceDAO().getRSSInstance(this.getEnvironmentName(),
-                    user.getRssInstanceName(),tenantId);
-            super.addDatabaseUser(isInTx, user, qualifiedUsername, rssInstance);
+	/**
+	 * @see RSSManager#removeDatabase(String, String)
+	 */
+	public void removeDatabase(String rssInstanceName,
+	                           String databaseName) throws RSSManagerException {
+		Connection conn = null;
+		PreparedStatement nativeRemoveDBStatement = null;
+		RSSInstance rssInstance = null;
+		try {
+			rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+		} catch (RSSDatabaseConnectionException e) {
+			String msg = "Database server error at removing database " + databaseName + e.getMessage();
+			handleException(msg, e);
+		}
+		if (rssInstance == null) {
+			String msg = "Unresolvable RSS Instance. Database " + databaseName + " does not exist";
+			log.error(msg);
+			throw new RSSManagerException(msg);
+		}
+		try {
+		    /* Validating database name to avoid any possible SQL injection attack */
+			RSSManagerUtil.checkIfParameterSecured(databaseName);
+			conn = getConnection(rssInstance.getName());
+			String removeDBQuery = "DROP DATABASE " + databaseName;
+			nativeRemoveDBStatement = conn.prepareStatement(removeDBQuery);
+			super.removeDatabase(nativeRemoveDBStatement, rssInstance.getName(), databaseName, rssInstance,
+			                     RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+		} catch (Exception e) {
+			String msg = "Error while dropping the database '" + databaseName +
+			             "' on RSS " + "instance '" + rssInstance.getName() + "' : " +
+			             e.getMessage();
+			handleException(msg, e);
+		} finally {
+			RSSManagerUtil.cleanupResources(null, nativeRemoveDBStatement, conn);
+		}
+	}
 
-            try {
-                    conn = getConnection(rssInstance.getName());
-                    conn.setAutoCommit(true);
-                    boolean hasPassword = (!StringUtils.isEmpty(user.getPassword()));
-                    StringBuilder sql = new StringBuilder(" CREATE USER " + qualifiedUsername);
-                    if (hasPassword) {
-                        RSSManagerUtil.checkIfParameterSecured(user.getPassword());
-                        sql.append(" WITH PASSWORD '").append(user.getPassword()).append("'");
-                    }
-                    stmt = conn.prepareStatement(sql.toString());
-    					/*
-    					 * Actual database user creation is committed just before
-    					 * committing the meta
-    					 * info into RSS management repository. This is done as it
-    					 * is not possible to
-    					 * control CREATE, DROP, ALTER, etc operations within a JTA
-    					 * transaction since
-    					 * those operations are committed implicitly
-    					 */
-                    stmt.execute();
-                    mapUserwithInstance.put(rssInstance.getName(), qualifiedUsername);
-                } finally {
-                    RSSManagerUtil.cleanupResources(null, stmt, conn);
-                }
-            if (isInTx.get()) {
-                this.getEntityManager().endJPATransaction();
-            }
-            return user;
-        } catch (Exception e) {
-            if (isInTx.get()) {
-                this.getEntityManager().rollbackJPATransaction();
-            }
-            if (e instanceof EntityAlreadyExistsException) {
-                handleException(e.getMessage(), e);
-            }
-            String msg = "Error while creating the database user '" +
-                    user.getName() + "' on RSS instance '" + user.getRssInstanceName() +
-                    "' : " + e.getMessage();
-            if(!mapUserwithInstance.isEmpty()){
-                dropAddedUsers(mapUserwithInstance);
-            }
-            handleException(msg, e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    log.error(e);
-                }
-            }
-            closeJPASession();
-            RSSManagerUtil.cleanupResources(null, stmt, conn);
-        }
-        return user;
-    }
+	/**
+	 * @see RSSManager#addDatabaseUser(org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser)
+	 */
+	public DatabaseUser addDatabaseUser(DatabaseUser user) throws RSSManagerException {
+		Connection conn = null;
+		PreparedStatement addDatabaseUserStmt = null;
+		/* Validating user information to avoid any possible SQL injection attacks */
+		RSSManagerUtil.validateDatabaseUserInfo(user);
+		String qualifiedUsername = user.getUsername().trim();
+		int tenantId = RSSManagerUtil.getTenantId();
+		try {
+			RSSInstance rssInstance = this.getEnvironmentManagementDAO().getRSSInstanceDAO().getRSSInstance(this.getEnvironmentName(),
+			                                                                                                user.getRssInstanceName(), tenantId);
+			try {
+				conn = getConnection(rssInstance.getName());
+				boolean hasPassword = (!StringUtils.isEmpty(user.getPassword()));
+				StringBuilder addDatabaseUserQuery = new StringBuilder(" CREATE USER " + qualifiedUsername);
+				if (hasPassword) {
+					RSSManagerUtil.checkIfParameterSecured(user.getPassword());
+					addDatabaseUserQuery.append(" WITH PASSWORD '").append(user.getPassword()).append("'");
+				}
+				addDatabaseUserStmt = conn.prepareStatement(addDatabaseUserQuery.toString());
+				super.addDatabaseUser(addDatabaseUserStmt, user, qualifiedUsername, rssInstance);
+			} finally {
+				RSSManagerUtil.cleanupResources(null, addDatabaseUserStmt, conn);
+			}
+		} catch (Exception e) {
+			String msg = "Error occurred while creating the database " + "user '" + qualifiedUsername;
+			handleException(msg, e);
+		} finally {
+			RSSManagerUtil.cleanupResources(null, addDatabaseUserStmt, conn);
+		}
+		return user;
+	}
 
-    private void dropAddedUsers(Map<String,String> mapUserwithInstance){
-        Set<Map.Entry<String, String>> entries = mapUserwithInstance.entrySet();
-        for(Map.Entry<String, String> entry : entries){
-            String userName = entry.getValue();
-            String instanceName = entry.getKey();
-            Connection conn = null;
-            PreparedStatement dropOwnedStmt = null;
-            PreparedStatement dropUserStmt = null;
-            try{
-                conn = getConnection(instanceName);
-                conn.setAutoCommit(true);
-                String sql = "drop owned by " + userName;
-                dropOwnedStmt = conn.prepareStatement(sql);
-                dropUserStmt = conn.prepareStatement(" drop user " + userName);
-                dropOwnedStmt.execute();
-                dropUserStmt.execute();
-            }catch(Exception ex){
-                log.error(ex);
-            } finally {
-                RSSManagerUtil.cleanupResources(null, dropOwnedStmt, null);
-                RSSManagerUtil.cleanupResources(null, dropUserStmt, conn);
-            }
+	/**
+	 * @see RSSManager#removeDatabaseUser(String, String)
+	 */
+	public void removeDatabaseUser(String type, String username) throws RSSManagerException {
+		Connection conn = null;
+		PreparedStatement dropOwnedStmt = null;
+		PreparedStatement dropUserStmt = null;
+		int tenantId = RSSManagerUtil.getTenantId();
+		try {
+			String rssInstanceName = getDatabaseUserDAO().resolveRSSInstanceNameByUser(this.getEnvironmentName(),
+			                                                                           RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED,
+			                                                                           username, tenantId);
+			conn = getConnection(rssInstanceName);
+			String sql = "drop owned by " + username;
+			dropOwnedStmt = conn.prepareStatement(sql);
+			dropUserStmt = conn.prepareStatement(" drop user " + username);
+			dropOwnedStmt.execute();
+			dropUserStmt.execute();
+			super.removeDatabaseUser(null, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+		} catch (Exception e) {
+			String msg = "Error while dropping the database user '" + username +
+			             "' on RSS instances : " + e.getMessage();
+			handleException(msg, e);
+		} finally {
+			RSSManagerUtil.cleanupResources(null, dropOwnedStmt, null);
+			RSSManagerUtil.cleanupResources(null, dropUserStmt, conn);
+		}
+	}
 
-        }
-    }
-
-    public void removeDatabaseUser(String type, String username) throws RSSManagerException {
-        Connection conn = null;
-        PreparedStatement dropOwnedStmt = null;
-        PreparedStatement dropUserStmt = null;
-        AtomicBoolean isInTx = new AtomicBoolean(false);
-			/* committing the distributed transaction */
-
-        RSSManagerUtil.checkIfParameterSecured(username);
-        try {
-            super.removeDatabaseUser(isInTx, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
-			/* committing the distributed transaction */
-
-            for (RSSInstance rssInstance: getEnvironmentManagementDAO().getRSSInstanceDAO().getSystemRSSInstances(MultitenantConstants.SUPER_TENANT_ID)) {
-                try {
-                    conn = getConnection(rssInstance.getName());
-                    conn.setAutoCommit(true);
-                    String sql = "drop owned by " + username;
-                    dropOwnedStmt = conn.prepareStatement(sql);
-                    dropUserStmt = conn.prepareStatement(" drop user " + username);
-
-                /*
-                 * Actual database creation is committed just before
-                 * committing the meta info into RSS
-                 * management repository. This is done as it is not possible
-                 * to control CREATE, DROP,
-                 * ALTER operations within a JTA transaction since those
-                 * operations are committed
-                 * implicitly
-                 */
-                    dropOwnedStmt.execute();
-                    dropUserStmt.execute();
-
-                } finally {
-                    RSSManagerUtil.cleanupResources(null, dropOwnedStmt, null);
-                    RSSManagerUtil.cleanupResources(null, dropUserStmt, conn);
-                }
-            }
-            if (isInTx.get()) {
-                this.getEntityManager().endJPATransaction();
-            }
-        } catch (SQLException e) {
-            if (isInTx.get()) {
-                this.getEntityManager().rollbackJPATransaction();
-            }
-            String msg = "Error while dropping the database user '" + username + "' on RSS instances : " + e.getMessage();
-            throw new RSSManagerException(msg, e);
-        } catch (RSSManagerException e) {
-            if (isInTx.get()) {
-                this.getEntityManager().rollbackJPATransaction();
-            }
-            throw e;
-        } catch (Exception e) {
-            if (isInTx.get()) {
-                this.getEntityManager().rollbackJPATransaction();
-            }
-            throw new RSSManagerException(e);
-        } finally {
-            RSSManagerUtil.cleanupResources(null, dropOwnedStmt, conn);
-            closeJPASession();
-        }
-    }
-
-    public void updateDatabaseUserPrivileges(DatabasePrivilegeSet privileges, DatabaseUser user,
-                                             String databaseName) throws RSSManagerException {
-        Connection dbConn = null;
-        Connection conn = null;
-        AtomicBoolean isInTx = new AtomicBoolean(false);
-
-        try {
-            if (privileges == null) {
-                throw new RSSManagerException("Database privileges-set is null");
-            }
-            PostgresPrivilegeSet postgresPrivs = new PostgresPrivilegeSet();
-            createPostgresPrivilegeSet(postgresPrivs, privileges);
-            final int tenantId = RSSManagerUtil.getTenantId();
-            String rssInstanceName = this.getRSSDAO().getDatabaseDAO().resolveRSSInstanceByDatabase(
-                    this.getEnvironmentName(), databaseName,
-                    RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED, tenantId);
-            RSSInstance rssInstance = this.getEnvironmentManagementDAO().getRSSInstanceDAO().getRSSInstance(this.getEnvironmentName(), rssInstanceName, tenantId);
-            if (rssInstance == null) {
-                String msg = "Database '" + databaseName + "' does not exist " + "in RSS instance '" + user.getRssInstanceName() + "'";
-                throw new EntityNotFoundException(msg);
-            }
-
-            user.setRssInstanceName(rssInstance.getName());
-            UserDatabasePrivilege entity = this.getRSSDAO()
-                    .getUserPrivilegesDAO()
-                    .getUserDatabasePrivileges(getEnvironmentName(),
-                            rssInstanceName, databaseName,
-                            user.getUsername(), tenantId);
-            RSSManagerUtil.createDatabasePrivilege(privileges, entity);
-            boolean inTx = getEntityManager().beginTransaction();
-            isInTx.set(inTx);
-
-            this.getRSSDAO().getUserPrivilegesDAO().merge(entity);
-            dbConn = getConnection(rssInstance.getName(), databaseName);
-            dbConn.setAutoCommit(true);
-            conn = getConnection(rssInstance.getName());
-            conn.setAutoCommit(true);
-            revokeAllPrivileges(conn, databaseName, user.getName());
-            composePreparedStatement(dbConn, databaseName, user.getName(), postgresPrivs);
-            if (isInTx.get()) {
-                this.getEntityManager().endJPATransaction();
-            }
-        } catch (SQLException e) {
-            if (isInTx.get()) {
-                this.getEntityManager().rollbackJPATransaction();
-            }
-            String msg = "Error occurred while editing privileges  : " + e.getMessage();
-            throw new RSSManagerException(msg, e);
-        } catch (RSSDAOException e) {
-            if (isInTx.get()) {
-                this.getEntityManager().rollbackJPATransaction();
-            }
-            throw new RSSManagerException(e);
-        } finally {
-            RSSManagerUtil.cleanupResources(null, null, conn);
-            RSSManagerUtil.cleanupResources(null, null, dbConn);
-            closeJPASession();
-        }
-    }
+	/**
+	 * @see RSSManager#updateDatabaseUserPrivileges(org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet, DatabaseUser, String)
+	 */
+	public void updateDatabaseUserPrivileges(DatabasePrivilegeSet privileges, DatabaseUser user,
+	                                         String databaseName) throws RSSManagerException {
+		Connection databaseConn = null;
+		Connection conn = null;
+		try {
+			if (privileges == null) {
+				throw new RSSManagerException("Database privileges-set is null");
+			}
+			final int tenantId = RSSManagerUtil.getTenantId();
+			PostgresPrivilegeSet postgresPrivs = new PostgresPrivilegeSet();
+			createPostgresPrivilegeSet(postgresPrivs, privileges);
+			String rssInstanceName = this.getRSSDAO().getDatabaseDAO().resolveRSSInstanceNameByDatabase(
+					this.getEnvironmentName(), databaseName,
+					RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED, tenantId);
+			RSSInstance rssInstance = this.getEnvironment().getRSSInstance(rssInstanceName);
+			if (rssInstance == null) {
+				String msg = "Database '" + databaseName + "' does not exist " +
+				             "in RSS instance '" + user.getRssInstanceName() + "'";
+				throw new RSSManagerException(msg);
+			}
+			user.setRssInstanceName(rssInstance.getName());
+			databaseConn = getConnection(rssInstance.getName(), databaseName);
+			conn = getConnection(rssInstance.getName());
+			revokeAllPrivileges(conn, databaseName, user.getName());
+			composePreparedStatement(databaseConn, databaseName, user.getName(), postgresPrivs);
+			super.updateDatabaseUserPrivileges(null, rssInstanceName, databaseName, privileges, user.getUsername(),
+			                                   RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+		} catch (Exception e) {
+			String msg = "Error occurred while updating database user privileges: " + e.getMessage();
+			handleException(msg, e);
+		} finally {
+			RSSManagerUtil.cleanupResources(null, null, conn);
+		}
+	}
 
     private void createPostgresPrivilegeSet(PostgresPrivilegeSet postgresPrivs,
                                             DatabasePrivilegeSet privileges) {
@@ -417,114 +279,69 @@ public class PostgresUserDefinedRSSManager extends UserDefinedRSSManager {
         }
     }
 
-    public void attachUser(UserDatabaseEntry entry, DatabasePrivilegeSet privileges)
-            throws RSSManagerException {
-        Connection conn = null;
-        Connection dbConn = null;
-        AtomicBoolean isInTx = new AtomicBoolean(false);
+	/**
+	 * @see RSSManager#attachUser(org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry, DatabasePrivilegeSet)
+	 */
+	public void attachUser(UserDatabaseEntry entry,
+	                       DatabasePrivilegeSet privileges) throws RSSManagerException {
+		Connection conn = null;
+		Connection databaseConn = null;
+		String databaseName = entry.getDatabaseName();
+		String username = entry.getUsername();
+		//resolve rss instance by database
+		RSSInstance rssInstance = null;
+		try {
+			rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+		} catch (RSSDatabaseConnectionException e) {
+			String msg = "Database server error at attach database user" + username + e.getMessage();
+			handleException(msg, e);
+		}
+		try {
+			conn = this.getConnection(rssInstance.getName());
+			if (privileges == null) {
+				privileges = entry.getPrivileges();
+			}
+			conn = getConnection(rssInstance.getName());
+			databaseConn = getConnection(rssInstance.getName(), databaseName);
+			grantConnect(conn, databaseName, username);
+			PostgresPrivilegeSet postgresPrivs = new PostgresPrivilegeSet();
+			createPostgresPrivilegeSet(postgresPrivs, privileges);
+			this.composePreparedStatement(databaseConn, databaseName, username, postgresPrivs);
+			super.attachUser(null, entry, privileges, rssInstance);
+		} catch (Exception e) {
+			String msg = "Error occurred while attaching the database user '" + username + "' to " +
+			             "the database '" + databaseName + "' : " + e.getMessage();
+			handleException(msg, e);
+		} finally {
+			RSSManagerUtil.cleanupResources(null, null, conn);
+		}
+	}
 
-        String rssInstanceName = entry.getRssInstanceName();
-        String databaseName = entry.getDatabaseName();
-        String username = entry.getUsername();
+	/**
+	 * @see RSSManager#detachUser(org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry)
+	 */
+	public void detachUser(UserDatabaseEntry entry) throws RSSManagerException {
+		Connection conn = null;
+		String databaseName = entry.getDatabaseName();
+		String username = entry.getUsername();
 
-        RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
-        if (rssInstance == null) {
-            throw new EntityNotFoundException(
-                    "Database '" + databaseName + "' does not exist in " + "RSS instance '" + rssInstanceName + "'");
-        }
-
-        try {
-
-            super.attachUser(isInTx, entry, privileges, rssInstance);
-            conn = getConnection(rssInstance.getName());
-            conn.setAutoCommit(true);
-            dbConn = getConnection(rssInstance.getName(), databaseName);
-            dbConn.setAutoCommit(true);
-
-			/*
-			 * Actual database user attachment is committed just before
-			 * committing the meta info into RSS
-			 * management repository. This is done as it is not possible to
-			 * control CREATE, DROP,
-			 * ALTER operations within a JTA transaction since those operations
-			 * are committed
-			 * implicitly
-			 */
-            grantConnect(conn, databaseName, username);
-
-            PostgresPrivilegeSet postgresPrivs = new PostgresPrivilegeSet();
-            createPostgresPrivilegeSet(postgresPrivs, privileges);
-            this.composePreparedStatement(dbConn, databaseName, username, postgresPrivs);
-
-            if (isInTx.get()) {
-                this.getEntityManager().endJPATransaction();
-            }
-
-        } catch (SQLException e) {
-            if (isInTx.get()) {
-                this.getEntityManager().rollbackJPATransaction();
-            }
-            String msg = "Error occurred while attaching the database user '" + username + "' to " + "the database '" + databaseName + "' : " + e.getMessage();
-            throw new RSSManagerException(msg, e);
-        } catch (RSSDAOException e) {
-            if (isInTx.get()) {
-                this.getEntityManager().rollbackJPATransaction();
-            }
-            String msg = "Error occurred while adding metadata into the RSS Management " + "Repository on user attachment";
-            throw new RSSManagerException(msg, e);
-        } finally {
-            RSSManagerUtil.cleanupResources(null, null, conn);
-            RSSManagerUtil.cleanupResources(null, null, dbConn);
-            closeJPASession();
-        }
-    }
-
-    public void detachUser(UserDatabaseEntry entry) throws RSSManagerException {
-        Connection conn = null;
-        AtomicBoolean isInTx = new AtomicBoolean(false);
-        String rssInstanceName = entry.getRssInstanceName();
-        String databaseName = entry.getDatabaseName();
-        String username = entry.getUsername();
-
-        RSSManagerUtil.checkIfParameterSecured(username);
-        RSSManagerUtil.checkIfParameterSecured(databaseName);
-
-        try {
-            RSSInstance rssInstance = super.detachUser(isInTx, entry, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
-			/* Committing the transaction */
-
-            conn = getConnection(rssInstance.getName());
-            conn.setAutoCommit(true);
-			/*
-			 * Actual database user detachment is committed just before
-			 * committing the meta info
-			 * into RSS management repository. This is done as it is not
-			 * possible to control CREATE,
-			 * DROP, ALTER operations within a JTA transaction since those
-			 * operations are committed
-			 * implicitly
-			 */
-            revokeAllPrivileges(conn, databaseName, username);
-            disAllowedConnect(conn, databaseName, username);
-            if (isInTx.get()) {
-                this.getEntityManager().endJPATransaction();
-            }
-        } catch (SQLException e) {
-            if (isInTx.get()) {
-                this.getEntityManager().rollbackJPATransaction();
-            }
-            String msg = "Error occurred while attaching the database user '" + username + "' to " + "the database '" + databaseName + "' : " + e.getMessage();
-            throw new RSSManagerException(msg, e);
-        } catch (RSSDAOException e) {
-            if (isInTx.get()) {
-                this.getEntityManager().rollbackJPATransaction();
-            }
-            throw new RSSManagerException(e);
-        } finally {
-            RSSManagerUtil.cleanupResources(null, null, conn);
-            closeJPASession();
-        }
-    }
+		try {
+			int tenantId = RSSManagerUtil.getTenantId();
+			String rssInstanceName = getDatabaseDAO().resolveRSSInstanceNameByDatabase(this.getEnvironmentName(),
+			                                                                           entry.getDatabaseName(), entry.getType(), tenantId);
+			conn = getConnection(rssInstanceName);
+			revokeAllPrivileges(conn, databaseName, username);
+			disAllowedConnect(conn, databaseName, username);
+			super.detachUser(null, entry, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+		} catch (Exception e) {
+			String msg = "Error occurred while attaching the database user '" +
+			             entry.getUsername() + "' to " + "the database '" + entry.getDatabaseName() +
+			             "': " + e.getMessage();
+			handleException(msg, e);
+		} finally {
+			RSSManagerUtil.cleanupResources(null, null, conn);
+		}
+	}
 
     private void composePreparedStatement(Connection con, String databaseName, String username,
                                           PostgresPrivilegeSet privileges) throws SQLException,
@@ -542,18 +359,14 @@ public class PostgresUserDefinedRSSManager extends UserDefinedRSSManager {
         composePreparedStatement(con, databaseName, username, privileges, PrivilegeTypes.TABLE, grantEnable);
         composePreparedStatement(con, databaseName, username, privileges, PrivilegeTypes.FUNCTION,
                 grantEnable);
-        // composePreparedStatement(con, databaseName, username, privileges,
-        // PRIVILEGESTYPE.LANGUAGE,
-        // grantEnable);
-        // composePreparedStatement(con, databaseName, username, privileges,
-        // PRIVILEGESTYPE.LARGE_OBJECT, grantEnable);
         composePreparedStatement(con, databaseName, username, privileges, PrivilegeTypes.SEQUENCE,
-                grantEnable);
-        // composePreparedStatement(con, databaseName, username, privileges,
-        // PRIVILEGESTYPE.TABLESPACE, grantEnable);
+                                 grantEnable);
     }
 
-    private void composePreparedStatement(Connection con, String databaseName, String username,
+	/**
+	 * Compost prepared statement with privileges
+	 */
+	private void composePreparedStatement(Connection con, String databaseName, String username,
                                           PostgresPrivilegeSet privileges, PrivilegeTypes type,
                                           boolean grantEnable) throws SQLException, RSSManagerException {
 
@@ -577,10 +390,13 @@ public class PostgresUserDefinedRSSManager extends UserDefinedRSSManager {
         }
         PreparedStatement stmt = con.prepareStatement(sql.toString());
         stmt.executeUpdate();
-        stmt.close();
+	    stmt.close();
     }
 
-    private void grantConnect(Connection con, String databaseName, String username) throws SQLException,
+	/**
+	 * Allow connect to specified users
+	 */
+	private void grantConnect(Connection con, String databaseName, String username) throws SQLException,
             RSSManagerException {
         RSSManagerUtil.checkIfParameterSecured(databaseName);
         RSSManagerUtil.checkIfParameterSecured(username);
@@ -595,10 +411,13 @@ public class PostgresUserDefinedRSSManager extends UserDefinedRSSManager {
         RSSManagerUtil.checkIfParameterSecured(username);
         PreparedStatement st = con.prepareStatement(" GRANT USAGE ON SCHEMA public TO " + username);
         st.executeUpdate();
-        st.close();
+	    st.close();
     }
 
-    private String createPrivilegesString(final PostgresPrivilegeSet privileges, PrivilegeTypes type) {
+	/**
+	 * Create POSTGRES privilege string
+	 */
+	private String createPrivilegesString(final PostgresPrivilegeSet privileges, PrivilegeTypes type) {
         List<Privileges> privList = new ArrayList<Privileges>();
 
         switch (type) {
@@ -647,31 +466,6 @@ public class PostgresUserDefinedRSSManager extends UserDefinedRSSManager {
                 addToPrivilegesList(privList, Privileges.CREATE, privileges.getCreatePriv());
                 break;
         }
-
-        // addToPrivilegesList(privList,Privileges.SELECT,
-        // privileges.getDropPriv());
-        // addToPrivilegesList(privList,Privileges.SELECT,
-        // privileges.getGrantPriv());
-
-        // addToPrivilegesList(privList,Privileges.SELECT,
-        // privileges.getIndexPriv());
-        // addToPrivilegesList(privList,Privileges.SELECT,
-        // privileges.getAlterPriv());
-
-        // addToPrivilegesList(privList,Privileges.SELECT,
-        // privileges.getLockTablesPriv());
-        // addToPrivilegesList(privList,Privileges.SELECT,
-        // privileges.getCreateViewPriv());
-        // addToPrivilegesList(privList,Privileges.SELECT,
-        // privileges.getShowViewPriv());
-        // addToPrivilegesList(privList,Privileges.SELECT,
-        // privileges.getCreateRoutinePriv());
-        // addToPrivilegesList(privList,Privileges.SELECT,
-        // privileges.getAlterRoutinePriv());
-
-        // addToPrivilegesList(privList,Privileges.SELECT,
-        // privileges.getEventPriv());
-
         if (privList.isEmpty()) {
             return null;
         }
@@ -690,70 +484,133 @@ public class PostgresUserDefinedRSSManager extends UserDefinedRSSManager {
 
     private void addToPrivilegesList(final List<Privileges> privList, Privileges privEnum, String priv) {
         if ("Y".equalsIgnoreCase(priv)) {
-            privList.add(privEnum);
+	        privList.add(privEnum);
         }
     }
 
-    private void disAllowedConnect(Connection con, String databaseName, String userName) throws SQLException,
-            RSSManagerException {
+	/**
+	 * Revoke connection to the users
+	 *
+	 * @param conn         the connection
+	 * @param databaseName name of the database
+	 * @param userName     of database user
+	 * @throws SQLException        if error occurred while execution database operation
+	 * @throws RSSManagerException if parameter is not secured
+	 */
+	private void disAllowedConnect(Connection conn, String databaseName, String userName) throws SQLException,
+	                                                                                             RSSManagerException {
         RSSManagerUtil.checkIfParameterSecured(databaseName);
-        RSSManagerUtil.checkIfParameterSecured(userName);
-        PreparedStatement st = con.prepareStatement("REVOKE connect ON DATABASE " + databaseName + " FROM " + userName);
-        st.executeUpdate();
-        st.close();
-    }
+		RSSManagerUtil.checkIfParameterSecured(userName);
+		PreparedStatement st = conn.prepareStatement("REVOKE connect ON DATABASE " + databaseName + " FROM " + userName);
+		st.executeUpdate();
+		st.close();
+	}
 
-    private void revokeAllPrivileges(Connection con, String databaseName, String userName)
-            throws SQLException,
+	/**
+	 * Revoke all the privileges
+	 *
+	 * @param conn         the connection
+	 * @param databaseName name of the database
+	 * @param userName     of database user
+	 * @throws SQLException        if error occurred while execution database operation
+	 * @throws RSSManagerException if parameter is not secured
+	 */
+	private void revokeAllPrivileges(Connection conn, String databaseName, String userName)
+			throws SQLException,
             RSSManagerException {
-        RSSManagerUtil.checkIfParameterSecured(databaseName);
-        RSSManagerUtil.checkIfParameterSecured(userName);
-        PreparedStatement st = con.prepareStatement("revoke all on database " + databaseName + " from " + userName);
-        st.executeUpdate();
-        st.close();
-    }
+		RSSManagerUtil.checkIfParameterSecured(databaseName);
+		RSSManagerUtil.checkIfParameterSecured(userName);
+		PreparedStatement st = conn.prepareStatement("revoke all on database " + databaseName + " from " + userName);
+		st.executeUpdate();
+		st.close();
+	}
 
-    private enum Privileges {
-        SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER, CREATE, CONNECT, TEMPORARY, EXECUTE,
-        USAGE, TEMP;
+	/**
+	 * @see RSSManager#isDatabaseExist(String, String)
+	 */
+	public boolean isDatabaseExist(String rssInstanceName, String databaseName) throws RSSManagerException {
+		boolean isExist = false;
+		try {
+			isExist = super.isDatabaseExist(rssInstanceName, databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+		} catch (Exception ex) {
+			String msg = "Error while check whether database '" + databaseName +
+			             "' on RSS instance : " + rssInstanceName + "exists" + ex.getMessage();
+			handleException(msg, ex);
+		}
+		return isExist;
+	}
+
+	/**
+	 * @see RSSManager#getDatabase(String, String)
+	 */
+	public Database getDatabase(String rssInstanceName, String databaseName) throws RSSManagerException {
+		return super.getDatabase(RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED, databaseName);
+	}
+
+	/**
+	 * @see RSSManager#isDatabaseUserExist(String, String)
+	 */
+	public boolean isDatabaseUserExist(String rssInstanceName, String username) throws RSSManagerException {
+		boolean isExist = false;
+		try {
+			isExist = super.isDatabaseUserExist(rssInstanceName, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+		} catch (Exception ex) {
+			String msg = "Error while check whether user '" + username +
+			             "' on RSS instance : " + rssInstanceName + "exists" + ex.getMessage();
+			handleException(msg, ex);
+		}
+		return isExist;
+	}
+
+	@Override
+	public DatabaseUser editDatabaseUser(DatabaseUser databaseUser) {
+		//TODO implement edit database user in POSTGRES if applicable
+		return null;
+	}
+
+	private enum Privileges {
+		SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER, CREATE, CONNECT, TEMPORARY, EXECUTE,
+		USAGE, TEMP
     }
 
     private enum PrivilegeTypes {
-        TABLE, DATABASE, SEQUENCE, FUNCTION, LANGUAGE, LARGE_OBJECT, SCHEMA, TABLESPACE;
+        TABLE, DATABASE, SEQUENCE, FUNCTION, LANGUAGE, LARGE_OBJECT, SCHEMA, TABLESPACE
     }
 
-    public boolean isDatabaseExist(String rssInstanceName, String databaseName) throws RSSManagerException {
-        boolean isExist=false;
-        try {
-            isExist = super.isDatabaseExist(rssInstanceName,databaseName,RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
-        }catch(Exception ex){
-            if (ex instanceof EntityAlreadyExistsException) {
-                handleException(ex.getMessage(), ex);
-            }
-            String msg = "Error while check whether database '" + databaseName +
-                    "' on RSS instance : " +rssInstanceName+ "exists"+ ex.getMessage();
-            handleException(msg, ex);
-        }
-        return isExist;
-    }
-
-    public boolean isDatabaseUserExist(String rssInstanceName, String username) throws RSSManagerException {
-        boolean isExist=false;
-        try {
-            isExist = super.isDatabaseUserExist(rssInstanceName,username,RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
-        }catch(Exception ex){
-            if (ex instanceof EntityAlreadyExistsException) {
-                handleException(ex.getMessage(), ex);
-            }
-            String msg = "Error while check whether user '" + username +
-                    "' on RSS instance : " +rssInstanceName+ "exists"+ ex.getMessage();
-            handleException(msg, ex);
-        }
-        return isExist;
-    }
-
+    /**
+     * @see org.wso2.carbon.rssmanager.core.manager.AbstractRSSManager#createSnapshot
+     */
     @Override
-    public DatabaseUser editDatabaseUser(String environmentName, DatabaseUser databaseUser) {
-        return null;
+    public void createSnapshot(String databaseName) throws RSSManagerException {
+	    RSSInstance instance = null;
+	    try {
+		    instance = resolveRSSInstanceByDatabase(databaseName,
+		                                                        RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+	    } catch (RSSDatabaseConnectionException e) {
+		    String msg = "Database server error at creating database snapshot " + databaseName + e.getMessage();
+		    handleException(msg, e);
+	    }
+	    SSHInformationConfig sshInformation = RSSManagerUtil.getSSHInformationOfServerInstance(instance.getName());
+        SnapshotConfig snapshotConfig = RSSManagerUtil.getSnapshotConfigOfServerInstance(instance.getName());
+        SSHConnection sshConnection = new SSHConnection(sshInformation.getHost(),
+                                                        sshInformation.getPort(),
+                                                        sshInformation.getUsername(),
+                                                        sshInformation.getPrivateKeyPath(),
+                                                        sshInformation.getPassPhrase());
+        String command = RSSManagerConstants.Snapshots.MYSQL_DUMP_TOOL + RSSManagerConstants.SPACE +
+                         RSSManagerConstants.Snapshots.MYSQL_USERNAME_OPTION + RSSManagerConstants.SPACE +
+                         instance.getAdminUserName() + RSSManagerConstants.SPACE +
+                         RSSManagerConstants.Snapshots.MYSQL_PASSWORD_OPTION +
+                         instance.getAdminPassword() +
+                         databaseName + RSSManagerConstants.SPACE +
+                         RSSManagerConstants.Snapshots.MYSQL_OUTPUT_FILE_OPTION + RSSManagerConstants.SPACE +
+                         RSSManagerUtil.getSnapshotFilePath(snapshotConfig.getTargetDirectory(), databaseName);
+        try {
+            sshConnection.executeCommand(command);
+        } catch (Exception e) {
+            String errorMessage = "Error occurred while creating snapshot.";
+            log.error(errorMessage, e);
+            throw new RSSManagerException(errorMessage, e);
+        }
     }
 }

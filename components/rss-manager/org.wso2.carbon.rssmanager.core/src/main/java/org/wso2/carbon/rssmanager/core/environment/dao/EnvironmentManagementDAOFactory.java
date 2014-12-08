@@ -19,14 +19,19 @@
 
 package org.wso2.carbon.rssmanager.core.environment.dao;
 
-import org.wso2.carbon.rssmanager.core.dao.util.EntityManager;
 import org.wso2.carbon.rssmanager.core.environment.dao.impl.EnvironmentManagementDAOImpl;
 
+/**
+ * Environment management factory class
+ */
 public class EnvironmentManagementDAOFactory {
 
-    public static EnvironmentManagementDAO getEnvironmentManagementDAO(Object o,
-                                                                EntityManager entityManager) {
-        return new EnvironmentManagementDAOImpl(entityManager);
-    }
+	/**
+	 * Get environment management DAO implementation
+	 * @return EnvironmentManagementDAO
+	 */
+	public static EnvironmentManagementDAO getEnvironmentManagementDAO() {
+		return new EnvironmentManagementDAOImpl();
+	}
 
 }
