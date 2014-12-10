@@ -91,6 +91,7 @@ public class RSSManagerServiceComponent {
 				MultitenantConstants.SUPER_TENANT_ID);
 		PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(
 				MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
+		//TODO avoid setting admin username here
 		PrivilegedCarbonContext.getThreadLocalCarbonContext().setUsername("admin");
 		try {
             /* Registers RSSManager service */

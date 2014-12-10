@@ -26,6 +26,7 @@ import org.wso2.carbon.cassandra.mgt.CassandraMBeanLocator;
 import org.wso2.carbon.cassandra.mgt.CassandraServerManagementException;
 import org.wso2.carbon.cassandra.mgt.environment.EnvironmentManager;
 import org.wso2.carbon.context.CarbonContext;
+import org.wso2.carbon.identity.application.mgt.ApplicationManagementService;
 import org.wso2.carbon.user.api.UserRealm;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.service.RealmService;
@@ -54,6 +55,7 @@ public class CassandraAdminDataHolder {
 
     private ConfigurationContextService configCtxService;
     private ServerConfigurationService serverConfigurationService;
+    private ApplicationManagementService applicationManagementService;
 
     private EnvironmentManager environmentManager;
 
@@ -123,4 +125,11 @@ public class CassandraAdminDataHolder {
         return mbeanLocator;
     }
 
+    public ApplicationManagementService getApplicationManagementService() {
+        return applicationManagementService;
+    }
+
+    public void setApplicationManagementService(ApplicationManagementService applicationManagementService) {
+        this.applicationManagementService = applicationManagementService;
+    }
 }
