@@ -36,6 +36,8 @@ import org.apache.cassandra.thrift.TokenRange;
 import org.wso2.carbon.cassandra.common.auth.Action;
 import org.wso2.carbon.cassandra.common.auth.AuthUtils;
 import org.wso2.carbon.cassandra.dataaccess.ClusterInformation;
+import org.wso2.carbon.cassandra.mgt.authorize.CassandraAuthorizationUtils;
+import org.wso2.carbon.cassandra.mgt.authorize.CassandraAuthorizer;
 import org.wso2.carbon.cassandra.mgt.environment.Environment;
 import org.wso2.carbon.cassandra.mgt.environment.EnvironmentManager;
 import org.wso2.carbon.cassandra.mgt.internal.CassandraAdminDataHolder;
@@ -290,6 +292,9 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
      */
     public void addKeyspace(KeyspaceInformation keyspaceInformation)
             throws CassandraServerManagementException {
+        CassandraAuthorizer.isUserAuthorize(CassandraAuthorizationUtils.getPermissionResource(keyspaceInformation
+                .getEnvironmentName(), CassandraAuthorizationUtils.KEYSPACE_RESOURCE, CassandraAuthorizationUtils
+                .ActionResource.ADD.getAction()));
         CassandraManagementUtils.checkComponentInitializationStatus();
         CassandraManagementUtils.validateKeyspaceInformation(keyspaceInformation);
         String resourcePath = "/" + keyspaceInformation.getEnvironmentName() + "/" + keyspaceInformation.getName() + "/add";
@@ -306,6 +311,9 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
      */
     public void updatedKeyspace(KeyspaceInformation keyspaceInformation)
             throws CassandraServerManagementException {
+        CassandraAuthorizer.isUserAuthorize(CassandraAuthorizationUtils.getPermissionResource(keyspaceInformation
+                .getEnvironmentName(), CassandraAuthorizationUtils.KEYSPACE_RESOURCE, CassandraAuthorizationUtils
+                .ActionResource.EDIT.getAction()));
         CassandraManagementUtils.checkComponentInitializationStatus();
         CassandraManagementUtils.validateKeyspaceInformation(keyspaceInformation);
         String resourcePath = "/" + keyspaceInformation.getEnvironmentName() + "/" + keyspaceInformation.getName() + "/update";
@@ -384,6 +392,8 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
      */
     public boolean deleteKeyspace(String environment, String clusterName, String keyspaceName)
             throws CassandraServerManagementException {
+        CassandraAuthorizer.isUserAuthorize(CassandraAuthorizationUtils.getPermissionResource(environment,
+                CassandraAuthorizationUtils.KEYSPACE_RESOURCE, CassandraAuthorizationUtils.ActionResource.DELETE.getAction()));
         CassandraManagementUtils.checkComponentInitializationStatus();
         CassandraManagementUtils.validateKeyspace(keyspaceName);
         try {
@@ -408,6 +418,8 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
      */
     public void addColumnFamily(String environment, String clusterName, ColumnFamilyInformation columnFamilyInformation)
             throws CassandraServerManagementException {
+        CassandraAuthorizer.isUserAuthorize(CassandraAuthorizationUtils.getPermissionResource(environment,
+                CassandraAuthorizationUtils.COLUMN_FAMILY_RESOURCE, CassandraAuthorizationUtils.ActionResource.ADD.getAction()));
         CassandraManagementUtils.checkComponentInitializationStatus();
         addOrUpdateCF(environment, clusterName, true, columnFamilyInformation);
     }
@@ -421,6 +433,8 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
     public void updateColumnFamily(String environment, String clusterName,
                                    ColumnFamilyInformation columnFamilyInformation)
             throws CassandraServerManagementException {
+        CassandraAuthorizer.isUserAuthorize(CassandraAuthorizationUtils.getPermissionResource(environment,
+                CassandraAuthorizationUtils.COLUMN_FAMILY_RESOURCE, CassandraAuthorizationUtils.ActionResource.EDIT.getAction()));
         CassandraManagementUtils.checkComponentInitializationStatus();
         addOrUpdateCF(environment, clusterName, false, columnFamilyInformation);
     }
@@ -436,6 +450,8 @@ public class CassandraKeyspaceAdmin extends AbstractAdmin {
     public boolean deleteColumnFamily(String environment, String clusterName, String keyspaceName,
                                       String columnFamilyName)
             throws CassandraServerManagementException {
+        CassandraAuthorizer.isUserAuthorize(CassandraAuthorizationUtils.getPermissionResource(environment,
+                CassandraAuthorizationUtils.COLUMN_FAMILY_RESOURCE, CassandraAuthorizationUtils.ActionResource.DELETE.getAction()));
         CassandraManagementUtils.checkComponentInitializationStatus();
         CassandraManagementUtils.validateKeyspace(keyspaceName);
         CassandraManagementUtils.validateCF(columnFamilyName);
