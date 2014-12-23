@@ -35,16 +35,11 @@
     <description>This feature contains the bundles required for Cassandra client</description>
 
     <dependencies>
-        <dependency>
-            <groupId>org.apache.cassandra.wso2</groupId>
-            <artifactId>apache-cassandra</artifactId>
-            <version>1.2.13.wso2v5</version>
-        </dependency>
 
 	<dependency>
 	    <groupId>io.netty</groupId>
 	    <artifactId>netty</artifactId>
-	    <version>3.7.0.Final</version>
+	    <version>3.9.0.Final</version>
 	</dependency>
 
 	<dependency>
@@ -56,13 +51,13 @@
         <dependency>
 	    <groupId>com.google.guava</groupId>
 	    <artifactId>guava</artifactId>
-	    <version>16.0.1</version>
+	    <version>14.0.1</version>
         </dependency>
 
         <dependency>
-            <groupId>com.datastax.cassandra.wso2</groupId>
-            <artifactId>cql-driver</artifactId>
-            <version>1.0.8.wso2v1</version>
+            <groupId>com.datastax.cassandra</groupId>
+            <artifactId>cassandra-driver-core</artifactId>
+            <version>2.1.3</version>
         </dependency>
 
         <dependency>
@@ -100,15 +95,16 @@
         </dependency>
 
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-core-asl</artifactId>
+            <groupId>com.codahale.metrics</groupId>
+            <artifactId>metrics-core</artifactId>
+            <version>3.0.2</version>
         </dependency>
 
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
+            <groupId>org.apache.cassandra.wso2</groupId>
+            <artifactId>cassandra-thrift</artifactId>
+            <version>1.2.13.wso2v4</version>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -134,8 +130,7 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.apache.cassandra.wso2:apache-cassandra</bundleDef>
-                                <bundleDef>com.datastax.cassandra.wso2:cql-driver</bundleDef>
+                                <bundleDef>com.datastax.cassandra:cassandra-driver-core</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.ndatasource.common</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.ndatasource.core</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.utils</bundleDef>
@@ -145,8 +140,8 @@
                                 <bundleDef>com.google.guava:guava</bundleDef>
                                 <bundleDef>org.xerial.snappy:snappy-java</bundleDef>
                                 <bundleDef>metrics-core.wso2:metrics-core</bundleDef>
-                                <bundleDef>org.codehaus.jackson:jackson-core-asl</bundleDef>
-                                <bundleDef>org.codehaus.jackson:jackson-mapper-asl</bundleDef>
+                                <bundleDef>com.codahale.metrics:metrics-core</bundleDef>
+                                <bundleDef>org.apache.cassandra.wso2:cassandra-thrift</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
