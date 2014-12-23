@@ -12,6 +12,10 @@ function validateRSSInstanceProperties() {
     var username = trim(document.getElementById("username").value);
     var password = trim(document.getElementById("password").value);
     var repassword = trim(document.getElementById("repassword").value);
+    var sshHost = trim(document.getElementById("sshHost").value);
+    var sshPort = trim(document.getElementById("sshPort").value);
+    var sshUsername = trim(document.getElementById("sshUsername").value);
+    var snapshotTargetDirectory = trim(document.getElementById("snapshotTargetDirectory").value);
 
     if (rssInstanceName == '' || rssInstanceName == null) {
         CARBON.showWarningDialog("Database server instance name cannot be left blank");
@@ -46,6 +50,26 @@ function validateRSSInstanceProperties() {
     }
     if (repassword == null || repassword == '') {
         CARBON.showWarningDialog("Data source confirm administrative password field cannot be left blank");
+        return false;
+    }
+    if (sshHost == '' || sshHost == null) {
+        CARBON.showWarningDialog("SSH host cannot be left blank");
+        return false;
+    }
+    if (sshPort == '' || sshPort == null) {
+        CARBON.showWarningDialog("SSH port cannot be left blank");
+        return false;
+    }
+    if (sshUsername == '' || sshUsername == null) {
+        CARBON.showWarningDialog("SSH username cannot be left blank");
+        return false;
+    }
+    if (snapshotTargetDirectory == '' || snapshotTargetDirectory == null) {
+        CARBON.showWarningDialog("Snapshot target directory cannot be left blank");
+        return false;
+    }
+    if (isNaN(parseInt(sshPort))){
+        CARBON.showWarningDialog("SSH port invalid");
         return false;
     }
     if (password!=repassword) {
@@ -91,10 +115,16 @@ function dispatchRSSInstanceCreateRequest(flag) {
         instancetype = instancetypeList[instancetypeList.selectedIndex].value;
     }
     var serverEnvironment = serverEnvironmentList[serverEnvironmentList.selectedIndex].value;
+    var sshHost = trim(document.getElementById("sshHost").value);
+    var sshPort = trim(document.getElementById("sshPort").value);
+    var sshUsername = trim(document.getElementById("sshUsername").value);
+    var snapshotTargetDirectory = trim(document.getElementById("snapshotTargetDirectory").value);
     var url = 'rssInstanceOps_ajaxprocessor.jsp?rssInstanceName=' + encodeURIComponent(rssInstanceName)
             + '&serverUrl=' + encodeURIComponent(serverUrl) + '&username=' + encodeURIComponent(
             username) + '&password=' + encodeURIComponent(password) + '&flag=' + flag + '&serverEnvironment=' + encodeURIComponent(serverEnvironment)
-        + '&databaseDriverClass=' + encodeURIComponent(databaseDriverClass) +'&instancetype=' + encodeURIComponent(instancetype);
+        + '&databaseDriverClass=' + encodeURIComponent(databaseDriverClass) +'&instancetype=' + encodeURIComponent(instancetype)
+        + '&sshHost=' + encodeURIComponent(sshHost) + '&sshPort=' + encodeURIComponent(sshPort) + '&sshUsername=' + encodeURIComponent(sshUsername)
+        + '&snapshotTargetDirectory=' + encodeURIComponent(snapshotTargetDirectory);
     sessionAwareFunction(function() {
         jQuery('#connectionStatusDiv').load(url, displayMessages);
     }, rssmanagerjsi18n["rss.manager.session.expire.message"]);
@@ -416,6 +446,10 @@ function dropDatabase(rssInstanceName, databaseName, envName, instanceTyoe) {
 
     CARBON.showConfirmationDialog("Do you want to drop the database?", forwardToDel);
 
+}
+
+function createSnapshot(rssInstanceName, databaseName, envName, instanceType) {
+        dispatchDatabaseActionRequest('snapshot', rssInstanceName, databaseName, envName, instanceType);
 }
 
 function manageDatabase(rssInstanceName, databaseName) {

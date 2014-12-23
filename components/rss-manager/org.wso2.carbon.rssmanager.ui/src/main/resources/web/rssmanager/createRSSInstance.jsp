@@ -238,6 +238,40 @@
                         </td>
                     </tr>
                     <tr>
+                        <td>
+                            <table class="normal">
+                                <tr>
+                                    <td class="leftCol-med"><fmt:message
+                                            key="rss.manager.ssh.host"/><font
+                                            color='red'>*</font></td>
+                                    <td><input value="" id="sshHost"
+                                               name="sshHost" class="longInput"></td>
+                                </tr>
+                                <tr>
+                                    <td class="leftCol-med"><fmt:message
+                                            key="rss.manager.ssh.port"/><font
+                                            color='red'>*</font></td>
+                                    <td><input value="" id="sshPort"
+                                               name="sshPort" class="longInput"></td>
+                                </tr>
+                                <tr>
+                                    <td class="leftCol-med"><fmt:message
+                                            key="rss.manager.ssh.username"/><font
+                                            color='red'>*</font></td>
+                                    <td><input value="" id="sshUsername"
+                                               name="sshUsername" class="longInput"></td>
+                                </tr>
+                                <tr>
+                                    <td class="leftCol-med"><fmt:message
+                                            key="rss.manager.snapshot.target.directory"/><font
+                                            color='red'>*</font></td>
+                                    <td><input value="" id="snapshotTargetDirectory"
+                                               name="snapshotTargetDirectory" class="longInput"></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
                         <td class="buttonRow" colspan="3">
                             <div id="connectionStatusDiv" style="display: none;"></div>
                             <input class="button" type="button"

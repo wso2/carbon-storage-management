@@ -46,6 +46,10 @@ public class RSSInstanceInfo implements Serializable {
 
 	private String driverClass;
 
+    private SSHInformationConfigInfo sshInformationConfig;
+
+    private SnapshotConfigInfo snapshotConfig;
+
 	public RSSInstanceInfo() {
 	}
 
@@ -120,4 +124,20 @@ public class RSSInstanceInfo implements Serializable {
 	public void setDriverClass(String driverClass) {
 		this.driverClass = driverClass;
 	}
+
+    public SSHInformationConfigInfo getSshInformationConfig() {
+        return sshInformationConfig;
+    }
+
+    public void setSshInformationConfig(SSHInformationConfigInfo sshInformationConfig) {
+        this.sshInformationConfig = sshInformationConfig;
+    }
+
+    public SnapshotConfigInfo getSnapshotConfig() {
+        return snapshotConfig;
+    }
+
+    public void setSnapshotConfig(SnapshotConfigInfo snapshotConfig) {
+        this.snapshotConfig = snapshotConfig;
+    }
 }

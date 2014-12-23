@@ -443,16 +443,12 @@ public class H2UserDefinedRSSManager extends UserDefinedRSSManager {
     public void createSnapshot(String databaseName) throws RSSManagerException {
         Connection conn = null;
         PreparedStatement snapshotStatement = null;
+        RSSInstance instance = null;
         try {
-            int tenantId = RSSManagerUtil.getTenantId();
-            String rssInstanceName = this.getRSSDAO().getDatabaseDAO()
-                    .resolveRSSInstanceNameByDatabase(this.getEnvironmentName(),
-                                                      databaseName,
-                                                      RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED,
-                                                      tenantId);
-            DataSource dataSource = getDataSource(rssInstanceName, databaseName);
+            instance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            DataSource dataSource = getDataSource(instance.getName(), databaseName);
             conn = dataSource.getConnection();
-            SnapshotConfig snapshotConfig = RSSManagerUtil.getSnapshotConfigOfServerInstance(rssInstanceName);
+            SnapshotConfig snapshotConfig = instance.getSnapshotConfig();
             RSSManagerUtil.createSnapshotDirectory(snapshotConfig.getTargetDirectory());
             String filePath = RSSManagerUtil.getSnapshotFilePath(snapshotConfig.getTargetDirectory(), databaseName);
             String snapshotQuery = "SCRIPT TO '" + filePath + "'";

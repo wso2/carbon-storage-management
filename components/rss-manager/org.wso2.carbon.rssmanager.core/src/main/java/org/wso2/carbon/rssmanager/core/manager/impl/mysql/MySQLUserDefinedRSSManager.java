@@ -22,6 +22,9 @@ package org.wso2.carbon.rssmanager.core.manager.impl.mysql;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
+import org.wso2.carbon.rssmanager.core.config.PrivateKeyConfig;
+import org.wso2.carbon.rssmanager.core.config.RSSConfig;
+import org.wso2.carbon.rssmanager.core.config.RSSConfigurationManager;
 import org.wso2.carbon.rssmanager.core.config.databasemanagement.SnapshotConfig;
 import org.wso2.carbon.rssmanager.core.config.ssh.SSHInformationConfig;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
@@ -526,18 +529,20 @@ public class MySQLUserDefinedRSSManager extends UserDefinedRSSManager {
             String msg = "Database server error at create snapshot of database " + databaseName + e.getMessage();
             handleException(msg, e);
         }
-        SSHInformationConfig sshInformation = RSSManagerUtil.getSSHInformationOfServerInstance(instance.getName());
-        SnapshotConfig snapshotConfig = RSSManagerUtil.getSnapshotConfigOfServerInstance(instance.getName());
+        RSSConfig rssConfig= RSSConfigurationManager.getInstance().getCurrentRSSConfig();
+        PrivateKeyConfig privateKeyConfig = rssConfig.getPrivateKeyConfig();
+        SSHInformationConfig sshInformation = instance.getSshInformationConfig();
+        SnapshotConfig snapshotConfig = instance.getSnapshotConfig();
         SSHConnection sshConnection = new SSHConnection(sshInformation.getHost(),
                                                         sshInformation.getPort(),
                                                         sshInformation.getUsername(),
-                                                        sshInformation.getPrivateKeyPath(),
-                                                        sshInformation.getPassPhrase());
+                                                        privateKeyConfig.getPrivateKeyPath(),
+                                                        privateKeyConfig.getPassPhrase());
         String command = RSSManagerConstants.Snapshots.MYSQL_DUMP_TOOL + RSSManagerConstants.SPACE +
                          RSSManagerConstants.Snapshots.MYSQL_USERNAME_OPTION + RSSManagerConstants.SPACE +
                          instance.getAdminUserName() + RSSManagerConstants.SPACE +
                          RSSManagerConstants.Snapshots.MYSQL_PASSWORD_OPTION +
-                         instance.getAdminPassword() +
+                         instance.getAdminPassword() + RSSManagerConstants.SPACE +
                          databaseName + RSSManagerConstants.SPACE +
                          RSSManagerConstants.Snapshots.MYSQL_OUTPUT_FILE_OPTION + RSSManagerConstants.SPACE +
                          RSSManagerUtil.getSnapshotFilePath(snapshotConfig.getTargetDirectory(), databaseName);

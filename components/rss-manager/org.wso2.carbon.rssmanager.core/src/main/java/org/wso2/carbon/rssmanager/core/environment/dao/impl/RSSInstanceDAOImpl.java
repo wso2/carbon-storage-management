@@ -22,6 +22,8 @@ package org.wso2.carbon.rssmanager.core.environment.dao.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
+import org.wso2.carbon.rssmanager.core.config.databasemanagement.SnapshotConfig;
+import org.wso2.carbon.rssmanager.core.config.ssh.SSHInformationConfig;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dao.util.RSSDAOUtil;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
@@ -53,24 +55,31 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		Connection conn = null;
 		PreparedStatement statement = null;
 		int environmentID = getEnvionmentIdByName(environmentName);
-		try {
-			conn = getDataSourceConnection();
-			conn.setAutoCommit(true);//there may be connections in the pool which have the auto commit state as false
-			String createInstanceQuery = "INSERT INTO RM_SERVER_INSTANCE (ENVIRONMENT_ID, NAME, SERVER_URL, DBMS_TYPE, INSTANCE_TYPE, " +
-			                       "SERVER_CATEGORY, ADMIN_USERNAME, ADMIN_PASSWORD, TENANT_ID, DRIVER_CLASS) VALUES (?,?,?,?,?,?,?,?,?,?)";
-			statement = conn.prepareStatement(createInstanceQuery);
-			statement.setInt(1, environmentID);
-			statement.setString(2, rssInstance.getName());
-			statement.setString(3, rssInstance.getServerURL());
-			statement.setString(4, rssInstance.getDbmsType());
-			statement.setString(5, rssInstance.getInstanceType());
-			statement.setString(6, rssInstance.getServerCategory());
-			statement.setString(7, rssInstance.getAdminUserName());
-			statement.setString(8, rssInstance.getAdminPassword());
-			statement.setLong(9, rssInstance.getTenantId());
-			statement.setString(10, rssInstance.getDriverClassName());
-			statement.executeUpdate();
-		} catch (SQLException e) {
+        SSHInformationConfig sshInformationConfig = rssInstance.getSshInformationConfig();
+        try {
+            conn = getDataSourceConnection();
+            conn.setAutoCommit(true);//there may be connections in the pool which have the auto commit state as false
+            String createInstanceQuery = "INSERT INTO RM_SERVER_INSTANCE (ENVIRONMENT_ID, NAME, SERVER_URL, " +
+                                         "DBMS_TYPE, INSTANCE_TYPE, SERVER_CATEGORY, ADMIN_USERNAME, ADMIN_PASSWORD, " +
+                                         "TENANT_ID, DRIVER_CLASS, SSH_HOST, SSH_PORT, SSH_USERNAME, " +
+                                         "SNAPSHOT_TARGET_DIRECTORY) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            statement = conn.prepareStatement(createInstanceQuery);
+            statement.setInt(1, environmentID);
+            statement.setString(2, rssInstance.getName());
+            statement.setString(3, rssInstance.getServerURL());
+            statement.setString(4, rssInstance.getDbmsType());
+            statement.setString(5, rssInstance.getInstanceType());
+            statement.setString(6, rssInstance.getServerCategory());
+            statement.setString(7, rssInstance.getAdminUserName());
+            statement.setString(8, rssInstance.getAdminPassword());
+            statement.setLong(9, rssInstance.getTenantId());
+            statement.setString(10, rssInstance.getDriverClassName());
+            statement.setString(11, sshInformationConfig.getHost());
+            statement.setInt(12, sshInformationConfig.getPort());
+            statement.setString(13, sshInformationConfig.getUsername());
+            statement.setString(14, rssInstance.getSnapshotConfig().getTargetDirectory());
+            statement.executeUpdate();
+        } catch (SQLException e) {
 			String msg = "Failed to add rss instance " + rssInstance.getName() + "in rssInstance in environment" + environmentName
 			             + "to meta repository";
 			handleException(msg, e);
@@ -140,13 +149,16 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		Connection conn = null;
 		PreparedStatement entryUpdateStatement = null;
 		int environmentId = getEnvionmentIdByName(environmentName);
+        SSHInformationConfig sshInformationConfig = rssInstance.getSshInformationConfig();
 		try {
 			conn = getDataSourceConnection();
 			conn.setAutoCommit(true);//there may be connections in the pool which have the auto commit state as false
-			String updateInstanceEntryQuery = "UPDATE RM_SERVER_INSTANCE SET NAME =?," +
-			                                  "SERVER_URL=?, DBMS_TYPE=?, INSTANCE_TYPE=?, SERVER_CATEGORY=?, ADMIN_USERNAME=?, ADMIN_PASSWORD=?," +
-			                                  "TENANT_ID=?, DRIVER_CLASS=? WHERE ENVIRONMENT_ID=? AND NAME=?";
-			entryUpdateStatement = conn.prepareStatement(updateInstanceEntryQuery);
+            String updateInstanceEntryQuery = "UPDATE RM_SERVER_INSTANCE SET NAME =?, SERVER_URL=?, DBMS_TYPE=?, " +
+                                              "INSTANCE_TYPE=?, SERVER_CATEGORY=?, ADMIN_USERNAME=?, " +
+                                              "ADMIN_PASSWORD=?, TENANT_ID=?, DRIVER_CLASS=?, SSH_HOST=?, SSH_PORT=?," +
+                                              " SSH_USERNAME=?, SNAPSHOT_TARGET_DIRECTORY=? WHERE ENVIRONMENT_ID=? " +
+                                              "AND NAME=?";
+            entryUpdateStatement = conn.prepareStatement(updateInstanceEntryQuery);
 			entryUpdateStatement.setString(1, rssInstance.getName());
 			entryUpdateStatement.setString(2, rssInstance.getServerURL());
 			entryUpdateStatement.setString(3, rssInstance.getDbmsType());
@@ -156,8 +168,12 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			entryUpdateStatement.setString(7, rssInstance.getAdminPassword());
 			entryUpdateStatement.setLong(8, rssInstance.getTenantId());
 			entryUpdateStatement.setString(9, rssInstance.getDriverClassName());
-			entryUpdateStatement.setInt(10, environmentId);
-			entryUpdateStatement.setString(11, rssInstance.getName());
+            entryUpdateStatement.setString(10, sshInformationConfig.getHost());
+            entryUpdateStatement.setInt(11, sshInformationConfig.getPort());
+            entryUpdateStatement.setString(12, sshInformationConfig.getUsername());
+            entryUpdateStatement.setString(13, rssInstance.getSnapshotConfig().getTargetDirectory());
+			entryUpdateStatement.setInt(14, environmentId);
+			entryUpdateStatement.setString(15, rssInstance.getName());
 			entryUpdateStatement.executeUpdate();
 		} catch (SQLException e) {
 			String msg = "Failed to update rss instance entry " + rssInstance.getName() + " in the metadata repository";
@@ -176,22 +192,32 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		RSSInstance rssInstance = null;
+        SSHInformationConfig sshInformationConfig = null;
+        SnapshotConfig snapshotConfig = null;
 		try {
-			conn = getDataSourceConnection();
-			String selectInstancesQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, RM_SERVER_INSTANCE.ID AS RSS_INSTANCE_ID, " +
-			                              "RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME, RM_SERVER_INSTANCE.SERVER_URL, RM_SERVER_INSTANCE.DBMS_TYPE, " +
-			                              "RM_SERVER_INSTANCE.INSTANCE_TYPE, RM_SERVER_INSTANCE.SERVER_CATEGORY, RM_SERVER_INSTANCE.ADMIN_USERNAME, " +
-			                              "RM_SERVER_INSTANCE.ADMIN_PASSWORD, RM_SERVER_INSTANCE.TENANT_ID, RM_SERVER_INSTANCE.DRIVER_CLASS, " +
-			                              "RM_SERVER_INSTANCE.ENVIRONMENT_ID FROM RM_SERVER_INSTANCE INNER JOIN RM_ENVIRONMENT " +
-			                              "WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = RM_ENVIRONMENT.ID AND RM_ENVIRONMENT.NAME = ? AND " +
-			                              "RM_SERVER_INSTANCE.NAME = ? AND RM_SERVER_INSTANCE.TENANT_ID = ?";
-			statement = conn.prepareStatement(selectInstancesQuery);
-			statement.setString(1, environmentName);
+            conn = getDataSourceConnection();
+            String selectInstancesQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, " +
+                                          "RM_SERVER_INSTANCE.ID AS RSS_INSTANCE_ID, " +
+                                          "RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME, " +
+                                          "RM_SERVER_INSTANCE.SERVER_URL, RM_SERVER_INSTANCE.DBMS_TYPE, " +
+                                          "RM_SERVER_INSTANCE.INSTANCE_TYPE, RM_SERVER_INSTANCE.SERVER_CATEGORY, " +
+                                          "RM_SERVER_INSTANCE.ADMIN_USERNAME, RM_SERVER_INSTANCE.ADMIN_PASSWORD, " +
+                                          "RM_SERVER_INSTANCE.TENANT_ID, RM_SERVER_INSTANCE.DRIVER_CLASS, " +
+                                          "RM_SERVER_INSTANCE.ENVIRONMENT_ID, RM_SERVER_INSTANCE.SSH_HOST, " +
+                                          "RM_SERVER_INSTANCE.SSH_PORT, RM_SERVER_INSTANCE.SSH_USERNAME, " +
+                                          "RM_SERVER_INSTANCE.SNAPSHOT_TARGET_DIRECTORY FROM RM_SERVER_INSTANCE " +
+                                          "INNER JOIN RM_ENVIRONMENT WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = " +
+                                          "RM_ENVIRONMENT.ID AND RM_ENVIRONMENT.NAME = ? AND " +
+                                          "RM_SERVER_INSTANCE.NAME = ? AND RM_SERVER_INSTANCE.TENANT_ID = ?";
+            statement = conn.prepareStatement(selectInstancesQuery);
+            statement.setString(1, environmentName);
 			statement.setString(2, rssInstanceName);
 			statement.setInt(3, tenantId);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
 				rssInstance = new RSSInstance();
+                sshInformationConfig = new SSHInformationConfig();
+                snapshotConfig = new SnapshotConfig();
 				rssInstance.setEnvironmentName(resultSet.getString("ENVIRONMENT_NAME"));
 				rssInstance.setId(resultSet.getInt("RSS_INSTANCE_ID"));
 				rssInstance.setName(resultSet.getString("RSS_INSTANCE_NAME"));
@@ -204,6 +230,12 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 				rssInstance.setTenantId(resultSet.getLong("TENANT_ID"));
 				rssInstance.setDriverClassName(resultSet.getString("DRIVER_CLASS"));
 				rssInstance.setEnvironmentId(resultSet.getInt("ENVIRONMENT_ID"));
+                sshInformationConfig.setHost(resultSet.getString("SSH_HOST"));
+                sshInformationConfig.setPort(resultSet.getInt("SSH_PORT"));
+                sshInformationConfig.setUsername(resultSet.getString("SSH_USERNAME"));
+                rssInstance.setSshInformationConfig(sshInformationConfig);
+                snapshotConfig.setTargetDirectory(resultSet.getString("SNAPSHOT_TARGET_DIRECTORY"));
+                rssInstance.setSnapshotConfig(snapshotConfig);
 			}
 		} catch (SQLException e) {
 			String msg = "Error while getting rss instance info of" + rssInstanceName;
@@ -223,21 +255,31 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		ResultSet resultSet = null;
 		List<RSSInstance> rssInstances = new ArrayList<RSSInstance>();
 		RSSInstance rssInstance = null;
+        SSHInformationConfig sshInformationConfig = null;
+        SnapshotConfig snapshotConfig = null;
 		try {
 			conn = getDataSourceConnection();
-			String selectInstancesQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, RM_SERVER_INSTANCE.ID AS RSS_INSTANCE_ID, " +
-			                              "RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME, RM_SERVER_INSTANCE.SERVER_URL, RM_SERVER_INSTANCE.DBMS_TYPE, " +
-			                              "RM_SERVER_INSTANCE.INSTANCE_TYPE, RM_SERVER_INSTANCE.SERVER_CATEGORY, RM_SERVER_INSTANCE.ADMIN_USERNAME, " +
-			                              "RM_SERVER_INSTANCE.ADMIN_PASSWORD, RM_SERVER_INSTANCE.TENANT_ID, RM_SERVER_INSTANCE.DRIVER_CLASS, " +
-			                              "RM_SERVER_INSTANCE.ENVIRONMENT_ID FROM RM_SERVER_INSTANCE INNER JOIN RM_ENVIRONMENT " +
-			                              "WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = RM_ENVIRONMENT.ID AND RM_ENVIRONMENT.NAME = ? AND " +
-			                              "RM_SERVER_INSTANCE.TENANT_ID = ?";
-			statement = conn.prepareStatement(selectInstancesQuery);
+			String selectInstancesQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, " +
+                                          "RM_SERVER_INSTANCE.ID AS RSS_INSTANCE_ID, " +
+                                          "RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME, " +
+                                          "RM_SERVER_INSTANCE.SERVER_URL, RM_SERVER_INSTANCE.DBMS_TYPE, " +
+                                          "RM_SERVER_INSTANCE.INSTANCE_TYPE, RM_SERVER_INSTANCE.SERVER_CATEGORY, " +
+                                          "RM_SERVER_INSTANCE.ADMIN_USERNAME, RM_SERVER_INSTANCE.ADMIN_PASSWORD, " +
+                                          "RM_SERVER_INSTANCE.TENANT_ID, RM_SERVER_INSTANCE.DRIVER_CLASS, " +
+                                          "RM_SERVER_INSTANCE.ENVIRONMENT_ID, RM_SERVER_INSTANCE.SSH_HOST, " +
+                                          "RM_SERVER_INSTANCE.SSH_PORT, RM_SERVER_INSTANCE.SSH_USERNAME, " +
+                                          "RM_SERVER_INSTANCE.SNAPSHOT_TARGET_DIRECTORY FROM RM_SERVER_INSTANCE " +
+                                          "INNER JOIN RM_ENVIRONMENT WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = " +
+                                          "RM_ENVIRONMENT.ID AND RM_ENVIRONMENT.NAME = ? AND " +
+                                          "RM_SERVER_INSTANCE.TENANT_ID = ?";
+            statement = conn.prepareStatement(selectInstancesQuery);
 			statement.setString(1, environmentName);
 			statement.setLong(2, tenantId);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
 				rssInstance = new RSSInstance();
+                sshInformationConfig = new SSHInformationConfig();
+                snapshotConfig = new SnapshotConfig();
 				rssInstance.setEnvironmentName(resultSet.getString("ENVIRONMENT_NAME"));
 				rssInstance.setId(resultSet.getInt("RSS_INSTANCE_ID"));
 				rssInstance.setName(resultSet.getString("RSS_INSTANCE_NAME"));
@@ -250,6 +292,12 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 				rssInstance.setTenantId(resultSet.getLong("TENANT_ID"));
 				rssInstance.setDriverClassName(resultSet.getString("DRIVER_CLASS"));
 				rssInstance.setEnvironmentId(resultSet.getInt("ENVIRONMENT_ID"));
+                sshInformationConfig.setHost(resultSet.getString("SSH_HOST"));
+                sshInformationConfig.setPort(resultSet.getInt("SSH_PORT"));
+                sshInformationConfig.setUsername(resultSet.getString("SSH_USERNAME"));
+                rssInstance.setSshInformationConfig(sshInformationConfig);
+                snapshotConfig.setTargetDirectory(resultSet.getString("SNAPSHOT_TARGET_DIRECTORY"));
+                rssInstance.setSnapshotConfig(snapshotConfig);
 				rssInstances.add(rssInstance);
 			}
 		} catch (SQLException e) {
@@ -271,19 +319,29 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		ResultSet resultSet = null;
 		List<RSSInstance> rssInstances = new ArrayList<RSSInstance>();
 		RSSInstance rssInstance = null;
+        SSHInformationConfig sshInformationConfig = null;
+        SnapshotConfig snapshotConfig = null;
 		try {
 			conn = getDataSourceConnection();
-			String selectInstancesQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, RM_SERVER_INSTANCE.ID AS RSS_INSTANCE_ID, " +
-			                              "RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME, RM_SERVER_INSTANCE.SERVER_URL, RM_SERVER_INSTANCE.DBMS_TYPE, " +
-			                              "RM_SERVER_INSTANCE.INSTANCE_TYPE, RM_SERVER_INSTANCE.SERVER_CATEGORY, RM_SERVER_INSTANCE.ADMIN_USERNAME, " +
-			                              "RM_SERVER_INSTANCE.ADMIN_PASSWORD, RM_SERVER_INSTANCE.TENANT_ID, RM_SERVER_INSTANCE.DRIVER_CLASS, " +
-			                              "RM_SERVER_INSTANCE.ENVIRONMENT_ID FROM RM_SERVER_INSTANCE INNER JOIN RM_ENVIRONMENT " +
-			                              "WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = RM_ENVIRONMENT.ID AND RM_ENVIRONMENT.NAME = ?";
-			statement = conn.prepareStatement(selectInstancesQuery);
+			String selectInstancesQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, " +
+                                          "RM_SERVER_INSTANCE.ID AS RSS_INSTANCE_ID, " +
+                                          "RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME, " +
+                                          "RM_SERVER_INSTANCE.SERVER_URL, RM_SERVER_INSTANCE.DBMS_TYPE, " +
+                                          "RM_SERVER_INSTANCE.INSTANCE_TYPE, RM_SERVER_INSTANCE.SERVER_CATEGORY, " +
+                                          "RM_SERVER_INSTANCE.ADMIN_USERNAME, RM_SERVER_INSTANCE.ADMIN_PASSWORD, " +
+                                          "RM_SERVER_INSTANCE.TENANT_ID, RM_SERVER_INSTANCE.DRIVER_CLASS, " +
+                                          "RM_SERVER_INSTANCE.ENVIRONMENT_ID, RM_SERVER_INSTANCE.SSH_HOST, " +
+                                          "RM_SERVER_INSTANCE.SSH_PORT, RM_SERVER_INSTANCE.SSH_USERNAME, " +
+                                          "RM_SERVER_INSTANCE.SNAPSHOT_TARGET_DIRECTORY FROM RM_SERVER_INSTANCE " +
+                                          "INNER JOIN RM_ENVIRONMENT WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = " +
+                                          "RM_ENVIRONMENT.ID AND RM_ENVIRONMENT.NAME = ?";
+            statement = conn.prepareStatement(selectInstancesQuery);
 			statement.setString(1, environmentName);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
 				rssInstance = new RSSInstance();
+                sshInformationConfig = new SSHInformationConfig();
+                snapshotConfig = new SnapshotConfig();
 				rssInstance.setEnvironmentName(resultSet.getString("ENVIRONMENT_NAME"));
 				rssInstance.setId(resultSet.getInt("RSS_INSTANCE_ID"));
 				rssInstance.setName(resultSet.getString("RSS_INSTANCE_NAME"));
@@ -296,6 +354,12 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 				rssInstance.setTenantId(resultSet.getLong("TENANT_ID"));
 				rssInstance.setDriverClassName(resultSet.getString("DRIVER_CLASS"));
 				rssInstance.setEnvironmentId(resultSet.getInt("ENVIRONMENT_ID"));
+                sshInformationConfig.setHost(resultSet.getString("SSH_HOST"));
+                sshInformationConfig.setPort(resultSet.getInt("SSH_PORT"));
+                sshInformationConfig.setUsername(resultSet.getString("SSH_USERNAME"));
+                rssInstance.setSshInformationConfig(sshInformationConfig);
+                snapshotConfig.setTargetDirectory(resultSet.getString("SNAPSHOT_TARGET_DIRECTORY"));
+                rssInstance.setSnapshotConfig(snapshotConfig);
 				rssInstances.add(rssInstance);
 			}
 		} catch (SQLException e) {
@@ -317,22 +381,32 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		ResultSet resultSet = null;
 		List<RSSInstance> rssInstances = new ArrayList<RSSInstance>();
 		RSSInstance rssInstance;
+        SSHInformationConfig sshInformationConfig = null;
+        SnapshotConfig snapshotConfig = null;
 		try {
 			conn = getDataSourceConnection();
-			String selectInstancesQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, RM_SERVER_INSTANCE.ID AS RSS_INSTANCE_ID, " +
-			                              "RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME, RM_SERVER_INSTANCE.SERVER_URL, RM_SERVER_INSTANCE.DBMS_TYPE, " +
-			                              "RM_SERVER_INSTANCE.INSTANCE_TYPE, RM_SERVER_INSTANCE.SERVER_CATEGORY, RM_SERVER_INSTANCE.ADMIN_USERNAME, " +
-			                              "RM_SERVER_INSTANCE.ADMIN_PASSWORD, RM_SERVER_INSTANCE.TENANT_ID, RM_SERVER_INSTANCE.DRIVER_CLASS, " +
-			                              "RM_SERVER_INSTANCE.ENVIRONMENT_ID FROM RM_SERVER_INSTANCE INNER JOIN RM_ENVIRONMENT " +
-			                              "WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = RM_ENVIRONMENT.ID AND RM_ENVIRONMENT.NAME = ? AND " +
-			                              "RM_SERVER_INSTANCE.TENANT_ID = ? AND RM_SERVER_INSTANCE.INSTANCE_TYPE = ?";
-			statement = conn.prepareStatement(selectInstancesQuery);
+			String selectInstancesQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, " +
+                                          "RM_SERVER_INSTANCE.ID AS RSS_INSTANCE_ID, " +
+                                          "RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME, " +
+                                          "RM_SERVER_INSTANCE.SERVER_URL, RM_SERVER_INSTANCE.DBMS_TYPE, " +
+                                          "RM_SERVER_INSTANCE.INSTANCE_TYPE, RM_SERVER_INSTANCE.SERVER_CATEGORY, " +
+                                          "RM_SERVER_INSTANCE.ADMIN_USERNAME, RM_SERVER_INSTANCE.ADMIN_PASSWORD, " +
+                                          "RM_SERVER_INSTANCE.TENANT_ID, RM_SERVER_INSTANCE.DRIVER_CLASS, " +
+                                          "RM_SERVER_INSTANCE.ENVIRONMENT_ID, RM_SERVER_INSTANCE.SSH_HOST, " +
+                                          "RM_SERVER_INSTANCE.SSH_PORT, RM_SERVER_INSTANCE.SSH_USERNAME, " +
+                                          "RM_SERVER_INSTANCE.SNAPSHOT_TARGET_DIRECTORY FROM RM_SERVER_INSTANCE INNER" +
+                                          " JOIN RM_ENVIRONMENT WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = " +
+                                          "RM_ENVIRONMENT.ID AND RM_ENVIRONMENT.NAME = ? AND " +
+                                          "RM_SERVER_INSTANCE.TENANT_ID = ? AND RM_SERVER_INSTANCE.INSTANCE_TYPE = ?";
+            statement = conn.prepareStatement(selectInstancesQuery);
 			statement.setString(1, environmentName);
 			statement.setLong(2, tenantId);
 			statement.setString(3, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
 				rssInstance = new RSSInstance();
+                sshInformationConfig = new SSHInformationConfig();
+                snapshotConfig = new SnapshotConfig();
 				rssInstance.setEnvironmentName(resultSet.getString("ENVIRONMENT_NAME"));
 				rssInstance.setId(resultSet.getInt("RSS_INSTANCE_ID"));
 				rssInstance.setName(resultSet.getString("RSS_INSTANCE_NAME"));
@@ -345,7 +419,13 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 				rssInstance.setTenantId(resultSet.getLong("TENANT_ID"));
 				rssInstance.setDriverClassName(resultSet.getString("DRIVER_CLASS"));
 				rssInstance.setEnvironmentId(resultSet.getInt("ENVIRONMENT_ID"));
-				rssInstances.add(rssInstance);
+                sshInformationConfig.setHost(resultSet.getString("SSH_HOST"));
+                sshInformationConfig.setPort(resultSet.getInt("SSH_PORT"));
+                sshInformationConfig.setUsername(resultSet.getString("SSH_USERNAME"));
+                rssInstance.setSshInformationConfig(sshInformationConfig);
+                snapshotConfig.setTargetDirectory(resultSet.getString("SNAPSHOT_TARGET_DIRECTORY"));
+                rssInstance.setSnapshotConfig(snapshotConfig);
+                rssInstances.add(rssInstance);
 			}
 		} catch (SQLException e) {
 			String msg = "Error while getting system rss instances information of a environment";
@@ -366,15 +446,23 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		ResultSet resultSet = null;
 		List<RSSInstance> rssInstances = new ArrayList<RSSInstance>();
 		RSSInstance rssInstance;
+        SSHInformationConfig sshInformationConfig = null;
+        SnapshotConfig snapshotConfig = null;
 		try {
 			conn = getDataSourceConnection();
-			String selectInstancesQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, RM_SERVER_INSTANCE.ID AS RSS_INSTANCE_ID, " +
-			                              "RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME, RM_SERVER_INSTANCE.SERVER_URL, RM_SERVER_INSTANCE.DBMS_TYPE, " +
-			                              "RM_SERVER_INSTANCE.INSTANCE_TYPE, RM_SERVER_INSTANCE.SERVER_CATEGORY, RM_SERVER_INSTANCE.ADMIN_USERNAME, " +
-			                              "RM_SERVER_INSTANCE.ADMIN_PASSWORD, RM_SERVER_INSTANCE.TENANT_ID, RM_SERVER_INSTANCE.DRIVER_CLASS, " +
-			                              "RM_SERVER_INSTANCE.ENVIRONMENT_ID FROM RM_SERVER_INSTANCE INNER JOIN RM_ENVIRONMENT " +
-			                              "WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = RM_ENVIRONMENT.ID AND RM_ENVIRONMENT.NAME = ? AND " +
-			                              "RM_SERVER_INSTANCE.TENANT_ID = ? AND RM_SERVER_INSTANCE.INSTANCE_TYPE = ?";
+			String selectInstancesQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, " +
+                                          "RM_SERVER_INSTANCE.ID AS RSS_INSTANCE_ID, " +
+			                              "RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME, " +
+                                          "RM_SERVER_INSTANCE.SERVER_URL, RM_SERVER_INSTANCE.DBMS_TYPE, " +
+			                              "RM_SERVER_INSTANCE.INSTANCE_TYPE, RM_SERVER_INSTANCE.SERVER_CATEGORY, " +
+                                          "RM_SERVER_INSTANCE.ADMIN_USERNAME, RM_SERVER_INSTANCE.ADMIN_PASSWORD, " +
+                                          "RM_SERVER_INSTANCE.TENANT_ID, RM_SERVER_INSTANCE.DRIVER_CLASS, " +
+			                              "RM_SERVER_INSTANCE.ENVIRONMENT_ID, RM_SERVER_INSTANCE.SSH_HOST, " +
+                                          "RM_SERVER_INSTANCE.SSH_PORT, RM_SERVER_INSTANCE.SSH_USERNAME, " +
+                                          "RM_SERVER_INSTANCE.SNAPSHOT_TARGET_DIRECTORY FROM RM_SERVER_INSTANCE INNER" +
+                                          " JOIN RM_ENVIRONMENT WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = " +
+                                          "RM_ENVIRONMENT.ID AND RM_ENVIRONMENT.NAME = ? AND " +
+                                          "RM_SERVER_INSTANCE.TENANT_ID = ? AND RM_SERVER_INSTANCE.INSTANCE_TYPE = ?";
 			statement = conn.prepareStatement(selectInstancesQuery);
 			statement.setString(1, environmentName);
 			statement.setLong(2, tenantId);
@@ -382,6 +470,8 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
 				rssInstance = new RSSInstance();
+                sshInformationConfig = new SSHInformationConfig();
+                snapshotConfig = new SnapshotConfig();
 				rssInstance.setEnvironmentName(resultSet.getString("ENVIRONMENT_NAME"));
 				rssInstance.setId(resultSet.getInt("RSS_INSTANCE_ID"));
 				rssInstance.setName(resultSet.getString("RSS_INSTANCE_NAME"));
@@ -394,7 +484,13 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 				rssInstance.setTenantId(resultSet.getLong("TENANT_ID"));
 				rssInstance.setDriverClassName(resultSet.getString("DRIVER_CLASS"));
 				rssInstance.setEnvironmentId(resultSet.getInt("ENVIRONMENT_ID"));
-				rssInstances.add(rssInstance);
+                sshInformationConfig.setHost(resultSet.getString("SSH_HOST"));
+                sshInformationConfig.setPort(resultSet.getInt("SSH_PORT"));
+                sshInformationConfig.setUsername(resultSet.getString("SSH_USERNAME"));
+                rssInstance.setSshInformationConfig(sshInformationConfig);
+                snapshotConfig.setTargetDirectory(resultSet.getString("SNAPSHOT_TARGET_DIRECTORY"));
+                rssInstance.setSnapshotConfig(snapshotConfig);
+                rssInstances.add(rssInstance);
 			}
 		} catch (SQLException e) {
 			String msg = "Error while getting user defined rss instances information of a environment";
@@ -415,21 +511,31 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		ResultSet resultSet = null;
 		List<RSSInstance> rssInstances = new ArrayList<RSSInstance>();
 		RSSInstance rssInstance;
+        SSHInformationConfig sshInformationConfig = null;
+        SnapshotConfig snapshotConfig = null;
 		try {
 			conn = getDataSourceConnection();
-			String selectInstancesQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, RM_SERVER_INSTANCE.ID AS RSS_INSTANCE_ID, " +
-			                        "RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME, RM_SERVER_INSTANCE.SERVER_URL, RM_SERVER_INSTANCE.DBMS_TYPE, " +
-			                        "RM_SERVER_INSTANCE.INSTANCE_TYPE, RM_SERVER_INSTANCE.SERVER_CATEGORY, RM_SERVER_INSTANCE.ADMIN_USERNAME, " +
-			                        "RM_SERVER_INSTANCE.ADMIN_PASSWORD, RM_SERVER_INSTANCE.TENANT_ID, RM_SERVER_INSTANCE.DRIVER_CLASS, " +
-			                        "RM_SERVER_INSTANCE.ENVIRONMENT_ID FROM RM_SERVER_INSTANCE INNER JOIN RM_ENVIRONMENT " +
-			                        "WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = RM_ENVIRONMENT.ID AND RM_SERVER_INSTANCE.TENANT_ID = ? " +
-			                        "AND RM_SERVER_INSTANCE.INSTANCE_TYPE = ?";
+			String selectInstancesQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, " +
+                                          "RM_SERVER_INSTANCE.ID AS RSS_INSTANCE_ID, " +
+                                          "RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME, " +
+                                          "RM_SERVER_INSTANCE.SERVER_URL, RM_SERVER_INSTANCE.DBMS_TYPE, " +
+                                          "RM_SERVER_INSTANCE.INSTANCE_TYPE, RM_SERVER_INSTANCE.SERVER_CATEGORY, " +
+                                          "RM_SERVER_INSTANCE.ADMIN_USERNAME, RM_SERVER_INSTANCE.ADMIN_PASSWORD, " +
+                                          "RM_SERVER_INSTANCE.TENANT_ID, RM_SERVER_INSTANCE.DRIVER_CLASS, " +
+                                          "RM_SERVER_INSTANCE.ENVIRONMENT_ID, RM_SERVER_INSTANCE.SSH_HOST, " +
+                                          "RM_SERVER_INSTANCE.SSH_PORT, RM_SERVER_INSTANCE.SSH_USERNAME, " +
+                                          "RM_SERVER_INSTANCE.SNAPSHOT_TARGET_DIRECTORY FROM RM_SERVER_INSTANCE INNER" +
+                                          " JOIN RM_ENVIRONMENT WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = " +
+                                          "RM_ENVIRONMENT.ID AND RM_SERVER_INSTANCE.TENANT_ID = ? AND " +
+                                          "RM_SERVER_INSTANCE.INSTANCE_TYPE = ?";
 			statement = conn.prepareStatement(selectInstancesQuery);
 			statement.setLong(1, tenantId);
 			statement.setString(2, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
 				rssInstance = new RSSInstance();
+                sshInformationConfig = new SSHInformationConfig();
+                snapshotConfig = new SnapshotConfig();
 				rssInstance.setEnvironmentName(resultSet.getString("ENVIRONMENT_NAME"));
 				rssInstance.setId(resultSet.getInt("RSS_INSTANCE_ID"));
 				rssInstance.setName(resultSet.getString("RSS_INSTANCE_NAME"));
@@ -442,7 +548,13 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 				rssInstance.setTenantId(resultSet.getLong("TENANT_ID"));
 				rssInstance.setDriverClassName(resultSet.getString("DRIVER_CLASS"));
 				rssInstance.setEnvironmentId(resultSet.getInt("ENVIRONMENT_ID"));
-				rssInstances.add(rssInstance);
+                sshInformationConfig.setHost(resultSet.getString("SSH_HOST"));
+                sshInformationConfig.setPort(resultSet.getInt("SSH_PORT"));
+                sshInformationConfig.setUsername(resultSet.getString("SSH_USERNAME"));
+                rssInstance.setSshInformationConfig(sshInformationConfig);
+                snapshotConfig.setTargetDirectory(resultSet.getString("SNAPSHOT_TARGET_DIRECTORY"));
+                rssInstance.setSnapshotConfig(snapshotConfig);
+                rssInstances.add(rssInstance);
 			}
 		} catch (SQLException e) {
 			String msg = "Error while getting all system rss instances information";
@@ -462,21 +574,31 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		ResultSet resultSet = null;
 		List<RSSInstance> rssInstances = new ArrayList<RSSInstance>();
 		RSSInstance rssInstance;
+        SSHInformationConfig sshInformationConfig = null;
+        SnapshotConfig snapshotConfig = null;
 		try {
 			conn = getDataSourceConnection();
-			String selectInstanceQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, RM_SERVER_INSTANCE.ID AS RSS_INSTANCE_ID, " +
-			                        "RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME, RM_SERVER_INSTANCE.SERVER_URL, RM_SERVER_INSTANCE.DBMS_TYPE, " +
-			                        "RM_SERVER_INSTANCE.INSTANCE_TYPE, RM_SERVER_INSTANCE.SERVER_CATEGORY, RM_SERVER_INSTANCE.ADMIN_USERNAME, " +
-			                        "RM_SERVER_INSTANCE.ADMIN_PASSWORD, RM_SERVER_INSTANCE.TENANT_ID, RM_SERVER_INSTANCE.DRIVER_CLASS, " +
-			                        "RM_SERVER_INSTANCE.ENVIRONMENT_ID FROM RM_SERVER_INSTANCE INNER JOIN RM_ENVIRONMENT " +
-			                        "WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = RM_ENVIRONMENT.ID AND RM_SERVER_INSTANCE.TENANT_ID = ? " +
-			                        "AND RM_SERVER_INSTANCE.INSTANCE_TYPE = ?";
-			statement = conn.prepareStatement(selectInstanceQuery);
+			String selectInstanceQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, " +
+                                         "RM_SERVER_INSTANCE.ID AS RSS_INSTANCE_ID, " +
+                                         "RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME, " +
+                                         "RM_SERVER_INSTANCE.SERVER_URL, RM_SERVER_INSTANCE.DBMS_TYPE, " +
+                                         "RM_SERVER_INSTANCE.INSTANCE_TYPE, RM_SERVER_INSTANCE.SERVER_CATEGORY, " +
+                                         "RM_SERVER_INSTANCE.ADMIN_USERNAME, RM_SERVER_INSTANCE.ADMIN_PASSWORD, " +
+                                         "RM_SERVER_INSTANCE.TENANT_ID, RM_SERVER_INSTANCE.DRIVER_CLASS, " +
+                                         "RM_SERVER_INSTANCE.ENVIRONMENT_ID, RM_SERVER_INSTANCE.SSH_HOST, " +
+                                         "RM_SERVER_INSTANCE.SSH_PORT, RM_SERVER_INSTANCE.SSH_USERNAME, " +
+                                         "RM_SERVER_INSTANCE.SNAPSHOT_TARGET_DIRECTORY FROM RM_SERVER_INSTANCE INNER " +
+                                         "JOIN RM_ENVIRONMENT WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = " +
+                                         "RM_ENVIRONMENT.ID AND RM_SERVER_INSTANCE.TENANT_ID = ? AND " +
+                                         "RM_SERVER_INSTANCE.INSTANCE_TYPE = ?";
+            statement = conn.prepareStatement(selectInstanceQuery);
 			statement.setLong(1, tenantId);
 			statement.setString(2, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
-				rssInstance = new RSSInstance();
+                rssInstance = new RSSInstance();
+                sshInformationConfig = new SSHInformationConfig();
+                snapshotConfig = new SnapshotConfig();
 				rssInstance.setEnvironmentName(resultSet.getString("ENVIRONMENT_NAME"));
 				rssInstance.setId(resultSet.getInt("RSS_INSTANCE_ID"));
 				rssInstance.setName(resultSet.getString("RSS_INSTANCE_NAME"));
@@ -489,7 +611,13 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 				rssInstance.setTenantId(resultSet.getLong("TENANT_ID"));
 				rssInstance.setDriverClassName(resultSet.getString("DRIVER_CLASS"));
 				rssInstance.setEnvironmentId(resultSet.getInt("ENVIRONMENT_ID"));
-				rssInstances.add(rssInstance);
+                sshInformationConfig.setHost(resultSet.getString("SSH_HOST"));
+                sshInformationConfig.setPort(resultSet.getInt("SSH_PORT"));
+                sshInformationConfig.setUsername(resultSet.getString("SSH_USERNAME"));
+                rssInstance.setSshInformationConfig(sshInformationConfig);
+                snapshotConfig.setTargetDirectory(resultSet.getString("SNAPSHOT_TARGET_DIRECTORY"));
+                rssInstance.setSnapshotConfig(snapshotConfig);
+                rssInstances.add(rssInstance);
 			}
 		} catch (SQLException e) {
 			String msg = "Error while getting all system rss instances information";

@@ -26,6 +26,8 @@
 <%@ page import="org.wso2.carbon.rssmanager.core.dto.xsd.RSSInstanceInfo" %>
 <%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerConstants" %>
 <%@ page import="org.wso2.carbon.utils.multitenancy.MultitenantConstants" %>
+<%@ page import="org.wso2.carbon.rssmanager.core.dto.xsd.SSHInformationConfigInfo" %>
+<%@ page import="org.wso2.carbon.rssmanager.core.dto.xsd.SnapshotConfigInfo" %>
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
@@ -57,6 +59,8 @@
         RSSManagerClient client = new RSSManagerClient(cookie, backendServerUrl, configContext,
                 request.getLocale());
         RSSInstanceInfo rssIns = null;
+        SSHInformationConfigInfo sshConfig = null;
+        SnapshotConfigInfo snapshotConfig = null;
         String tenantDomain = (String) session.getAttribute(MultitenantConstants.TENANT_DOMAIN);
         String[] environments=null;
         try {
@@ -67,6 +71,8 @@
         }
 
         if (rssIns != null) {
+            sshConfig = rssIns.getSshInformationConfig();
+            snapshotConfig = rssIns.getSnapshotConfig();
     %>
 
     <div id="middle">
@@ -192,6 +198,40 @@
                                         <input type="password" id="repassword" type="password" name="repassword" class="longInput"
                                                value=""/>
                                     </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table class="normal">
+                                <tr>
+                                    <td class="leftCol-med"><fmt:message
+                                            key="rss.manager.ssh.host"/><font
+                                            color='red'>*</font></td>
+                                    <td><input value="<%=sshConfig.getHost()%>" id="sshHost"
+                                               name="sshHost" size="30" type="text"></td>
+                                </tr>
+                                <tr>
+                                    <td class="leftCol-med"><fmt:message
+                                            key="rss.manager.ssh.port"/><font
+                                            color='red'>*</font></td>
+                                    <td><input value="<%=sshConfig.getPort()%>" id="sshPort"
+                                               name="sshPort" size="30" type="text"></td>
+                                </tr>
+                                <tr>
+                                    <td class="leftCol-med"><fmt:message
+                                            key="rss.manager.ssh.username"/><font
+                                            color='red'>*</font></td>
+                                    <td><input value="<%=sshConfig.getUsername()%>" id="sshUsername"
+                                               name="sshUsername" size="30" type="text"></td>
+                                </tr>
+                                <tr>
+                                    <td class="leftCol-med"><fmt:message
+                                            key="rss.manager.snapshot.target.directory"/><font
+                                            color='red'>*</font></td>
+                                    <td><input value="<%=snapshotConfig.getTargetDirectory()%>" id="snapshotTargetDirectory"
+                                               name="snapshotTargetDirectory" size="30" type="text"></td>
                                 </tr>
                             </table>
                         </td>
