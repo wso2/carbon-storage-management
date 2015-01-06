@@ -665,15 +665,22 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
                                                         sshInformation.getUsername(),
                                                         privateKeyConfig.getPrivateKeyPath(),
                                                         privateKeyConfig.getPassPhrase());
-        String command = RSSManagerConstants.Snapshots.POSTGRE_DUMP_TOOL + RSSManagerConstants.SPACE +
-                         RSSManagerConstants.Snapshots.POSTGRE_USERNAME_OPTION + RSSManagerConstants.SPACE +
-                         instance.getAdminUserName() + RSSManagerConstants.SPACE +
-                         databaseName.toLowerCase() + RSSManagerConstants.SPACE +
-                         RSSManagerConstants.Snapshots.POSTGRE_OUTPUT_FILE_OPTION + RSSManagerConstants.SPACE +
-                         RSSManagerUtil.getSnapshotFilePath(snapshotConfig.getTargetDirectory(), databaseName)
-                         + RSSManagerConstants.SPACE + RSSManagerConstants.Snapshots.POSTGRE_INSERTS_OPTION;
+        StringBuilder command = new StringBuilder();
+        command.append(RSSManagerConstants.Snapshots.POSTGRE_DUMP_TOOL);
+        command.append(RSSManagerConstants.SPACE);
+        command.append(RSSManagerConstants.Snapshots.POSTGRE_USERNAME_OPTION);
+        command.append(RSSManagerConstants.SPACE);
+        command.append(instance.getAdminUserName());
+        command.append(RSSManagerConstants.SPACE);
+        command.append(databaseName.toLowerCase());
+        command.append(RSSManagerConstants.SPACE);
+        command.append(RSSManagerConstants.Snapshots.POSTGRE_OUTPUT_FILE_OPTION);
+        command.append(RSSManagerConstants.SPACE);
+        command.append(RSSManagerUtil.getSnapshotFilePath(snapshotConfig.getTargetDirectory(), databaseName));
+        command.append(RSSManagerConstants.SPACE);
+        command.append(RSSManagerConstants.Snapshots.POSTGRE_INSERTS_OPTION);
         try {
-            sshConnection.executeCommand(command, instance.getAdminPassword());
+            sshConnection.executeCommand(command.toString(), instance.getAdminPassword());
         } catch (Exception e) {
             String errorMessage = "Error occurred while creating snapshot.";
             log.error(errorMessage, e);

@@ -203,33 +203,37 @@
                         </td>
                     </tr>
                     <tr>
+                        <td colspan="2" class="middle-header">
+                            <a onclick="showSnapshotInfo()" class="icon-link"
+                               style="background-image:url(images/plus.gif);"
+                               href="#snapshotInfo" id="snapshotinfoheader"></a>
+                            <fmt:message key="rss.manager.snapshot.related.info"/>
+                        </td>
+                    </tr>
+                    <tr id="snapshotinfo" style="display:none">
                         <td>
-                            <table class="normal">
+                            <table class="normal" id="showSnapshotInfo">
                                 <tr>
                                     <td class="leftCol-med"><fmt:message
-                                            key="rss.manager.ssh.host"/><font
-                                            color='red'>*</font></td>
+                                            key="rss.manager.ssh.host"/></td>
                                     <td><input value="<%=sshConfig.getHost()%>" id="sshHost"
                                                name="sshHost" size="30" type="text"></td>
                                 </tr>
                                 <tr>
                                     <td class="leftCol-med"><fmt:message
-                                            key="rss.manager.ssh.port"/><font
-                                            color='red'>*</font></td>
+                                            key="rss.manager.ssh.port"/></td>
                                     <td><input value="<%=sshConfig.getPort()%>" id="sshPort"
                                                name="sshPort" size="30" type="text"></td>
                                 </tr>
                                 <tr>
                                     <td class="leftCol-med"><fmt:message
-                                            key="rss.manager.ssh.username"/><font
-                                            color='red'>*</font></td>
+                                            key="rss.manager.ssh.username"/></td>
                                     <td><input value="<%=sshConfig.getUsername()%>" id="sshUsername"
                                                name="sshUsername" size="30" type="text"></td>
                                 </tr>
                                 <tr>
                                     <td class="leftCol-med"><fmt:message
-                                            key="rss.manager.snapshot.target.directory"/><font
-                                            color='red'>*</font></td>
+                                            key="rss.manager.snapshot.target.directory"/></td>
                                     <td><input value="<%=snapshotConfig.getTargetDirectory()%>" id="snapshotTargetDirectory"
                                                name="snapshotTargetDirectory" size="30" type="text"></td>
                                 </tr>

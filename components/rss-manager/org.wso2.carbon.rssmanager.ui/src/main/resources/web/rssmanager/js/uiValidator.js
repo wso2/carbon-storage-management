@@ -52,25 +52,11 @@ function validateRSSInstanceProperties() {
         CARBON.showWarningDialog("Data source confirm administrative password field cannot be left blank");
         return false;
     }
-    if (sshHost == '' || sshHost == null) {
-        CARBON.showWarningDialog("SSH host cannot be left blank");
-        return false;
-    }
-    if (sshPort == '' || sshPort == null) {
-        CARBON.showWarningDialog("SSH port cannot be left blank");
-        return false;
-    }
-    if (sshUsername == '' || sshUsername == null) {
-        CARBON.showWarningDialog("SSH username cannot be left blank");
-        return false;
-    }
-    if (snapshotTargetDirectory == '' || snapshotTargetDirectory == null) {
-        CARBON.showWarningDialog("Snapshot target directory cannot be left blank");
-        return false;
-    }
-    if (isNaN(parseInt(sshPort))){
-        CARBON.showWarningDialog("SSH port invalid");
-        return false;
+    if (!(sshPort == '' || sshPort == null)) {
+        if (isNaN(parseInt(sshPort))) {
+            CARBON.showWarningDialog("SSH port invalid");
+            return false;
+        }
     }
     if (password!=repassword) {
         CARBON.showWarningDialog("Data source password and confirmation password do not match");
@@ -117,6 +103,9 @@ function dispatchRSSInstanceCreateRequest(flag) {
     var serverEnvironment = serverEnvironmentList[serverEnvironmentList.selectedIndex].value;
     var sshHost = trim(document.getElementById("sshHost").value);
     var sshPort = trim(document.getElementById("sshPort").value);
+    if(sshPort==null || sshPort==""){
+        sshPort=0;
+    }
     var sshUsername = trim(document.getElementById("sshUsername").value);
     var snapshotTargetDirectory = trim(document.getElementById("snapshotTargetDirectory").value);
     var url = 'rssInstanceOps_ajaxprocessor.jsp?rssInstanceName=' + encodeURIComponent(rssInstanceName)
@@ -1240,6 +1229,17 @@ function addDataSourceProperties() {
     }
 }
 
+function showSnapshotInfo() {
+    var snapshotHeder =  document.getElementById('snapshotinfoheader');
+    var infoFields = document.getElementById('snapshotinfo');
+    if(infoFields.style.display == 'none') {
+        snapshotHeder.setAttribute('style','background-image:url(images/minus.gif);');
+        infoFields.style.display = '';
+    } else {
+        snapshotHeder.setAttribute('style','background-image:url(images/plus.gif);');
+        infoFields.style.display = 'none';
+    }
+}
 
 function alternateTableRows(id, evenStyle, oddStyle) {
     if (document.getElementsByTagName) {

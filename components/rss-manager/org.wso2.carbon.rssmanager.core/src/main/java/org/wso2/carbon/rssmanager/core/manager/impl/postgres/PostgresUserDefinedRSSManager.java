@@ -588,7 +588,7 @@ public class PostgresUserDefinedRSSManager extends UserDefinedRSSManager {
 	    RSSInstance instance = null;
 	    try {
 		    instance = resolveRSSInstanceByDatabase(databaseName,
-		                                                        RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+		                                                        RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
 	    } catch (RSSDatabaseConnectionException e) {
 		    String msg = "Database server error at creating database snapshot " + databaseName + e.getMessage();
 		    handleException(msg, e);
@@ -602,16 +602,22 @@ public class PostgresUserDefinedRSSManager extends UserDefinedRSSManager {
                                                         sshInformation.getUsername(),
                                                         privateKeyConfig.getPrivateKeyPath(),
                                                         privateKeyConfig.getPassPhrase());
-        String command = RSSManagerConstants.Snapshots.MYSQL_DUMP_TOOL + RSSManagerConstants.SPACE +
-                         RSSManagerConstants.Snapshots.MYSQL_USERNAME_OPTION + RSSManagerConstants.SPACE +
-                         instance.getAdminUserName() + RSSManagerConstants.SPACE +
-                         RSSManagerConstants.Snapshots.MYSQL_PASSWORD_OPTION +
-                         instance.getAdminPassword() +
-                         databaseName.toLowerCase() + RSSManagerConstants.SPACE +
-                         RSSManagerConstants.Snapshots.MYSQL_OUTPUT_FILE_OPTION + RSSManagerConstants.SPACE +
-                         RSSManagerUtil.getSnapshotFilePath(snapshotConfig.getTargetDirectory(), databaseName);
-        try {
-            sshConnection.executeCommand(command);
+	    StringBuilder command = new StringBuilder();
+	    command.append(RSSManagerConstants.Snapshots.POSTGRE_DUMP_TOOL);
+	    command.append(RSSManagerConstants.SPACE);
+	    command.append(RSSManagerConstants.Snapshots.POSTGRE_USERNAME_OPTION);
+	    command.append(RSSManagerConstants.SPACE);
+	    command.append(instance.getAdminUserName());
+	    command.append(RSSManagerConstants.SPACE);
+	    command.append(databaseName.toLowerCase());
+	    command.append(RSSManagerConstants.SPACE);
+	    command.append(RSSManagerConstants.Snapshots.POSTGRE_OUTPUT_FILE_OPTION);
+	    command.append(RSSManagerConstants.SPACE);
+	    command.append(RSSManagerUtil.getSnapshotFilePath(snapshotConfig.getTargetDirectory(), databaseName));
+	    command.append(RSSManagerConstants.SPACE);
+	    command.append(RSSManagerConstants.Snapshots.POSTGRE_INSERTS_OPTION);
+	    try {
+	        sshConnection.executeCommand(command.toString(), instance.getAdminPassword());
         } catch (Exception e) {
             String errorMessage = "Error occurred while creating snapshot.";
             log.error(errorMessage, e);

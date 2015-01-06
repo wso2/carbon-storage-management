@@ -2181,13 +2181,13 @@
     </wsdl:binding>
     <wsdl:service name="RSSAdmin">
         <wsdl:port name="RSSAdminHttpsSoap11Endpoint" binding="ns:RSSAdminSoap11Binding">
-            <soap:address location="https://10.100.4.123:9443/services/RSSAdmin.RSSAdminHttpsSoap11Endpoint/"/>
+            <soap:address location="https://localhost:9443/services/RSSAdmin.RSSAdminHttpsSoap11Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="RSSAdminHttpsSoap12Endpoint" binding="ns:RSSAdminSoap12Binding">
-            <soap12:address location="https://10.100.4.123:9443/services/RSSAdmin.RSSAdminHttpsSoap12Endpoint/"/>
+            <soap12:address location="https://localhost:9443/services/RSSAdmin.RSSAdminHttpsSoap12Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="RSSAdminHttpsEndpoint" binding="ns:RSSAdminHttpBinding">
-            <http:address location="https://10.100.4.123:9443/services/RSSAdmin.RSSAdminHttpsEndpoint/"/>
+            <http:address location="https://localhost:9443/services/RSSAdmin.RSSAdminHttpsEndpoint/"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

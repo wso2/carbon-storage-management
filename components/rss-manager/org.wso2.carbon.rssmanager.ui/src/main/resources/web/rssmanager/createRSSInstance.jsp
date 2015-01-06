@@ -238,33 +238,37 @@
                         </td>
                     </tr>
                     <tr>
+                        <td colspan="2" class="middle-header">
+                            <a onclick="showSnapshotInfo()" class="icon-link"
+                               style="background-image:url(images/plus.gif);"
+                               href="#snapshotInfo" id="snapshotinfoheader"></a>
+                            <fmt:message key="rss.manager.snapshot.related.info"/>
+                        </td>
+                    </tr>
+                    <tr id="snapshotinfo" style="display:none">
                         <td>
-                            <table class="normal">
+                            <table class="normal" id="showSnapshotInfo">
                                 <tr>
                                     <td class="leftCol-med"><fmt:message
-                                            key="rss.manager.ssh.host"/><font
-                                            color='red'>*</font></td>
+                                            key="rss.manager.ssh.host"/></td>
                                     <td><input value="" id="sshHost"
                                                name="sshHost" class="longInput"></td>
                                 </tr>
                                 <tr>
                                     <td class="leftCol-med"><fmt:message
-                                            key="rss.manager.ssh.port"/><font
-                                            color='red'>*</font></td>
+                                            key="rss.manager.ssh.port"/></td>
                                     <td><input value="" id="sshPort"
                                                name="sshPort" class="longInput"></td>
                                 </tr>
                                 <tr>
                                     <td class="leftCol-med"><fmt:message
-                                            key="rss.manager.ssh.username"/><font
-                                            color='red'>*</font></td>
+                                            key="rss.manager.ssh.username"/></td>
                                     <td><input value="" id="sshUsername"
                                                name="sshUsername" class="longInput"></td>
                                 </tr>
                                 <tr>
                                     <td class="leftCol-med"><fmt:message
-                                            key="rss.manager.snapshot.target.directory"/><font
-                                            color='red'>*</font></td>
+                                            key="rss.manager.snapshot.target.directory"/></td>
                                     <td><input value="" id="snapshotTargetDirectory"
                                                name="snapshotTargetDirectory" class="longInput"></td>
                                 </tr>
