@@ -52,19 +52,21 @@
                                 <DriverClassName>org.h2.Driver</DriverClassName>
                             </Definition>
                         </DataSourceConfiguration>
-                        <!--SSHInformation>
+                        <SSHInformation>
                             <Host>remotehost</Host>
                             <Port>22</Port>
                             <Username>username</Username>
-                            <PrivateKeyPath>/data/private/my_keys/private.key</PrivateKeyPath>
-                            <PassPhrase>pass</PassPhrase>
                         </SSHInformation>
                         <SnapshotConfiguration>
                              <TargetDirectory>/home/cloud/snapshots</TargetDirectory>
-                        </SnapshotConfiguration-->
+                        </SnapshotConfiguration>
                     </RSSInstance>
                 </RSSInstances>
              </Environment>
         </Environments>
+    <PrivateKeyConfiguration>
+        <PrivateKeyPath>/data/private/my_keys/private.key</PrivateKeyPath>
+        <PassPhrase>pass</PassPhrase>
+    </PrivateKeyConfiguration>
 </RSSConfiguration>
 

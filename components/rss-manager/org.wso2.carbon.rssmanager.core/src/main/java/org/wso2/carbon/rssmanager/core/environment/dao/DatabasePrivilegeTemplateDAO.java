@@ -20,8 +20,8 @@
 package org.wso2.carbon.rssmanager.core.environment.dao;
 
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate;
-import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 
 public interface DatabasePrivilegeTemplateDAO {
 
@@ -32,7 +32,8 @@ public interface DatabasePrivilegeTemplateDAO {
 	 * @param environmentId environment id
 	 * @throws RSSDAOException if error occur when adding database privilege template
 	 */
-	void addDatabasePrivilegeTemplate(DatabasePrivilegeTemplate databasePrivilegeTemplate, int environmentId) throws RSSDAOException;
+	void addDatabasePrivilegeTemplate(DatabasePrivilegeTemplate databasePrivilegeTemplate, int environmentId)
+			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Get database privilege template
@@ -44,7 +45,8 @@ public interface DatabasePrivilegeTemplateDAO {
 	 * @throws RSSDAOException if error occur when getting database privilege template
 	 */
 	DatabasePrivilegeTemplate getDatabasePrivilegesTemplate(int environmentId, String name,
-	                                                        int tenantId) throws RSSDAOException;
+	                                                        int tenantId)
+			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Get database privilege templates of environment
@@ -54,7 +56,7 @@ public interface DatabasePrivilegeTemplateDAO {
 	 * @throws RSSDAOException if error occur when getting database privilege templates
 	 */
 	DatabasePrivilegeTemplate[] getDatabasePrivilegesTemplates(
-			int environmentId, int tenantId) throws RSSDAOException;
+			int environmentId, int tenantId) throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
 	 * Check the exitence of a privilege template
@@ -66,7 +68,8 @@ public interface DatabasePrivilegeTemplateDAO {
 	 * @throws RSSDAOException if error occur when checking existence of database privilege template
 	 */
 	boolean isDatabasePrivilegeTemplateExist(int environmentId, String templateName,
-	                                         int tenantId) throws RSSDAOException;
+	                                         int tenantId) throws RSSDAOException,
+			RSSDatabaseConnectionException;
 
 	/**
 	 * Remove dataabase privilege template
@@ -77,5 +80,5 @@ public interface DatabasePrivilegeTemplateDAO {
 	 * @throws RSSDAOException if error occur when removing database privilege template
 	 */
 	void removeDatabasePrivilegeTemplate(int environmentId, String templateName,
-	                                     int tenantId) throws RSSDAOException;
+	                                     int tenantId) throws RSSDAOException, RSSDatabaseConnectionException;
 }

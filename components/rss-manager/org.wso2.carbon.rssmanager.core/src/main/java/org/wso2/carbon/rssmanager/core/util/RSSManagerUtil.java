@@ -40,13 +40,7 @@ import org.wso2.carbon.rssmanager.core.config.RSSConfigurationManager;
 import org.wso2.carbon.rssmanager.core.config.databasemanagement.SnapshotConfig;
 import org.wso2.carbon.rssmanager.core.config.datasource.RDBMSConfig;
 import org.wso2.carbon.rssmanager.core.config.ssh.SSHInformationConfig;
-import org.wso2.carbon.rssmanager.core.dto.DatabaseInfo;
-import org.wso2.carbon.rssmanager.core.dto.DatabasePrivilegeSetInfo;
-import org.wso2.carbon.rssmanager.core.dto.DatabasePrivilegeTemplateInfo;
-import org.wso2.carbon.rssmanager.core.dto.DatabaseUserInfo;
-import org.wso2.carbon.rssmanager.core.dto.MySQLPrivilegeSetInfo;
-import org.wso2.carbon.rssmanager.core.dto.RSSInstanceInfo;
-import org.wso2.carbon.rssmanager.core.dto.UserDatabaseEntryInfo;
+import org.wso2.carbon.rssmanager.core.dto.*;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplateEntry;
@@ -565,9 +559,10 @@ public final class RSSManagerUtil {
     /**
      * create rss instance info object from rss instance to be presented from service
      */
-    public static void createRSSInstanceInfo(RSSInstanceInfo rssInstanceInfo, RSSInstance rssInstance) {
+    public static void createRSSInstanceInfo(RSSInstanceInfo rssInstanceInfo, RSSInstance rssInstance)
+            throws RSSManagerException{
         if (rssInstanceInfo == null || rssInstance == null) {
-            return;
+            throw new RSSManagerException("Error occurred while mapping rss instance to rss instance info");
         }
         rssInstanceInfo.setDbmsType(rssInstance.getDbmsType());
         rssInstanceInfo.setEnvironmentName(rssInstance.getEnvironmentName());
@@ -578,6 +573,12 @@ public final class RSSManagerUtil {
         rssInstanceInfo.setUsername(rssInstance.getAdminUserName());
         rssInstanceInfo.setPassword(rssInstance.getAdminPassword());
         rssInstanceInfo.setDriverClass(rssInstance.getDriverClassName());
+        SSHInformationConfigInfo sshConfigInfo = new SSHInformationConfigInfo();
+        createSSHInformationConfigInfo(sshConfigInfo, rssInstance.getSshInformationConfig());
+        rssInstanceInfo.setSshInformationConfig(rssInstance.getSshInformationConfig() == null ? null : sshConfigInfo);
+        SnapshotConfigInfo snapshotConfigInfo = new SnapshotConfigInfo();
+        createSnapshotConfigInfo(snapshotConfigInfo, rssInstance.getSnapshotConfig());
+        rssInstanceInfo.setSnapshotConfig(rssInstance.getSnapshotConfig() == null ? null : snapshotConfigInfo);
 
     }
 
@@ -685,9 +686,10 @@ public final class RSSManagerUtil {
     /**
      * create rss instance object from rss instance info to be use in internally
      */
-    public static void createRSSInstance(RSSInstanceInfo instanceInfo, RSSInstance rssInstance) {
+    public static void createRSSInstance(RSSInstanceInfo instanceInfo, RSSInstance rssInstance)
+            throws RSSManagerException{
         if (instanceInfo == null || rssInstance == null) {
-            return;
+            throw new RSSManagerException("Error occurred while mapping rss instance info to rss instance");
         }
         rssInstance.setDbmsType(instanceInfo.getDbmsType());
         rssInstance.setEnvironmentName(instanceInfo.getEnvironmentName());
@@ -698,6 +700,12 @@ public final class RSSManagerUtil {
         rssInstance.setAdminPassword(instanceInfo.getPassword());
         rssInstance.setAdminUserName(instanceInfo.getUsername());
         rssInstance.setDriverClassName(instanceInfo.getDriverClass());
+        SSHInformationConfig sshConfig = new SSHInformationConfig();
+        createSSHInformationConfig(instanceInfo.getSshInformationConfig(), sshConfig);
+        rssInstance.setSshInformationConfig(instanceInfo.getSshInformationConfig() == null ? null : sshConfig);
+        SnapshotConfig snapshotConfig = new SnapshotConfig();
+        createSnapshotConfig(instanceInfo.getSnapshotConfig(), snapshotConfig);
+        rssInstance.setSnapshotConfig(instanceInfo.getSnapshotConfig() == null ? null : snapshotConfig);
 
     }
 
@@ -1020,35 +1028,62 @@ public final class RSSManagerUtil {
                + RSSManagerConstants.Snapshots.SNAPSHOT_FILE_POST_FIX;
     }
 
-    public static SSHInformationConfig getSSHInformationOfServerInstance(String instanceName)
+    /**
+     * create Snapshot Config Info object from Snapshot Config to be presented from service
+     */
+    public static void createSnapshotConfigInfo(SnapshotConfigInfo snapshotConfigInfo, SnapshotConfig snapshotConfig)
             throws RSSManagerException {
-        Environment[] environments = RSSConfigurationManager.getInstance().getCurrentRSSConfig().getRSSEnvironments();
-        for (Environment environment : environments) {
-            for (RSSInstance rssInstance : environment.getRSSInstances()) {
-                if (instanceName.equalsIgnoreCase(rssInstance.getName())) {
-                    return rssInstance.getSshInformationConfig();
-                }
-            }
+        if (snapshotConfigInfo == null || snapshotConfig == null) {
+            throw new RSSManagerException("Error occurred while mapping snapshot config to snapshot config info");
         }
-        throw new RSSManagerException("SSH Information is not available for RSS Instance: "
-                                      + instanceName
-                                      + ", in "
-                                      + RSSManagerConstants.RSS_CONFIG_XML_NAME);
+        snapshotConfigInfo.setTargetDirectory(snapshotConfig.getTargetDirectory());
     }
 
-    public static SnapshotConfig getSnapshotConfigOfServerInstance(String instanceName)
-            throws RSSManagerException {
-        Environment[] environments = RSSConfigurationManager.getInstance().getCurrentRSSConfig().getRSSEnvironments();
-        for (Environment environment : environments) {
-            for (RSSInstance rssInstance : environment.getRSSInstances()) {
-                if (instanceName.equalsIgnoreCase(rssInstance.getName())) {
-                    return rssInstance.getSnapshotConfig();
-                }
-            }
+    /**
+     * create SSH Information Config Info object from SSH Information Config to be presented from service
+     */
+    public static void createSSHInformationConfigInfo(SSHInformationConfigInfo sshInformationConfigInfo,
+                                                      SSHInformationConfig sshInformationConfig) throws
+                                                                                                 RSSManagerException{
+        if (sshInformationConfigInfo == null || sshInformationConfig == null) {
+            throw new RSSManagerException("Error occurred while mapping SSH information config to SSH information " +
+                                          "config info");
         }
-        throw new RSSManagerException("Snapshot Configuration is not available for RSS Instance: "
-                                      + instanceName
-                                      + ", in "
-                                      + RSSManagerConstants.RSS_CONFIG_XML_NAME);
+        sshInformationConfigInfo.setHost(sshInformationConfig.getHost());
+        sshInformationConfigInfo.setPort(sshInformationConfig.getPort());
+        sshInformationConfigInfo.setUsername(sshInformationConfig.getUsername());
     }
+
+
+    /**
+     * create Snapshot Config object from Snapshot Config Info to be use in internally
+     */
+    public static void createSnapshotConfig(SnapshotConfigInfo snapshotConfigInfo, SnapshotConfig snapshotConfig)
+            throws RSSManagerException{
+        if (snapshotConfigInfo == null || snapshotConfig == null) {
+            throw new RSSManagerException("Error occurred while mapping snapshot config info to snapshot config");
+        }
+        snapshotConfig.setTargetDirectory(snapshotConfigInfo.getTargetDirectory());
+    }
+
+    /**
+     * create SSH Information Config object from SSH Information Config Info to be use in internally
+     */
+    public static void createSSHInformationConfig(SSHInformationConfigInfo sshInformationConfigInfo,
+                                                      SSHInformationConfig sshInformationConfig) throws
+                                                                                                 RSSManagerException{
+        if (sshInformationConfigInfo == null || sshInformationConfig == null) {
+            throw new RSSManagerException("Error occurred while mapping SSH information config info to SSH " +
+                                          "information config");
+        }
+        sshInformationConfig.setHost(sshInformationConfigInfo.getHost());
+        sshInformationConfig.setPort(sshInformationConfigInfo.getPort());
+        sshInformationConfig.setUsername(sshInformationConfigInfo.getUsername());
+    }
+
+	public static String getCleanInstanceType(String instanceType) {
+		return (instanceType == null || "".equals(instanceType) || RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equals
+				(instanceType)) ? RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM : RSSManagerConstants.RSSManagerTypes
+				.RM_TYPE_USER_DEFINED;
+	}
 }

@@ -22,8 +22,12 @@ package org.wso2.carbon.rssmanager.core.manager.impl.mysql;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
+import org.wso2.carbon.rssmanager.core.config.PrivateKeyConfig;
+import org.wso2.carbon.rssmanager.core.config.RSSConfig;
+import org.wso2.carbon.rssmanager.core.config.RSSConfigurationManager;
 import org.wso2.carbon.rssmanager.core.config.databasemanagement.SnapshotConfig;
 import org.wso2.carbon.rssmanager.core.config.ssh.SSHInformationConfig;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.MySQLPrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry;
@@ -38,12 +42,9 @@ import org.wso2.carbon.rssmanager.core.manager.UserDefinedRSSManager;
 import org.wso2.carbon.rssmanager.core.util.databasemanagement.SSHConnection;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @see org.wso2.carbon.rssmanager.core.manager.RSSManager for the method java doc comments
@@ -66,8 +67,14 @@ public class MySQLUserDefinedRSSManager extends UserDefinedRSSManager {
         PreparedStatement addDBNativeQuery = null;
         final String qualifiedDatabaseName = database.getName().trim();
         int tenantId = RSSManagerUtil.getTenantId();
-        boolean isExist = super.isDatabaseExist(database.getRssInstanceName(), qualifiedDatabaseName,
-                                                RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+        boolean isExist = false;
+        try {
+            isExist = super.isDatabaseExist(database.getRssInstanceName(), qualifiedDatabaseName,
+                                                    RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+        } catch (RSSDatabaseConnectionException e) {
+            String msg = "Database server error at adding database " + database.getName() + e.getMessage();
+            handleException(msg, e);
+        }
         if (isExist) {
             String msg = "Database '" + qualifiedDatabaseName + "' already exists";
             log.error(msg);
@@ -106,7 +113,13 @@ public class MySQLUserDefinedRSSManager extends UserDefinedRSSManager {
                                String databaseName) throws RSSManagerException {
         Connection conn = null;
         PreparedStatement dropDBNativeStmt = null;
-        RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+        RSSInstance rssInstance = null;
+        try {
+            rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+        } catch (RSSDatabaseConnectionException e) {
+            String msg = "Database server error at removing database " + databaseName + e.getMessage();
+            handleException(msg, e);
+        }
         if (rssInstance == null) {
             String msg = "Unresolvable RSS Instance. Database " + databaseName + " does not exist";
             log.error(msg);
@@ -292,7 +305,13 @@ public class MySQLUserDefinedRSSManager extends UserDefinedRSSManager {
         String databaseName = entry.getDatabaseName();
         String username = entry.getUsername();
         //resolve rss instance by database
-        RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+        RSSInstance rssInstance = null;
+        try {
+            rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+        } catch (RSSDatabaseConnectionException e) {
+            String msg = "Database server error at adding database user" + username + e.getMessage();
+            handleException(msg, e);
+        }
         try {
             conn = this.getConnection(rssInstance.getName());
             if (privileges == null) {
@@ -488,6 +507,10 @@ public class MySQLUserDefinedRSSManager extends UserDefinedRSSManager {
         } catch (SQLException e) {
             String msg = "Error while flusing privileges '" + rssInstance.getName() + "exists" + e.getMessage();
             handleException(msg, e);
+        } catch (RSSDatabaseConnectionException e) {
+            String msg = "Database server error while flusing privileges '" + rssInstance.getName() + "exists" + e
+                    .getMessage();
+            handleException(msg, e);
         } finally {
             RSSManagerUtil.cleanupResources(null, stmt, conn);
         }
@@ -498,25 +521,40 @@ public class MySQLUserDefinedRSSManager extends UserDefinedRSSManager {
      */
     @Override
     public void createSnapshot(String databaseName) throws RSSManagerException {
-        RSSInstance instance = resolveRSSInstanceByDatabase(databaseName,
-                                                            RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
-        SSHInformationConfig sshInformation = RSSManagerUtil.getSSHInformationOfServerInstance(instance.getName());
-        SnapshotConfig snapshotConfig = RSSManagerUtil.getSnapshotConfigOfServerInstance(instance.getName());
+        RSSInstance instance = null;
+        try {
+            instance = resolveRSSInstanceByDatabase(databaseName,
+                                                                RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+        } catch (RSSDatabaseConnectionException e) {
+            String msg = "Database server error at create snapshot of database " + databaseName + e.getMessage();
+            handleException(msg, e);
+        }
+        RSSConfig rssConfig= RSSConfigurationManager.getInstance().getCurrentRSSConfig();
+        PrivateKeyConfig privateKeyConfig = rssConfig.getPrivateKeyConfig();
+        SSHInformationConfig sshInformation = instance.getSshInformationConfig();
+        SnapshotConfig snapshotConfig = instance.getSnapshotConfig();
         SSHConnection sshConnection = new SSHConnection(sshInformation.getHost(),
                                                         sshInformation.getPort(),
                                                         sshInformation.getUsername(),
-                                                        sshInformation.getPrivateKeyPath(),
-                                                        sshInformation.getPassPhrase());
-        String command = RSSManagerConstants.Snapshots.MYSQL_DUMP_TOOL + RSSManagerConstants.SPACE +
-                         RSSManagerConstants.Snapshots.MYSQL_USERNAME_OPTION + RSSManagerConstants.SPACE +
-                         instance.getAdminUserName() + RSSManagerConstants.SPACE +
-                         RSSManagerConstants.Snapshots.MYSQL_PASSWORD_OPTION +
-                         instance.getAdminPassword() +
-                         databaseName + RSSManagerConstants.SPACE +
-                         RSSManagerConstants.Snapshots.MYSQL_OUTPUT_FILE_OPTION + RSSManagerConstants.SPACE +
-                         RSSManagerUtil.getSnapshotFilePath(snapshotConfig.getTargetDirectory(), databaseName);
+                                                        privateKeyConfig.getPrivateKeyPath(),
+                                                        privateKeyConfig.getPassPhrase());
+        StringBuilder command = new StringBuilder();
+        command.append(RSSManagerConstants.Snapshots.MYSQL_DUMP_TOOL);
+        command.append(RSSManagerConstants.SPACE);
+        command.append(RSSManagerConstants.Snapshots.MYSQL_USERNAME_OPTION);
+        command.append(RSSManagerConstants.SPACE);
+        command.append(instance.getAdminUserName());
+        command.append(RSSManagerConstants.SPACE);
+        command.append(RSSManagerConstants.Snapshots.MYSQL_PASSWORD_OPTION);
+        command.append(instance.getAdminPassword());
+        command.append(RSSManagerConstants.SPACE);
+        command.append(databaseName);
+        command.append(RSSManagerConstants.SPACE);
+        command.append(RSSManagerConstants.Snapshots.MYSQL_OUTPUT_FILE_OPTION);
+        command.append(RSSManagerConstants.SPACE);
+        command.append(RSSManagerUtil.getSnapshotFilePath(snapshotConfig.getTargetDirectory(), databaseName));
         try {
-            sshConnection.executeCommand(command);
+            sshConnection.executeCommand(command.toString());
         } catch (Exception e) {
             String errorMessage = "Error occurred while creating snapshot.";
             log.error(errorMessage, e);

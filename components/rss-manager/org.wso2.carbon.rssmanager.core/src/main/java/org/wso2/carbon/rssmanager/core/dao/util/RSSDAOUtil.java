@@ -40,27 +40,50 @@ import java.sql.SQLException;
 public class RSSDAOUtil {
 	private static final Log log = LogFactory.getLog(RSSDAOUtil.class);
 
+	/**
+	 * Clean up database resources
+	 * @param resultSet result set to be closed
+	 * @param statement prepared statement to be closed
+	 * @param conn connection to be closed
+	 * @param task occurred when clean up the resources
+	 */
 	public static synchronized void cleanupResources(ResultSet resultSet, PreparedStatement statement,
-	                                                 Connection conn) {
+	                                                 Connection conn, String task) {
 		if (resultSet != null) {
 			try {
 				resultSet.close();
 			} catch (SQLException e) {
-				log.error("Error occurred while closing the result set", e);
+				log.error("Error occurred while closing the result set " + task, e);
 			}
 		}
 		if (statement != null) {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				log.error("Error occurred while closing the statement", e);
+				log.error("Error occurred while closing the statement " + task, e);
 			}
 		}
 		if (conn != null) {
 			try {
 				conn.close();
 			} catch (SQLException e) {
-				log.error("Error occurred while closing the connection", e);
+				log.error("Error occurred while closing the connection "+ task, e);
+			}
+		}
+	}
+
+	/**
+	 * Roll back database updates on error
+	 *
+	 * @param connection database connection
+	 * @param task       task which was executing at the error.
+	 */
+	public static synchronized void rollback(Connection connection, String task) {
+		if (connection != null) {
+			try {
+				connection.rollback();
+			} catch (SQLException e) {
+				log.error("Rollback failed on " + task, e);
 			}
 		}
 	}

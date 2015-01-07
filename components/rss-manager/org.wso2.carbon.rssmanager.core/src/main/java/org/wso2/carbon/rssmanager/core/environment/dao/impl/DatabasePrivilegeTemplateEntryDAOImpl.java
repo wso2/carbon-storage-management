@@ -22,6 +22,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
+import org.wso2.carbon.rssmanager.core.dao.util.RSSDAOUtil;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplateEntry;
 import org.wso2.carbon.rssmanager.core.environment.DatabasePrivilegeTemplateEntryDAO;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
@@ -47,11 +49,13 @@ public class DatabasePrivilegeTemplateEntryDAOImpl implements DatabasePrivilegeT
 	/**
 	 * @see DatabasePrivilegeTemplateEntryDAO#addPrivilegeTemplateEntry(int, int, DatabasePrivilegeTemplateEntry)
 	 */
-	public void addPrivilegeTemplateEntry(int environmentId, int templateId, DatabasePrivilegeTemplateEntry entry) throws RSSDAOException {
+	public void addPrivilegeTemplateEntry(int environmentId, int templateId, DatabasePrivilegeTemplateEntry entry)
+			throws RSSDAOException, RSSDatabaseConnectionException {
 		Connection conn = null;
 		PreparedStatement templateEntryStatement = null;
 		try {
-			conn = getDataSource().getConnection();//acquire data source connection
+			conn = getDataSourceConnection();//acquire data source connection
+			conn.setAutoCommit(false);
 			String insertTemplateEntryQuery = "INSERT INTO RM_DB_PRIVILEGE_TEMPLATE_ENTRY(TEMPLATE_ID, SELECT_PRIV, " +
 			                                  "INSERT_PRIV, UPDATE_PRIV, DELETE_PRIV, CREATE_PRIV, DROP_PRIV, GRANT_PRIV, REFERENCES_PRIV, " +
 			                                  "INDEX_PRIV, ALTER_PRIV, CREATE_TMP_TABLE_PRIV, LOCK_TABLES_PRIV, CREATE_VIEW_PRIV, SHOW_VIEW_PRIV, " +
@@ -82,24 +86,25 @@ public class DatabasePrivilegeTemplateEntryDAOImpl implements DatabasePrivilegeT
 			conn.commit();
 		} catch (SQLException e) {
 			String msg = "Failed to add database template entry to the metadata repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
-			close(templateEntryStatement, RSSManagerConstants.ADD_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
-			close(conn, RSSManagerConstants.ADD_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
+			RSSDAOUtil.cleanupResources(null, templateEntryStatement, conn, RSSManagerConstants
+					.ADD_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
 		}
 	}
 
 	/**
 	 * @see DatabasePrivilegeTemplateEntryDAO#getPrivilegeTemplateEntry(int)
 	 */
-	public DatabasePrivilegeTemplateEntry getPrivilegeTemplateEntry(int templateId) throws RSSDAOException {
+	public DatabasePrivilegeTemplateEntry getPrivilegeTemplateEntry(int templateId)
+			throws RSSDAOException, RSSDatabaseConnectionException {
 		Connection conn = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		DatabasePrivilegeTemplateEntry entry = null;
 		try {
-			conn = getDataSource().getConnection();//acquire data source connection
+			conn = getDataSourceConnection();//acquire data source connection
+			conn.setAutoCommit(false);
 			String getPrivilegeEntryQuery = "SELECT * FROM RM_DB_PRIVILEGE_TEMPLATE_ENTRY WHERE TEMPLATE_ID = ?";
 			statement = conn.prepareStatement(getPrivilegeEntryQuery);
 			statement.setInt(1, templateId);
@@ -129,12 +134,10 @@ public class DatabasePrivilegeTemplateEntryDAOImpl implements DatabasePrivilegeT
 			}
 		} catch (SQLException e) {
 			String msg = "Failed to retrieve database privilege entry information from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
-			close(statement, RSSManagerConstants.SELECT_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
-			close(conn, RSSManagerConstants.SELECT_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants
+					.SELECT_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
 		}
 		return entry;
 	}
@@ -142,11 +145,13 @@ public class DatabasePrivilegeTemplateEntryDAOImpl implements DatabasePrivilegeT
 	/**
 	 * @see DatabasePrivilegeTemplateEntryDAO#updatePrivilegeTemplateEntry(int, int, DatabasePrivilegeTemplateEntry)
 	 */
-	public void updatePrivilegeTemplateEntry(int environmentId, int templateId, DatabasePrivilegeTemplateEntry updatedEntry) throws RSSDAOException {
+	public void updatePrivilegeTemplateEntry(int environmentId, int templateId, DatabasePrivilegeTemplateEntry updatedEntry)
+			throws RSSDAOException, RSSDatabaseConnectionException {
 		Connection conn = null;
 		PreparedStatement entryUpdateStatement = null;
 		try {
-			conn = getDataSource().getConnection();//acquire data source connection
+			conn = getDataSourceConnection();//acquire data source connection
+			conn.setAutoCommit(false);
 			String updateTemplateEntryQuery = "UPDATE RM_DB_PRIVILEGE_TEMPLATE_ENTRY SET SELECT_PRIV=?, INSERT_PRIV=?," +
 			                                  "UPDATE_PRIV=? ,DELETE_PRIV=?, CREATE_PRIV=?, DROP_PRIV=?, GRANT_PRIV=?, REFERENCES_PRIV=?, INDEX_PRIV=?, ALTER_PRIV=?," +
 			                                  "CREATE_TMP_TABLE_PRIV=?, LOCK_TABLES_PRIV=?, CREATE_VIEW_PRIV=?, SHOW_VIEW_PRIV=?, CREATE_ROUTINE_PRIV=?," +
@@ -176,83 +181,34 @@ public class DatabasePrivilegeTemplateEntryDAOImpl implements DatabasePrivilegeT
 			conn.commit();
 		} catch (SQLException e) {
 			String msg = "Failed to update database template entry in the metadata repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
-			close(entryUpdateStatement, RSSManagerConstants.UPDATE_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
-			close(conn, RSSManagerConstants.UPDATE_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
+			RSSDAOUtil.cleanupResources(null, entryUpdateStatement, conn, RSSManagerConstants
+					.UPDATE_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
 		}
 	}
-
-
 	/**
-	 * @param connection database connection
-	 * @param task task which was executed before closing connection
-	 */
-	private void close(Connection connection, String task) {
-		if (connection != null) {
-			try {
-				connection.close();
-			} catch (SQLException e) {
-				log.error("Failed to close connection after " + task, e);
-			}
-		}
-	}
-
-	/**
-	 * Roll back database updates on error
+	 * Get data source connection
 	 *
-	 * @param connection database connection
-	 * @param task       task which was executing at the error.
+	 * @return the data source connection
 	 */
-	private void rollback(Connection connection, String task) {
-		if (connection != null) {
-			try {
-				connection.rollback();
-			} catch (SQLException e) {
-				log.warn("Rollback failed on " + task, e);
-			}
+	private Connection getDataSourceConnection() throws RSSDatabaseConnectionException {
+		try{
+			return dataSource.getConnection();//acquire data source connection
+		} catch (SQLException e) {
+			String msg = "Error while acquiring the database connection. Meta Repository Database server may down";
+			throw new RSSDatabaseConnectionException(msg, e);
 		}
 	}
 
 	/**
-	 * Close the prepared statement
-	 *
-	 * @param preparedStatement PreparedStatement
-	 * @param task              task which was executed before closing the prepared statement.
+	 * Log and throw a rss manager data access exception
+	 * @param msg high level exception message
+	 * @param e error
+	 * @throws RSSDAOException throw RSS DAO exception
 	 */
-	private void close(PreparedStatement preparedStatement, String task) {
-		if (preparedStatement != null) {
-			try {
-				preparedStatement.close();
-			} catch (SQLException e) {
-				log.error("Closing prepared statement failed after " + task, e);
-			}
-		}
-	}
-
-	/**
-	 * Closes the result set
-	 *
-	 * @param resultSet ResultSet
-	 * @param task      task which was executed before closing the result set.
-	 */
-	private void close(ResultSet resultSet, String task) {
-		if (resultSet != null) {
-			try {
-				resultSet.close();
-			} catch (SQLException e) {
-				log.error("Closing result set failed after " + task, e);
-			}
-		}
-	}
-
-	/**
-	 * Get data source
-	 *
-	 * @return data source
-	 */
-	private DataSource getDataSource() {
-		return this.dataSource;
+	public void handleException(String msg, Exception e) throws RSSDAOException {
+		log.error(msg, e);
+		throw new RSSDAOException(msg, e);
 	}
 }

@@ -21,8 +21,12 @@ package org.wso2.carbon.rssmanager.core.manager.impl.postgres;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
+import org.wso2.carbon.rssmanager.core.config.PrivateKeyConfig;
+import org.wso2.carbon.rssmanager.core.config.RSSConfig;
+import org.wso2.carbon.rssmanager.core.config.RSSConfigurationManager;
 import org.wso2.carbon.rssmanager.core.config.databasemanagement.SnapshotConfig;
 import org.wso2.carbon.rssmanager.core.config.ssh.SSHInformationConfig;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.MySQLPrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.PostgresPrivilegeSet;
@@ -35,13 +39,11 @@ import org.wso2.carbon.rssmanager.core.environment.dao.RSSInstanceDAO;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.manager.RSSManager;
 import org.wso2.carbon.rssmanager.core.manager.SystemRSSManager;
-import org.wso2.carbon.rssmanager.core.util.ProcessBuilderWrapper;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 import org.wso2.carbon.rssmanager.core.util.databasemanagement.SSHConnection;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.utils.xml.StringUtils;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -75,8 +77,14 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
         PreparedStatement nativeAddDBStatement = null;
         //get qualified name for database which specific to tenant
         final String qualifiedDatabaseName = RSSManagerUtil.getFullyQualifiedDatabaseName(database.getName());
-        boolean isExist = super.isDatabaseExist(database.getRssInstanceName(), qualifiedDatabaseName,
-                                                RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        boolean isExist = false;
+        try {
+            isExist = super.isDatabaseExist(database.getRssInstanceName(), qualifiedDatabaseName,
+                                                    RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        } catch (RSSDatabaseConnectionException e) {
+            String msg = "Database server error at adding database " + database.getName() + e.getMessage();
+            handleException(msg, e);
+        }
         if (isExist) {
             String msg = "Database '" + qualifiedDatabaseName + "' already exists";
             log.error(msg);
@@ -115,7 +123,13 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
                                String databaseName) throws RSSManagerException {
         Connection conn = null;
         PreparedStatement nativeRemoveDBStatement = null;
-        RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        RSSInstance rssInstance = null;
+        try {
+            rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        } catch (RSSDatabaseConnectionException e) {
+            String msg = "Database server error at removing database " + databaseName + e.getMessage();
+            handleException(msg, e);
+        }
         if (rssInstance == null) {
             String msg = "Unresolvable RSS Instance. Database " + databaseName + " does not exist";
             log.error(msg);
@@ -281,12 +295,11 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
             if (privileges == null) {
                 throw new RSSManagerException("Database privileges-set is null");
             }
-            final int tenantId = RSSManagerUtil.getTenantId();
             PostgresPrivilegeSet postgresPrivs = new PostgresPrivilegeSet();
             createPostgresPrivilegeSet(postgresPrivs, privileges);
             String rssInstanceName = this.getRSSDAO().getDatabaseDAO().resolveRSSInstanceNameByDatabase(
                     this.getEnvironmentName(), databaseName,
-                    RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, tenantId);
+                    RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, MultitenantConstants.SUPER_TENANT_ID);
             RSSInstance rssInstance = this.getEnvironment().getRSSInstance(rssInstanceName);
             if (rssInstance == null) {
                 String msg = "Database '" + databaseName + "' does not exist " +
@@ -346,7 +359,13 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
         String databaseName = entry.getDatabaseName();
         String username = entry.getUsername();
         //resolve rss instance by database
-        RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        RSSInstance rssInstance = null;
+        try {
+            rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        } catch (RSSDatabaseConnectionException e) {
+            String msg = "Database server error at adding database user" + username + e.getMessage();
+            handleException(msg, e);
+        }
         try {
             conn = this.getConnection(rssInstance.getName());
             if (privileges == null) {
@@ -379,7 +398,7 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
         try {
             int tenantId = RSSManagerUtil.getTenantId();
             String rssInstanceName = getDatabaseDAO().resolveRSSInstanceNameByDatabase(this.getEnvironmentName(),
-                                                                                       entry.getDatabaseName(), entry.getType(), tenantId);
+                                     entry.getDatabaseName(), entry.getType(), tenantId);
             conn = getConnection(rssInstanceName);
             revokeAllPrivileges(conn, databaseName, username);
             disAllowedConnect(conn, databaseName, username);
@@ -590,7 +609,7 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
      * @see RSSManager#getDatabase(String, String)
      */
     public Database getDatabase(String rssInstanceName, String databaseName) throws RSSManagerException {
-        return super.getDatabase(RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, databaseName);
+          return super.getDatabase(RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, databaseName);
     }
 
     /**
@@ -629,24 +648,39 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
      */
     @Override
     public void createSnapshot(String databaseName) throws RSSManagerException {
-        RSSInstance instance = resolveRSSInstanceByDatabase(databaseName,
-                                                            RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
-        SSHInformationConfig sshInformation = RSSManagerUtil.getSSHInformationOfServerInstance(instance.getName());
-        SnapshotConfig snapshotConfig = RSSManagerUtil.getSnapshotConfigOfServerInstance(instance.getName());
+        RSSInstance instance = null;
+        try {
+            instance = resolveRSSInstanceByDatabase(databaseName,
+                                                                RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+        } catch (RSSDatabaseConnectionException e) {
+            String msg = "Database server error at creating snapshot of database " + databaseName + e.getMessage();
+            handleException(msg, e);
+        }
+        RSSConfig rssConfig= RSSConfigurationManager.getInstance().getCurrentRSSConfig();
+        PrivateKeyConfig privateKeyConfig = rssConfig.getPrivateKeyConfig();
+        SSHInformationConfig sshInformation = instance.getSshInformationConfig();
+        SnapshotConfig snapshotConfig = instance.getSnapshotConfig();
         SSHConnection sshConnection = new SSHConnection(sshInformation.getHost(),
                                                         sshInformation.getPort(),
                                                         sshInformation.getUsername(),
-                                                        sshInformation.getPrivateKeyPath(),
-                                                        sshInformation.getPassPhrase());
-        String command = RSSManagerConstants.Snapshots.POSTGRE_DUMP_TOOL + RSSManagerConstants.SPACE +
-                         RSSManagerConstants.Snapshots.POSTGRE_USERNAME_OPTION + RSSManagerConstants.SPACE +
-                         instance.getAdminUserName() + RSSManagerConstants.SPACE +
-                         databaseName + RSSManagerConstants.SPACE +
-                         RSSManagerConstants.Snapshots.POSTGRE_OUTPUT_FILE_OPTION + RSSManagerConstants.SPACE +
-                         RSSManagerUtil.getSnapshotFilePath(snapshotConfig.getTargetDirectory(), databaseName)
-                         + RSSManagerConstants.SPACE + RSSManagerConstants.Snapshots.POSTGRE_INSERTS_OPTION;
+                                                        privateKeyConfig.getPrivateKeyPath(),
+                                                        privateKeyConfig.getPassPhrase());
+        StringBuilder command = new StringBuilder();
+        command.append(RSSManagerConstants.Snapshots.POSTGRE_DUMP_TOOL);
+        command.append(RSSManagerConstants.SPACE);
+        command.append(RSSManagerConstants.Snapshots.POSTGRE_USERNAME_OPTION);
+        command.append(RSSManagerConstants.SPACE);
+        command.append(instance.getAdminUserName());
+        command.append(RSSManagerConstants.SPACE);
+        command.append(databaseName.toLowerCase());
+        command.append(RSSManagerConstants.SPACE);
+        command.append(RSSManagerConstants.Snapshots.POSTGRE_OUTPUT_FILE_OPTION);
+        command.append(RSSManagerConstants.SPACE);
+        command.append(RSSManagerUtil.getSnapshotFilePath(snapshotConfig.getTargetDirectory(), databaseName));
+        command.append(RSSManagerConstants.SPACE);
+        command.append(RSSManagerConstants.Snapshots.POSTGRE_INSERTS_OPTION);
         try {
-            sshConnection.executeCommand(command, instance.getAdminPassword());
+            sshConnection.executeCommand(command.toString(), instance.getAdminPassword());
         } catch (Exception e) {
             String errorMessage = "Error occurred while creating snapshot.";
             log.error(errorMessage, e);

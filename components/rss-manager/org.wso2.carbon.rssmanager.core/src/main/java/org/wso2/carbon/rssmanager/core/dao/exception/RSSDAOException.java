@@ -24,7 +24,7 @@ package org.wso2.carbon.rssmanager.core.dao.exception;
  */
 public class RSSDAOException extends Exception {
 
-	private String errorMessage;
+	private String message;
 	private static final long serialVersionUID = 2021891706072918864L;
 
 	/**
@@ -68,12 +68,12 @@ public class RSSDAOException extends Exception {
 		super(cause);
 	}
 
-	public String getErrorMessage() {
-		return errorMessage;
+	public String getMessage() {
+		return message;
 	}
 
 	public void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
+		this.message = errorMessage;
 	}
 
 }

@@ -24,6 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.config.databasemanagement.SnapshotConfig;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.H2PrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry;
@@ -65,8 +66,14 @@ public class H2UserDefinedRSSManager extends UserDefinedRSSManager {
         Connection conn = null;
         final String qualifiedDatabaseName = database.getName().trim();
         int tenantId = RSSManagerUtil.getTenantId();
-        boolean isExist = super.isDatabaseExist(database.getRssInstanceName(), qualifiedDatabaseName,
-                                                RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+        boolean isExist = false;
+        try {
+            isExist = super.isDatabaseExist(database.getRssInstanceName(), qualifiedDatabaseName,
+                                                    RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+        } catch (RSSDatabaseConnectionException e) {
+            String msg = "Database server error at adding database " + database.getName() + e.getMessage();
+            handleException(msg, e);
+        }
         if (isExist) {
             String msg = "Database '" + qualifiedDatabaseName + "' already exists";
             log.error(msg);
@@ -106,7 +113,13 @@ public class H2UserDefinedRSSManager extends UserDefinedRSSManager {
                                String databaseName) throws RSSManagerException {
         Connection conn = null;
         PreparedStatement nativeRemoveDBStatement = null;
-        RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+        RSSInstance rssInstance = null;
+        try {
+            rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+        } catch (RSSDatabaseConnectionException e) {
+            String msg = "Database server error at removing database " +databaseName + e.getMessage();
+            handleException(msg, e);
+        }
         if (rssInstance == null) {
             String msg = "Unresolvable RSS Instance. Database " + databaseName + " does not exist";
             log.error(msg);
@@ -158,7 +171,7 @@ public class H2UserDefinedRSSManager extends UserDefinedRSSManager {
             user.setEnvironmentId(this.getEnvironment().getId());
             super.addDatabaseUser(null, user, qualifiedUsername, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
         } catch (Exception e) {
-            String msg = "Error occurred while creating the database " + "user '" + qualifiedUsername;
+            String msg = "Error occurred while creating the database " + "user '" + qualifiedUsername + e.getMessage();
             handleException(msg, e);
         }
         return user;
@@ -193,7 +206,13 @@ public class H2UserDefinedRSSManager extends UserDefinedRSSManager {
         RSSManagerUtil.checkIfParameterSecured(databaseName);
         RSSManagerUtil.checkIfParameterSecured(username);
         //resolve rss instance by database
-        RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+        RSSInstance rssInstance = null;
+        try {
+            rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+        } catch (RSSDatabaseConnectionException e) {
+            String msg = "Database server error at attach database user" + username + e.getMessage();
+            handleException(msg, e);
+        }
         try {
             conn = this.getConnection(rssInstance.getName(), databaseName);
             if (privileges == null) {
@@ -424,23 +443,19 @@ public class H2UserDefinedRSSManager extends UserDefinedRSSManager {
     public void createSnapshot(String databaseName) throws RSSManagerException {
         Connection conn = null;
         PreparedStatement snapshotStatement = null;
+        RSSInstance instance = null;
         try {
-            int tenantId = RSSManagerUtil.getTenantId();
-            String rssInstanceName = this.getRSSDAO().getDatabaseDAO()
-                    .resolveRSSInstanceNameByDatabase(this.getEnvironmentName(),
-                                                      databaseName,
-                                                      RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED,
-                                                      tenantId);
-            DataSource dataSource = getDataSource(rssInstanceName, databaseName);
+            instance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            DataSource dataSource = getDataSource(instance.getName(), databaseName);
             conn = dataSource.getConnection();
-            SnapshotConfig snapshotConfig = RSSManagerUtil.getSnapshotConfigOfServerInstance(rssInstanceName);
+            SnapshotConfig snapshotConfig = instance.getSnapshotConfig();
             RSSManagerUtil.createSnapshotDirectory(snapshotConfig.getTargetDirectory());
             String filePath = RSSManagerUtil.getSnapshotFilePath(snapshotConfig.getTargetDirectory(), databaseName);
             String snapshotQuery = "SCRIPT TO '" + filePath + "'";
             snapshotStatement = conn.prepareStatement(snapshotQuery);
             snapshotStatement.executeQuery();
         } catch (Exception e) {
-            String errorMessage = "Error occurred while creating snapshot.";
+            String errorMessage = "Error occurred while creating snapshot." + e.getMessage();
             log.error(errorMessage, e);
             throw new RSSManagerException(errorMessage, e);
         } finally {

@@ -21,6 +21,7 @@ package org.wso2.carbon.rssmanager.core.manager;
 
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.MySQLPrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry;
@@ -29,8 +30,15 @@ import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
 import org.wso2.carbon.rssmanager.core.environment.Environment;
+import org.wso2.carbon.rssmanager.core.environment.dao.EnvironmentManagementDAO;
+import org.wso2.carbon.rssmanager.core.environment.dao.EnvironmentManagementDAOFactory;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
+
+import java.sql.PreparedStatement;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class UserDefinedRSSManager extends AbstractRSSManager {
 
@@ -49,11 +57,17 @@ public abstract class UserDefinedRSSManager extends AbstractRSSManager {
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
 			databases = getDatabaseDAO().getDatabases(getEnvironmentName(), tenantId,
-			                                          RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
-		} catch (RSSDAOException e) {
+					RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+		}
+		catch (RSSDAOException e) {
 			String msg = "Error occurred while retrieving metadata " +
-			             "corresponding to databases, from RSS metadata repository : " +
-			             e.getMessage();
+					"corresponding to databases, from RSS metadata repository : " +
+					e.getMessage();
+			handleException(msg, e);
+		} catch (RSSDatabaseConnectionException e) {
+			String msg = "Database server error occurred while retrieving metadata " +
+					"corresponding to databases, from RSS metadata repository : " +
+					e.getMessage();
 			handleException(msg, e);
 		}
 		return databases;
@@ -70,11 +84,17 @@ public abstract class UserDefinedRSSManager extends AbstractRSSManager {
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
 			users = getDatabaseUserDAO().getDatabaseUsers(getEnvironmentName(),
-			                                                          tenantId, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
-		} catch (RSSDAOException e) {
+					tenantId, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+		}
+		catch (RSSDAOException e) {
 			String msg = "Error occurred while retrieving metadata " +
-			             "corresponding to database users, from RSS metadata repository : " +
-			             e.getMessage();
+					"corresponding to database users, from RSS metadata repository : " +
+					e.getMessage();
+			handleException(msg, e);
+		} catch (RSSDatabaseConnectionException e) {
+			String msg = "Database server error occurred while retrieving metadata " +
+					"corresponding to database users, from RSS metadata repository : " +
+					e.getMessage();
 			handleException(msg, e);
 		}
 		return users;
@@ -89,21 +109,27 @@ public abstract class UserDefinedRSSManager extends AbstractRSSManager {
 	 * @throws RSSManagerException if error occurred getting database user
 	 */
 	public DatabaseUser getDatabaseUser(String rssInstanceName,
-	                                    String username) throws RSSManagerException {
+	                                    String username)
+			throws RSSManagerException {
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
 			boolean isExist = getDatabaseUserDAO().isDatabaseUserExist(getEnvironmentName(), username, tenantId,
-					                                                     RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+					RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
 			if (!isExist) {
 				throw new RSSManagerException("Database user '" + username + "' does not exist " +
-				                              "in RSS instance '" + rssInstanceName + "'");
+						"in RSS instance '" + rssInstanceName + "'");
 			}
 			return getDatabaseUserDAO().getDatabaseUser(getEnvironmentName(), rssInstanceName, username, tenantId,
-			                                            RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
-		} catch (RSSDAOException e) {
+					RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+		}
+		catch (RSSDAOException e) {
 			throw new RSSManagerException("Error occurred while retrieving metadata related to " +
-			                              "database user '" + username + "' belongs to the RSS instance '" +
-			                              rssInstanceName + ", from RSS metadata repository : " + e.getMessage(), e);
+					"database user '" + username + "' belongs to the RSS instance '" +
+					rssInstanceName + ", from RSS metadata repository : " + e.getMessage(), e);
+		} catch (RSSDatabaseConnectionException e) {
+			throw new RSSManagerException("Database server error occurred while retrieving metadata related to " +
+					"database user '" + username + "' belongs to the RSS instance '" +
+					rssInstanceName + ", from RSS metadata repository : " + e.getMessage(), e);
 		}
 	}
 
@@ -116,24 +142,31 @@ public abstract class UserDefinedRSSManager extends AbstractRSSManager {
 	 * @throws RSSManagerException if error occurred getting attached users
 	 */
 	public DatabaseUser[] getAttachedUsers(String rssInstanceName,
-	                                       String databaseName) throws RSSManagerException {
+	                                       String databaseName)
+			throws RSSManagerException {
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
-			rssInstanceName = getDatabaseDAO().resolveRSSInstanceNameByDatabase( this.getEnvironmentName(), databaseName,
-							RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED, tenantId);
+			rssInstanceName = getDatabaseDAO().resolveRSSInstanceNameByDatabase(this.getEnvironmentName(), databaseName,
+					RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED, tenantId);
 			RSSInstance rssInstance = this.getEnvironment().getRSSInstance(rssInstanceName);
 			if (rssInstance == null) {
 				throw new RSSManagerException("Database '" + databaseName
-				                              + "' does not exist " + "in RSS instance '"
-				                              + rssInstanceName + "'");
+						+ "' does not exist " + "in RSS instance '"
+						+ rssInstanceName + "'");
 			}
 			return getUserDatabaseEntryDAO().getAssignedDatabaseUsers(getEnvironmentName(), rssInstance.getName(),
-			                                                          databaseName, tenantId, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
-		} catch (RSSDAOException e) {
+					databaseName, tenantId, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+		}
+		catch (RSSDAOException e) {
 			throw new RSSManagerException("Error occurred while retrieving metadata related to " +
-			                              "database users already attached to database '" + databaseName + "' which " +
-			                              "belongs to the RSS instance '" + rssInstanceName + ", from RSS metadata " +
-			                              "repository : " + e.getMessage(), e);
+					"database users already attached to database '" + databaseName + "' which " +
+					"belongs to the RSS instance '" + rssInstanceName + ", from RSS metadata " +
+					"repository : " + e.getMessage(), e);
+		} catch (RSSDatabaseConnectionException e) {
+			throw new RSSManagerException("Database server error occurred while retrieving metadata related to " +
+					"database users already attached to database '" + databaseName + "' which " +
+					"belongs to the RSS instance '" + rssInstanceName + ", from RSS metadata " +
+					"repository : " + e.getMessage(), e);
 		}
 	}
 
@@ -146,17 +179,26 @@ public abstract class UserDefinedRSSManager extends AbstractRSSManager {
 	 * @throws RSSManagerException if error occurred while getting available users
 	 */
 	public DatabaseUser[] getAvailableUsers(String rssInstanceName,
-	                                        String databaseName) throws RSSManagerException {
+	                                        String databaseName)
+			throws RSSManagerException {
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
-			DatabaseUser[] availableDatabaseUsers = getUserDatabaseEntryDAO().getAvailableDatabaseUsers(getEnvironmentName(), rssInstanceName, databaseName,
-			                                                   tenantId, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+			DatabaseUser[] availableDatabaseUsers = getUserDatabaseEntryDAO().getAvailableDatabaseUsers
+					(getEnvironmentName(),
+					rssInstanceName, databaseName,
+					tenantId, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
 			return availableDatabaseUsers;
-		} catch (RSSDAOException e) {
+		}
+		catch (RSSDAOException e) {
 			throw new RSSManagerException("Error occurred while retrieving metadata related to " +
-			                              "database users available to be attached to database '" + databaseName +
-			                              "' which belongs to the RSS instance '" + rssInstanceName + ", from RSS " +
-			                              "metadata repository : " + e.getMessage(), e);
+					"database users available to be attached to database '" + databaseName +
+					"' which belongs to the RSS instance '" + rssInstanceName + ", from RSS " +
+					"metadata repository : " + e.getMessage(), e);
+		} catch (RSSDatabaseConnectionException e) {
+			throw new RSSManagerException("Database server error occurred while retrieving metadata related to " +
+					"database users available to be attached to database '" + databaseName +
+					"' which belongs to the RSS instance '" + rssInstanceName + ", from RSS " +
+					"metadata repository : " + e.getMessage(), e);
 		}
 	}
 
@@ -170,40 +212,81 @@ public abstract class UserDefinedRSSManager extends AbstractRSSManager {
 	 * @throws RSSManagerException if error occurred getting database user privileges from meta repository
 	 */
 	public DatabasePrivilegeSet getUserDatabasePrivileges(String rssInstanceName, String databaseName,
-	                                                      String username) throws RSSManagerException {
+	                                                      String username)
+			throws RSSManagerException {
 		DatabasePrivilegeSet privilegesSet = null;
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
 			rssInstanceName = getRSSDAO().getDatabaseDAO()
 					.resolveRSSInstanceNameByDatabase(getEnvironmentName(),
-					                                  databaseName,
-					                                  RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM,
-					                                  tenantId);
+							databaseName,
+							RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM,
+							tenantId);
 			RSSInstance rssInstance = this.getEnvironment().getRSSInstance(rssInstanceName);
 			if (rssInstance == null) {
 				throw new RSSManagerException(
 						"Database '" + databaseName + "' does not exist " + "in RSS instance '" +
-						rssInstanceName + "'"
+								rssInstanceName + "'"
 				);
 			}
 			Database database = getDatabaseDAO().getDatabase(this.getEnvironmentName(), rssInstanceName,
-			                                                             databaseName, tenantId,
-			                                                             RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+					databaseName, tenantId,
+					RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
 			DatabaseUser databaseUser = getDatabaseUserDAO().getDatabaseUser(this.getEnvironmentName(),
-			                                                                             username, tenantId,
-			                                                                             RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
-			UserDatabaseEntry userDatabaseEntry = getUserDatabaseEntryDAO().getUserDatabaseEntry(database.getId(), databaseUser.getId());
+					username, tenantId,
+					RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+			UserDatabaseEntry userDatabaseEntry = getUserDatabaseEntryDAO().getUserDatabaseEntry(database.getId(),
+					databaseUser.getId());
 			UserDatabasePrivilege privileges = userDatabaseEntry.getUserPrivileges();
 			if (privileges != null) {
 				privilegesSet = new MySQLPrivilegeSet();
 			}
 			RSSManagerUtil.createDatabasePrivilegeSet(privilegesSet, privileges);
-		} catch (RSSDAOException e) {
+		}
+		catch (RSSDAOException e) {
 			String msg = "Error occurred while retrieving metadata corresponding to the " +
-			             "database privileges assigned to database user '" + username +
-			             "' from RSS metadata repository : " + e.getMessage();
+					"database privileges assigned to database user '" + username +
+					"' from RSS metadata repository : " + e.getMessage();
+			handleException(msg, e);
+		} catch (RSSDatabaseConnectionException e) {
+			String msg = "Database server error occurred while retrieving metadata corresponding to the " +
+					"database privileges assigned to database user '" + username +
+					"' from RSS metadata repository : " + e.getMessage();
 			handleException(msg, e);
 		}
 		return privilegesSet;
+	}
+
+	/**
+	 * Add database user
+	 *
+	 * @param statement         Atomic boolean value for the distributed transaction
+	 * @param user              database user properties
+	 * @param qualifiedUsername fully qualified username
+	 * @param instanceType      rss instance type
+	 * @return DatabaseUser
+	 * @throws RSSManagerException
+	 * @throws RSSDAOException
+	 */
+	protected DatabaseUser addDatabaseUser(PreparedStatement statement, DatabaseUser user,
+	                                       String qualifiedUsername, String instanceType)
+			throws RSSManagerException, RSSDAOException, RSSDatabaseConnectionException {
+
+		boolean isExist = this.isDatabaseUserExist(user.getRssInstanceName(), qualifiedUsername, instanceType);
+		if (isExist) {
+			String msg = "Database user '" + qualifiedUsername + "' already exists";
+			throw new RSSManagerException(msg);
+		}
+		/* Sets the fully qualified username */
+		final int tenantId = RSSManagerUtil.getTenantId();
+		user.setName(qualifiedUsername);
+		EnvironmentManagementDAO entityDAO = EnvironmentManagementDAOFactory.getEnvironmentManagementDAO();
+		Set<RSSInstance> servers = new HashSet<RSSInstance>();
+		servers.add(entityDAO.getRSSInstanceDAO().getRSSInstance(this.getEnvironmentName(), user.getRssInstanceName(),
+				tenantId));
+		user.setInstances(servers);
+		user.setTenantId(tenantId);
+		this.getRSSDAO().getDatabaseUserDAO().addDatabaseUser(statement, user);
+		return user;
 	}
 }

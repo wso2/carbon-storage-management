@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.config.databasemanagement.SnapshotConfig;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.MySQLPrivilegeSet;
 import org.wso2.carbon.rssmanager.core.dto.common.SQLServerPrivilegeSet;
@@ -72,8 +73,14 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
 		PreparedStatement nativeAddDBStatement = null;
 		//get qualified name for database which specific to tenant
 		final String qualifiedDatabaseName = RSSManagerUtil.getFullyQualifiedDatabaseName(database.getName());
-		boolean isExist = super.isDatabaseExist(database.getRssInstanceName(), qualifiedDatabaseName,
-		                                        RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+		boolean isExist = false;
+		try {
+			isExist = super.isDatabaseExist(database.getRssInstanceName(), qualifiedDatabaseName,
+			                                        RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+		} catch (RSSDatabaseConnectionException e) {
+			String msg = "Database server error at adding database " + database.getName() + e.getMessage();
+			handleException(msg, e);
+		}
 		if (isExist) {
 			String msg = "Database '" + qualifiedDatabaseName + "' already exists";
 			log.error(msg);
@@ -111,7 +118,13 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
 	                           String databaseName) throws RSSManagerException {
 		Connection conn = null;
 		PreparedStatement nativeRemoveDBStatement = null;
-		RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+		RSSInstance rssInstance = null;
+		try {
+			rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+		} catch (RSSDatabaseConnectionException e) {
+			String msg = "Database server error at removing database " + databaseName + e.getMessage();
+			handleException(msg, e);
+		}
 		if (rssInstance == null) {
 			String msg = "Unresolvable RSS Instance. Database " + databaseName + " does not exist";
 			log.error(msg);
@@ -247,10 +260,9 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
 			if (privileges == null) {
 				throw new RSSManagerException("Database privileges-set is null");
 			}
-			final int tenantId = RSSManagerUtil.getTenantId();
 			String rssInstanceName = this.getRSSDAO().getDatabaseDAO().resolveRSSInstanceNameByDatabase(
 					this.getEnvironmentName(), databaseName,
-					RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, tenantId);
+					RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, MultitenantConstants.SUPER_TENANT_ID);
 			RSSInstance rssInstance = this.getEnvironment().getRSSInstance(rssInstanceName);
 			if (rssInstance == null) {
 				String msg = "Database '" + databaseName + "' does not exist " +
@@ -312,7 +324,13 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
 		String databaseName = entry.getDatabaseName();
 		String username = entry.getUsername();
 		//resolve rss instance by database
-		RSSInstance rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+		RSSInstance rssInstance = null;
+		try {
+			rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+		} catch (RSSDatabaseConnectionException e) {
+			String msg = "Database server error at attach database user" + username + e.getMessage();
+			handleException(msg, e);
+		}
 		try {
 			conn = this.getConnection(rssInstance.getName());
 			if (privileges == null) {
@@ -365,7 +383,7 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
 		try {
 			int tenantId = RSSManagerUtil.getTenantId();
 			String rssInstanceName = getDatabaseDAO().resolveRSSInstanceNameByDatabase(this.getEnvironmentName(),
-			                                                                           entry.getDatabaseName(), entry.getType(), tenantId);
+			                         entry.getDatabaseName(), entry.getType(), tenantId);
 			conn = getConnection(rssInstanceName);
 			String sqlUseDb = "USE " + entry.getDatabaseName();
 			stmtUseDb = conn.prepareStatement(sqlUseDb);
@@ -578,13 +596,13 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
                     RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
             DataSource dataSource = getDataSource(instance.getName(), databaseName);
             conn = dataSource.getConnection();
-            SnapshotConfig snapshotConfig = RSSManagerUtil.getSnapshotConfigOfServerInstance(instance.getName());
+            SnapshotConfig snapshotConfig = instance.getSnapshotConfig();
             String filePath = RSSManagerUtil.getSnapshotFilePath(snapshotConfig.getTargetDirectory(), databaseName);
             String snapshotQuery = "BACKUP DATABASE adventure TO DISK='" + filePath + "'";
             snapshotStatement = conn.prepareStatement(snapshotQuery);
             snapshotStatement.executeQuery();
         } catch (Exception e) {
-            String errorMessage = "Error occurred while creating snapshot.";
+            String errorMessage = "Error occurred while creating snapshot." + e.getMessage();
             log.error(errorMessage, e);
             throw new RSSManagerException(errorMessage, e);
         } finally {

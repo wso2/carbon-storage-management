@@ -121,8 +121,6 @@ public class OracleUserDefinedRSSManager extends UserDefinedRSSManager {
      */
     @Override
     public void createSnapshot(String databaseName) throws RSSManagerException {
-        RSSInstance instance = resolveRSSInstanceByDatabase(databaseName,
-                                                            RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
         //TODO implement
     }
 }

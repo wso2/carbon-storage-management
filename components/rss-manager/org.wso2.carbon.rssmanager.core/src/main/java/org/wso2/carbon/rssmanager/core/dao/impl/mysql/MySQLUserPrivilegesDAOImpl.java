@@ -23,6 +23,8 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.dao.UserPrivilegesDAO;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
+import org.wso2.carbon.rssmanager.core.dao.util.RSSDAOUtil;
 import org.wso2.carbon.rssmanager.core.dto.common.UserDatabasePrivilege;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 
@@ -45,11 +47,11 @@ public class MySQLUserPrivilegesDAOImpl implements UserPrivilegesDAO {
 	 * @see UserPrivilegesDAO#updateUserPrivileges(PreparedStatement, UserDatabasePrivilege)
 	 */
 	public void updateUserPrivileges(PreparedStatement nativePrivilegeUpdateStatement, UserDatabasePrivilege privileges)
-			throws RSSDAOException {
+			throws RSSDAOException, RSSDatabaseConnectionException {
 		Connection conn = null;
 		PreparedStatement userPrivilegeEntryStatement = null;
 		try {
-			conn = getDataSource().getConnection(); //acquire data source connection
+			conn = getDataSourceConnection(); //acquire data source connection
 			//start transaction with setting auto commit value to false
 			conn.setAutoCommit(false);
 			String updateTemplateEntryQuery = "UPDATE RM_USER_DATABASE_PRIVILEGE SET " +
@@ -90,68 +92,37 @@ public class MySQLUserPrivilegesDAOImpl implements UserPrivilegesDAO {
 			}
 			conn.commit();
 		} catch (SQLException e) {
-			rollback(conn, RSSManagerConstants.UPDATE_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
+			RSSDAOUtil.rollback(conn, RSSManagerConstants.UPDATE_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
 			String msg = "Error while rollback at updating privilege template";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
-			close(userPrivilegeEntryStatement, RSSManagerConstants.UPDATE_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
-			close(conn, RSSManagerConstants.UPDATE_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
+			RSSDAOUtil.cleanupResources(null, userPrivilegeEntryStatement, conn, RSSManagerConstants
+					.UPDATE_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
 		}
 	}
 
 	/**
-	 * @param connection database connection
-	 * @param task       task which perform before closing the connection
-	 */
-	private void close(Connection connection, String task) {
-		if (connection != null) {
-			try {
-				connection.close();
-			} catch (SQLException e) {
-				log.error("Failed to close connection after " + task, e);
-			}
-		}
-	}
-
-	/**
-	 * Roll back database updates on error
+	 * Get data source connection
 	 *
-	 * @param connection database connection
-	 * @param task       task which was executing at the error.
+	 * @return the data source connection
 	 */
-	private void rollback(Connection connection, String task) {
-		if (connection != null) {
-			try {
-				connection.rollback();
-			} catch (SQLException e) {
-				log.error("Rollback failed on " + task, e);
-			}
+	private Connection getDataSourceConnection() throws RSSDatabaseConnectionException {
+		try{
+			return dataSource.getConnection();//acquire data source connection
+		} catch (SQLException e) {
+			String msg = "Error while acquiring the database connection. Meta Repository Database server may down";
+			throw new RSSDatabaseConnectionException(msg, e);
 		}
 	}
 
 	/**
-	 * Close the prepared statement
-	 *
-	 * @param preparedStatement PreparedStatement
-	 * @param task              task which was executed before closing the prepared statement.
+	 * Log and throw a rss manager data access exception
+	 * @param msg high level exception message
+	 * @param e error
+	 * @throws RSSDAOException throw RSS DAO exception
 	 */
-	private void close(PreparedStatement preparedStatement, String task) {
-		if (preparedStatement != null) {
-			try {
-				preparedStatement.close();
-			} catch (SQLException e) {
-				log.error("Closing prepared statement failed after " + task, e);
-			}
-		}
-	}
-
-	/**
-	 * Get data source
-	 *
-	 * @return DataSource the data source configured in the component
-	 */
-	private DataSource getDataSource() {
-		return dataSource;
+	public void handleException(String msg, Exception e) throws RSSDAOException {
+		log.error(msg, e);
+		throw new RSSDAOException(msg, e);
 	}
 }

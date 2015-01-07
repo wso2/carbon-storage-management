@@ -33,8 +33,6 @@ public class SSHInformationConfig {
     private String host;
     private int port;
     private String username;
-    private String privateKeyPath;
-    private String passPhrase;
 
     @XmlElement(name = "Host", nillable = true)
     public String getHost() {
@@ -61,23 +59,5 @@ public class SSHInformationConfig {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    @XmlElement(name = "PrivateKeyPath", nillable = true)
-    public String getPrivateKeyPath() {
-        return privateKeyPath;
-    }
-
-    public void setPrivateKeyPath(String privateKeyPath) {
-        this.privateKeyPath = privateKeyPath;
-    }
-
-    @XmlElement(name = "PassPhrase", nillable = true)
-    public String getPassPhrase() {
-        return passPhrase;
-    }
-
-    public void setPassPhrase(String passPhrase) {
-        this.passPhrase = passPhrase;
     }
 }

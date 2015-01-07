@@ -20,6 +20,7 @@
 package org.wso2.carbon.rssmanager.core.dto.restricted;
 
 import org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 
@@ -52,12 +53,12 @@ public class RSSInstanceDSWrapper {
 	 * @return data source connection
 	 * @throws RSSManagerException if something went wrong when acquire the connection
 	 */
-	public Connection getConnection() throws RSSManagerException {
+	public Connection getConnection() throws RSSDatabaseConnectionException {
 		try {
 			return getDataSource().getConnection();
 		} catch (SQLException e) {
-			throw new RSSManagerException("Error while acquiring datasource connection : " +
-			                              e.getMessage(), e);
+			throw new RSSDatabaseConnectionException("Error while acquiring data source connection : Database Server may"
+					+ "unavailable" + e.getMessage(), e);
 		}
 	}
 

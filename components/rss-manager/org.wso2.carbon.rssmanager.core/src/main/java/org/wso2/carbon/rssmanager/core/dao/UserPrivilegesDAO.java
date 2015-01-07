@@ -20,6 +20,7 @@
 package org.wso2.carbon.rssmanager.core.dao;
 
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.common.UserDatabasePrivilege;
 
 import java.sql.PreparedStatement;
@@ -35,5 +36,6 @@ public interface UserPrivilegesDAO {
 	 * @param privileges update privileges
 	 * @throws RSSDAOException if something went wrong when updating user privileges
 	 */
-	public void updateUserPrivileges(PreparedStatement nativePrivilegeUpdateStatement, UserDatabasePrivilege privileges) throws RSSDAOException;;
+	public void updateUserPrivileges(PreparedStatement nativePrivilegeUpdateStatement, UserDatabasePrivilege privileges)
+			throws RSSDAOException, RSSDatabaseConnectionException;;
 }

@@ -23,6 +23,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
+import org.wso2.carbon.rssmanager.core.dao.util.RSSDAOUtil;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate;
 import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplateEntry;
 import org.wso2.carbon.rssmanager.core.environment.dao.DatabasePrivilegeTemplateDAO;
@@ -51,14 +53,15 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 	/**
 	 * @see DatabasePrivilegeTemplateDAO#addDatabasePrivilegeTemplate(org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate, int)
 	 */
-	public void addDatabasePrivilegeTemplate(DatabasePrivilegeTemplate databasePrivilegeTemplate, int environmentId) throws RSSDAOException {
+	public void addDatabasePrivilegeTemplate(DatabasePrivilegeTemplate databasePrivilegeTemplate, int environmentId)
+			throws RSSDAOException, RSSDatabaseConnectionException {
 		Connection conn = null;
 		PreparedStatement templateStatement = null;
 		PreparedStatement templateEntryStatement = null;
 		ResultSet result = null;
 		int templateId;
 		try {
-			conn = getDataSource().getConnection();//acquire data source connection
+			conn = getDataSourceConnection();//acquire data source connection
 			conn.setAutoCommit(false);
 			String insertTemplateQuery = "INSERT INTO RM_DB_PRIVILEGE_TEMPLATE(ENVIRONMENT_ID, NAME, TENANT_ID) VALUES(?,?,?)";
 			templateStatement = conn.prepareStatement(insertTemplateQuery, Statement.RETURN_GENERATED_KEYS);
@@ -101,29 +104,28 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 			}
 			conn.commit();
 		} catch (SQLException e) {
-			rollback(conn, RSSManagerConstants.ADD_PRIVILEGE_TEMPLATE_ENTRY);
+			RSSDAOUtil.rollback(conn, RSSManagerConstants.ADD_PRIVILEGE_TEMPLATE_ENTRY);
 			String msg = "Failed to add database template" + databasePrivilegeTemplate.getName() + "to the metadata repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
-			close(templateStatement, RSSManagerConstants.ADD_PRIVILEGE_TEMPLATE_ENTRY);
-			close(templateEntryStatement, RSSManagerConstants.ADD_PRIVILEGE_TEMPLATE_ENTRY);
-			close(result, RSSManagerConstants.ADD_PRIVILEGE_TEMPLATE_ENTRY);
-			close(conn, RSSManagerConstants.ADD_PRIVILEGE_TEMPLATE_ENTRY);
+			RSSDAOUtil.cleanupResources(null, templateEntryStatement, null, RSSManagerConstants.ADD_PRIVILEGE_TEMPLATE_ENTRY);
+			RSSDAOUtil.cleanupResources(result, templateEntryStatement, conn, RSSManagerConstants
+					.ADD_PRIVILEGE_TEMPLATE_ENTRY);
 		}
 	}
 
 	/**
 	 * @see DatabasePrivilegeTemplateDAO#getDatabasePrivilegesTemplate(int, String, int)
 	 */
-	public DatabasePrivilegeTemplate getDatabasePrivilegesTemplate(int environmentId, String templateName, int tenantId) throws RSSDAOException {
+	public DatabasePrivilegeTemplate getDatabasePrivilegesTemplate(int environmentId, String templateName, int tenantId)
+			throws RSSDAOException, RSSDatabaseConnectionException {
 
 		Connection conn = null;
 		PreparedStatement statement = null;
 		ResultSet result = null;
 		DatabasePrivilegeTemplate privilegeTemplate = new DatabasePrivilegeTemplate();
 		try {
-			conn = getDataSource().getConnection();//acquire data source connection
+			conn = getDataSourceConnection();//acquire data source connection
 			String selectTemplateQuery = "SELECT * FROM RM_DB_PRIVILEGE_TEMPLATE WHERE ENVIRONMENT_ID = ? AND NAME = ? AND TENANT_ID = ?";
 			statement = conn.prepareStatement(selectTemplateQuery);
 			statement.setInt(1, environmentId);
@@ -137,11 +139,9 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 			}
 		} catch (SQLException e) {
 			String msg = "Failed to get data of privilege template " + templateName + "from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
-			close(statement, RSSManagerConstants.SELECT_PRIVILEGE_TEMPLATE);
-			close(conn, RSSManagerConstants.SELECT_PRIVILEGE_TEMPLATE);
+			RSSDAOUtil.cleanupResources(null, statement, conn, RSSManagerConstants.SELECT_PRIVILEGE_TEMPLATE);
 		}
 		return privilegeTemplate;
 	}
@@ -149,7 +149,8 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 	/**
 	 * @see DatabasePrivilegeTemplateDAO#getDatabasePrivilegesTemplates(int, int)
 	 */
-	public DatabasePrivilegeTemplate[] getDatabasePrivilegesTemplates(int environmentId, int tenantId) throws RSSDAOException {
+	public DatabasePrivilegeTemplate[] getDatabasePrivilegesTemplates(int environmentId, int tenantId)
+			throws RSSDAOException, RSSDatabaseConnectionException {
 
 		Connection conn = null;
 		PreparedStatement statement = null;
@@ -157,7 +158,7 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 		List<DatabasePrivilegeTemplate> privilegeTemplates = new ArrayList<DatabasePrivilegeTemplate>();
 		DatabasePrivilegeTemplate privilegeTemplate;
 		try {
-			conn = getDataSource().getConnection();//acquire data source connection
+			conn = getDataSourceConnection();//acquire data source connection
 			String selectTemplateQuery = "SELECT * FROM RM_DB_PRIVILEGE_TEMPLATE WHERE ENVIRONMENT_ID = ? AND TENANT_ID = ?";
 			statement = conn.prepareStatement(selectTemplateQuery);
 			statement.setInt(1, environmentId);
@@ -172,11 +173,9 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 			}
 		} catch (SQLException e) {
 			String msg = "Failed to get data of privilege templates from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
-			close(statement, RSSManagerConstants.SELECT_PRIVILEGE_TEMPLATES);
-			close(conn, RSSManagerConstants.SELECT_PRIVILEGE_TEMPLATES);
+			RSSDAOUtil.cleanupResources(null, statement, conn, RSSManagerConstants.SELECT_PRIVILEGE_TEMPLATES);
 		}
 		return privilegeTemplates.toArray(new DatabasePrivilegeTemplate[privilegeTemplates.size()]);
 	}
@@ -185,14 +184,15 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 	 * @see DatabasePrivilegeTemplateDAO#isDatabasePrivilegeTemplateExist(int, String, int)
 	 */
 	public boolean isDatabasePrivilegeTemplateExist(int environmentId, String templateName,
-	                                                int tenantId) throws RSSDAOException {
+	                                                int tenantId)
+			throws RSSDAOException, RSSDatabaseConnectionException {
 
 		Connection conn = null;
 		PreparedStatement statement = null;
 		ResultSet result = null;
 		boolean isExist = false;
 		try {
-			conn = getDataSource().getConnection();//acquire data source connection
+			conn = getDataSourceConnection();//acquire data source connection
 			String existenceTemplateQuery = "SELECT * FROM RM_DB_PRIVILEGE_TEMPLATE WHERE ENVIRONMENT_ID = ? AND NAME = ? AND TENANT_ID = ?";
 			statement = conn.prepareStatement(existenceTemplateQuery);
 			statement.setInt(1, environmentId);
@@ -204,11 +204,9 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 			}
 		} catch (SQLException e) {
 			String msg = "Failed check privilege template existence of " + templateName + "in meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
-			close(statement, RSSManagerConstants.CHECK_PRIVILEGE_TEMPLATE_ENTRY_EXIST);
-			close(conn, RSSManagerConstants.CHECK_PRIVILEGE_TEMPLATE_ENTRY_EXIST);
+			RSSDAOUtil.cleanupResources(result, statement, conn, RSSManagerConstants.CHECK_PRIVILEGE_TEMPLATE_ENTRY_EXIST);
 		}
 		return isExist;
 	}
@@ -216,11 +214,12 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 	/**
 	 * @see DatabasePrivilegeTemplateDAO#removeDatabasePrivilegeTemplate(int, String, int)
 	 */
-	public void removeDatabasePrivilegeTemplate(int environmentId, String templateName, int tenantId) throws RSSDAOException {
+	public void removeDatabasePrivilegeTemplate(int environmentId, String templateName, int tenantId)
+			throws RSSDAOException, RSSDatabaseConnectionException {
 		Connection conn = null;
 		PreparedStatement statement = null;
 		try {
-			conn = getDataSource().getConnection();//acquire data source connection
+			conn = getDataSourceConnection();//acquire data source connection
 			String removePrivilegeTemplateQuery = "DELETE FROM RM_DB_PRIVILEGE_TEMPLATE WHERE ENVIRONMENT_ID=? AND NAME=? AND TENANT_ID=?";
 			statement = conn.prepareStatement(removePrivilegeTemplateQuery);
 			statement.setInt(1, environmentId);
@@ -230,82 +229,34 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 			conn.commit();
 		} catch (SQLException e) {
 			String msg = "Failed to delete database privilege template" + templateName + "from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
-			close(statement, RSSManagerConstants.DELETE_PRIVILEGE_TEMPLATE_ENTRY);
-			close(conn, RSSManagerConstants.DELETE_PRIVILEGE_TEMPLATE_ENTRY);
+			RSSDAOUtil.cleanupResources(null, statement, conn, RSSManagerConstants.DELETE_PRIVILEGE_TEMPLATE_ENTRY);
 		}
 	}
 
 	/**
-	 * @param connection database connection
-	 * @param task task which was executed before closing connection
-	 */
-	private void close(Connection connection, String task) {
-		if (connection != null) {
-			try {
-				connection.close();
-			} catch (SQLException e) {
-				log.error("Failed to close connection after " + task);
-			}
-		}
-	}
-
-	/**
-	 * Roll back database updates on error
+	 * Get data source connection
 	 *
-	 * @param connection database connection
-	 * @param task       task which was executing at the error.
+	 * @return the data source connection
 	 */
-	private void rollback(Connection connection, String task) {
-		if (connection != null) {
-			try {
-				connection.rollback();
-			} catch (SQLException e) {
-				log.error("Rollback failed on " + task, e);
-			}
+	private Connection getDataSourceConnection() throws RSSDatabaseConnectionException {
+		try{
+			return dataSource.getConnection();//acquire data source connection
+		} catch (SQLException e) {
+			String msg = "Error while acquiring the database connection. Meta Repository Database server may down";
+			throw new RSSDatabaseConnectionException(msg, e);
 		}
 	}
 
 	/**
-	 * Close the prepared statement
-	 *
-	 * @param preparedStatement PreparedStatement
-	 * @param task              task which was executed before closing the prepared statement.
+	 * Log and throw a rss manager data access exception
+	 * @param msg high level exception message
+	 * @param e error
+	 * @throws RSSDAOException throw RSS DAO exception
 	 */
-	private void close(PreparedStatement preparedStatement, String task) {
-		if (preparedStatement != null) {
-			try {
-				preparedStatement.close();
-			} catch (SQLException e) {
-				log.error("Closing prepared statement failed after " + task, e);
-			}
-		}
-	}
-
-	/**
-	 * Closes the result set
-	 *
-	 * @param resultSet ResultSet
-	 * @param task      task which was executed before closing the result set.
-	 */
-	private void close(ResultSet resultSet, String task) {
-		if (resultSet != null) {
-			try {
-				resultSet.close();
-			} catch (SQLException e) {
-				log.error("Closing result set failed after " + task, e);
-			}
-		}
-	}
-
-	/**
-	 * Get data source
-	 *
-	 * @return data source
-	 */
-	private DataSource getDataSource() {
-		return this.dataSource;
+	public void handleException(String msg, Exception e) throws RSSDAOException {
+		log.error(msg, e);
+		throw new RSSDAOException(msg, e);
 	}
 }

@@ -33,10 +33,14 @@ import java.io.File;
 public class EnvironmentManager {
 
     private static final Log log = LogFactory.getLog(EnvironmentManager.class);
-    private RegistryAccessor registry = new RegistryAccessor();
+    private RegistryAccessor registry;
     private EnvironmentConfig environmentConfig;
     private final String envConfigXMLPath = CarbonUtils.getEtcCarbonConfigDirPath() + File.separator
             + CassandraConstants.Environments.CASSANDRA_ENVIRONMENT_CONFIG_FILE;
+
+    public EnvironmentManager() {
+        this.registry = RegistryAccessor.getInstance();
+    }
 
     public EnvironmentConfig getEnvironmentConfig() {
         return environmentConfig;

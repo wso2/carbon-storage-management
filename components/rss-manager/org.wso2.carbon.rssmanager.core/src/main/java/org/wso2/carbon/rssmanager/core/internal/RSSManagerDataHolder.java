@@ -20,10 +20,13 @@
 package org.wso2.carbon.rssmanager.core.internal;
 
 import org.wso2.carbon.context.CarbonContext;
+import org.wso2.carbon.identity.application.mgt.ApplicationManagementOSGIService;
+import org.wso2.carbon.identity.application.mgt.ApplicationManagementService;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.rssmanager.common.exception.RSSManagerCommonException;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.securevault.SecretCallbackHandlerService;
+import org.wso2.carbon.user.api.UserRealm;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.user.core.tenant.TenantManager;
@@ -44,6 +47,8 @@ public class RSSManagerDataHolder {
 	private TenantManager tenantManager;
 
 	private static RSSManagerDataHolder thisInstance = new RSSManagerDataHolder();
+
+	private ApplicationManagementService applicationManagementService;
 
 	private RSSManagerDataHolder() {
 	}
@@ -125,4 +130,30 @@ public class RSSManagerDataHolder {
 		return tenantId;
 	}
 
+	public UserRealm getRealmForCurrentTenant() throws RSSManagerCommonException {
+		int tenantId = Integer.MIN_VALUE;
+		try {
+			tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
+			return realmService.getTenantUserRealm(tenantId);
+		} catch (UserStoreException e) {
+			throw new RSSManagerCommonException("Error accessing the UserRealm for  tenant : " +tenantId+ e);
+		}
+	}
+
+	public UserRealm getRealmForTenant(String domainName) throws RSSManagerCommonException{
+		try {
+			int tenantID = realmService.getTenantManager().getTenantId(domainName);
+			return realmService.getTenantUserRealm(tenantID);
+		} catch (UserStoreException e) {
+			throw new RSSManagerCommonException("Error accessing the UserRealm for  tenant domain : "+domainName + e);
+		}
+	}
+
+	public ApplicationManagementService getApplicationManagementService() {
+		return applicationManagementService;
+	}
+
+	public void setApplicationManagementService(ApplicationManagementService applicationManagementService) {
+		this.applicationManagementService = applicationManagementService;
+	}
 }

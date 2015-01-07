@@ -24,7 +24,10 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.dao.DatabaseDAO;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
+import org.wso2.carbon.rssmanager.core.dao.util.RSSDAOUtil;
 import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
+import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 
 import javax.sql.DataSource;
@@ -49,11 +52,12 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 	/**
 	 * @see DatabaseDAO#addDatabase(java.sql.PreparedStatement, org.wso2.carbon.rssmanager.core.dto.restricted.Database)
 	 */
-	public void addDatabase(PreparedStatement nativeAddDBStatement, Database database) throws RSSDAOException {
+	public void addDatabase(PreparedStatement nativeAddDBStatement, Database database)
+			throws RSSDAOException, RSSDatabaseConnectionException {
 		Connection conn = null;
 		PreparedStatement addDBStatement = null;
 		try {
-			conn = getDataSource().getConnection();//acquire data source connection
+			conn = getDataSourceConnection();//acquire data source connection
 			//start transaction with setting auto commit value to false
 			conn.setAutoCommit(false);
 			String createDBQuery = "INSERT INTO RM_DATABASE(NAME, RSS_INSTANCE_ID, TYPE, TENANT_ID) VALUES (?,?,?,?)";
@@ -70,25 +74,24 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 			}
 			conn.commit();
 		} catch (SQLException e) {
-			rollback(conn, RSSManagerConstants.ADD_DATABASE_ENTRY);
+			RSSDAOUtil.rollback(conn, RSSManagerConstants.ADD_DATABASE_ENTRY);
 			String msg = "Failed to add database " + database.getName() + " in rssInstance " + database.getRssInstanceName()
 			             + " to meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
-			close(addDBStatement, RSSManagerConstants.ADD_DATABASE_ENTRY);
-			close(conn, RSSManagerConstants.ADD_DATABASE_ENTRY);
+			RSSDAOUtil.cleanupResources(null, addDBStatement, conn, RSSManagerConstants.ADD_DATABASE_ENTRY);
 		}
 	}
 
 	/**
 	 * @see DatabaseDAO#removeDatabase(java.sql.PreparedStatement, org.wso2.carbon.rssmanager.core.dto.restricted.Database)
 	 */
-	public void removeDatabase(PreparedStatement nativeRemoveDBStatement, Database database) throws RSSDAOException {
+	public void removeDatabase(PreparedStatement nativeRemoveDBStatement, Database database)
+			throws RSSDAOException, RSSDatabaseConnectionException {
 		Connection conn = null;
 		PreparedStatement removeDBStatement = null;
 		try {
-			conn = getDataSource().getConnection(); //acquire data source connection
+			conn = getDataSourceConnection(); //acquire data source connection
 			//start transaction with setting auto commit value to false
 			conn.setAutoCommit(false);
 			String removeDBQuery = "DELETE FROM RM_DATABASE WHERE ID=?";
@@ -100,14 +103,12 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 			nativeRemoveDBStatement.executeUpdate();
 			conn.commit();
 		} catch (SQLException e) {
-			rollback(conn, RSSManagerConstants.DELETE_DATABASE_ENTRY);
+			RSSDAOUtil.rollback(conn, RSSManagerConstants.DELETE_DATABASE_ENTRY);
 			String msg = "Failed to delete database" + database.getName() + "in rssInstance" + database.getRssInstanceName()
 			             + "from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
-			close(removeDBStatement, RSSManagerConstants.DELETE_DATABASE_ENTRY);
-			close(conn, RSSManagerConstants.DELETE_DATABASE_ENTRY);
+			RSSDAOUtil.cleanupResources(null, removeDBStatement, conn, RSSManagerConstants.DELETE_DATABASE_ENTRY);
 		}
 	}
 
@@ -115,16 +116,17 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 	 * @see DatabaseDAO#isDatabaseExist(String, String, String, int, String)
 	 */
 	public boolean isDatabaseExist(String environmentName, String rssInstanceName, String databaseName,
-	                               int tenantId, String instanceType) throws RSSDAOException {
+	                               int tenantId, String instanceType)
+			throws RSSDAOException, RSSDatabaseConnectionException {
 		boolean isExist = false;
 		Connection conn = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		int environmentId = getEnvionmentIdByName(environmentName);
 		try {
-			conn = getDataSource().getConnection();//acquire data source connection
+			conn = getDataSourceConnection();//acquire data source connection
 			String checkDBExistQuery = "SELECT RM_DATABASE.ID FROM RM_DATABASE INNER JOIN RM_SERVER_INSTANCE WHERE " +
-			                           "RM_DATABASE.ID = RM_SERVER_INSTANCE.ID AND RM_SERVER_INSTANCE.NAME=? AND RM_DATABASE.NAME=? " +
+			                           "RM_DATABASE.RSS_INSTANCE_ID = RM_SERVER_INSTANCE.ID AND RM_SERVER_INSTANCE.NAME=? AND RM_DATABASE.NAME=? " +
 			                           "AND RM_DATABASE.TYPE=? AND RM_DATABASE.TENANT_ID=? AND RM_SERVER_INSTANCE.ENVIRONMENT_ID=?";
 			statement = conn.prepareStatement(checkDBExistQuery);
 			//set required fields to check the database existence
@@ -140,12 +142,9 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 		} catch (SQLException e) {
 			String msg = "Failed to check database existence of " + databaseName + " in rssInstance " + rssInstanceName
 			             + " from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.CHECK_DATABASE_ENTRY_EXIST);
-			close(statement, RSSManagerConstants.CHECK_DATABASE_ENTRY_EXIST);
-			close(conn, RSSManagerConstants.CHECK_DATABASE_ENTRY_EXIST);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.CHECK_DATABASE_ENTRY_EXIST);
 		}
 		return isExist;
 	}
@@ -154,14 +153,15 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 	 * @see DatabaseDAO#getDatabase(String, String, String, int, String)
 	 */
 	public Database getDatabase(String environmentName, String rssInstanceName, String databaseName, int tenantId,
-	                                                                        String instanceType) throws RSSDAOException {
+	                                                                        String instanceType)
+			throws RSSDAOException, RSSDatabaseConnectionException {
 		Connection conn = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		Database database = null;
 		int environmentId = getEnvionmentIdByName(environmentName);
 		try {
-			conn = getDataSource().getConnection();//acquire data source connection
+			conn = getDataSourceConnection();//acquire data source connection
 			String getDatabaseQuery = "SELECT RM_DATABASE.ID, RM_DATABASE.NAME, RM_DATABASE.TYPE, RM_SERVER_INSTANCE.NAME " +
 			                          "AS RSS_INSTANCE_NAME, RM_SERVER_INSTANCE.DBMS_TYPE, RM_SERVER_INSTANCE.SERVER_URL " +
 			                          "FROM RM_DATABASE INNER JOIN RM_SERVER_INSTANCE  WHERE RM_SERVER_INSTANCE.ID=RM_DATABASE.RSS_INSTANCE_ID " +
@@ -187,12 +187,9 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 		} catch (SQLException e) {
 			String msg = "Failed to retrieve database information of" + databaseName + "in rssInstance" + rssInstanceName
 			             + "from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_DATABASE_ENTRY);
-			close(statement, RSSManagerConstants.SELECT_DATABASE_ENTRY);
-			close(conn, RSSManagerConstants.SELECT_DATABASE_ENTRY);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_DATABASE_ENTRY);
 		}
 		return database;
 	}
@@ -200,14 +197,15 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 	/**
 	 * @see DatabaseDAO#getDatabase(String, String, int, String)
 	 */
-	public Database getDatabase(String environmentName, String databaseName, int tenantId, String instanceType) throws RSSDAOException {
+	public Database getDatabase(String environmentName, String databaseName, int tenantId, String instanceType)
+			throws RSSDAOException, RSSDatabaseConnectionException {
 		Connection conn = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		Database database = null;
 		int environmentId = getEnvionmentIdByName(environmentName);
 		try {
-			conn = getDataSource().getConnection();//acquire data source connection
+			conn = getDataSourceConnection();//acquire data source connection
 			String getDatabaseQuery = "SELECT RM_DATABASE.ID, RM_DATABASE.NAME, RM_DATABASE.TYPE, RM_SERVER_INSTANCE.NAME " +
 			                          "AS RSS_INSTANCE_NAME, RM_SERVER_INSTANCE.DBMS_TYPE, RM_SERVER_INSTANCE.SERVER_URL " +
 			                          "FROM RM_DATABASE INNER JOIN RM_SERVER_INSTANCE  WHERE RM_SERVER_INSTANCE.ID=RM_DATABASE.RSS_INSTANCE_ID " +
@@ -231,12 +229,9 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Failed to retrieve database information of" + databaseName + "from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_DATABASE_ENTRY);
-			close(statement, RSSManagerConstants.SELECT_DATABASE_ENTRY);
-			close(conn, RSSManagerConstants.SELECT_DATABASE_ENTRY);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_DATABASE_ENTRY);
 		}
 		return database;
 	}
@@ -244,7 +239,8 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 	/**
 	 * @see DatabaseDAO#getDatabases(String, int, String)
 	 */
-	public Database[] getDatabases(String environmentName, int tenantId, String instanceType) throws RSSDAOException {
+	public Database[] getDatabases(String environmentName, int tenantId, String instanceType)
+			throws RSSDAOException, RSSDatabaseConnectionException {
 		Connection conn = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
@@ -252,7 +248,7 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 		List<Database> databases = new ArrayList<Database>();
 		int environmentId = getEnvionmentIdByName(environmentName);
 		try {
-			conn = getDataSource().getConnection();//acquire data source connection
+			conn = getDataSourceConnection();//acquire data source connection
 			String getDatabasesQuery = "SELECT RM_DATABASE.ID, RM_DATABASE.NAME, RM_DATABASE.TYPE, RM_SERVER_INSTANCE.NAME " +
 			                          "AS RSS_INSTANCE_NAME, RM_SERVER_INSTANCE.DBMS_TYPE, RM_SERVER_INSTANCE.SERVER_URL " +
 			                          "FROM RM_DATABASE INNER JOIN RM_SERVER_INSTANCE  WHERE RM_SERVER_INSTANCE.ID=RM_DATABASE.RSS_INSTANCE_ID " +
@@ -278,12 +274,9 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 		} catch (SQLException e) {
 			String msg = "Failed to retrieve database information of environment" + environmentName +
 			             "from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_DATABASE_ENTRIES);
-			close(statement, RSSManagerConstants.SELECT_DATABASE_ENTRIES);
-			close(conn, RSSManagerConstants.SELECT_DATABASE_ENTRIES);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_DATABASE_ENTRIES);
 		}
 		return databases.toArray(new Database[databases.size()]);
 	}
@@ -291,7 +284,8 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 	/**
 	 * @see DatabaseDAO#getAllDatabases(String, int)
 	 */
-	public Database[] getAllDatabases(String environmentName, int tenantId) throws RSSDAOException {
+	public Database[] getAllDatabases(String environmentName, int tenantId)
+			throws RSSDAOException, RSSDatabaseConnectionException {
 		Connection conn = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
@@ -299,7 +293,7 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 		List<Database> databases = new ArrayList<Database>();
 		int environmentId = getEnvionmentIdByName(environmentName);
 		try {
-			conn = getDataSource().getConnection();//acquire data source connection
+			conn = getDataSourceConnection();//acquire data source connection
 			String getDatabasesOfEnvironmentQuery = "SELECT RM_DATABASE.NAME.ID, RM_DATABASE.NAME, RM_DATABASE.TYPE, RM_DATABASE.TENANT_ID" +
 			                                        ",RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME, RM_SERVER_INSTANCE.DBMS_TYPE, " +
 			                                        "RM_SERVER_INSTANCE.SERVER_URL FROM RM_DATABASE INNER JOIN RM_SERVER_INSTANCE WHERE " +
@@ -323,12 +317,10 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Failed to retrieve database information of environment" + environmentName + "from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_DATABASE_ENTRIES_OF_ENVIRONMENT);
-			close(statement, RSSManagerConstants.SELECT_DATABASE_ENTRIES_OF_ENVIRONMENT);
-			close(conn, RSSManagerConstants.SELECT_DATABASE_ENTRIES_OF_ENVIRONMENT);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants
+					.SELECT_DATABASE_ENTRIES_OF_ENVIRONMENT);
 		}
 		return databases.toArray(new Database[databases.size()]);
 	}
@@ -337,14 +329,15 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 	 * @see DatabaseDAO#resolveRSSInstanceNameByDatabase(String, String, String, int)
 	 */
 	public String resolveRSSInstanceNameByDatabase(String environmentName,
-	                                               String databaseName, String rssInstanceType, int tenantId) throws RSSDAOException {
+	                                               String databaseName, String rssInstanceType, int tenantId)
+			throws RSSDAOException, RSSDatabaseConnectionException {
 		Connection conn = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		String rssInstanceName = null;
 		int environmentId = getEnvionmentIdByName(environmentName);
 		try {
-			conn = getDataSource().getConnection();//acquire data source connection
+			conn = getDataSourceConnection();//acquire data source connection
 			String getDatabasesOfEnvironmentQuery = "SELECT RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME FROM RM_DATABASE " +
 			                                        "INNER JOIN RM_SERVER_INSTANCE WHERE RM_DATABASE.RSS_INSTANCE_ID=RM_SERVER_INSTANCE.ID " +
 			                                        "AND RM_DATABASE.TENANT_ID= ? AND RM_SERVER_INSTANCE.ENVIRONMENT_ID=? AND RM_DATABASE.NAME=?" +
@@ -361,90 +354,25 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Failed to retrieve database information of environment" + environmentName + "from meta repository";
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.RESOLVE_RSS_INSTANCE_BY_DATABASE);
-			close(statement, RSSManagerConstants.RESOLVE_RSS_INSTANCE_BY_DATABASE);
-			close(conn, RSSManagerConstants.RESOLVE_RSS_INSTANCE_BY_DATABASE);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.RESOLVE_RSS_INSTANCE_BY_DATABASE);
 		}
 		return rssInstanceName;
-	}
-
-	/**
-	 * Close database connection
-	 * @param connection database connection
-	 * @param task task which was executed before closing the connection
-	 */
-	private void close(Connection connection, String task) {
-		if (connection != null) {
-			try {
-				connection.close();
-			} catch (SQLException e) {
-				log.error("Failed to close connection after " + task, e);
-			}
-		}
-	}
-
-	/**
-	 * Roll back database updates on error
-	 *
-	 * @param connection database connection
-	 * @param task       task which was executing at the error.
-	 */
-	private void rollback(Connection connection, String task) {
-		if (connection != null) {
-			try {
-				connection.rollback();
-			} catch (SQLException e1) {
-				log.warn("Rollback failed on " + task);
-			}
-		}
-	}
-
-	/**
-	 * Close the prepared statement
-	 *
-	 * @param preparedStatement PreparedStatement
-	 * @param task              task which was executed before closing the prepared statement.
-	 */
-	private void close(PreparedStatement preparedStatement, String task) {
-		if (preparedStatement != null) {
-			try {
-				preparedStatement.close();
-			} catch (SQLException e) {
-				log.error("Closing prepared statement failed after " + task, e);
-			}
-		}
-	}
-
-	/**
-	 * Closes the result set
-	 *
-	 * @param resultSet ResultSet
-	 * @param task      task which was executed before closing the result set.
-	 */
-	private void close(ResultSet resultSet, String task) {
-		if (resultSet != null) {
-			try {
-				resultSet.close();
-			} catch (SQLException e) {
-				log.error("Closing result set failed after " + task);
-			}
-		}
 	}
 
 	/**
 	 * Get environment id by name
 	 * @return environment name
 	 */
-	private int getEnvionmentIdByName(String environmentName) throws RSSDAOException {
+	private int getEnvionmentIdByName(String environmentName) throws RSSDAOException,
+			RSSDatabaseConnectionException {
 		Connection conn = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		int environmentId = 0;
 		try {
-			conn = getDataSource().getConnection();
+			conn = getDataSourceConnection();
 			String selectEnvQuery = "SELECT ID FROM RM_ENVIRONMENT WHERE NAME = ?";
 			statement = conn.prepareStatement(selectEnvQuery);
 			statement.setString(1, environmentName);
@@ -454,22 +382,35 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Error while getting environment id by name" + environmentName;
-			log.error(msg, e);
-			throw new RSSDAOException(msg, e);
+			handleException(msg, e);
 		} finally {
-			close(resultSet, RSSManagerConstants.SELECT_ENVIRONMENT_ID_BY_NAME);
-			close(statement, RSSManagerConstants.SELECT_ENVIRONMENT_ID_BY_NAME);
-			close(conn, RSSManagerConstants.SELECT_ENVIRONMENT_ID_BY_NAME);
+			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_ENVIRONMENT_ID_BY_NAME);
 		}
 		return environmentId;
 	}
 
 	/**
-	 * Get data source
+	 * Get data source connection
 	 *
-	 * @return the data source
+	 * @return the data source connection
 	 */
-	private DataSource getDataSource() {
-		return dataSource;
+	private Connection getDataSourceConnection() throws RSSDatabaseConnectionException {
+		try{
+			return dataSource.getConnection();//acquire data source connection
+		} catch (SQLException e) {
+			String msg = "Error while acquiring the database connection. Meta Repository Database server may down";
+			throw new RSSDatabaseConnectionException(msg, e);
+		}
+	}
+
+	/**
+	 * Log and throw a rss manager data access exception
+	 * @param msg high level exception message
+	 * @param e error
+	 * @throws RSSDAOException throw RSS DAO exception
+	 */
+	public void handleException(String msg, Exception e) throws RSSDAOException {
+		log.error(msg, e);
+		throw new RSSDAOException(msg, e);
 	}
 }
