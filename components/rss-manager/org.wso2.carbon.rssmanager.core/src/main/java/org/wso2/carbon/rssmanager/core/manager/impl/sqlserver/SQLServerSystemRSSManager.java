@@ -260,10 +260,9 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
 			if (privileges == null) {
 				throw new RSSManagerException("Database privileges-set is null");
 			}
-			final int tenantId = RSSManagerUtil.getTenantId();
 			String rssInstanceName = this.getRSSDAO().getDatabaseDAO().resolveRSSInstanceNameByDatabase(
 					this.getEnvironmentName(), databaseName,
-					RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, tenantId);
+					RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, MultitenantConstants.SUPER_TENANT_ID);
 			RSSInstance rssInstance = this.getEnvironment().getRSSInstance(rssInstanceName);
 			if (rssInstance == null) {
 				String msg = "Database '" + databaseName + "' does not exist " +
@@ -384,7 +383,7 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
 		try {
 			int tenantId = RSSManagerUtil.getTenantId();
 			String rssInstanceName = getDatabaseDAO().resolveRSSInstanceNameByDatabase(this.getEnvironmentName(),
-			                                                                           entry.getDatabaseName(), entry.getType(), tenantId);
+			                         entry.getDatabaseName(), entry.getType(), tenantId);
 			conn = getConnection(rssInstanceName);
 			String sqlUseDb = "USE " + entry.getDatabaseName();
 			stmtUseDb = conn.prepareStatement(sqlUseDb);

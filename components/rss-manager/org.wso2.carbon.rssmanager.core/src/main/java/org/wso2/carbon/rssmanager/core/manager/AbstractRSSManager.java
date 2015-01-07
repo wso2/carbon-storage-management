@@ -497,38 +497,6 @@ public abstract class AbstractRSSManager implements RSSManager{
 	}
 
 	/**
-	 * Add database user
-	 *
-	 * @param statement         Atomic boolean value for the distributed transaction
-	 * @param user              database user properties
-	 * @param qualifiedUsername fully qualified username
-	 * @param instanceType      rss instance type
-	 * @return DatabaseUser
-	 * @throws RSSManagerException
-	 * @throws RSSDAOException
-	 */
-	protected DatabaseUser addDatabaseUser(PreparedStatement statement, DatabaseUser user,
-	                                       String qualifiedUsername, String instanceType)
-			throws RSSManagerException, RSSDAOException, RSSDatabaseConnectionException {
-
-		boolean isExist = this.isDatabaseUserExist(user.getRssInstanceName(), qualifiedUsername, instanceType);
-		if (isExist) {
-			String msg = "Database user '" + qualifiedUsername + "' already exists";
-			throw new RSSManagerException(msg);
-		}
-		/* Sets the fully qualified username */
-		final int tenantId = RSSManagerUtil.getTenantId();
-		user.setName(qualifiedUsername);
-		EnvironmentManagementDAO entityDAO = EnvironmentManagementDAOFactory.getEnvironmentManagementDAO();
-		Set<RSSInstance> servers = new HashSet<RSSInstance>(Arrays.asList(entityDAO.getRSSInstanceDAO().getSystemRSSInstances(
-				this.getEnvironmentName(), tenantId)));
-		user.setInstances(servers);
-		user.setTenantId(tenantId);
-		this.getRSSDAO().getDatabaseUserDAO().addDatabaseUser(statement, user);
-		return user;
-	}
-
-	/**
 	 * Remove database user
 	 *
 	 * @param statement    Atomic boolean value for the distributed transaction

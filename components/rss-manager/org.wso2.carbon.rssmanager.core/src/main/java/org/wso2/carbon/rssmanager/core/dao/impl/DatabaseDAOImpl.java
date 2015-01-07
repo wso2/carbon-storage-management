@@ -126,7 +126,7 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 		try {
 			conn = getDataSourceConnection();//acquire data source connection
 			String checkDBExistQuery = "SELECT RM_DATABASE.ID FROM RM_DATABASE INNER JOIN RM_SERVER_INSTANCE WHERE " +
-			                           "RM_DATABASE.ID = RM_SERVER_INSTANCE.ID AND RM_SERVER_INSTANCE.NAME=? AND RM_DATABASE.NAME=? " +
+			                           "RM_DATABASE.RSS_INSTANCE_ID = RM_SERVER_INSTANCE.ID AND RM_SERVER_INSTANCE.NAME=? AND RM_DATABASE.NAME=? " +
 			                           "AND RM_DATABASE.TYPE=? AND RM_DATABASE.TENANT_ID=? AND RM_SERVER_INSTANCE.ENVIRONMENT_ID=?";
 			statement = conn.prepareStatement(checkDBExistQuery);
 			//set required fields to check the database existence

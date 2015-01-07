@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.cassandra.common.CassandraConstants;
 import org.wso2.carbon.cassandra.mgt.CassandraServerManagementException;
+import org.wso2.carbon.cassandra.mgt.authorize.CassandraAuthorizer;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.context.RegistryType;
@@ -34,6 +35,23 @@ import org.wso2.carbon.registry.api.Resource;
 public class RegistryAccessor {
 
     private static final Log log = LogFactory.getLog(RegistryAccessor.class);
+    private static RegistryAccessor registryAccessor;
+
+    private RegistryAccessor() {
+        //Make RegistryAccessor as singleton
+    }
+
+    //Get registry accessor instance.
+    public static RegistryAccessor getInstance() {
+        if(registryAccessor == null) {
+            synchronized(RegistryAccessor.class) {
+                if(registryAccessor == null) {
+                    registryAccessor = new RegistryAccessor();
+                }
+            }
+        }
+        return registryAccessor;
+    }
 
     public void addEnvironmentToRegistry(Environment env) throws CassandraServerManagementException {
         try {
@@ -41,7 +59,8 @@ public class RegistryAccessor {
             PrivilegedCarbonContext cc = PrivilegedCarbonContext.getThreadLocalCarbonContext();
             cc.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
             cc.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
-
+            //TODO avoid setting admin username here
+            PrivilegedCarbonContext.getThreadLocalCarbonContext().setUsername("admin");
             Registry registry = cc.getRegistry(RegistryType.SYSTEM_CONFIGURATION);
             if (!registry.resourceExists(CassandraConstants.Environments.CASSANDRA_ENVIRONMENT_REGISTRY_PATH)) {
                 Collection environmentsCollection = registry.newCollection();
@@ -51,8 +70,12 @@ public class RegistryAccessor {
             Collection envCollection = registry.newCollection();
             envCollection.setProperty(CassandraConstants.Configurations.ENVIRONMENT_NAME, env.getEnvironmentName());
             envCollection.setProperty(CassandraConstants.Configurations.IS_EXTERNAL, String.valueOf(env.isExternal()));
-            registry.put(CassandraConstants.Environments.CASSANDRA_ENVIRONMENT_REGISTRY_PATH + "/"
-                    + env.getEnvironmentName(), envCollection);
+            if (!registry.resourceExists(CassandraConstants.Environments.CASSANDRA_ENVIRONMENT_REGISTRY_PATH + "/"
+                                         + env.getEnvironmentName())) {
+                registry.put(CassandraConstants.Environments.CASSANDRA_ENVIRONMENT_REGISTRY_PATH + "/"
+                             + env.getEnvironmentName(), envCollection);
+                CassandraAuthorizer.definePermissions(env.getEnvironmentName());
+            }
             if (!CassandraConstants.Environments.CASSANDRA_DEFAULT_ENVIRONMENT.equals(env.getEnvironmentName())) {
                 Collection clusterCollection = registry.newCollection();
                 registry.put(CassandraConstants.Environments.CASSANDRA_ENVIRONMENT_REGISTRY_PATH + "/" +

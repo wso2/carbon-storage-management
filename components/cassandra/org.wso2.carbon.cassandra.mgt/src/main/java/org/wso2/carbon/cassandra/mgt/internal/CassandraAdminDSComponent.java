@@ -23,10 +23,15 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.cassandra.dataaccess.DataAccessService;
 import org.wso2.carbon.cassandra.mgt.CassandraServerManagementException;
+import org.wso2.carbon.cassandra.mgt.authorize.CassandraAuthorizer;
 import org.wso2.carbon.cassandra.mgt.environment.EnvironmentManager;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.identity.application.mgt.ApplicationManagementService;
 import org.wso2.carbon.user.core.service.RealmService;
+import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
 import org.wso2.carbon.utils.ConfigurationContextService;
 import org.wso2.carbon.base.api.ServerConfigurationService;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 /**
  * @scr.component name="org.wso2.carbon.cassandra.mgt.component" immediate="true"
@@ -41,6 +46,12 @@ import org.wso2.carbon.base.api.ServerConfigurationService;
  * @scr.reference name="org.wso2.carbon.base.api.ServerConfigurationService"
  * interface="org.wso2.carbon.base.api.ServerConfigurationService"
  * cardinality="1..1" policy="dynamic"  bind="setServerConfiguration" unbind="unsetServerConfiguration"
+ * @scr.reference name="org.wso2.carbon.identity.application.mgt.ApplicationManagementService"
+ * interface="org.wso2.carbon.identity.application.mgt.ApplicationManagementService"
+ * cardinality="1..1"
+ * policy="dynamic"
+ * bind="setApplicationManagementService"
+ * unbind="unsetApplicationManagementService"
  */
 public class CassandraAdminDSComponent {
 
@@ -50,8 +61,18 @@ public class CassandraAdminDSComponent {
         if (log.isDebugEnabled()) {
             log.debug("Cassandra Admin bundle is activated.");
         }
+        PrivilegedCarbonContext.startTenantFlow();
+        PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantId(
+                MultitenantConstants.SUPER_TENANT_ID);
+        PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(
+                MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
+        //TODO avoid setting admin username here
+        PrivilegedCarbonContext.getThreadLocalCarbonContext().setUsername("admin");
         EnvironmentManager environmentManager = new EnvironmentManager();
+        componentContext.getBundleContext().registerService(Axis2ConfigurationContextObserver.class.getName(),
+                new CassandraAxis2ConfigurationContextObserver(), null);
         try {
+            CassandraAuthorizer.createServiceProvider();
             environmentManager.initEnvironments();
             CassandraAdminDataHolder.getInstance().setEnvironmentManager(environmentManager);
             if (log.isDebugEnabled()) {
@@ -60,6 +81,8 @@ public class CassandraAdminDSComponent {
             CassandraAdminDataHolder.getInstance().setInitialized(true);
         } catch (CassandraServerManagementException e) {
             log.error("Cassandra Environments Initialization Failed.", e);
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
@@ -101,4 +124,17 @@ public class CassandraAdminDSComponent {
         CassandraAdminDataHolder.getInstance().setServerConfigurationService(serverConfigService);
     }
 
+    protected void setApplicationManagementService(ApplicationManagementService service){
+        if (log.isDebugEnabled()) {
+            log.debug("Setting ApplicationManagementService");
+        }
+        CassandraAdminDataHolder.getInstance().setApplicationManagementService(service);
+    }
+
+    protected void unsetApplicationManagementService(ApplicationManagementService service){
+        if (log.isDebugEnabled()) {
+            log.debug("Unsetting ApplicationManagementService");
+        }
+        CassandraAdminDataHolder.getInstance().setApplicationManagementService(null);
+    }
 }
