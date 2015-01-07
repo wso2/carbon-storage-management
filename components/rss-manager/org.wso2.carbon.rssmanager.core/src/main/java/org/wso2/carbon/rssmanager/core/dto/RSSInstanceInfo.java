@@ -46,9 +46,9 @@ public class RSSInstanceInfo implements Serializable {
 
 	private String driverClass;
 
-    private SSHInformationConfigInfo sshInformationConfig;
+	private SSHInformationConfigInfo sshInformationConfig;
 
-    private SnapshotConfigInfo snapshotConfig;
+	private SnapshotConfigInfo snapshotConfig;
 
 	public RSSInstanceInfo() {
 	}

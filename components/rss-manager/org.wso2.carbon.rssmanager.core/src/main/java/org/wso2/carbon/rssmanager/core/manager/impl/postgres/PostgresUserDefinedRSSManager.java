@@ -588,20 +588,20 @@ public class PostgresUserDefinedRSSManager extends UserDefinedRSSManager {
 	    RSSInstance instance = null;
 	    try {
 		    instance = resolveRSSInstanceByDatabase(databaseName,
-		                                                        RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+		                                            RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
 	    } catch (RSSDatabaseConnectionException e) {
 		    String msg = "Database server error at creating database snapshot " + databaseName + e.getMessage();
 		    handleException(msg, e);
 	    }
-	    RSSConfig rssConfig= RSSConfigurationManager.getInstance().getCurrentRSSConfig();
+	    RSSConfig rssConfig = RSSConfigurationManager.getInstance().getCurrentRSSConfig();
 	    PrivateKeyConfig privateKeyConfig = rssConfig.getPrivateKeyConfig();
 	    SSHInformationConfig sshInformation = instance.getSshInformationConfig();
-        SnapshotConfig snapshotConfig = instance.getSnapshotConfig();
-        SSHConnection sshConnection = new SSHConnection(sshInformation.getHost(),
-                                                        sshInformation.getPort(),
-                                                        sshInformation.getUsername(),
-                                                        privateKeyConfig.getPrivateKeyPath(),
-                                                        privateKeyConfig.getPassPhrase());
+	    SnapshotConfig snapshotConfig = instance.getSnapshotConfig();
+	    SSHConnection sshConnection = new SSHConnection(sshInformation.getHost(),
+	                                                    sshInformation.getPort(),
+	                                                    sshInformation.getUsername(),
+	                                                    privateKeyConfig.getPrivateKeyPath(),
+	                                                    privateKeyConfig.getPassPhrase());
 	    StringBuilder command = new StringBuilder();
 	    command.append(RSSManagerConstants.Snapshots.POSTGRE_DUMP_TOOL);
 	    command.append(RSSManagerConstants.SPACE);
@@ -617,11 +617,11 @@ public class PostgresUserDefinedRSSManager extends UserDefinedRSSManager {
 	    command.append(RSSManagerConstants.SPACE);
 	    command.append(RSSManagerConstants.Snapshots.POSTGRE_INSERTS_OPTION);
 	    try {
-	        sshConnection.executeCommand(command.toString(), instance.getAdminPassword());
-        } catch (Exception e) {
-            String errorMessage = "Error occurred while creating snapshot.";
-            log.error(errorMessage, e);
-            throw new RSSManagerException(errorMessage, e);
-        }
+		    sshConnection.executeCommand(command.toString(), instance.getAdminPassword());
+	    } catch (Exception e) {
+		    String errorMessage = "Error occurred while creating snapshot.";
+		    log.error(errorMessage, e);
+		    throw new RSSManagerException(errorMessage, e);
+	    }
     }
 }
