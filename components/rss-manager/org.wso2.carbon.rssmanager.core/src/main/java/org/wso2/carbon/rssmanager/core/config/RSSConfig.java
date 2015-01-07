@@ -33,6 +33,7 @@ public final class RSSConfig {
 	private String rssProvider;
 	private Environment[] environments;
 	private RSSManagementRepository rssMgtRepository;
+	private PrivateKeyConfig privateKeyConfig;
 
 	@XmlElement(name = "ManagementRepository", nillable = false)
 	public RSSManagementRepository getRSSManagementRepository() {
@@ -62,4 +63,12 @@ public final class RSSConfig {
 		this.rssProvider = rssProvider;
 	}
 
+	@XmlElement(name = "PrivateKeyConfiguration", nillable = true)
+	public PrivateKeyConfig getPrivateKeyConfig() {
+		return privateKeyConfig;
+	}
+
+	public void setPrivateKeyConfig(PrivateKeyConfig privateKeyConfig) {
+		this.privateKeyConfig = privateKeyConfig;
+	}
 }

@@ -90,6 +90,21 @@
             pw.write(xml);
             pw.flush();
         }
+    } else if ("snapshot".equals(flag)) {
+        try {
+            client.createSnapshot(envName,databaseName,instanceType.trim());
+            PrintWriter pw = response.getWriter();
+            msg = "Database '" + databaseName + "' snapshot has been successfully created";
+            xml = "<Response><Message>" + msg + "</Message><Environment>" + envName + "</Environment></Response>" ;
+            pw.write(xml);
+            pw.flush();
+        } catch (Exception e) {
+            PrintWriter pw = response.getWriter();
+            msg = e.getMessage();
+            xml = "<Response><Message>" + msg + "</Message><Environment>" + envName + "</Environment></Response>" ;
+            pw.write(xml);
+            pw.flush();
+        }
     }
 
 %>

@@ -156,6 +156,10 @@
                                style="background-image:url(../admin/images/delete.gif);"
                                onclick="dropDatabase('<%=database.getRssInstanceName()%>', '<%=database.getName()%>', '<%=environmentName%>', '<%=database.getType()%>')"><fmt:message
                                     key="rss.manager.delete.database"/></a>
+                            <a class="icon-link"
+                               style="background-image:url(../rssmanager/images/snapshot.png);"
+                               onclick="createSnapshot('<%=database.getRssInstanceName()%>', '<%=database.getName()%>', '<%=environmentName%>', '<%=database.getType()%>')"><fmt:message
+                                  key="rss.manager.create.snapshot"/></a>
                         </td>
                     </tr>
                     <%

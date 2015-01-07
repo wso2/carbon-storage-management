@@ -176,6 +176,8 @@ public class EnvironmentManager {
 			entity.setTenantId((long) tenantId);
 			entity.setDbmsType(rssInstance.getInstanceType());
 			entity.setEnvironment(env);
+			entity.setSshInformationConfig(rssInstance.getSshInformationConfig());
+			entity.setSnapshotConfig(rssInstance.getSnapshotConfig());
 			rssInstanceDAO.updateRSSInstance(environmentName, entity, tenantId);
 		} catch (RSSDAOException e) {
 			String msg = "Error occurred while updating metadata related to " + "RSS instance '" + rssInstance.getName() +

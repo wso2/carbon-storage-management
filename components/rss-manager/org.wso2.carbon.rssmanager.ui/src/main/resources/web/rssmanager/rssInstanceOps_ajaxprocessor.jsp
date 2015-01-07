@@ -26,6 +26,8 @@
 <%@ page import="java.io.PrintWriter" %>
 <%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerHelper" %>
 <%@ page import="org.wso2.carbon.rssmanager.common.RSSManagerConstants" %>
+<%@ page import="org.wso2.carbon.rssmanager.core.dto.xsd.SSHInformationConfigInfo" %>
+<%@ page import="org.wso2.carbon.rssmanager.core.dto.xsd.SnapshotConfigInfo" %>
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
@@ -42,6 +44,11 @@
     String serverEnvironment=request.getParameter("serverEnvironment");
     String databaseDriverClass=request.getParameter("databaseDriverClass");
     String instanceType=request.getParameter("instancetype");
+    String sshHost = request.getParameter("sshHost");
+    String sshPort = request.getParameter("sshPort");
+    String sshUsername = request.getParameter("sshUsername");
+    String snapshotTargetDirectory = request.getParameter("snapshotTargetDirectory");
+
     String dbmsType;
     RSSManagerClient client;
 
@@ -56,6 +63,8 @@
         try {
             serverUrl = (serverUrl != null) ? RSSManagerHelper.constructConnectionUrl(serverUrl) : "";
             RSSInstanceInfo rssIns = new RSSInstanceInfo();
+            SSHInformationConfigInfo sshConfig = new SSHInformationConfigInfo();
+            SnapshotConfigInfo snapshotConfig = new SnapshotConfigInfo();
             rssIns.setName(rssInstanceName);
             rssIns.setServerURL(serverUrl);
             rssIns.setUsername(username);
@@ -70,6 +79,12 @@
                 rssIns.setInstanceType(RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
             }
             rssIns.setServerCategory(RSSManagerConstants.LOCAL);
+            sshConfig.setHost(sshHost);
+            sshConfig.setPort(Integer.parseInt(sshPort));
+            sshConfig.setUsername(sshUsername);
+            snapshotConfig.setTargetDirectory(snapshotTargetDirectory);
+            rssIns.setSshInformationConfig(sshConfig);
+            rssIns.setSnapshotConfig(snapshotConfig);
             client.createRSSInstance(rssIns.getEnvironmentName(), rssIns);
             response.setContentType("text/xml; charset=UTF-8");
             // Set standard HTTP/1.1 no-cache headers.
@@ -118,6 +133,8 @@
         try {
             serverUrl = (serverUrl != null) ? RSSManagerHelper.constructConnectionUrl(serverUrl) : "";
             RSSInstanceInfo rssIns = new RSSInstanceInfo();
+            SSHInformationConfigInfo sshConfig = new SSHInformationConfigInfo();
+            SnapshotConfigInfo snapshotConfig = new SnapshotConfigInfo();
             rssIns.setName(rssInstanceName);
             rssIns.setServerURL(serverUrl);
             rssIns.setUsername(username);
@@ -132,6 +149,12 @@
                 rssIns.setInstanceType(RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
             }
 
+            sshConfig.setHost(sshHost);
+            sshConfig.setPort(Integer.parseInt(sshPort));
+            sshConfig.setUsername(sshUsername);
+            snapshotConfig.setTargetDirectory(snapshotTargetDirectory);
+            rssIns.setSshInformationConfig(sshConfig);
+            rssIns.setSnapshotConfig(snapshotConfig);
             client.editRSSInstance(rssIns.getEnvironmentName(), rssIns);
             response.setContentType("text/xml; charset=UTF-8");
             // Set standard HTTP/1.1 no-cache headers.

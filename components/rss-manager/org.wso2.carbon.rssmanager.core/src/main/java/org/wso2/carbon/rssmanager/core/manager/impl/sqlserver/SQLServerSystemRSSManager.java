@@ -596,7 +596,7 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
                     RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
             DataSource dataSource = getDataSource(instance.getName(), databaseName);
             conn = dataSource.getConnection();
-            SnapshotConfig snapshotConfig = RSSManagerUtil.getSnapshotConfigOfServerInstance(instance.getName());
+            SnapshotConfig snapshotConfig = instance.getSnapshotConfig();
             String filePath = RSSManagerUtil.getSnapshotFilePath(snapshotConfig.getTargetDirectory(), databaseName);
             String snapshotQuery = "BACKUP DATABASE adventure TO DISK='" + filePath + "'";
             snapshotStatement = conn.prepareStatement(snapshotQuery);
