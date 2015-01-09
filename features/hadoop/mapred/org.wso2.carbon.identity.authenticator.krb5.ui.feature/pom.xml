@@ -48,7 +48,7 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.core.server.feature</artifactId>
-            <version>${wso2carbon.version}</version>
+            <version>${carbon.kernel.version}</version>
             <type>zip</type>
         </dependency>
 	<!--dependency>
@@ -84,7 +84,7 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.identity.authenticator.krb5.stub</bundleDef>
                             </bundles>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.core.ui:${wso2carbon.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.core.ui:${carbon.kernel.version}</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>

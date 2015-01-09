@@ -23,7 +23,7 @@
         <artifactId>cassandra-feature</artifactId>
         <groupId>org.wso2.carbon</groupId>
         <version>4.3.0-SNAPSHOT</version>
-	<relativePath>../../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.cassandra.cluster.mgt.ui.feature</artifactId>
@@ -37,62 +37,63 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cassandra.cluster.mgt.ui</artifactId>
-            <version>4.3.0-SNAPSHOT</version>
+            <version>${carbon.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cassandra.cluster.mgt.stub</artifactId>
-            <version>4.3.0-SNAPSHOT</version>
-	</dependency>
-	<dependency>
+            <version>${carbon.platform.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cassandra.cluster.proxy.stub</artifactId>
-            <version>4.3.0-SNAPSHOT</version>
-	</dependency>
-	<dependency>
+            <version>${carbon.platform.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon</groupId>
-	    <artifactId>org.wso2.carbon.ui.menu.tools</artifactId>
-	    <version>${wso2carbon.version}</version>
+            <artifactId>org.wso2.carbon.ui.menu.tools</artifactId>
+            <version>${carbon.kernel.version}</version>
         </dependency>
     </dependencies>
 
     <build>
-    <plugins>
-    <plugin>
-        <groupId>org.wso2.maven</groupId>
-        <artifactId>carbon-p2-plugin</artifactId>
-        <version>${carbon.p2.plugin.version}</version>
-        <executions>
-            <execution>
-                <id>4-p2-feature-generation</id>
-                <phase>package</phase>
-                <goals>
-                    <goal>p2-feature-gen</goal>
-                </goals>
-                <configuration>
-                    <id>org.wso2.carbon.cassandra.cluster.mgt.ui</id>
-                    <propertiesFile>../../../../etc/feature.properties</propertiesFile>
-                    <adviceFile>
-                        <properties>
-                            <propertyDef>org.wso2.carbon.p2.category.type:console</propertyDef>
-                            <propertyDef>org.eclipse.equinox.p2.type.group:false</propertyDef>
-                        </properties>
-                    </adviceFile>
-                    <bundles>
-                        <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.cluster.mgt.ui</bundleDef>
-                        <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.cluster.mgt.stub</bundleDef>
-                        <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.cluster.proxy.stub</bundleDef>
-                    </bundles>
-		    <importBundles>
-                          <importBundleDef>org.wso2.carbon:org.wso2.carbon.ui.menu.tools:${wso2carbon.version}</importBundleDef>
-                    </importBundles>
-                    <importFeatures>
-                           <importFeatureDef>org.wso2.carbon.core.ui:${wso2carbon.version}</importFeatureDef>
-                    </importFeatures>
-                </configuration>
-            </execution>
-        </executions>
-    </plugin>
+        <plugins>
+            <plugin>
+                <groupId>org.wso2.maven</groupId>
+                <artifactId>carbon-p2-plugin</artifactId>
+                <version>${carbon.p2.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>4-p2-feature-generation</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>p2-feature-gen</goal>
+                        </goals>
+                        <configuration>
+                            <id>org.wso2.carbon.cassandra.cluster.mgt.ui</id>
+                            <propertiesFile>../../../../etc/feature.properties</propertiesFile>
+                            <adviceFile>
+                                <properties>
+                                    <propertyDef>org.wso2.carbon.p2.category.type:console</propertyDef>
+                                    <propertyDef>org.eclipse.equinox.p2.type.group:false</propertyDef>
+                                </properties>
+                            </adviceFile>
+                            <bundles>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.cluster.mgt.ui</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.cluster.mgt.stub</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.cluster.proxy.stub</bundleDef>
+                            </bundles>
+                            <importBundles>
+                                <importBundleDef>org.wso2.carbon:org.wso2.carbon.ui.menu.tools:${carbon.kernel.version}
+                                </importBundleDef>
+                            </importBundles>
+                            <importFeatures>
+                                <importFeatureDef>org.wso2.carbon.core.ui:${carbon.kernel.version}</importFeatureDef>
+                            </importFeatures>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
