@@ -334,7 +334,7 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
-                <version>${project.version}</version>
+                <version>${carbon.kernel.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -1018,11 +1018,11 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
     <properties>
         <!-- Carbon kernel version -->
         <carbon.kernel.version>4.3.0</carbon.kernel.version>
-        <carbon.kernel.imp.pkg.version>[4.3.0, 4.4.0)
-        </carbon.kernel.imp.pkg.version>
+        <carbon.kernel.imp.pkg.version>[4.3.0, 4.4.0)</carbon.kernel.imp.pkg.version>
 
         <!-- Carbon platform version comes here-->
         <carbon.platform.version>4.3.0-SNAPSHOT</carbon.platform.version>
