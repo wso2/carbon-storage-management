@@ -38,7 +38,7 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cassandra.server</artifactId>
-            <version>4.3.0-SNAPSHOT</version>
+            <version>${carbon.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.cassandra.wso2</groupId>
@@ -70,10 +70,6 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.identity.authentication</artifactId>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.wso2.carbon</groupId>-->
-            <!--<artifactId>org.wso2.carbon.user.api</artifactId>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cassandra.mgt</artifactId>
@@ -157,7 +153,7 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.tenant.common.feature</artifactId>
-            <version>${org.wso2.carbon.tenant.common.feature.version}</version>
+            <version>${carbon.platform.version}</version>
 	    <type>zip</type>
         </dependency>
     </dependencies>
@@ -238,10 +234,9 @@
 				<bundleDef>io.netty:netty</bundleDef>
                             </bundles>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.tenant.common:${org.wso2.carbon.tenant.common.feature.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.tenant.common:${carbon.platform.version}</importFeatureDef>
                             </importFeatures>
-
                         </configuration>
                     </execution>
                 </executions>
@@ -267,9 +262,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <properties>
-	<org.wso2.carbon.tenant.common.feature.version>4.3.0-SNAPSHOT</org.wso2.carbon.tenant.common.feature.version>
-    </properties>
-
 </project>

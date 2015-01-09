@@ -23,7 +23,7 @@
         <groupId>org.wso2.carbon</groupId>
         <artifactId>cassandra-feature</artifactId>
         <version>4.3.0-SNAPSHOT</version>
-	<relativePath>../../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -38,17 +38,17 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cassandra.mgt.ui</artifactId>
-    	    <version>4.3.0-SNAPSHOT</version>
+            <version>${carbon.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cassandra.mgt.stub</artifactId>
-            <version>4.3.0-SNAPSHOT</version>
+            <version>${carbon.platform.version}</version>
         </dependency>
-	<dependency>
+        <dependency>
             <groupId>org.wso2.carbon</groupId>
-	    <artifactId>org.wso2.carbon.ui.menu.tools</artifactId>
-	    <version>${wso2carbon.version}</version>
+            <artifactId>org.wso2.carbon.ui.menu.tools</artifactId>
+            <version>${carbon.kernel.version}</version>
         </dependency>
     </dependencies>
 
@@ -71,18 +71,19 @@
                             <adviceFile>
                                 <properties>
                                     <propertyDef>org.wso2.carbon.p2.category.type:console</propertyDef>
-                                    <propertyDef>org.eclipse.equinox.p2.type.group:false</propertyDef>  
+                                    <propertyDef>org.eclipse.equinox.p2.type.group:false</propertyDef>
                                 </properties>
                             </adviceFile>
                             <bundles>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.mgt.ui</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.mgt.stub</bundleDef>
                             </bundles>
-			    <importBundles>
-                                  <importBundleDef>org.wso2.carbon:org.wso2.carbon.ui.menu.tools:${wso2carbon.version}</importBundleDef>
+                            <importBundles>
+                                <importBundleDef>org.wso2.carbon:org.wso2.carbon.ui.menu.tools:${carbon.kernel.version}
+                                </importBundleDef>
                             </importBundles>
                             <importFeatures>
-                                   <importFeatureDef>org.wso2.carbon.core.ui:${wso2carbon.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.core.ui:${carbon.kernel.version}</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>
@@ -103,8 +104,6 @@
                                 <resource>
                                     <directory>resources</directory>
                                     <includes>
-                                        <include>conf/cassandra-auth.xml</include>
-                                        <include>conf/cassandra-endpoint.xml</include>
                                         <include>p2.inf</include>
                                         <include>build.properties</include>
                                     </includes>
