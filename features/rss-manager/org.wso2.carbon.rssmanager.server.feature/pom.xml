@@ -29,11 +29,11 @@
             <artifactId>org.wso2.carbon.rssmanager.common</artifactId>
             <version>${carbon.platform.version}</version>
         </dependency>
-	    <dependency>
+	<dependency>
 	       <groupId>asm.wso2</groupId>
 	       <artifactId>asm</artifactId>
 	       <version>${asm.wso2.version}</version>
-	    </dependency>
+	</dependency>
     </dependencies>
 
     <build>

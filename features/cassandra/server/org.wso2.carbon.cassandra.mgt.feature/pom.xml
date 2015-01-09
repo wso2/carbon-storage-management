@@ -38,7 +38,7 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cassandra.mgt</artifactId>
-            <version>4.3.0-SNAPSHOT</version>
+            <version>${carbon.platform.version}</version>
         </dependency>
             <dependency>
                 <groupId>org.apache.cassandra.wso2</groupId>
@@ -95,15 +95,11 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.mgt:4.3.0-SNAPSHOT</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.mgt:${carbon.platform.version}</bundleDef>
                             </bundles>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}</importFeatureDef>
                             </importFeatures>
-                            <!--<includedFeatures>-->
-                                <!--&lt;!&ndash;<includedFeatureDef>org.wso2.carbon:org.wso2.carbon.cassandra.server.feature</includedFeatureDef>&ndash;&gt;-->
-                                <!--&lt;!&ndash;<includedFeatureDef>org.wso2.carbon:org.wso2.carbon.cassandra.dataaccess.feature</includedFeatureDef>&ndash;&gt;-->
-                            <!--</includedFeatures>-->
                         </configuration>
                     </execution>
                 </executions>

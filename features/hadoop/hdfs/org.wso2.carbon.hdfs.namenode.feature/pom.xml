@@ -38,7 +38,7 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.hdfs.namenode</artifactId>
-            <version>${project.version}</version>
+            <version>${carbon.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop.wso2</groupId>
@@ -71,8 +71,8 @@
             <version>${slf4j.wso2.version}</version>
         </dependency>
         <dependency>
-              <groupId>commons-configuration.wso2</groupId>
-    <artifactId>commons-configuration</artifactId>
+            <groupId>commons-configuration.wso2</groupId>
+    	    <artifactId>commons-configuration</artifactId>
             <version>${commons-configuration.version}</version>
         </dependency>
 
@@ -114,10 +114,9 @@
                                 <bunldeDef>org.json.wso2:json</bunldeDef>
                                 <bundleDef>slf4j.wso2:slf4j</bundleDef>
                                 <bundleDef>commons-configuration.wso2:commons-configuration</bundleDef>
-
                             </bundles>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>

@@ -21,7 +21,7 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cassandra.explorer.mgt</artifactId>
-            <version>4.3.0-SNAPSHOT</version>
+            <version>${carbon.platform.version}</version>
         </dependency>
 
         <!--Cassandra -->
@@ -63,8 +63,6 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-
-
         <dependency>
             <groupId>org.yaml.wso2</groupId>
             <artifactId>snakeyaml</artifactId>
@@ -157,8 +155,6 @@
             <artifactId>compress-lzf</artifactId>
             <version>${compress-lzf.version}</version>
         </dependency>
-
-
     </dependencies>
 
     <build>
@@ -194,8 +190,7 @@
                                 <bundleDef>org.hectorclient.wso2:hector-core</bundleDef>
                                 <bundleDef>org.yaml.wso2:snakeyaml</bundleDef>
                                 <bundleDef>com.google.guava:guava</bundleDef>
-                                <bundleDef>com.googlecode.concurrentlinkedhashmap.wso2:concurrentlinkedhashmap-lru
-                                </bundleDef>
+                                <bundleDef>com.googlecode.concurrentlinkedhashmap.wso2:concurrentlinkedhashmap-lru</bundleDef>
                                 <bundleDef>org.apache.hadoop.wso2:avro</bundleDef>
                                 <bundleDef>org.safehaus.jug.wso2:jug</bundleDef>
                                 <bundleDef>com.googlecode.json-simple.wso2:json-simple</bundleDef>
@@ -211,7 +206,7 @@
                                 <bundleDef>com.ning:compress-lzf</bundleDef>
                             </bundles>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>
@@ -221,7 +216,7 @@
     </build>
 
     <properties>
-     <jamm.version>0.2.5.wso2v2</jamm.version>
+     	<jamm.version>0.2.5.wso2v2</jamm.version>
 	<libthrift.patch.version>0.7.0.wso2v2</libthrift.patch.version>
     </properties>
 </project>
