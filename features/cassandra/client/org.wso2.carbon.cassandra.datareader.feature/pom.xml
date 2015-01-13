@@ -144,7 +144,7 @@
                                 <bundleDef>org.apache.cassandra.wso2:cassandra-thrift</bundleDef>
                             </bundles>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.core.server:${wso2.kernel.version}</importFeatureDef>
                             </importFeatures>
 
                         </configuration>
