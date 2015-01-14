@@ -206,6 +206,9 @@ public class RSSManagerHelper {
     }
 
     public static String constructConnectionUrl(String url) throws Exception {
+        if(RSSManagerConstants.H2.equalsIgnoreCase(getDatabasePrefix(url))) {
+            return url;
+        }
         return RSSManagerConstants.JDBC_PREFIX + ":" + RSSManagerHelper.getDatabasePrefix(url) +
                 "://" + RSSManagerHelper.validateRSSInstanceHostname(url);
     }
