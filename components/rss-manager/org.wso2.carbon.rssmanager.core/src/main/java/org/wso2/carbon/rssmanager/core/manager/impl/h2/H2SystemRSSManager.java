@@ -463,9 +463,8 @@ public class H2SystemRSSManager extends SystemRSSManager {
             snapshotStatement = conn.prepareStatement(snapshotQuery);
             snapshotStatement.executeQuery();
         } catch (Exception e) {
-            String errorMessage = "Error occurred while creating snapshot." + e.getMessage();
-            log.error(errorMessage, e);
-            throw new RSSManagerException(errorMessage, e);
+            log.error(e.getMessage(), e);
+            throw new RSSManagerException(e.getMessage(), e);
         } finally {
             if (snapshotStatement != null) {
                 try {

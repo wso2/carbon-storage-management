@@ -57,16 +57,16 @@
                             <Port>22</Port>
                             <Username>username</Username>
                         </SSHInformation>
-                        <SnapshotConfiguration>
+                        <!--SnapshotConfiguration>
                              <TargetDirectory>/home/cloud/snapshots</TargetDirectory>
-                        </SnapshotConfiguration>
+                        </SnapshotConfiguration-->
                     </RSSInstance>
                 </RSSInstances>
              </Environment>
         </Environments>
-    <PrivateKeyConfiguration>
-        <PrivateKeyPath>/data/private/my_keys/private.key</PrivateKeyPath>
-        <PassPhrase>pass</PassPhrase>
-    </PrivateKeyConfiguration>
+    	<PrivateKeyConfiguration>
+             <PrivateKeyPath>/data/private/my_keys/private.key</PrivateKeyPath>
+             <PassPhrase>pass</PassPhrase>
+    	</PrivateKeyConfiguration>
 </RSSConfiguration>
 

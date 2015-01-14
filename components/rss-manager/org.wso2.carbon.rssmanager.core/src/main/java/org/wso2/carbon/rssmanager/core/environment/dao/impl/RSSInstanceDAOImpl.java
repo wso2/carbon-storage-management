@@ -77,7 +77,11 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			statement.setString(11, sshInformationConfig.getHost());
 			statement.setInt(12, sshInformationConfig.getPort());
 			statement.setString(13, sshInformationConfig.getUsername());
-			statement.setString(14, rssInstance.getSnapshotConfig().getTargetDirectory());
+			if (rssInstance.getSnapshotConfig() != null) {
+				statement.setString(14, rssInstance.getSnapshotConfig().getTargetDirectory());
+			} else {
+				statement.setString(14, null);
+			}
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			String msg = "Failed to add rss instance " + rssInstance.getName() + "in rssInstance in environment" + environmentName
@@ -171,7 +175,11 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			entryUpdateStatement.setString(10, sshInformationConfig.getHost());
 			entryUpdateStatement.setInt(11, sshInformationConfig.getPort());
 			entryUpdateStatement.setString(12, sshInformationConfig.getUsername());
-			entryUpdateStatement.setString(13, rssInstance.getSnapshotConfig().getTargetDirectory());
+			if (rssInstance.getSnapshotConfig() != null) {
+				entryUpdateStatement.setString(13, rssInstance.getSnapshotConfig().getTargetDirectory());
+			} else {
+				entryUpdateStatement.setString(13, null);
+			}
 			entryUpdateStatement.setInt(14, environmentId);
 			entryUpdateStatement.setString(15, rssInstance.getName());
 			entryUpdateStatement.executeUpdate();

@@ -29,17 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "SnapshotConfiguration")
 public class SnapshotConfig {
 
-	private SSHInformationConfig sshInformation;
 	private String targetDirectory;
-
-    @XmlElement(name = "SSHInformation", nillable = true)
-    public SSHInformationConfig getSshInformation() {
-        return sshInformation;
-    }
-
-    public void setSshInformation(SSHInformationConfig sshInformation) {
-        this.sshInformation = sshInformation;
-    }
 
     @XmlElement(name = "TargetDirectory", nillable = true)
     public String getTargetDirectory() {
