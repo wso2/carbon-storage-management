@@ -509,32 +509,20 @@ public final class RSSManagerUtil {
      * @param instanceFromConfig instance from configuration
      */
     public static void applyInstanceChanges(RSSInstance instanceFromDB, RSSInstance instanceFromConfig) {
-        if (!instanceFromDB.getServerURL().equalsIgnoreCase(instanceFromConfig.getServerURL())) {
-            instanceFromDB.setServerURL(instanceFromConfig.getServerURL());
+        instanceFromDB.setServerURL(instanceFromConfig.getServerURL());
+        instanceFromDB.setAdminPassword(instanceFromConfig.getAdminPassword());
+        instanceFromDB.setAdminUserName(instanceFromConfig.getAdminUserName());
+        instanceFromDB.setDbmsType(instanceFromConfig.getDbmsType());
+        instanceFromDB.setDriverClassName(instanceFromConfig.getDriverClassName());
+        instanceFromDB.setInstanceType(instanceFromConfig.getInstanceType());
+        instanceFromDB.setServerCategory(instanceFromConfig.getServerCategory());
+        if (instanceFromConfig.getSshInformationConfig() != null) {
+            instanceFromDB.getSshInformationConfig().setHost(instanceFromConfig.getSshInformationConfig().getHost());
+            instanceFromDB.getSshInformationConfig().setPort(instanceFromConfig.getSshInformationConfig().getPort());
+            instanceFromDB.getSshInformationConfig().setUsername(instanceFromConfig.getSshInformationConfig().getUsername());
         }
-
-        if (!instanceFromDB.getAdminPassword().equalsIgnoreCase(instanceFromConfig.getAdminPassword())) {
-            instanceFromDB.setAdminPassword(instanceFromConfig.getAdminPassword());
-        }
-
-        if (!instanceFromDB.getAdminUserName().equalsIgnoreCase(instanceFromConfig.getAdminUserName())) {
-            instanceFromDB.setAdminUserName(instanceFromConfig.getAdminUserName());
-        }
-
-        if (!instanceFromDB.getDbmsType().equalsIgnoreCase(instanceFromConfig.getDbmsType())) {
-            instanceFromDB.setDbmsType(instanceFromConfig.getDbmsType());
-        }
-
-        if (!instanceFromDB.getDriverClassName().equalsIgnoreCase(instanceFromConfig.getDriverClassName())) {
-            instanceFromDB.setDriverClassName(instanceFromConfig.getDriverClassName());
-        }
-
-        if (!instanceFromDB.getInstanceType().equalsIgnoreCase(instanceFromConfig.getInstanceType())) {
-            instanceFromDB.setInstanceType(instanceFromConfig.getInstanceType());
-        }
-
-        if (!instanceFromDB.getServerCategory().equalsIgnoreCase(instanceFromConfig.getServerCategory())) {
-            instanceFromDB.setServerCategory(instanceFromConfig.getServerCategory());
+        if (instanceFromConfig.getSnapshotConfig() != null) {
+            instanceFromDB.getSnapshotConfig().setTargetDirectory(instanceFromConfig.getSnapshotConfig().getTargetDirectory());
         }
     }
 
@@ -995,11 +983,12 @@ public final class RSSManagerUtil {
         }
     }
 
-    public static String getSnapshotFilePath(String directory, String databaseName) {
+    public static String getSnapshotFilePath(String directory, String databaseName) throws RSSManagerException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("_yyyy-MM-dd_hh-mm-ss_");
         String date = simpleDateFormat.format(new Date());
         if (directory == null || directory.isEmpty()) {
-            directory = RSSManagerConstants.Snapshots.SNAPSHOT_DIRECTORY_NAME;
+            throw new RSSManagerException("Snapshots are not enabled. Please configure " +
+                                          "'SnapshotConfiguration > TargetDirectory' in " + RSSManagerConstants.RSS_CONFIG_XML_NAME);
         }
         if (!directory.endsWith(File.pathSeparator)) {
             directory = directory + File.separator;
