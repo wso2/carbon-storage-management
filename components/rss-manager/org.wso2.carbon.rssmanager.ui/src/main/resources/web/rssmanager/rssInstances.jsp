@@ -31,7 +31,7 @@
     <carbon:breadcrumb
             label="RSS Instances"
             resourceBundle="org.wso2.carbon.rssmanager.ui.i18n.Resources"
-            topPage="false"
+            topPage="true"
             request="<%=request%>"/>
 	<carbon:jsi18n
 			resourceBundle="org.wso2.carbon.rssmanager.ui.i18n.JSResources"
