@@ -81,7 +81,6 @@
                         </Export-Package>
                         <Import-Package>
                             org.apache.commons.logging,
-                            org.wso2.carbon.core.*,
                             org.wso2.carbon.utils.*,
                             org.apache.axis2.*,
                             org.apache.axiom.*,
@@ -122,10 +121,6 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.user.api</artifactId>
         </dependency>
         <dependency>
@@ -154,28 +149,13 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jboss.spec.javax.transaction</groupId>
-            <artifactId>jboss-transaction-api_1.1_spec</artifactId>
-            <version>${jboss-transaction-api.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.utils</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.rssmanager.common</artifactId>
-            <version>${carbon.platform.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.rssmanager.core</artifactId>
             <version>${carbon.platform.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.ndatasource.core</artifactId>
-            <version>${carbon.kernel.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -187,94 +167,53 @@
             <artifactId>org.wso2.carbon.transaction.manager</artifactId>
             <version>${carbon.platform.version}</version>
         </dependency>
+
+        <!-- Secure vault related dependencies -->
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.24</version>
-        </dependency>
-        <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>9.1-901.jdbc4</version>
-        </dependency>
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>ojdbc</artifactId>
-            <version>11.1.0.7.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/src/test/resources/artifacts/SS/jar/ojdbc6.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.jbossts</groupId>
-            <artifactId>jbossjta</artifactId>
-            <version>4.14.0.Final</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.jboss.ws.native</groupId>
-                    <artifactId>jbossws-native-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>emma</artifactId>
-                    <groupId>emma</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>emma_ant</artifactId>
-                    <groupId>emma</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>hornetq-core</artifactId>
-                    <groupId>org.hornetq</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>netty</artifactId>
-                    <groupId>org.jboss.netty</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>wrapper</artifactId>
-                    <groupId>tanukisoft</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>jacorb</artifactId>
-                    <groupId>jacorb</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>jfreechart</artifactId>
-                    <groupId>jfree</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>jboss-corba-ots-spi</artifactId>
-                    <groupId>org.jboss.integration</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>jboss-server-manager</artifactId>
-                    <groupId>org.jboss.jbossas</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>jboss-ejb-api_3.1_spec</artifactId>
-                    <groupId>org.jboss.spec.javax.ejb</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>jnp-client</artifactId>
-                    <groupId>org.jboss.naming</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>jboss-servlet-api_3.0_spec</artifactId>
-                    <groupId>org.jboss.spec.javax.servlet</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>jbossws-common</artifactId>
-                    <groupId>org.jboss.ws</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>jcl-over-slf4j</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-            </exclusions>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.securevault</artifactId>
+            <version>${carbon.kernel.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.user.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ntask.common</artifactId>
+            <version>${carbon.platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ndatasource.common</artifactId>
+            <version>${carbon.kernel.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.osgi</groupId>
+            <artifactId>org.eclipse.osgi.services</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.osgi</groupId>
+            <artifactId>org.eclipse.osgi</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.tomcat.wso2</groupId>
+            <artifactId>jdbc-pool</artifactId>
+            <version>${tomcat.jdbc.pool.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom.wso2</groupId>
+            <artifactId>axiom</artifactId>
+        </dependency>
     </dependencies>
 
     <properties>
         <commons-lang.wso2.version>2.6.0.wso2v1</commons-lang.wso2.version>
+        <secure.vault.version>1.0.0-wso2v2</secure.vault.version>
+        <tomcat.jdbc.pool.version>7.0.34.wso2v2</tomcat.jdbc.pool.version>
+        <jboss.transaction.api.spec.version>1.0.0.Final</jboss.transaction.api.spec.version>
     </properties>
 </project>

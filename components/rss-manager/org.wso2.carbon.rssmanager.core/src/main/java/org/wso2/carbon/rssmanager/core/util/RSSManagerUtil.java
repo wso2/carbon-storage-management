@@ -21,11 +21,7 @@ package org.wso2.carbon.rssmanager.core.util;
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.ndatasource.common.DataSourceException;
@@ -36,22 +32,14 @@ import org.wso2.carbon.ndatasource.rdbms.RDBMSDataSource;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.common.RSSManagerHelper;
 import org.wso2.carbon.rssmanager.common.exception.RSSManagerCommonException;
-import org.wso2.carbon.rssmanager.core.config.RSSConfigurationManager;
 import org.wso2.carbon.rssmanager.core.config.databasemanagement.SnapshotConfig;
 import org.wso2.carbon.rssmanager.core.config.datasource.RDBMSConfig;
 import org.wso2.carbon.rssmanager.core.config.ssh.SSHInformationConfig;
 import org.wso2.carbon.rssmanager.core.dto.*;
-import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeSet;
-import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplate;
-import org.wso2.carbon.rssmanager.core.dto.common.DatabasePrivilegeTemplateEntry;
-import org.wso2.carbon.rssmanager.core.dto.common.MySQLPrivilegeSet;
-import org.wso2.carbon.rssmanager.core.dto.common.SQLServerPrivilegeSet;
-import org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry;
-import org.wso2.carbon.rssmanager.core.dto.common.UserDatabasePrivilege;
+import org.wso2.carbon.rssmanager.core.dto.common.*;
 import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
-import org.wso2.carbon.rssmanager.core.environment.Environment;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.RSSManagerDataHolder;
 import org.wso2.carbon.user.core.tenant.TenantManager;
@@ -74,13 +62,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 public final class RSSManagerUtil {
     private static final Log log = LogFactory.getLog(RSSManagerUtil.class);
@@ -103,7 +85,7 @@ public final class RSSManagerUtil {
             return tenantMgr.getDomain(tenantId);
         } catch (Exception e) {
             throw new RSSManagerException("Error occurred while retrieving tenant domain for " +
-                                          "the given tenant ID");
+                    "the given tenant ID");
         }
     }
 
@@ -125,7 +107,7 @@ public final class RSSManagerUtil {
                             CarbonContext.getThreadLocalCarbonContext().getTenantId());
         } catch (Exception e) {
             throw new RSSManagerException("Error occurred while composing fully qualified name " +
-                                          "of the database '" + databaseName + "'", e);
+                    "of the database '" + databaseName + "'", e);
         }
         if (!MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantDomain)) {
             return databaseName + "_" + RSSManagerHelper.processDomainName(tenantDomain);
@@ -263,7 +245,7 @@ public final class RSSManagerUtil {
             return ctx.createMarshaller();
         } catch (JAXBException e) {
             throw new RSSManagerException("Error creating rdbms data source configuration " +
-                                          "info marshaller: " + e.getMessage(), e);
+                    "info marshaller: " + e.getMessage(), e);
         }
     }
 
@@ -282,7 +264,7 @@ public final class RSSManagerUtil {
             return docBuilder.parse(file);
         } catch (Exception e) {
             throw new RSSManagerException("Error occurred while parsing file, while converting " +
-                                          "to a org.w3c.dom.Document : " + e.getMessage(), e);
+                    "to a org.w3c.dom.Document : " + e.getMessage(), e);
         }
     }
 
@@ -318,7 +300,7 @@ public final class RSSManagerUtil {
                         RSSManagerConstants.SecureValueProperties.SECRET_ALIAS_ATTRIBUTE_NAME_WITH_NAMESPACE);
         if (secureAttr != null) {
             element.setTextContent(RSSManagerUtil
-                                           .loadFromSecureVault(secureAttr.getValue()));
+                    .loadFromSecureVault(secureAttr.getValue()));
             element.removeAttributeNode(secureAttr);
         }
         NodeList childNodes = element.getChildNodes();
@@ -385,7 +367,7 @@ public final class RSSManagerUtil {
                 tenantId = tenantManager.getTenantId(tenantDomain);
             } catch (Exception e) {
                 throw new RSSManagerCommonException("Error while retrieving the tenant Id for " +
-                                                    "tenant domain : " + tenantDomain, e);
+                        "tenant domain : " + tenantDomain, e);
             }
         }
         return tenantId;
@@ -502,7 +484,7 @@ public final class RSSManagerUtil {
             url = url.replace("?", "/" + databaseName + "?");
         } else if (url.lastIndexOf("/") != (url.length() - 1) && url.contains(";")) {
             url = new StringBuilder(url).replace(url.lastIndexOf("/"), url.lastIndexOf("/") + 1,
-                                                 "/" + databaseName + ";").toString();
+                    "/" + databaseName + ";").toString();
         } else {
             url = url + "/" + databaseName;
         }
@@ -560,7 +542,7 @@ public final class RSSManagerUtil {
      * create rss instance info object from rss instance to be presented from service
      */
     public static void createRSSInstanceInfo(RSSInstanceInfo rssInstanceInfo, RSSInstance rssInstance)
-            throws RSSManagerException{
+            throws RSSManagerException {
         if (rssInstanceInfo == null || rssInstance == null) {
             throw new RSSManagerException("Error occurred while mapping rss instance to rss instance info");
         }
@@ -687,7 +669,7 @@ public final class RSSManagerUtil {
      * create rss instance object from rss instance info to be use in internally
      */
     public static void createRSSInstance(RSSInstanceInfo instanceInfo, RSSInstance rssInstance)
-            throws RSSManagerException{
+            throws RSSManagerException {
         if (instanceInfo == null || rssInstance == null) {
             throw new RSSManagerException("Error occurred while mapping rss instance info to rss instance");
         }
@@ -1000,7 +982,7 @@ public final class RSSManagerUtil {
     public static void createSnapshotDirectory(String directory) throws RSSManagerException {
         if (directory == null || directory.isEmpty()) {
             log.warn("Target snapshot directory is null or empty. Creating snapshot in default directory: "
-            + CarbonUtils.getCarbonHome() + File.separator + RSSManagerConstants.Snapshots.SNAPSHOT_DIRECTORY_NAME);
+                    + CarbonUtils.getCarbonHome() + File.separator + RSSManagerConstants.Snapshots.SNAPSHOT_DIRECTORY_NAME);
             directory = RSSManagerConstants.Snapshots.SNAPSHOT_DIRECTORY_NAME;
         }
         File snapshotDir = new File(directory);
@@ -1023,9 +1005,9 @@ public final class RSSManagerUtil {
             directory = directory + File.separator;
         }
         return directory
-               + databaseName
-               + date
-               + RSSManagerConstants.Snapshots.SNAPSHOT_FILE_POST_FIX;
+                + databaseName
+                + date
+                + RSSManagerConstants.Snapshots.SNAPSHOT_FILE_POST_FIX;
     }
 
     /**
@@ -1044,10 +1026,10 @@ public final class RSSManagerUtil {
      */
     public static void createSSHInformationConfigInfo(SSHInformationConfigInfo sshInformationConfigInfo,
                                                       SSHInformationConfig sshInformationConfig) throws
-                                                                                                 RSSManagerException{
+            RSSManagerException {
         if (sshInformationConfigInfo == null || sshInformationConfig == null) {
             throw new RSSManagerException("Error occurred while mapping SSH information config to SSH information " +
-                                          "config info");
+                    "config info");
         }
         sshInformationConfigInfo.setHost(sshInformationConfig.getHost());
         sshInformationConfigInfo.setPort(sshInformationConfig.getPort());
@@ -1059,7 +1041,7 @@ public final class RSSManagerUtil {
      * create Snapshot Config object from Snapshot Config Info to be use in internally
      */
     public static void createSnapshotConfig(SnapshotConfigInfo snapshotConfigInfo, SnapshotConfig snapshotConfig)
-            throws RSSManagerException{
+            throws RSSManagerException {
         if (snapshotConfigInfo == null || snapshotConfig == null) {
             throw new RSSManagerException("Error occurred while mapping snapshot config info to snapshot config");
         }
@@ -1070,20 +1052,20 @@ public final class RSSManagerUtil {
      * create SSH Information Config object from SSH Information Config Info to be use in internally
      */
     public static void createSSHInformationConfig(SSHInformationConfigInfo sshInformationConfigInfo,
-                                                      SSHInformationConfig sshInformationConfig) throws
-                                                                                                 RSSManagerException{
+                                                  SSHInformationConfig sshInformationConfig) throws
+            RSSManagerException {
         if (sshInformationConfigInfo == null || sshInformationConfig == null) {
             throw new RSSManagerException("Error occurred while mapping SSH information config info to SSH " +
-                                          "information config");
+                    "information config");
         }
         sshInformationConfig.setHost(sshInformationConfigInfo.getHost());
         sshInformationConfig.setPort(sshInformationConfigInfo.getPort());
         sshInformationConfig.setUsername(sshInformationConfigInfo.getUsername());
     }
 
-	public static String getCleanInstanceType(String instanceType) {
-		return (instanceType == null || "".equals(instanceType) || RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equals
-				(instanceType)) ? RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM : RSSManagerConstants.RSSManagerTypes
-				.RM_TYPE_USER_DEFINED;
-	}
+    public static String getCleanInstanceType(String instanceType) {
+        return (instanceType == null || "".equals(instanceType) || RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equals
+                (instanceType)) ? RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM : RSSManagerConstants.RSSManagerTypes
+                .RM_TYPE_USER_DEFINED;
+    }
 }

@@ -30,7 +30,6 @@ import org.wso2.carbon.rssmanager.core.config.RSSConfigurationManager;
 import org.wso2.carbon.rssmanager.core.service.RSSManagerService;
 import org.wso2.carbon.rssmanager.core.service.RSSManagerServiceImpl;
 import org.wso2.carbon.securevault.SecretCallbackHandlerService;
-import org.wso2.carbon.identity.application.mgt.ApplicationManagementOSGIService;
 import org.wso2.carbon.transaction.manager.TransactionManagerDummyService;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
