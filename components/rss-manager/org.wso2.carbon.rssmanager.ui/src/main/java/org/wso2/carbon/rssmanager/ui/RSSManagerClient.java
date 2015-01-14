@@ -25,6 +25,7 @@ import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.core.dto.xsd.*;
+import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSManagerExceptionException;
 import org.wso2.carbon.rssmanager.ui.stub.RSSAdminStub;
 
 import java.rmi.RemoteException;
@@ -282,11 +283,6 @@ public class RSSManagerClient {
 		return tempalte;
 	}
 
-	private void handleException(String msg, Exception e) throws AxisFault {
-		log.error(msg, e);
-		throw new AxisFault(msg, e);
-	}
-
 	public RSSInstanceInfo getRSSInstance(String environmentName, String rssInstanceName, String type) throws AxisFault {
 		RSSInstanceInfo rssIns = null;
 		try {
@@ -421,4 +417,18 @@ public class RSSManagerClient {
         }
     }
 
+	private String[] handleException(String msg, Exception e) throws AxisFault  {
+		String errorMessage = "Unknown";
+
+		if(e instanceof RSSAdminRSSManagerExceptionException){
+			RSSAdminRSSManagerExceptionException rssException = (RSSAdminRSSManagerExceptionException) e;
+			if (rssException.getFaultMessage().getRSSManagerException()!=null) {
+				errorMessage = msg + rssException.getFaultMessage().getRSSManagerException().getErrorMessage();
+			}
+		} else {
+			errorMessage = msg + e.getMessage();
+		}
+		log.error(errorMessage, e);
+		throw new AxisFault(errorMessage, e);
+	}
 }

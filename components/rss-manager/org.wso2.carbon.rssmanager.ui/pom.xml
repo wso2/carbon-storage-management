@@ -31,11 +31,15 @@
                         <Bundle-Version>${project.version}</Bundle-Version>
                         <Export-Package>
                             org.wso2.carbon.rssmanager.ui.*,
+                            org.wso2.carbon.rssmanager.core.dto.*
                         </Export-Package>
                         <Import-Package>
-                            !org.wso2.carbon.rssmanager.ui.i18n,
+                            javax.servlet.*;version="${imp.pkg.version.javax.servlet}",
+                            javax.xml.namespace.*;version="0.0.0",
+                            *;resolution:=optional,
                             org.wso2.carbon.rssmanager.ui.*,
-                            org.wso2.carbon.rssmanager.ui.stub.*
+                            org.wso2.carbon.rssmanager.core.dto.*
+                            org.wso2.carbon.rssmanager.stub.*
                         </Import-Package>
                         <Carbon-Component>UIBundle</Carbon-Component>
                     </instructions>

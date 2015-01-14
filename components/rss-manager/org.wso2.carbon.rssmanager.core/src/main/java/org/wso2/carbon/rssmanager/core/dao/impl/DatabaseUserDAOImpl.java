@@ -202,6 +202,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 				databaseUser.setName(resultSet.getString("USERNAME"));
 				databaseUser.setType(resultSet.getString("TYPE"));
 				databaseUser.setTenantId(resultSet.getInt("TENANT_ID"));
+				databaseUser.setRssInstanceName(rssInstanceName);
 			}
 		} catch (SQLException e) {
 			String msg = "Failed to retrieve database user information of" + username + "in rssInstance" + rssInstanceName
