@@ -445,7 +445,7 @@ public class H2UserDefinedRSSManager extends UserDefinedRSSManager {
         PreparedStatement snapshotStatement = null;
         RSSInstance instance = null;
         try {
-            instance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            instance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
             DataSource dataSource = getDataSource(instance.getName(), databaseName);
             conn = dataSource.getConnection();
             SnapshotConfig snapshotConfig = instance.getSnapshotConfig();
