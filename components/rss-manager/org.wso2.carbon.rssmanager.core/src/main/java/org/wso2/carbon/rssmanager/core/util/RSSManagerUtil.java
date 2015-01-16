@@ -987,8 +987,10 @@ public final class RSSManagerUtil {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("_yyyy-MM-dd_hh-mm-ss_");
         String date = simpleDateFormat.format(new Date());
         if (directory == null || directory.isEmpty()) {
-            throw new RSSManagerException("Snapshots are not enabled. Please configure " +
-                                          "'SnapshotConfiguration > TargetDirectory' in " + RSSManagerConstants.RSS_CONFIG_XML_NAME);
+            throw new RSSManagerException("Snapshots are not enabled. Please configure "
+                                          + "'SnapshotConfiguration > TargetDirectory' in "
+                                          + RSSManagerConstants.RSS_CONFIG_XML_NAME
+                                          + " or in 'RSS Instances' UI.");
         }
         if (!directory.endsWith(File.pathSeparator)) {
             directory = directory + File.separator;
