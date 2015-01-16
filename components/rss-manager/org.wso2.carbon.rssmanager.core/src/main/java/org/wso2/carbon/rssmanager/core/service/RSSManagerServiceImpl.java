@@ -48,7 +48,7 @@ public class RSSManagerServiceImpl implements RSSManagerService {
 			this.getEnvironmentAdaptor().addRSSInstance(environmentName, rssInstance);
 		} catch (RSSManagerException e) {
 			String msg =
-					"Error occurred while creating RSS instance '" + rssInstance.getName() + "'";
+					"Error occurred while creating RSS instance '" + rssInstance.getRssInstanceName() + "'";
 			handleException(msg, e);
 		}
 	}
@@ -75,7 +75,7 @@ public class RSSManagerServiceImpl implements RSSManagerService {
 			this.getEnvironmentAdaptor().updateRSSInstance(environmentName, rssInstance);
 		} catch (RSSManagerException e) {
 			String msg = "Error occurred while editing the configuration of RSS instance '" +
-			             rssInstance.getName() + "'";
+			             rssInstance.getRssInstanceName() + "'";
 			handleException(msg, e);
 		}
 	}

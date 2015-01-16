@@ -209,7 +209,7 @@ public class RSSManagerClient {
 			stub.addRSSInstance(environmentName, rssInstance);
 		} catch (Exception e) {
 			handleException(bundle.getString("rss.manager.failed.to.add.database.server.instance") + " :" +
-			                rssInstance.getName() + " : " + e.getMessage(), e);
+			                rssInstance.getRssInstanceName() + " : " + e.getMessage(), e);
 		}
 	}
 
@@ -227,7 +227,7 @@ public class RSSManagerClient {
 			stub.updateRSSInstance(environmentName, rssInstance);
 		} catch (Exception e) {
 			handleException(bundle.getString("rss.manager.failed.to.edit.database.server.instance") + " :" +
-			                rssInstance.getName() + " : " + e.getMessage(), e);
+			                rssInstance.getRssInstanceName() + " : " + e.getMessage(), e);
 		}
 	}
 

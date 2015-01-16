@@ -77,7 +77,7 @@ public class EnvironmentAdaptor implements RSSManagerService {
 			entity = this.getEnvironmentManager().addRSSInstance(entity);
 		}
 		catch (RSSDatabaseConnectionException e) {
-			String msg = "Database server error at adding rss instance " + rssInstance.getName() + e.getMessage();
+			String msg = "Database server error at adding rss instance " + rssInstance.getRssInstanceName() + e.getMessage();
 			handleException(msg, e);
 		}
 		environmentManager.getEnvironment(rssInstance.getEnvironmentName()).getDSWrapperRepository().addRSSInstanceDSWrapper(entity);
@@ -111,11 +111,11 @@ public class EnvironmentAdaptor implements RSSManagerService {
 			this.environmentManager.updateRSSInstance(environmentName, entity);
 		}
 		catch (RSSDatabaseConnectionException e) {
-			String msg = "Database server error at updating rss instance" + rssInstance.getName() + e.getMessage();
+			String msg = "Database server error at updating rss instance" + rssInstance.getRssInstanceName() + e.getMessage();
 			handleException(msg, e);
 		}
-		environmentManager.getEnvironment(environmentName).getDSWrapperRepository().removeRSSInstanceDSWrapper(rssInstance.getName());
-		environmentManager.getEnvironment(environmentName).removeRSSInstance(rssInstance.getName());
+		environmentManager.getEnvironment(environmentName).getDSWrapperRepository().removeRSSInstanceDSWrapper(rssInstance.getRssInstanceName());
+		environmentManager.getEnvironment(environmentName).removeRSSInstance(rssInstance.getRssInstanceName());
 		environmentManager.getEnvironment(rssInstance.getEnvironmentName()).getDSWrapperRepository().addRSSInstanceDSWrapper(entity);
 		environmentManager.getEnvironment(rssInstance.getEnvironmentName()).addRSSInstance(entity);
 	}
