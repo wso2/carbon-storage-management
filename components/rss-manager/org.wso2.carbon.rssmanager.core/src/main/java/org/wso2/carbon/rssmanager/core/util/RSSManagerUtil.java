@@ -1057,4 +1057,17 @@ public final class RSSManagerUtil {
                 (instanceType)) ? RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM : RSSManagerConstants.RSSManagerTypes
                 .RM_TYPE_USER_DEFINED;
     }
+
+    /**
+     * Check whether the database template name created with alphanumeric charactors and underscores
+     * @param templateName mame of the template
+     * @return true if valid template else false
+     */
+    public static boolean isValidTemplateName(String templateName) {
+            String pattern= "^[a-zA-Z0-9_]*$";
+            if(templateName.matches(pattern)){
+                return true;
+            }
+            return false;
+    }
 }
