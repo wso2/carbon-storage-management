@@ -537,7 +537,7 @@ public final class RSSManagerUtil {
         rssInstanceInfo.setDbmsType(rssInstance.getDbmsType());
         rssInstanceInfo.setEnvironmentName(rssInstance.getEnvironmentName());
         rssInstanceInfo.setInstanceType(rssInstance.getInstanceType());
-        rssInstanceInfo.setName(rssInstance.getName());
+        rssInstanceInfo.setRssInstanceName(rssInstance.getName());
         rssInstanceInfo.setServerCategory(rssInstance.getServerCategory());
         rssInstanceInfo.setServerURL(rssInstance.getServerURL());
         rssInstanceInfo.setUsername(rssInstance.getAdminUserName());
@@ -664,7 +664,7 @@ public final class RSSManagerUtil {
         rssInstance.setDbmsType(instanceInfo.getDbmsType());
         rssInstance.setEnvironmentName(instanceInfo.getEnvironmentName());
         rssInstance.setInstanceType(instanceInfo.getInstanceType());
-        rssInstance.setName(instanceInfo.getName());
+        rssInstance.setName(instanceInfo.getRssInstanceName());
         rssInstance.setServerCategory(instanceInfo.getServerCategory());
         rssInstance.setServerURL(instanceInfo.getServerURL());
         rssInstance.setAdminPassword(instanceInfo.getPassword());

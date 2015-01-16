@@ -28,7 +28,7 @@ public class RSSInstanceInfo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String name;
+	private String rssInstanceName;
 
 	private String dbmsType;
 
@@ -53,12 +53,12 @@ public class RSSInstanceInfo implements Serializable {
 	public RSSInstanceInfo() {
 	}
 
-	public String getName() {
-		return name;
+	public String getRssInstanceName() {
+		return rssInstanceName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setRssInstanceName(String name) {
+		this.rssInstanceName = name;
 	}
 
 	public String getDbmsType() {
