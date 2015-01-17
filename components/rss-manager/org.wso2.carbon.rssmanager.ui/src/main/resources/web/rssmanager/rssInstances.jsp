@@ -81,7 +81,7 @@
                     <%
                         for (RSSInstanceInfo rssInstance : rssInstances) {
                             if (rssInstance != null) {
-                                rssInstanceName = rssInstance.getName();
+                                rssInstanceName = rssInstance.getRssInstanceName();
                     %>
                     <tr id="tr_<%=rssInstanceName%>">
                         <td id="td_<%=rssInstanceName%>"><%=rssInstanceName%>
@@ -93,15 +93,17 @@
                         <td id="td_<%=rssInstance.getServerCategory()%>"><%=rssInstance.getServerCategory()%>
                         </td>
                         <td>
+                            <%if(!rssInstance.getFromConfig()) {%>
                             <a class="icon-link"
                                style="background-image:url(../admin/images/edit.gif);"
-                               onclick="dispatchEditRSSInstanceRequest('<%=rssInstance.getName()%>','<%=rssInstance.getEnvironmentName()%>','<%=rssInstance.getInstanceType()%>')"><fmt:message
+                               onclick="dispatchEditRSSInstanceRequest('<%=rssInstance.getRssInstanceName()%>','<%=rssInstance.getEnvironmentName()%>','<%=rssInstance.getInstanceType()%>')"><fmt:message
                                     key="rss.manager.edit.instance"/></a>
                             <a class="icon-link"
                                style="background-image:url(../admin/images/delete.gif);"
                                href="#"
-                               onclick="dispatchDropRSSInstanceRequest('<%=rssInstance.getName()%>','<%=rssInstance.getEnvironmentName()%>','<%=rssInstance.getInstanceType()%>');"><fmt:message
+                               onclick="dispatchDropRSSInstanceRequest('<%=rssInstance.getRssInstanceName()%>','<%=rssInstance.getEnvironmentName()%>','<%=rssInstance.getInstanceType()%>');"><fmt:message
                                     key="rss.manager.drop.instance"/></a>
+                            <%}%>
                         </td>
                     <%
                             }

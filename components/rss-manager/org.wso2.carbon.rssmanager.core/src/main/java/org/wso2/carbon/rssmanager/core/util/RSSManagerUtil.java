@@ -32,6 +32,8 @@ import org.wso2.carbon.ndatasource.rdbms.RDBMSDataSource;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.common.RSSManagerHelper;
 import org.wso2.carbon.rssmanager.common.exception.RSSManagerCommonException;
+import org.wso2.carbon.rssmanager.core.config.RSSConfig;
+import org.wso2.carbon.rssmanager.core.config.RSSConfigurationManager;
 import org.wso2.carbon.rssmanager.core.config.databasemanagement.SnapshotConfig;
 import org.wso2.carbon.rssmanager.core.config.datasource.RDBMSConfig;
 import org.wso2.carbon.rssmanager.core.config.ssh.SSHInformationConfig;
@@ -40,6 +42,7 @@ import org.wso2.carbon.rssmanager.core.dto.common.*;
 import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
+import org.wso2.carbon.rssmanager.core.environment.Environment;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.internal.RSSManagerDataHolder;
 import org.wso2.carbon.user.core.tenant.TenantManager;
@@ -549,7 +552,11 @@ public final class RSSManagerUtil {
         SnapshotConfigInfo snapshotConfigInfo = new SnapshotConfigInfo();
         createSnapshotConfigInfo(snapshotConfigInfo, rssInstance.getSnapshotConfig());
         rssInstanceInfo.setSnapshotConfig(rssInstance.getSnapshotConfig() == null ? null : snapshotConfigInfo);
-
+        if(RSSManagerUtil.isRSSInstanceFromConfig(rssInstance.getName(), rssInstance.getEnvironmentName())) {
+            rssInstanceInfo.setFromConfig(true);
+        } else {
+            rssInstanceInfo.setFromConfig(false);
+        }
     }
 
     /**
@@ -1071,5 +1078,26 @@ public final class RSSManagerUtil {
                 return true;
             }
             return false;
+    }
+
+    /**
+     * Check whether specified rss instance define in the config
+     *
+     * @param rssInstanceName name of the rss instance
+     * @param environmentName name of the environment
+     * @return boolean true if defined in the config else false
+     */
+    public static boolean isRSSInstanceFromConfig(String rssInstanceName, String environmentName) {
+        RSSConfig rssConfig = RSSConfigurationManager.getInstance().getCurrentRSSConfig();
+        for(Environment environment : rssConfig.getRSSEnvironments()) {
+            if(environmentName.equalsIgnoreCase(environment.getName())) {
+                for(RSSInstance rssInstance : environment.getRSSInstances()) {
+                    if(rssInstanceName.equals(rssInstance.getName())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

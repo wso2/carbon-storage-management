@@ -90,7 +90,7 @@
                                     <td class="leftCol-med"><fmt:message
                                             key="rss.manager.instance.name"/><font
                                             color='red'>*</font></td>
-                                    <td><input value="<%=rssIns.getName()%>" id="rssInstanceName"
+                                    <td><input value="<%=rssIns.getRssInstanceName()%>" id="rssInstanceName"
                                                name="rssInstanceName"
                                                size="30" type="text" readonly="readonly"></td>
                                 </tr>

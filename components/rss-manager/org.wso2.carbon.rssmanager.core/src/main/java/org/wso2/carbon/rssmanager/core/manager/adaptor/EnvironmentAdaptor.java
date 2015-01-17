@@ -25,6 +25,7 @@ import org.wso2.carbon.ndatasource.core.CarbonDataSource;
 import org.wso2.carbon.ndatasource.core.DataSourceMetaInfo;
 import org.wso2.carbon.rssmanager.core.authorize.RSSAuthorizationUtils;
 import org.wso2.carbon.rssmanager.core.authorize.RSSAuthorizer;
+import org.wso2.carbon.rssmanager.core.config.RSSConfig;
 import org.wso2.carbon.rssmanager.core.config.RSSConfigurationManager;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.DatabaseInfo;
@@ -102,6 +103,9 @@ public class EnvironmentAdaptor implements RSSManagerService {
 	 */
 	public void updateRSSInstance(String environmentName, RSSInstanceInfo rssInstance)
 			throws RSSManagerException {
+		if(RSSManagerUtil.isRSSInstanceFromConfig(rssInstance.getRssInstanceName(), environmentName)) {
+			throw new RSSManagerException("RSS Instances define in the configuration cannot be edited");
+		}
 		String instanceType = RSSManagerUtil.getCleanInstanceType(rssInstance.getInstanceType());
 		RSSAuthorizer.isUserAuthorize(RSSAuthorizationUtils.getPermissionResource(environmentName, instanceType,
 				RSSAuthorizationUtils.RSSINSTANCE_RESOURCE, RSSAuthorizationUtils.ActionResource.EDIT.getAction()));
