@@ -65,7 +65,7 @@
             RSSInstanceInfo rssIns = new RSSInstanceInfo();
             SSHInformationConfigInfo sshConfig = new SSHInformationConfigInfo();
             SnapshotConfigInfo snapshotConfig = new SnapshotConfigInfo();
-            rssIns.setName(rssInstanceName);
+            rssIns.setRssInstanceName(rssInstanceName);
             rssIns.setServerURL(serverUrl);
             rssIns.setUsername(username);
             rssIns.setPassword(password);
@@ -96,7 +96,7 @@
             response.setHeader("Pragma", "no-cache");
 
             PrintWriter pw = response.getWriter();
-            String msg = "Database server '" + rssIns.getName() + "' has been successfully created";
+            String msg = "Database server '" + rssIns.getRssInstanceName() + "' has been successfully created";
             pw.write(msg);
             pw.flush();
         } catch (Exception e) {
@@ -135,7 +135,7 @@
             RSSInstanceInfo rssIns = new RSSInstanceInfo();
             SSHInformationConfigInfo sshConfig = new SSHInformationConfigInfo();
             SnapshotConfigInfo snapshotConfig = new SnapshotConfigInfo();
-            rssIns.setName(rssInstanceName);
+            rssIns.setRssInstanceName(rssInstanceName);
             rssIns.setServerURL(serverUrl);
             rssIns.setUsername(username);
             rssIns.setPassword(password);
@@ -166,7 +166,7 @@
             response.setHeader("Pragma", "no-cache");
 
             PrintWriter pw = response.getWriter();
-            String msg = "Configuration of the database server '" + rssIns.getName() +
+            String msg = "Configuration of the database server '" + rssIns.getRssInstanceName() +
                     "' has been successfully edited";
             pw.write(msg);
             pw.flush();

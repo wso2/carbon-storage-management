@@ -11,38 +11,6 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="addDatabase">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="database" nillable="true" type="ax2349:DatabaseInfo"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="addDatabaseResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2349:DatabaseInfo"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="addRSSInstance">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="rssInstance" nillable="true" type="ax2349:RSSInstanceInfo"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="removeRSSInstance">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="rssInstanceName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
             <xs:element name="updateRSSInstance">
                 <xs:complexType>
                     <xs:sequence>
@@ -51,33 +19,21 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="getRSSInstance">
+            <xs:element name="updateDatabaseUserPrivileges">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="rssInstanceName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="privileges" nillable="true" type="ax2349:DatabasePrivilegeSetInfo"></xs:element>
+                        <xs:element minOccurs="0" name="user" nillable="true" type="ax2349:DatabaseUserInfo"></xs:element>
+                        <xs:element minOccurs="0" name="databaseName" nillable="true" type="xs:string"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="getRSSInstanceResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2349:RSSInstanceInfo"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getRSSInstances">
+            <xs:element name="updateDatabasePrivilegeTemplate">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getRSSInstancesResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2349:RSSInstanceInfo"></xs:element>
+                        <xs:element minOccurs="0" name="template" nillable="true" type="ax2349:DatabasePrivilegeTemplateInfo"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -91,56 +47,30 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="editDatabaseUser">
+            <xs:element name="removeRSSInstance">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="databaseUserInfo" nillable="true" type="ax2349:DatabaseUserInfo"></xs:element>
+                        <xs:element minOccurs="0" name="rssInstanceName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="editDatabaseUserResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2349:DatabaseUserInfo"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getRSSProvider">
-                <xs:complexType>
-                    <xs:sequence></xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getRSSProviderResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getDatabases">
+            <xs:element name="removeDatabaseUser">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="rssInstanceName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="getDatabasesResponse">
+            <xs:element name="removeDatabasePrivilegeTemplate">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2349:DatabaseInfo"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getRSSInstancesList">
-                <xs:complexType>
-                    <xs:sequence></xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getRSSInstancesListResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2349:RSSInstanceInfo"></xs:element>
+                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="templateName" nillable="true" type="xs:string"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -151,23 +81,6 @@
                         <xs:element minOccurs="0" name="rssInstanceName" nillable="true" type="xs:string"></xs:element>
                         <xs:element minOccurs="0" name="databaseName" nillable="true" type="xs:string"></xs:element>
                         <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="isDatabaseExist">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="rssInstanceName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="databaseName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="isDatabaseExistResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" type="xs:boolean"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -203,32 +116,108 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="addDatabaseUser">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="user" nillable="true" type="ax2349:DatabaseUserInfo"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="addDatabaseUserResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2349:DatabaseUserInfo"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="removeDatabaseUser">
+            <xs:element name="isDatabaseExist">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
                         <xs:element minOccurs="0" name="rssInstanceName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="databaseName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="isDatabaseExistResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserDatabasePrivileges">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="rssInstanceName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="databaseName" nillable="true" type="xs:string"></xs:element>
                         <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"></xs:element>
                         <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="deleteTenantRSSData">
+            <xs:element name="getUserDatabasePrivilegesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2349:DatabasePrivilegeSetInfo"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRSSProvider">
+                <xs:complexType>
+                    <xs:sequence></xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRSSProviderResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRSSInstancesList">
+                <xs:complexType>
+                    <xs:sequence></xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRSSInstancesListResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2349:RSSInstanceInfo"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRSSInstances">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRSSInstancesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2349:RSSInstanceInfo"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRSSInstance">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="rssInstanceName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRSSInstanceResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2349:RSSInstanceInfo"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getEnvironments">
+                <xs:complexType>
+                    <xs:sequence></xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getEnvironmentsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getDatabasesForTenant">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
@@ -236,37 +225,24 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="deleteTenantRSSDataResponse">
+            <xs:element name="getDatabasesForTenantResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" type="xs:boolean"></xs:element>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2349:DatabaseInfo"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="updateDatabaseUserPrivileges">
+            <xs:element name="getDatabases">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="privileges" nillable="true" type="ax2349:DatabasePrivilegeSetInfo"></xs:element>
-                        <xs:element minOccurs="0" name="user" nillable="true" type="ax2349:DatabaseUserInfo"></xs:element>
-                        <xs:element minOccurs="0" name="databaseName" nillable="true" type="xs:string"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="getDatabaseUser">
+            <xs:element name="getDatabasesResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="rssInstance" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getDatabaseUserResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2349:DatabaseUserInfo"></xs:element>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2349:DatabaseInfo"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -284,27 +260,20 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="addDatabasePrivilegeTemplate">
+            <xs:element name="getDatabaseUser">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="template" nillable="true" type="ax2349:DatabasePrivilegeTemplateInfo"></xs:element>
+                        <xs:element minOccurs="0" name="rssInstance" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="removeDatabasePrivilegeTemplate">
+            <xs:element name="getDatabaseUserResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="templateName" nillable="true" type="xs:string"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="updateDatabasePrivilegeTemplate">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="template" nillable="true" type="ax2349:DatabasePrivilegeTemplateInfo"></xs:element>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2349:DatabaseUserInfo"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -337,108 +306,6 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="attachUser">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="ude" nillable="true" type="ax2349:UserDatabaseEntryInfo"></xs:element>
-                        <xs:element minOccurs="0" name="templateName" nillable="true" type="xs:string"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="detachUser">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="databaseEntryInfo" nillable="true" type="ax2349:UserDatabaseEntryInfo"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getAttachedUsers">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="rssInstanceName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="databaseName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getAttachedUsersResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2349:DatabaseUserInfo"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getAvailableUsers">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="rssInstanceName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="databaseName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getAvailableUsersResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2349:DatabaseUserInfo"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="addCarbonDataSource">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="dataSourceName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="entry" nillable="true" type="ax2349:UserDatabaseEntryInfo"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getUserDatabasePrivileges">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="rssInstanceName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="databaseName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getUserDatabasePrivilegesResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2349:DatabasePrivilegeSetInfo"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getDatabasesForTenant">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="tenantDomain" nillable="true" type="xs:string"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getDatabasesForTenantResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2349:DatabaseInfo"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="addDatabaseForTenant">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="database" nillable="true" type="ax2349:DatabaseInfo"></xs:element>
-                        <xs:element minOccurs="0" name="tenantDomain" nillable="true" type="xs:string"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
             <xs:element name="getDatabaseForTenant">
                 <xs:complexType>
                     <xs:sequence>
@@ -454,18 +321,6 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="return" nillable="true" type="ax2349:DatabaseInfo"></xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getEnvironments">
-                <xs:complexType>
-                    <xs:sequence></xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getEnvironmentsResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -486,12 +341,157 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="getAvailableUsers">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="rssInstanceName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="databaseName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAvailableUsersResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2349:DatabaseUserInfo"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAttachedUsers">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="rssInstanceName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="databaseName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAttachedUsersResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2349:DatabaseUserInfo"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="editDatabaseUser">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="databaseUserInfo" nillable="true" type="ax2349:DatabaseUserInfo"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="editDatabaseUserResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2349:DatabaseUserInfo"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="detachUser">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="databaseEntryInfo" nillable="true" type="ax2349:UserDatabaseEntryInfo"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteTenantRSSData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="tenantDomain" nillable="true" type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteTenantRSSDataResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="createSnapshot">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
                         <xs:element minOccurs="0" name="databaseName" nillable="true" type="xs:string"></xs:element>
                         <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="attachUser">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="ude" nillable="true" type="ax2349:UserDatabaseEntryInfo"></xs:element>
+                        <xs:element minOccurs="0" name="templateName" nillable="true" type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addRSSInstance">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="rssInstance" nillable="true" type="ax2349:RSSInstanceInfo"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addDatabaseUser">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="user" nillable="true" type="ax2349:DatabaseUserInfo"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addDatabaseUserResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2349:DatabaseUserInfo"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addDatabasePrivilegeTemplate">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="template" nillable="true" type="ax2349:DatabasePrivilegeTemplateInfo"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addDatabaseForTenant">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="database" nillable="true" type="ax2349:DatabaseInfo"></xs:element>
+                        <xs:element minOccurs="0" name="tenantDomain" nillable="true" type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addDatabase">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="database" nillable="true" type="ax2349:DatabaseInfo"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addDatabaseResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2349:DatabaseInfo"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addCarbonDataSource">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="dataSourceName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="entry" nillable="true" type="ax2349:UserDatabaseEntryInfo"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -504,19 +504,12 @@
             </xs:complexType>
         </xs:schema>
         <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://dto.core.rssmanager.carbon.wso2.org/xsd">
-            <xs:complexType name="DatabaseInfo">
-                <xs:sequence>
-                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"></xs:element>
-                    <xs:element minOccurs="0" name="rssInstanceName" nillable="true" type="xs:string"></xs:element>
-                    <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"></xs:element>
-                    <xs:element minOccurs="0" name="url" nillable="true" type="xs:string"></xs:element>
-                </xs:sequence>
-            </xs:complexType>
             <xs:complexType name="RSSInstanceInfo">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="dbmsType" nillable="true" type="xs:string"></xs:element>
                     <xs:element minOccurs="0" name="driverClass" nillable="true" type="xs:string"></xs:element>
                     <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="fromConfig" type="xs:boolean"></xs:element>
                     <xs:element minOccurs="0" name="instanceType" nillable="true" type="xs:string"></xs:element>
                     <xs:element minOccurs="0" name="password" nillable="true" type="xs:string"></xs:element>
                     <xs:element minOccurs="0" name="rssInstanceName" nillable="true" type="xs:string"></xs:element>
@@ -539,15 +532,6 @@
                     <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"></xs:element>
                 </xs:sequence>
             </xs:complexType>
-            <xs:complexType name="DatabaseUserInfo">
-                <xs:sequence>
-                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"></xs:element>
-                    <xs:element minOccurs="0" name="password" nillable="true" type="xs:string"></xs:element>
-                    <xs:element minOccurs="0" name="rssInstanceName" nillable="true" type="xs:string"></xs:element>
-                    <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"></xs:element>
-                    <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"></xs:element>
-                </xs:sequence>
-            </xs:complexType>
             <xs:complexType abstract="true" name="DatabasePrivilegeSetInfo">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="alterPriv" nillable="true" type="xs:string"></xs:element>
@@ -560,10 +544,27 @@
                     <xs:element minOccurs="0" name="updatePriv" nillable="true" type="xs:string"></xs:element>
                 </xs:sequence>
             </xs:complexType>
+            <xs:complexType name="DatabaseUserInfo">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="password" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="rssInstanceName" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
             <xs:complexType name="DatabasePrivilegeTemplateInfo">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"></xs:element>
                     <xs:element minOccurs="0" name="privileges" nillable="true" type="ax2348:DatabasePrivilegeSetInfo"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="DatabaseInfo">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="rssInstanceName" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="url" nillable="true" type="xs:string"></xs:element>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="UserDatabaseEntryInfo">
@@ -598,20 +599,20 @@
     </wsdl:types>
     <wsdl:message name="createDatabaseForTenantRequest"></wsdl:message>
     <wsdl:message name="createDatabaseForTenantResponse"></wsdl:message>
-    <wsdl:message name="getRSSInstancesRequest">
-        <wsdl:part name="parameters" element="ns:getRSSInstances"></wsdl:part>
-    </wsdl:message>
-    <wsdl:message name="getRSSInstancesResponse">
-        <wsdl:part name="parameters" element="ns:getRSSInstancesResponse"></wsdl:part>
-    </wsdl:message>
-    <wsdl:message name="RSSAdminRSSManagerException">
-        <wsdl:part name="parameters" element="ns:RSSAdminRSSManagerException"></wsdl:part>
-    </wsdl:message>
     <wsdl:message name="getRSSInstanceRequest">
         <wsdl:part name="parameters" element="ns:getRSSInstance"></wsdl:part>
     </wsdl:message>
     <wsdl:message name="getRSSInstanceResponse">
         <wsdl:part name="parameters" element="ns:getRSSInstanceResponse"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="RSSAdminRSSManagerException">
+        <wsdl:part name="parameters" element="ns:RSSAdminRSSManagerException"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getRSSInstancesRequest">
+        <wsdl:part name="parameters" element="ns:getRSSInstances"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getRSSInstancesResponse">
+        <wsdl:part name="parameters" element="ns:getRSSInstancesResponse"></wsdl:part>
     </wsdl:message>
     <wsdl:message name="addDatabaseRequest">
         <wsdl:part name="parameters" element="ns:addDatabase"></wsdl:part>
@@ -793,15 +794,15 @@
             <wsdl:input message="ns:createDatabaseForTenantRequest" wsaw:Action="urn:createDatabaseForTenant"></wsdl:input>
             <wsdl:output message="ns:createDatabaseForTenantResponse" wsaw:Action="urn:createDatabaseForTenantResponse"></wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="getRSSInstances">
-            <wsdl:input message="ns:getRSSInstancesRequest" wsaw:Action="urn:getRSSInstances"></wsdl:input>
-            <wsdl:output message="ns:getRSSInstancesResponse" wsaw:Action="urn:getRSSInstancesResponse"></wsdl:output>
-            <wsdl:fault message="ns:RSSAdminRSSManagerException" name="RSSAdminRSSManagerException" wsaw:Action="urn:getRSSInstancesRSSAdminRSSManagerException"></wsdl:fault>
-        </wsdl:operation>
         <wsdl:operation name="getRSSInstance">
             <wsdl:input message="ns:getRSSInstanceRequest" wsaw:Action="urn:getRSSInstance"></wsdl:input>
             <wsdl:output message="ns:getRSSInstanceResponse" wsaw:Action="urn:getRSSInstanceResponse"></wsdl:output>
             <wsdl:fault message="ns:RSSAdminRSSManagerException" name="RSSAdminRSSManagerException" wsaw:Action="urn:getRSSInstanceRSSAdminRSSManagerException"></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getRSSInstances">
+            <wsdl:input message="ns:getRSSInstancesRequest" wsaw:Action="urn:getRSSInstances"></wsdl:input>
+            <wsdl:output message="ns:getRSSInstancesResponse" wsaw:Action="urn:getRSSInstancesResponse"></wsdl:output>
+            <wsdl:fault message="ns:RSSAdminRSSManagerException" name="RSSAdminRSSManagerException" wsaw:Action="urn:getRSSInstancesRSSAdminRSSManagerException"></wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="addDatabase">
             <wsdl:input message="ns:addDatabaseRequest" wsaw:Action="urn:addDatabase"></wsdl:input>
@@ -987,8 +988,8 @@
                 <soap:body use="literal"></soap:body>
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="getRSSInstance">
-            <soap:operation soapAction="urn:getRSSInstance" style="document"></soap:operation>
+        <wsdl:operation name="getRSSInstances">
+            <soap:operation soapAction="urn:getRSSInstances" style="document"></soap:operation>
             <wsdl:input>
                 <soap:body use="literal"></soap:body>
             </wsdl:input>
@@ -999,8 +1000,8 @@
                 <soap:fault use="literal" name="RSSAdminRSSManagerException"></soap:fault>
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="getRSSInstances">
-            <soap:operation soapAction="urn:getRSSInstances" style="document"></soap:operation>
+        <wsdl:operation name="getRSSInstance">
+            <soap:operation soapAction="urn:getRSSInstance" style="document"></soap:operation>
             <wsdl:input>
                 <soap:body use="literal"></soap:body>
             </wsdl:input>
@@ -1122,15 +1123,6 @@
                 <soap:fault use="literal" name="RSSAdminRSSManagerException"></soap:fault>
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="updateDatabasePrivilegeTemplate">
-            <soap:operation soapAction="urn:updateDatabasePrivilegeTemplate" style="document"></soap:operation>
-            <wsdl:input>
-                <soap:body use="literal"></soap:body>
-            </wsdl:input>
-            <wsdl:fault name="RSSAdminRSSManagerException">
-                <soap:fault use="literal" name="RSSAdminRSSManagerException"></soap:fault>
-            </wsdl:fault>
-        </wsdl:operation>
         <wsdl:operation name="getUserDatabasePrivileges">
             <soap:operation soapAction="urn:getUserDatabasePrivileges" style="document"></soap:operation>
             <wsdl:input>
@@ -1151,6 +1143,15 @@
             <wsdl:output>
                 <soap:body use="literal"></soap:body>
             </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSManagerException">
+                <soap:fault use="literal" name="RSSAdminRSSManagerException"></soap:fault>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateDatabasePrivilegeTemplate">
+            <soap:operation soapAction="urn:updateDatabasePrivilegeTemplate" style="document"></soap:operation>
+            <wsdl:input>
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
             <wsdl:fault name="RSSAdminRSSManagerException">
                 <soap:fault use="literal" name="RSSAdminRSSManagerException"></soap:fault>
             </wsdl:fault>
@@ -1203,8 +1204,8 @@
                 <soap:fault use="literal" name="RSSAdminRSSManagerException"></soap:fault>
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="getDatabasePrivilegeTemplate">
-            <soap:operation soapAction="urn:getDatabasePrivilegeTemplate" style="document"></soap:operation>
+        <wsdl:operation name="getDatabaseUsers">
+            <soap:operation soapAction="urn:getDatabaseUsers" style="document"></soap:operation>
             <wsdl:input>
                 <soap:body use="literal"></soap:body>
             </wsdl:input>
@@ -1215,8 +1216,8 @@
                 <soap:fault use="literal" name="RSSAdminRSSManagerException"></soap:fault>
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="getDatabaseUsers">
-            <soap:operation soapAction="urn:getDatabaseUsers" style="document"></soap:operation>
+        <wsdl:operation name="getDatabasePrivilegeTemplate">
+            <soap:operation soapAction="urn:getDatabasePrivilegeTemplate" style="document"></soap:operation>
             <wsdl:input>
                 <soap:body use="literal"></soap:body>
             </wsdl:input>
@@ -1236,15 +1237,6 @@
                 <soap:body use="literal"></soap:body>
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="isInitializedTenant">
-            <soap:operation soapAction="urn:isInitializedTenant" style="document"></soap:operation>
-            <wsdl:input>
-                <soap:body use="literal"></soap:body>
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal"></soap:body>
-            </wsdl:output>
-        </wsdl:operation>
         <wsdl:operation name="addCarbonDataSource">
             <soap:operation soapAction="urn:addCarbonDataSource" style="document"></soap:operation>
             <wsdl:input>
@@ -1253,6 +1245,15 @@
             <wsdl:fault name="RSSAdminRSSManagerException">
                 <soap:fault use="literal" name="RSSAdminRSSManagerException"></soap:fault>
             </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="isInitializedTenant">
+            <soap:operation soapAction="urn:isInitializedTenant" style="document"></soap:operation>
+            <wsdl:input>
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"></soap:body>
+            </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="removeDatabasePrivilegeTemplate">
             <soap:operation soapAction="urn:removeDatabasePrivilegeTemplate" style="document"></soap:operation>
@@ -1425,8 +1426,8 @@
                 <soap12:body use="literal"></soap12:body>
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="getRSSInstance">
-            <soap12:operation soapAction="urn:getRSSInstance" style="document"></soap12:operation>
+        <wsdl:operation name="getRSSInstances">
+            <soap12:operation soapAction="urn:getRSSInstances" style="document"></soap12:operation>
             <wsdl:input>
                 <soap12:body use="literal"></soap12:body>
             </wsdl:input>
@@ -1437,8 +1438,8 @@
                 <soap12:fault use="literal" name="RSSAdminRSSManagerException"></soap12:fault>
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="getRSSInstances">
-            <soap12:operation soapAction="urn:getRSSInstances" style="document"></soap12:operation>
+        <wsdl:operation name="getRSSInstance">
+            <soap12:operation soapAction="urn:getRSSInstance" style="document"></soap12:operation>
             <wsdl:input>
                 <soap12:body use="literal"></soap12:body>
             </wsdl:input>
@@ -1560,15 +1561,6 @@
                 <soap12:fault use="literal" name="RSSAdminRSSManagerException"></soap12:fault>
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="updateDatabasePrivilegeTemplate">
-            <soap12:operation soapAction="urn:updateDatabasePrivilegeTemplate" style="document"></soap12:operation>
-            <wsdl:input>
-                <soap12:body use="literal"></soap12:body>
-            </wsdl:input>
-            <wsdl:fault name="RSSAdminRSSManagerException">
-                <soap12:fault use="literal" name="RSSAdminRSSManagerException"></soap12:fault>
-            </wsdl:fault>
-        </wsdl:operation>
         <wsdl:operation name="getUserDatabasePrivileges">
             <soap12:operation soapAction="urn:getUserDatabasePrivileges" style="document"></soap12:operation>
             <wsdl:input>
@@ -1589,6 +1581,15 @@
             <wsdl:output>
                 <soap12:body use="literal"></soap12:body>
             </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSManagerException">
+                <soap12:fault use="literal" name="RSSAdminRSSManagerException"></soap12:fault>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateDatabasePrivilegeTemplate">
+            <soap12:operation soapAction="urn:updateDatabasePrivilegeTemplate" style="document"></soap12:operation>
+            <wsdl:input>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:input>
             <wsdl:fault name="RSSAdminRSSManagerException">
                 <soap12:fault use="literal" name="RSSAdminRSSManagerException"></soap12:fault>
             </wsdl:fault>
@@ -1641,8 +1642,8 @@
                 <soap12:fault use="literal" name="RSSAdminRSSManagerException"></soap12:fault>
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="getDatabasePrivilegeTemplate">
-            <soap12:operation soapAction="urn:getDatabasePrivilegeTemplate" style="document"></soap12:operation>
+        <wsdl:operation name="getDatabaseUsers">
+            <soap12:operation soapAction="urn:getDatabaseUsers" style="document"></soap12:operation>
             <wsdl:input>
                 <soap12:body use="literal"></soap12:body>
             </wsdl:input>
@@ -1653,8 +1654,8 @@
                 <soap12:fault use="literal" name="RSSAdminRSSManagerException"></soap12:fault>
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="getDatabaseUsers">
-            <soap12:operation soapAction="urn:getDatabaseUsers" style="document"></soap12:operation>
+        <wsdl:operation name="getDatabasePrivilegeTemplate">
+            <soap12:operation soapAction="urn:getDatabasePrivilegeTemplate" style="document"></soap12:operation>
             <wsdl:input>
                 <soap12:body use="literal"></soap12:body>
             </wsdl:input>
@@ -1674,15 +1675,6 @@
                 <soap12:body use="literal"></soap12:body>
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="isInitializedTenant">
-            <soap12:operation soapAction="urn:isInitializedTenant" style="document"></soap12:operation>
-            <wsdl:input>
-                <soap12:body use="literal"></soap12:body>
-            </wsdl:input>
-            <wsdl:output>
-                <soap12:body use="literal"></soap12:body>
-            </wsdl:output>
-        </wsdl:operation>
         <wsdl:operation name="addCarbonDataSource">
             <soap12:operation soapAction="urn:addCarbonDataSource" style="document"></soap12:operation>
             <wsdl:input>
@@ -1691,6 +1683,15 @@
             <wsdl:fault name="RSSAdminRSSManagerException">
                 <soap12:fault use="literal" name="RSSAdminRSSManagerException"></soap12:fault>
             </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="isInitializedTenant">
+            <soap12:operation soapAction="urn:isInitializedTenant" style="document"></soap12:operation>
+            <wsdl:input>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"></soap12:body>
+            </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="removeDatabasePrivilegeTemplate">
             <soap12:operation soapAction="urn:removeDatabasePrivilegeTemplate" style="document"></soap12:operation>
@@ -1863,8 +1864,8 @@
                 <mime:content type="text/xml" part="parameters"></mime:content>
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="getRSSInstance">
-            <http:operation location="getRSSInstance"></http:operation>
+        <wsdl:operation name="getRSSInstances">
+            <http:operation location="getRSSInstances"></http:operation>
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters"></mime:content>
             </wsdl:input>
@@ -1872,8 +1873,8 @@
                 <mime:content type="text/xml" part="parameters"></mime:content>
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="getRSSInstances">
-            <http:operation location="getRSSInstances"></http:operation>
+        <wsdl:operation name="getRSSInstance">
+            <http:operation location="getRSSInstance"></http:operation>
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters"></mime:content>
             </wsdl:input>
@@ -1962,12 +1963,6 @@
                 <mime:content type="text/xml" part="parameters"></mime:content>
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="updateDatabasePrivilegeTemplate">
-            <http:operation location="updateDatabasePrivilegeTemplate"></http:operation>
-            <wsdl:input>
-                <mime:content type="text/xml" part="parameters"></mime:content>
-            </wsdl:input>
-        </wsdl:operation>
         <wsdl:operation name="getUserDatabasePrivileges">
             <http:operation location="getUserDatabasePrivileges"></http:operation>
             <wsdl:input>
@@ -1985,6 +1980,12 @@
             <wsdl:output>
                 <mime:content type="text/xml" part="parameters"></mime:content>
             </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateDatabasePrivilegeTemplate">
+            <http:operation location="updateDatabasePrivilegeTemplate"></http:operation>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:input>
         </wsdl:operation>
         <wsdl:operation name="getDatabases">
             <http:operation location="getDatabases"></http:operation>
@@ -2022,8 +2023,8 @@
                 <mime:content type="text/xml" part="parameters"></mime:content>
             </wsdl:input>
         </wsdl:operation>
-        <wsdl:operation name="getDatabasePrivilegeTemplate">
-            <http:operation location="getDatabasePrivilegeTemplate"></http:operation>
+        <wsdl:operation name="getDatabaseUsers">
+            <http:operation location="getDatabaseUsers"></http:operation>
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters"></mime:content>
             </wsdl:input>
@@ -2031,8 +2032,8 @@
                 <mime:content type="text/xml" part="parameters"></mime:content>
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="getDatabaseUsers">
-            <http:operation location="getDatabaseUsers"></http:operation>
+        <wsdl:operation name="getDatabasePrivilegeTemplate">
+            <http:operation location="getDatabasePrivilegeTemplate"></http:operation>
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters"></mime:content>
             </wsdl:input>
@@ -2049,6 +2050,12 @@
                 <mime:content type="text/xml" part="parameters"></mime:content>
             </wsdl:output>
         </wsdl:operation>
+        <wsdl:operation name="addCarbonDataSource">
+            <http:operation location="addCarbonDataSource"></http:operation>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"></mime:content>
+            </wsdl:input>
+        </wsdl:operation>
         <wsdl:operation name="isInitializedTenant">
             <http:operation location="isInitializedTenant"></http:operation>
             <wsdl:input>
@@ -2057,12 +2064,6 @@
             <wsdl:output>
                 <mime:content type="text/xml" part="parameters"></mime:content>
             </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="addCarbonDataSource">
-            <http:operation location="addCarbonDataSource"></http:operation>
-            <wsdl:input>
-                <mime:content type="text/xml" part="parameters"></mime:content>
-            </wsdl:input>
         </wsdl:operation>
         <wsdl:operation name="removeDatabasePrivilegeTemplate">
             <http:operation location="removeDatabasePrivilegeTemplate"></http:operation>
@@ -2181,13 +2182,13 @@
     </wsdl:binding>
     <wsdl:service name="RSSAdmin">
         <wsdl:port name="RSSAdminHttpsSoap11Endpoint" binding="ns:RSSAdminSoap11Binding">
-            <soap:address location="https://10.100.5.81:9443/services/RSSAdmin.RSSAdminHttpsSoap11Endpoint/"></soap:address>
+            <soap:address location="https://192.168.1.3:9443/services/RSSAdmin.RSSAdminHttpsSoap11Endpoint/"></soap:address>
         </wsdl:port>
         <wsdl:port name="RSSAdminHttpsSoap12Endpoint" binding="ns:RSSAdminSoap12Binding">
-            <soap12:address location="https://10.100.5.81:9443/services/RSSAdmin.RSSAdminHttpsSoap12Endpoint/"></soap12:address>
+            <soap12:address location="https://192.168.1.3:9443/services/RSSAdmin.RSSAdminHttpsSoap12Endpoint/"></soap12:address>
         </wsdl:port>
         <wsdl:port name="RSSAdminHttpsEndpoint" binding="ns:RSSAdminHttpBinding">
-            <http:address location="https://10.100.5.81:9443/services/RSSAdmin.RSSAdminHttpsEndpoint/"></http:address>
+            <http:address location="https://192.168.1.3:9443/services/RSSAdmin.RSSAdminHttpsEndpoint/"></http:address>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

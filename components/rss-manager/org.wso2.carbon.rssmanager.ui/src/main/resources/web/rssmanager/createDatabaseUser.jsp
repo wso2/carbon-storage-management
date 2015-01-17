@@ -139,11 +139,11 @@
                                 </option>
                                 <%
                                     for (RSSInstanceInfo rssInstanceInfo : rssInstances) {
-                                        if (rssInstanceInfo.getName() != null &&
+                                        if (rssInstanceInfo.getRssInstanceName() != null &&
                                                 RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED.equalsIgnoreCase(rssInstanceInfo.getInstanceType())) {
                                 %>
-                                <option id="<%=rssInstanceInfo.getName()%>" value="<%=rssInstanceInfo.getName()%>">
-                                    <%=rssInstanceInfo.getName()%>
+                                <option id="<%=rssInstanceInfo.getRssInstanceName()%>" value="<%=rssInstanceInfo.getRssInstanceName()%>">
+                                    <%=rssInstanceInfo.getRssInstanceName()%>
                                 </option>
                                 <%}}%>
                             </select>

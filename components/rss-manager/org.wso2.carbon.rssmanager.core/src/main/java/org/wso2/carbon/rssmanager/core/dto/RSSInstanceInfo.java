@@ -46,6 +46,8 @@ public class RSSInstanceInfo implements Serializable {
 
 	private String driverClass;
 
+	private boolean isFromConfig;
+
 	private SSHInformationConfigInfo sshInformationConfig;
 
 	private SnapshotConfigInfo snapshotConfig;
@@ -140,4 +142,12 @@ public class RSSInstanceInfo implements Serializable {
     public void setSnapshotConfig(SnapshotConfigInfo snapshotConfig) {
         this.snapshotConfig = snapshotConfig;
     }
+
+	public boolean isFromConfig() {
+		return isFromConfig;
+	}
+
+	public void setFromConfig(boolean isFromConfig) {
+		this.isFromConfig = isFromConfig;
+	}
 }
