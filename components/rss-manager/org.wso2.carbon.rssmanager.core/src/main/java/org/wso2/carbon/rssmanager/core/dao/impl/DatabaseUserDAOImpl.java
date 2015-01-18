@@ -170,14 +170,6 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 			statement.setString(6, rssInstanceName);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
-				databaseUser = new DatabaseUser();
-				databaseUser.setId(resultSet.getInt("ID"));
-				databaseUser.setName(resultSet.getString("USERNAME"));
-				databaseUser.setType(resultSet.getString("TYPE"));
-				databaseUser.setTenantId(resultSet.getInt("TENANT_ID"));
-				databaseUser.setRssInstanceName(rssInstanceName);
-			}
-			while (resultSet.next()) {
 				isExist = true;
 			}
 		} catch (SQLException e) {
