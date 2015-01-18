@@ -263,7 +263,7 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
                     this.getEnvironmentName(), MultitenantConstants.SUPER_TENANT_ID);
             //check whether rss instances are available
             checkConnections(rssInstances);
-            super.removeDatabaseUser(null, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            super.removeDatabaseUser(null, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
             for (RSSInstance rssInstance : rssInstances) {
                 try {
                     conn = getConnection(rssInstance.getName());

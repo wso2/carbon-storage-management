@@ -201,21 +201,19 @@ public class MySQLUserDefinedRSSManager extends UserDefinedRSSManager {
     /**
      * @see RSSManager#removeDatabaseUser(String, String)
      */
-    public void removeDatabaseUser(String type, String username) throws RSSManagerException {
+    public void removeDatabaseUser(String rssInstanceName, String username) throws RSSManagerException {
         Connection conn = null;
         PreparedStatement nativeRemoveUserStmt = null;
         int tenantId = RSSManagerUtil.getTenantId();
         try {
-            String rssInstanceName = getDatabaseUserDAO().resolveRSSInstanceNameByUser(this.getEnvironmentName(),
-                                                                                       RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED,
-                                                                                       username, tenantId);
             try {
                 conn = getConnection(rssInstanceName);
                 String removeUserQuery = "DELETE FROM mysql.user WHERE User = ? AND Host = ?";
                 nativeRemoveUserStmt = conn.prepareStatement(removeUserQuery);
                 nativeRemoveUserStmt.setString(1, username);
                 nativeRemoveUserStmt.setString(2, "%");
-                super.removeDatabaseUser(nativeRemoveUserStmt, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+                super.removeDatabaseUser(nativeRemoveUserStmt, username, RSSManagerConstants.RSSManagerTypes
+                        .RM_TYPE_USER_DEFINED, rssInstanceName);
             } finally {
                 RSSManagerUtil.cleanupResources(null, nativeRemoveUserStmt, conn);
             }
