@@ -36,7 +36,6 @@ import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 
 import java.sql.PreparedStatement;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -114,7 +113,7 @@ public abstract class UserDefinedRSSManager extends AbstractRSSManager {
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
 			boolean isExist = getDatabaseUserDAO().isDatabaseUserExist(getEnvironmentName(), username, tenantId,
-					RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+					RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED, rssInstanceName);
 			if (!isExist) {
 				throw new RSSManagerException("Database user '" + username + "' does not exist " +
 						"in RSS instance '" + rssInstanceName + "'");
@@ -232,7 +231,7 @@ public abstract class UserDefinedRSSManager extends AbstractRSSManager {
 			Database database = getDatabaseDAO().getDatabase(this.getEnvironmentName(), rssInstanceName,
 					databaseName, tenantId,
 					RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
-			DatabaseUser databaseUser = getDatabaseUserDAO().getDatabaseUser(this.getEnvironmentName(),
+			DatabaseUser databaseUser = getDatabaseUserDAO().getSysttemDatabaseUser(this.getEnvironmentName(),
 					username, tenantId,
 					RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
 			UserDatabaseEntry userDatabaseEntry = getUserDatabaseEntryDAO().getUserDatabaseEntry(database.getId(),

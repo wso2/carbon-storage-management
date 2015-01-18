@@ -176,19 +176,16 @@ public class SQLServerUserDefinedRSSManager extends UserDefinedRSSManager {
 	/**
 	 * @see org.wso2.carbon.rssmanager.core.manager.RSSManager#removeDatabaseUser(String, String)
 	 */
-	public void removeDatabaseUser(String type, String username) throws RSSManagerException {
+	public void removeDatabaseUser(String rssInstanceName, String username) throws RSSManagerException {
 		Connection conn = null;
 		PreparedStatement nativeRemoveUserStmt = null;
-		int tenantId = RSSManagerUtil.getTenantId();
 		try {
-			String rssInstanceName = getDatabaseUserDAO().resolveRSSInstanceNameByUser(this.getEnvironmentName(),
-			                                                                           RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED,
-			                                                                           username, tenantId);
 			try {
 				conn = getConnection(rssInstanceName);
 				String removeUserQuery = "DROP LOGIN " + username;
 				nativeRemoveUserStmt = conn.prepareStatement(removeUserQuery);
-				super.removeDatabaseUser(nativeRemoveUserStmt, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+				super.removeDatabaseUser(nativeRemoveUserStmt, username, RSSManagerConstants.RSSManagerTypes
+						.RM_TYPE_USER_DEFINED, rssInstanceName);
 			} finally {
 				RSSManagerUtil.cleanupResources(null, nativeRemoveUserStmt, conn);
 			}

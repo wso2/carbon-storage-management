@@ -61,11 +61,12 @@ public interface DatabaseUserDAO {
 	 * @param username username of the database user
 	 * @param tenantId tenant id of the database user added system user
 	 * @param instanceType instance type
+	 * @param rssInstanceName name of rss instance
 	 * @return boolean true if user exists else false
 	 * @throws RSSDAOException  if something went wrong when checking database user existence
 	 */
 	boolean isDatabaseUserExist(String environmentName, String username,
-	                            int tenantId, String instanceType)
+	                            int tenantId, String instanceType, String rssInstanceName)
 			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
@@ -91,8 +92,8 @@ public interface DatabaseUserDAO {
 	 * @return database user object
 	 * @throws RSSDAOException if something went wrong when fetch database user data
 	 */
-	DatabaseUser getDatabaseUser(String environmentName,
-	                             String username, int tenantId, String instanceType)
+	DatabaseUser getSysttemDatabaseUser(String environmentName,
+	                                    String username, int tenantId, String instanceType)
 			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**

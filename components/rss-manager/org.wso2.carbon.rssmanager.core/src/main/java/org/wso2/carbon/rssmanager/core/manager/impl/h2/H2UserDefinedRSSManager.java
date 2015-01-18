@@ -180,9 +180,10 @@ public class H2UserDefinedRSSManager extends UserDefinedRSSManager {
     /**
      * @see RSSManager#removeDatabaseUser(String, String)
      */
-    public void removeDatabaseUser(String type, String username) throws RSSManagerException {
+    public void removeDatabaseUser(String rssInstanceName, String username) throws RSSManagerException {
         try {
-            super.removeDatabaseUser(null, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+            super.removeDatabaseUser(null, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED,
+                    rssInstanceName);
         } catch (Exception e) {
             String msg = "Error while dropping the database user '" + username +
                          "' on RSS instances : " + e.getMessage();

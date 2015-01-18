@@ -226,7 +226,7 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
 			int tenantId = RSSManagerUtil.getTenantId();
 			RSSInstance[] rssInstances = getEnvironmentManagementDAO().getRSSInstanceDAO().getSystemRSSInstances(
 					this.getEnvironmentName(), MultitenantConstants.SUPER_TENANT_ID);
-			super.removeDatabaseUser(null, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+			super.removeDatabaseUser(null, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
 			for (RSSInstance rssInstance : rssInstances) {
 				try {
 					conn = getConnection(rssInstance.getName());

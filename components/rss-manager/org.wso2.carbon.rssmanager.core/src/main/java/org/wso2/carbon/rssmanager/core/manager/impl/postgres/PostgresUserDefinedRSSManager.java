@@ -190,22 +190,18 @@ public class PostgresUserDefinedRSSManager extends UserDefinedRSSManager {
 	/**
 	 * @see RSSManager#removeDatabaseUser(String, String)
 	 */
-	public void removeDatabaseUser(String type, String username) throws RSSManagerException {
+	public void removeDatabaseUser(String rssInstanceName, String username) throws RSSManagerException {
 		Connection conn = null;
 		PreparedStatement dropOwnedStmt = null;
 		PreparedStatement dropUserStmt = null;
-		int tenantId = RSSManagerUtil.getTenantId();
 		try {
-			String rssInstanceName = getDatabaseUserDAO().resolveRSSInstanceNameByUser(this.getEnvironmentName(),
-			                                                                           RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED,
-			                                                                           username, tenantId);
 			conn = getConnection(rssInstanceName);
 			String sql = "drop owned by " + username;
 			dropOwnedStmt = conn.prepareStatement(sql);
 			dropUserStmt = conn.prepareStatement(" drop user " + username);
 			dropOwnedStmt.execute();
 			dropUserStmt.execute();
-			super.removeDatabaseUser(null, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+			super.removeDatabaseUser(null, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED, rssInstanceName);
 		} catch (Exception e) {
 			String msg = "Error while dropping the database user '" + username +
 			             "' on RSS instances : " + e.getMessage();

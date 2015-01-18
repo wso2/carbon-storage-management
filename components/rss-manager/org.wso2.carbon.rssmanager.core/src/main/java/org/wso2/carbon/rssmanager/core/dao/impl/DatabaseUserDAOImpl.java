@@ -64,13 +64,18 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 			conn = getDataSourceConnection();//acquire data source connection
 			//start transaction with setting auto commit value to false
 			conn.setAutoCommit(false);
-			String createDBUserQuery = "INSERT INTO RM_DATABASE_USER(USERNAME, ENVIRONMENT_ID, TYPE, TENANT_ID) VALUES(?,?,?,?)";
+			String createDBUserQuery = "INSERT INTO RM_DATABASE_USER(USERNAME, ENVIRONMENT_ID, TYPE, TENANT_ID, INSTANCE_NAME) VALUES(?,?,?,?,?)";
 			createUserStatement = conn.prepareStatement(createDBUserQuery, Statement.RETURN_GENERATED_KEYS);
 			//insert user data to the statement to insert
 			createUserStatement.setString(1, user.getName());
 			createUserStatement.setInt(2, user.getEnvironmentId());
 			createUserStatement.setString(3, user.getType());
 			createUserStatement.setInt(4, user.getTenantId());
+			if(RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equalsIgnoreCase(user.getType())){
+				createUserStatement.setString(5, user.getType());
+			} else {
+				createUserStatement.setString(5, user.getInstances().iterator().next().getName());
+			}
 			createUserStatement.executeUpdate();
 			//get the inserted database user id from result
 			//which will be inserted as a foreign key to user rss instance entry table
@@ -134,27 +139,43 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 	}
 
 	/**
-	 * @see DatabaseUserDAO#isDatabaseUserExist(String, String, int, String)
+	 * @see DatabaseUserDAO#isDatabaseUserExist(String, String, int, String, java.lang.String)
 	 */
 	public boolean isDatabaseUserExist(String environmentName,
-	                                   String username, int tenantId, String instanceType)
+	                                   String username, int tenantId, String instanceType, String rssInstanceName)
 			throws RSSDAOException, RSSDatabaseConnectionException {
 		Connection conn = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
+		DatabaseUser databaseUser = null;
 		boolean isExist = false;
 		int environmentId = getEnvionmentIdByName(environmentName);
+		int instanceId = getRSSInstanceIdByName(rssInstanceName, environmentId);
 		try {
-			conn = getDataSourceConnection();//acquire data source connection
-			String databaseUserExistenceQuery = "SELECT * FROM RM_DATABASE_USER WHERE USERNAME=? AND TYPE=? " +
-			                                    "AND  TENANT_ID=? AND ENVIRONMENT_ID=?";
-			statement = conn.prepareStatement(databaseUserExistenceQuery);
-			//set data to check the user existence
+			conn = getDataSourceConnection();
+			String checkDatabaseUserExistenceQuery = "SELECT RM_DATABASE_USER.ID, RM_DATABASE_USER.USERNAME, RM_DATABASE_USER.TYPE, " +
+			                              "RM_DATABASE_USER.TENANT_ID FROM RM_DATABASE_USER INNER JOIN RM_USER_INSTANCE_ENTRY WHERE " +
+			                              "RM_USER_INSTANCE_ENTRY.DATABASE_USER_ID =  RM_DATABASE_USER.ID " +
+			                              "AND RM_DATABASE_USER.USERNAME= ? AND RM_DATABASE_USER.TYPE= ? " +
+			                              "AND  RM_DATABASE_USER.TENANT_ID= ? AND RM_DATABASE_USER.ENVIRONMENT_ID=? " +
+			                              "AND  RM_USER_INSTANCE_ENTRY.RSS_INSTANCE_ID=? AND RM_DATABASE_USER.INSTANCE_NAME= ?";
+			statement = conn.prepareStatement(checkDatabaseUserExistenceQuery);
+			//set data to the statement to query required database user
 			statement.setString(1, username);
 			statement.setString(2, instanceType);
 			statement.setInt(3, tenantId);
 			statement.setInt(4, environmentId);
+			statement.setInt(5, instanceId);
+			statement.setString(6, rssInstanceName);
 			resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				databaseUser = new DatabaseUser();
+				databaseUser.setId(resultSet.getInt("ID"));
+				databaseUser.setName(resultSet.getString("USERNAME"));
+				databaseUser.setType(resultSet.getString("TYPE"));
+				databaseUser.setTenantId(resultSet.getInt("TENANT_ID"));
+				databaseUser.setRssInstanceName(rssInstanceName);
+			}
 			while (resultSet.next()) {
 				isExist = true;
 			}
@@ -187,7 +208,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 			                              "RM_USER_INSTANCE_ENTRY.DATABASE_USER_ID =  RM_DATABASE_USER.ID " +
 			                              "AND RM_DATABASE_USER.USERNAME= ? AND RM_DATABASE_USER.TYPE= ? " +
 			                              "AND  RM_DATABASE_USER.TENANT_ID= ? AND RM_DATABASE_USER.ENVIRONMENT_ID=? " +
-			                              "AND  RM_USER_INSTANCE_ENTRY.RSS_INSTANCE_ID=?";
+			                              "AND  RM_USER_INSTANCE_ENTRY.RSS_INSTANCE_ID=? AND RM_DATABASE_USER.INSTANCE_NAME= ?";
 			statement = conn.prepareStatement(getDatabaseUserQuery);
 			//set data to the statement to query required database user
 			statement.setString(1, username);
@@ -195,6 +216,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 			statement.setInt(3, tenantId);
 			statement.setInt(4, environmentId);
 			statement.setInt(5, instanceId);
+			statement.setString(6, rssInstanceName);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
 				databaseUser = new DatabaseUser();
@@ -215,10 +237,10 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 	}
 
 	/**
-	 * @see DatabaseUserDAO#getDatabaseUser(String, String, int, String)
+	 * @see DatabaseUserDAO#getSysttemDatabaseUser(String, String, int, String)
 	 */
-	public DatabaseUser getDatabaseUser(String environmentName,
-	                                    String username, int tenantId, String instanceType)
+	public DatabaseUser getSysttemDatabaseUser(String environmentName,
+	                                           String username, int tenantId, String instanceType)
 			throws RSSDAOException, RSSDatabaseConnectionException {
 		Connection conn = null;
 		PreparedStatement statement = null;
@@ -228,13 +250,14 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 		try {
 			conn = getDataSourceConnection();
 			String getDatabaseUserQuery = "SELECT * FROM RM_DATABASE_USER WHERE USERNAME= ? AND TYPE= ? " +
-			                              "AND  TENANT_ID= ? AND ENVIRONMENT_ID=?";
+			                              "AND  TENANT_ID= ? AND ENVIRONMENT_ID=? AND INSTANCE_NAME=?";
 			statement = conn.prepareStatement(getDatabaseUserQuery);
 			//set data to the statement to query required database user
 			statement.setString(1, username);
 			statement.setString(2, instanceType);
 			statement.setInt(3, tenantId);
 			statement.setInt(4, environmentId);
+			statement.setString(5, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
 				databaseUser = new DatabaseUser();

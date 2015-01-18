@@ -232,7 +232,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
     /**
      * @see RSSManager#removeDatabaseUser(String, String)
      */
-    public void removeDatabaseUser(String type, String username) throws RSSManagerException {
+    public void removeDatabaseUser(String rssInstanceName, String username) throws RSSManagerException {
         Connection conn = null;
         PreparedStatement nativeRemoveDBUserStatement = null;
         try {
@@ -240,7 +240,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
                     this.getEnvironmentName(), MultitenantConstants.SUPER_TENANT_ID);
             //check whether rss instances are available
             checkConnections(rssInstances);
-            super.removeDatabaseUser(null, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            super.removeDatabaseUser(null, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
             for (RSSInstance rssInstance : rssInstances) {
                 try {
                     conn = getConnection(rssInstance.getName());

@@ -50,7 +50,6 @@ import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -294,7 +293,7 @@ public abstract class AbstractRSSManager implements RSSManager{
 			final int tenantId = RSSManagerUtil.getTenantId();
 			isExist = getRSSDAO().getDatabaseUserDAO().isDatabaseUserExist(getEnvironmentName(),
 			                                                               username,
-			                                                               tenantId, instanceType);
+			                                                               tenantId, instanceType, rssInstanceName);
 		} catch (RSSDAOException e) {
 			String msg = "Error occurred while checking whether the database " + "user named '" +
 			             username + "' already exists in RSS instance '" + rssInstanceName + "': " +
@@ -347,8 +346,8 @@ public abstract class AbstractRSSManager implements RSSManager{
 		int tenantId = RSSManagerUtil.getTenantId();
 		Database database = getRSSDAO().getDatabaseDAO().getDatabase(this.getEnvironmentName(), databaseName, tenantId,
 		                                                             RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
-		DatabaseUser databaseUser = getRSSDAO().getDatabaseUserDAO().getDatabaseUser(this.getEnvironmentName(),
-		                                                                             username, tenantId, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+		DatabaseUser databaseUser = getRSSDAO().getDatabaseUserDAO().getSysttemDatabaseUser(this.getEnvironmentName(),
+				username, tenantId, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
 		UserDatabaseEntry userDatabaseEntry = getRSSDAO().getUserDatabaseEntryDAO().getUserDatabaseEntry(database.getId(), databaseUser.getId());
 		UserDatabasePrivilege entity = userDatabaseEntry.getUserPrivileges();
 		RSSManagerUtil.createDatabasePrivilege(privileges, entity);
@@ -424,7 +423,7 @@ public abstract class AbstractRSSManager implements RSSManager{
 			throw new RSSManagerException(msg);
 		}
 		int tenantId = RSSManagerUtil.getTenantId();
-		DatabaseUser databaseUser = getRSSDAO().getDatabaseUserDAO().getDatabaseUser(this.getEnvironmentName(),
+		DatabaseUser databaseUser = getRSSDAO().getDatabaseUserDAO().getDatabaseUser(this.getEnvironmentName(), rssInstance.getName(),
 		                                                                             entry.getUsername(), tenantId, entry.getType());
 		UserDatabaseEntryDAO dao = this.getRSSDAO().getUserDatabaseEntryDAO();
 		UserDatabaseEntry userDBEntry = dao.getUserDatabaseEntry(database.getId(), databaseUser.getId());
@@ -470,33 +469,6 @@ public abstract class AbstractRSSManager implements RSSManager{
 	}
 
 	/**
-	 * Update database user
-	 *
-	 * @param statement    Atomic boolean value for the distributed transaction
-	 * @param user         database user properties
-	 * @param instanceType rss instance type
-	 * @return DatabaseUser
-	 * @throws RSSManagerException
-	 * @throws RSSDAOException
-	 */
-	protected DatabaseUser updateDatabaseUser(PreparedStatement statement, DatabaseUser user,
-	                                          String instanceType)
-			throws RSSManagerException, RSSDAOException, RSSDatabaseConnectionException {
-
-		final int tenantId = RSSManagerUtil.getTenantId();
-		DatabaseUser entity = this.getRSSDAO().getDatabaseUserDAO().getDatabaseUser(this.getEnvironmentName(),
-		                                                                            user.getUsername(), tenantId, instanceType);
-		if (entity == null) {
-			String msg = "Database user '" + user.getUsername() + "' not exists";
-			throw new RSSManagerException(msg);
-		}
-		/* Sets the fully qualified username */
-		entity.setPassword(user.getPassword());
-		this.getRSSDAO().getDatabaseUserDAO().addDatabaseUser(statement, entity);
-		return user;
-	}
-
-	/**
 	 * Remove database user
 	 *
 	 * @param statement    Atomic boolean value for the distributed transaction
@@ -504,19 +476,19 @@ public abstract class AbstractRSSManager implements RSSManager{
 	 * @param instanceType rss instance type
 	 * @throws RSSManagerException
 	 */
-	protected void removeDatabaseUser(PreparedStatement statement, String username, String instanceType)
+	protected void removeDatabaseUser(PreparedStatement statement, String username, String instanceType, String rssInstanceName)
 			throws RSSManagerException, RSSDatabaseConnectionException {
 		DatabaseUser dbUser;
 		try {
 			DatabaseUserDAO databaseUserDAO = getRSSDAO().getDatabaseUserDAO();
 			final int tenantId = RSSManagerUtil.getTenantId();
 			boolean isExist = databaseUserDAO.isDatabaseUserExist(this.getEnvironmentName(),
-			                                                      username, tenantId, instanceType);
+			                                                      username, tenantId, instanceType, rssInstanceName);
 			if (!isExist) {
 				throw new RSSManagerException("Database user '" + username + "' is not exists " +
 				                              "in the RSS instance type'" + instanceType + "'");
 			}
-			dbUser = databaseUserDAO.getDatabaseUser(this.getEnvironmentName(), username, tenantId, instanceType);
+			dbUser = databaseUserDAO.getSysttemDatabaseUser(this.getEnvironmentName(), username, tenantId, instanceType);
 			boolean isUserEntriesExist = userDatabaseEntryDAO.isDatabaseUserEntriesExist(dbUser.getId());
 			if (isUserEntriesExist) {
 				String msg = "Database user '" + dbUser.getName() + "' already attached to a Database ";
@@ -566,7 +538,8 @@ public abstract class AbstractRSSManager implements RSSManager{
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
 			boolean isExist =
-					getRSSDAO().getDatabaseUserDAO().isDatabaseUserExist(getEnvironmentName(), username, tenantId, instanceType);
+					getRSSDAO().getDatabaseUserDAO().isDatabaseUserExist(getEnvironmentName(), username, tenantId,
+							instanceType, rssInstanceName);
 			if (!isExist) {
 				throw new RSSManagerException("Database user '" + username + "' does not exist " +
 				                              "in RSS instance '" + rssInstanceName + "'");
