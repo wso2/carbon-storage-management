@@ -72,6 +72,65 @@ public abstract class SystemRSSManager extends AbstractRSSManager{
 	}
 
 	/**
+	 * Add database user
+	 *
+	 * @param statement         Atomic boolean value for the distributed transaction
+	 * @param user              database user properties
+	 * @param qualifiedUsername fully qualified username
+	 * @param rssInstance       name of the rss instance
+	 * @return DatabaseUser
+	 * @throws RSSManagerException
+	 * @throws RSSDAOException
+	 */
+	protected DatabaseUser addDatabaseUser(PreparedStatement statement, DatabaseUser user,
+	                                       String qualifiedUsername, RSSInstance rssInstance)
+			throws RSSManagerException, RSSDAOException, RSSDatabaseConnectionException {
+		boolean isExist = this.isDatabaseUserExist(user.getRssInstanceName(), qualifiedUsername, rssInstance.getInstanceType());
+		if (isExist) {
+			String msg = "Database user '" + qualifiedUsername + "' already exists";
+			throw new RSSManagerException(msg);
+		}
+		/* Sets the fully qualified username */
+		user.setName(qualifiedUsername);
+		user.setRssInstanceName(user.getRssInstanceName());
+		EnvironmentManagementDAO entityDAO = EnvironmentManagementDAOFactory.getEnvironmentManagementDAO();
+		Environment envrionment = entityDAO.getEnvironmentDAO().getEnvironment(getEnvironmentName());
+		Set<RSSInstance> servers = new HashSet<RSSInstance>();
+		user.setEnvironmentId(envrionment.getId());
+		servers.add(rssInstance);
+		user.setInstances(servers);
+		final int tenantId = RSSManagerUtil.getTenantId();
+		user.setTenantId(tenantId);
+		this.getRSSDAO().getDatabaseUserDAO().addDatabaseUser(statement, user);
+		return user;
+	}
+
+	/**
+	 * Check whether database user exist
+	 *
+	 * @param rssInstanceName name of the rss instance
+	 * @param instanceType    rss instance type
+	 * @return boolean
+	 * @throws RSSManagerException
+	 */
+	public boolean isDatabaseUserExist(String rssInstanceName,
+	                                   String username, String instanceType)
+			throws RSSManagerException, RSSDatabaseConnectionException {
+		boolean isExist = false;
+		try {
+			final int tenantId = RSSManagerUtil.getTenantId();
+			isExist = getRSSDAO().getDatabaseUserDAO().isSystemDatabaseUserExist(getEnvironmentName(),
+					username, tenantId, instanceType);
+		} catch (RSSDAOException e) {
+			String msg = "Error occurred while checking whether the database " + "user named '" +
+			             username + "' already exists in RSS instance '" + rssInstanceName + "': " +
+			             e.getMessage();
+			handleException(msg, e);
+		}
+		return isExist;
+	}
+
+	/**
 	 * Get database users of system RSS Instances for the environment
 	 *
 	 * @return get system database users
@@ -109,7 +168,7 @@ public abstract class SystemRSSManager extends AbstractRSSManager{
 		DatabaseUser user = null;
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
-			user = getDatabaseUserDAO().getSysttemDatabaseUser(getEnvironmentName(), username, tenantId,
+			user = getDatabaseUserDAO().getSystemDatabaseUser(getEnvironmentName(), username, tenantId,
 					RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
 		} catch (RSSDAOException e) {
 			String msg = "Error occurred while retrieving metadata " + "corresponding to the " +
@@ -228,7 +287,7 @@ public abstract class SystemRSSManager extends AbstractRSSManager{
                                                              rssInstanceName,
                                                              databaseName, tenantId,
                                                              RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
-            DatabaseUser databaseUser = getDatabaseUserDAO().getSysttemDatabaseUser(
+            DatabaseUser databaseUser = getDatabaseUserDAO().getSystemDatabaseUser(
 		            this.getEnvironmentName(),
 		            username, tenantId,
 		            RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);

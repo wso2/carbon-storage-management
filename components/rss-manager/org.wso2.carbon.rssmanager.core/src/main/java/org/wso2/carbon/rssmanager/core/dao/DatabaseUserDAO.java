@@ -65,8 +65,8 @@ public interface DatabaseUserDAO {
 	 * @return boolean true if user exists else false
 	 * @throws RSSDAOException  if something went wrong when checking database user existence
 	 */
-	boolean isDatabaseUserExist(String environmentName, String username,
-	                            int tenantId, String instanceType, String rssInstanceName)
+	boolean isUserDefineTypeDatabaseUserExist(String environmentName, String username,
+	                                          int tenantId, String instanceType, String rssInstanceName)
 			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
@@ -79,10 +79,22 @@ public interface DatabaseUserDAO {
 	 * @return database user object
 	 * @throws RSSDAOException if something went wrong when fetch database user data
 	 */
-	DatabaseUser getDatabaseUser(String environmentName, String rssInstanceName, String username,
-	                             int tenantId, String instanceType)
+	DatabaseUser getUserDefineDatabaseUser(String environmentName, String rssInstanceName, String username,
+	                                       int tenantId, String instanceType)
 			throws RSSDAOException, RSSDatabaseConnectionException;
 
+	/**
+	 * Check whether database user in system instance is exist
+	 *
+	 * @param environmentName name of the environment
+	 * @param username username of the database user
+	 * @param tenantId tenant id of the database user added system user
+	 * @param instanceType instance type
+	 * @return boolean true if user exists else false
+	 * @throws RSSDAOException  if something went wrong when checking database user existence
+	 */
+	boolean isSystemDatabaseUserExist(String environmentName, String username, int tenantId, String instanceType)
+			throws RSSDAOException, RSSDatabaseConnectionException;
 	/**
 	 * Get database user without specifying rss instance name
 	 * @param environmentName name of the environment
@@ -92,8 +104,8 @@ public interface DatabaseUserDAO {
 	 * @return database user object
 	 * @throws RSSDAOException if something went wrong when fetch database user data
 	 */
-	DatabaseUser getSysttemDatabaseUser(String environmentName,
-	                                    String username, int tenantId, String instanceType)
+	DatabaseUser getSystemDatabaseUser(String environmentName,
+	                                   String username, int tenantId, String instanceType)
 			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
@@ -107,16 +119,4 @@ public interface DatabaseUserDAO {
 	DatabaseUser[] getDatabaseUsers(String environmentName, int tenantId, String instanceType)
 			throws RSSDAOException, RSSDatabaseConnectionException;
 
-	/**
-	 * Resolve rss instance name by database user
-	 *
-	 * @param environmentName name of the environment
-	 * @param rssInstanceType name of the rss instance
-	 * @param username database username
-	 * @param tenantId tenant id of the database user added system user
-	 * @return rss instance name
-	 * @throws RSSDAOException if something went wrong when resolving rss instance name from database user name
-	 */
-	String resolveRSSInstanceNameByUser(String environmentName, String rssInstanceType, String username,
-	                                    int tenantId) throws RSSDAOException, RSSDatabaseConnectionException;
 }
