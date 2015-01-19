@@ -342,7 +342,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			                              "RM_SERVER_INSTANCE.ENVIRONMENT_ID, RM_SERVER_INSTANCE.SSH_HOST, " +
 			                              "RM_SERVER_INSTANCE.SSH_PORT, RM_SERVER_INSTANCE.SSH_USERNAME, " +
 			                              "RM_SERVER_INSTANCE.SNAPSHOT_TARGET_DIRECTORY FROM RM_SERVER_INSTANCE " +
-			                              "INNER JOIN RM_ENVIRONMENT WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = " +
+			                              " , RM_ENVIRONMENT WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = " +
 			                              "RM_ENVIRONMENT.ID AND RM_ENVIRONMENT.NAME = ?";
 			statement = conn.prepareStatement(selectInstancesQuery);
 			statement.setString(1, environmentName);
@@ -403,16 +403,16 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			                              "RM_SERVER_INSTANCE.TENANT_ID, RM_SERVER_INSTANCE.DRIVER_CLASS, " +
 			                              "RM_SERVER_INSTANCE.ENVIRONMENT_ID, RM_SERVER_INSTANCE.SSH_HOST, " +
 			                              "RM_SERVER_INSTANCE.SSH_PORT, RM_SERVER_INSTANCE.SSH_USERNAME, " +
-			                              "RM_SERVER_INSTANCE.SNAPSHOT_TARGET_DIRECTORY FROM RM_SERVER_INSTANCE INNER" +
-			                              " JOIN RM_ENVIRONMENT WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = " +
-			                              "RM_ENVIRONMENT.ID AND RM_ENVIRONMENT.NAME = ? AND " +
-			                              "RM_SERVER_INSTANCE.TENANT_ID = ? AND RM_SERVER_INSTANCE.INSTANCE_TYPE = ?";
+			                              "RM_SERVER_INSTANCE.SNAPSHOT_TARGET_DIRECTORY FROM RM_SERVER_INSTANCE INNER " +
+			                              " JOIN RM_ENVIRONMENT ON RM_SERVER_INSTANCE.ENVIRONMENT_ID = RM_ENVIRONMENT.ID   WHERE " +
+			                              " RM_ENVIRONMENT.NAME = ? AND " +
+			                              " RM_SERVER_INSTANCE.TENANT_ID = ? AND RM_SERVER_INSTANCE.INSTANCE_TYPE = ?";
 			statement = conn.prepareStatement(selectInstancesQuery);
 			statement.setString(1, environmentName);
 			statement.setLong(2, tenantId);
 			statement.setString(3, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
 			resultSet = statement.executeQuery();
-			while (resultSet.next()) {
+			while (resultSet != null && resultSet.next()) {
 				rssInstance = new RSSInstance();
 				sshInformationConfig = new SSHInformationConfig();
 				snapshotConfig = new SnapshotConfig();
