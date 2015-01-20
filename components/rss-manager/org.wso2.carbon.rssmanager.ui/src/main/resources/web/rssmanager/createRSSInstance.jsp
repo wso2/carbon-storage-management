@@ -151,7 +151,7 @@
                                         serverUrl = "jdbc:postgresql://[machine-name/ip]:[port]";
                                         driver = "org.postgresql.Driver";
                                     }if(RSSManagerConstants.SQLSERVER.equalsIgnoreCase(rssProvider)) {
-                                        serverUrl = "dbc:sqlserver://[machine-name/ip]";
+                                        serverUrl = "jdbc:sqlserver://[machine-name/ip]";
                                         driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
                                     }if(RSSManagerConstants.ORACLE.equalsIgnoreCase(rssProvider)) {
                                         serverUrl = "jdbc:oracle:thin:@//[machine-name/ip][:port]";
