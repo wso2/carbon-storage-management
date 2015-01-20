@@ -215,7 +215,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			                              "RM_SERVER_INSTANCE.ENVIRONMENT_ID, RM_SERVER_INSTANCE.SSH_HOST, " +
 			                              "RM_SERVER_INSTANCE.SSH_PORT, RM_SERVER_INSTANCE.SSH_USERNAME, " +
 			                              "RM_SERVER_INSTANCE.SNAPSHOT_TARGET_DIRECTORY FROM RM_SERVER_INSTANCE " +
-			                              "INNER JOIN RM_ENVIRONMENT WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = " +
+			                              ", RM_ENVIRONMENT WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = " +
 			                              "RM_ENVIRONMENT.ID AND RM_ENVIRONMENT.NAME = ? AND " +
 			                              "RM_SERVER_INSTANCE.NAME = ? AND RM_SERVER_INSTANCE.TENANT_ID = ?";
 			statement = conn.prepareStatement(selectInstancesQuery);
@@ -278,7 +278,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			                              "RM_SERVER_INSTANCE.ENVIRONMENT_ID, RM_SERVER_INSTANCE.SSH_HOST, " +
 			                              "RM_SERVER_INSTANCE.SSH_PORT, RM_SERVER_INSTANCE.SSH_USERNAME, " +
 			                              "RM_SERVER_INSTANCE.SNAPSHOT_TARGET_DIRECTORY FROM RM_SERVER_INSTANCE " +
-			                              "INNER JOIN RM_ENVIRONMENT WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = " +
+			                              ", RM_ENVIRONMENT WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = " +
 			                              "RM_ENVIRONMENT.ID AND RM_ENVIRONMENT.NAME = ? AND " +
 			                              "RM_SERVER_INSTANCE.TENANT_ID = ?";
 			statement = conn.prepareStatement(selectInstancesQuery);
@@ -468,8 +468,8 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			                              "RM_SERVER_INSTANCE.TENANT_ID, RM_SERVER_INSTANCE.DRIVER_CLASS, " +
 			                              "RM_SERVER_INSTANCE.ENVIRONMENT_ID, RM_SERVER_INSTANCE.SSH_HOST, " +
 			                              "RM_SERVER_INSTANCE.SSH_PORT, RM_SERVER_INSTANCE.SSH_USERNAME, " +
-			                              "RM_SERVER_INSTANCE.SNAPSHOT_TARGET_DIRECTORY FROM RM_SERVER_INSTANCE INNER" +
-			                              " JOIN RM_ENVIRONMENT WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = " +
+			                              "RM_SERVER_INSTANCE.SNAPSHOT_TARGET_DIRECTORY FROM RM_SERVER_INSTANCE " +
+			                              " , RM_ENVIRONMENT WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = " +
 			                              "RM_ENVIRONMENT.ID AND RM_ENVIRONMENT.NAME = ? AND " +
 			                              "RM_SERVER_INSTANCE.TENANT_ID = ? AND RM_SERVER_INSTANCE.INSTANCE_TYPE = ?";
 			statement = conn.prepareStatement(selectInstancesQuery);
@@ -533,8 +533,8 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			                              "RM_SERVER_INSTANCE.TENANT_ID, RM_SERVER_INSTANCE.DRIVER_CLASS, " +
 			                              "RM_SERVER_INSTANCE.ENVIRONMENT_ID, RM_SERVER_INSTANCE.SSH_HOST, " +
 			                              "RM_SERVER_INSTANCE.SSH_PORT, RM_SERVER_INSTANCE.SSH_USERNAME, " +
-			                              "RM_SERVER_INSTANCE.SNAPSHOT_TARGET_DIRECTORY FROM RM_SERVER_INSTANCE INNER" +
-			                              " JOIN RM_ENVIRONMENT WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = " +
+			                              "RM_SERVER_INSTANCE.SNAPSHOT_TARGET_DIRECTORY FROM RM_SERVER_INSTANCE " +
+			                              " , RM_ENVIRONMENT WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = " +
 			                              "RM_ENVIRONMENT.ID AND RM_SERVER_INSTANCE.TENANT_ID = ? AND " +
 			                              "RM_SERVER_INSTANCE.INSTANCE_TYPE = ?";
 			statement = conn.prepareStatement(selectInstancesQuery);
@@ -596,8 +596,8 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			                             "RM_SERVER_INSTANCE.TENANT_ID, RM_SERVER_INSTANCE.DRIVER_CLASS, " +
 			                             "RM_SERVER_INSTANCE.ENVIRONMENT_ID, RM_SERVER_INSTANCE.SSH_HOST, " +
 			                             "RM_SERVER_INSTANCE.SSH_PORT, RM_SERVER_INSTANCE.SSH_USERNAME, " +
-			                             "RM_SERVER_INSTANCE.SNAPSHOT_TARGET_DIRECTORY FROM RM_SERVER_INSTANCE INNER " +
-			                             "JOIN RM_ENVIRONMENT WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = " +
+			                             "RM_SERVER_INSTANCE.SNAPSHOT_TARGET_DIRECTORY FROM RM_SERVER_INSTANCE  " +
+			                             ", RM_ENVIRONMENT WHERE RM_SERVER_INSTANCE.ENVIRONMENT_ID = " +
 			                             "RM_ENVIRONMENT.ID AND RM_SERVER_INSTANCE.TENANT_ID = ? AND " +
 			                             "RM_SERVER_INSTANCE.INSTANCE_TYPE = ?";
 			statement = conn.prepareStatement(selectInstanceQuery);

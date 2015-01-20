@@ -125,7 +125,7 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 		int environmentId = getEnvionmentIdByName(environmentName);
 		try {
 			conn = getDataSourceConnection();//acquire data source connection
-			String checkDBExistQuery = "SELECT RM_DATABASE.ID FROM RM_DATABASE INNER JOIN RM_SERVER_INSTANCE WHERE " +
+			String checkDBExistQuery = "SELECT RM_DATABASE.ID FROM RM_DATABASE , RM_SERVER_INSTANCE WHERE " +
 			                           "RM_DATABASE.RSS_INSTANCE_ID = RM_SERVER_INSTANCE.ID AND RM_SERVER_INSTANCE.NAME=? AND RM_DATABASE.NAME=? " +
 			                           "AND RM_DATABASE.TYPE=? AND RM_DATABASE.TENANT_ID=? AND RM_SERVER_INSTANCE.ENVIRONMENT_ID=?";
 			statement = conn.prepareStatement(checkDBExistQuery);
@@ -164,7 +164,7 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 			conn = getDataSourceConnection();//acquire data source connection
 			String getDatabaseQuery = "SELECT RM_DATABASE.ID, RM_DATABASE.NAME, RM_DATABASE.TYPE, RM_SERVER_INSTANCE.NAME " +
 			                          "AS RSS_INSTANCE_NAME, RM_SERVER_INSTANCE.DBMS_TYPE, RM_SERVER_INSTANCE.SERVER_URL " +
-			                          "FROM RM_DATABASE INNER JOIN RM_SERVER_INSTANCE  WHERE RM_SERVER_INSTANCE.ID=RM_DATABASE.RSS_INSTANCE_ID " +
+			                          "FROM RM_DATABASE , RM_SERVER_INSTANCE  WHERE RM_SERVER_INSTANCE.ID=RM_DATABASE.RSS_INSTANCE_ID " +
 			                          "AND RM_SERVER_INSTANCE.ENVIRONMENT_ID=? AND RM_DATABASE.NAME=? AND RM_DATABASE.TENANT_ID=? " +
 			                          "AND RM_DATABASE.TYPE=? AND RM_SERVER_INSTANCE.NAME=?";
 			statement = conn.prepareStatement(getDatabaseQuery);
@@ -208,7 +208,7 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 			conn = getDataSourceConnection();//acquire data source connection
 			String getDatabaseQuery = "SELECT RM_DATABASE.ID, RM_DATABASE.NAME, RM_DATABASE.TYPE, RM_SERVER_INSTANCE.NAME " +
 			                          "AS RSS_INSTANCE_NAME, RM_SERVER_INSTANCE.DBMS_TYPE, RM_SERVER_INSTANCE.SERVER_URL " +
-			                          "FROM RM_DATABASE INNER JOIN RM_SERVER_INSTANCE  WHERE RM_SERVER_INSTANCE.ID=RM_DATABASE.RSS_INSTANCE_ID " +
+			                          "FROM RM_DATABASE , RM_SERVER_INSTANCE  WHERE RM_SERVER_INSTANCE.ID=RM_DATABASE.RSS_INSTANCE_ID " +
 			                          "AND RM_SERVER_INSTANCE.ENVIRONMENT_ID=? AND RM_DATABASE.NAME=? AND RM_DATABASE.TENANT_ID=? " +
 			                          "AND RM_DATABASE.TYPE=?";
 			statement = conn.prepareStatement(getDatabaseQuery);
@@ -251,7 +251,7 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 			conn = getDataSourceConnection();//acquire data source connection
 			String getDatabasesQuery = "SELECT RM_DATABASE.ID, RM_DATABASE.NAME, RM_DATABASE.TYPE, RM_SERVER_INSTANCE.NAME " +
 			                          "AS RSS_INSTANCE_NAME, RM_SERVER_INSTANCE.DBMS_TYPE, RM_SERVER_INSTANCE.SERVER_URL " +
-			                          "FROM RM_DATABASE INNER JOIN RM_SERVER_INSTANCE  WHERE RM_SERVER_INSTANCE.ID=RM_DATABASE.RSS_INSTANCE_ID " +
+			                          "FROM RM_DATABASE , RM_SERVER_INSTANCE  WHERE RM_SERVER_INSTANCE.ID=RM_DATABASE.RSS_INSTANCE_ID " +
 			                          "AND RM_SERVER_INSTANCE.ENVIRONMENT_ID=? " +
 			                          "AND RM_DATABASE.TENANT_ID=? AND RM_DATABASE.TYPE=?";
 			statement = conn.prepareStatement(getDatabasesQuery);
@@ -296,7 +296,7 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 			conn = getDataSourceConnection();//acquire data source connection
 			String getDatabasesOfEnvironmentQuery = "SELECT RM_DATABASE.NAME.ID, RM_DATABASE.NAME, RM_DATABASE.TYPE, RM_DATABASE.TENANT_ID" +
 			                                        ",RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME, RM_SERVER_INSTANCE.DBMS_TYPE, " +
-			                                        "RM_SERVER_INSTANCE.SERVER_URL FROM RM_DATABASE INNER JOIN RM_SERVER_INSTANCE WHERE " +
+			                                        "RM_SERVER_INSTANCE.SERVER_URL FROM RM_DATABASE , RM_SERVER_INSTANCE WHERE " +
 			                                        "RM_DATABASE.RSS_INSTANCE_ID=RM_SERVER_INSTANCE.ID AND RM_DATABASE.TENANT_ID= ? " +
 			                                        "AND RM_SERVER_INSTANCE.ENVIRONMENT_ID=?";
 			statement = conn.prepareStatement(getDatabasesOfEnvironmentQuery);
@@ -339,7 +339,7 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 		try {
 			conn = getDataSourceConnection();//acquire data source connection
 			String getDatabasesOfEnvironmentQuery = "SELECT RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME FROM RM_DATABASE " +
-			                                        "INNER JOIN RM_SERVER_INSTANCE WHERE RM_DATABASE.RSS_INSTANCE_ID=RM_SERVER_INSTANCE.ID " +
+			                                        ", RM_SERVER_INSTANCE WHERE RM_DATABASE.RSS_INSTANCE_ID=RM_SERVER_INSTANCE.ID " +
 			                                        "AND RM_DATABASE.TENANT_ID= ? AND RM_SERVER_INSTANCE.ENVIRONMENT_ID=? AND RM_DATABASE.NAME=?" +
 			                                        "AND RM_DATABASE.TYPE=?";
 			statement = conn.prepareStatement(getDatabasesOfEnvironmentQuery);
