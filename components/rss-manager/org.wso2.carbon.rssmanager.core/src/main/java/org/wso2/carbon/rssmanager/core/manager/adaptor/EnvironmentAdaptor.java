@@ -297,7 +297,7 @@ public class EnvironmentAdaptor implements RSSManagerService {
 
 		DatabaseUser[] entities = this.getRSSManagerAdaptor(environmentName).getDatabaseUsers();
 		List<DatabaseUser> entityList = Arrays.asList(entities);
-		List<DatabaseUserInfo> infoList = new ArrayList<DatabaseUserInfo>();
+		Set<DatabaseUserInfo> infoList = new HashSet<DatabaseUserInfo>();
 		for (DatabaseUser entity : entityList) {
 			DatabaseUserInfo info = new DatabaseUserInfo();
 			RSSManagerUtil.createDatabaseUserInfo(info, entity);
