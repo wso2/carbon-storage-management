@@ -129,9 +129,13 @@
                                         <font color="red">*</font>
                                     </td>
                                     <td>
-                                        <input value="<%=rssProvider%>" id="provider"
-                                        name="provider"
-                                        size="30" type="text" readonly="readonly">
+                                        <label>
+                                            <select name="databaseEngine" id="databaseEngine"
+                                                    onchange="setJDBCValues(this,document)" disabled>
+                                                <option value="<%=rssProvider%>" selected="selected"><%=rssProvider%>
+                                                </option>
+                                            </select>
+                                        </label>
                                     </td>
                                 </tr>
                                 <tr>
