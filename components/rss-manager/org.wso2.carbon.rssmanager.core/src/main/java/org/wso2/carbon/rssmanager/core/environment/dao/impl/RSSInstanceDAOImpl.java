@@ -74,9 +74,15 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			statement.setString(8, rssInstance.getAdminPassword());
 			statement.setLong(9, rssInstance.getTenantId());
 			statement.setString(10, rssInstance.getDriverClassName());
-			statement.setString(11, sshInformationConfig.getHost());
-			statement.setInt(12, sshInformationConfig.getPort());
-			statement.setString(13, sshInformationConfig.getUsername());
+			if (sshInformationConfig != null) {
+				statement.setString(11, sshInformationConfig.getHost());
+				statement.setInt(12, sshInformationConfig.getPort());
+				statement.setString(13, sshInformationConfig.getUsername());
+			} else {
+				statement.setString(11, null);
+				statement.setString(12, null);
+				statement.setString(13, null);
+			}
 			if (rssInstance.getSnapshotConfig() != null) {
 				statement.setString(14, rssInstance.getSnapshotConfig().getTargetDirectory());
 			} else {
@@ -172,9 +178,15 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			entryUpdateStatement.setString(7, rssInstance.getAdminPassword());
 			entryUpdateStatement.setLong(8, rssInstance.getTenantId());
 			entryUpdateStatement.setString(9, rssInstance.getDriverClassName());
-			entryUpdateStatement.setString(10, sshInformationConfig.getHost());
-			entryUpdateStatement.setInt(11, sshInformationConfig.getPort());
-			entryUpdateStatement.setString(12, sshInformationConfig.getUsername());
+			if (sshInformationConfig != null) {
+				entryUpdateStatement.setString(10, sshInformationConfig.getHost());
+				entryUpdateStatement.setInt(11, sshInformationConfig.getPort());
+				entryUpdateStatement.setString(12, sshInformationConfig.getUsername());
+			} else {
+				entryUpdateStatement.setString(11, null);
+				entryUpdateStatement.setString(12, null);
+				entryUpdateStatement.setString(13, null);
+			}
 			if (rssInstance.getSnapshotConfig() != null) {
 				entryUpdateStatement.setString(13, rssInstance.getSnapshotConfig().getTargetDirectory());
 			} else {
