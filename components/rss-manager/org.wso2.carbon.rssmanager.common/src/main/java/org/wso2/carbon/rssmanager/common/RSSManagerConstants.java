@@ -36,11 +36,17 @@ public final class RSSManagerConstants {
     /* Prefixes of supported database types */
     public static final String MYSQL_PREFIX = "mysql";
     public static final String ORACLE_PREFIX = "oracle";
+    public static final String H2_PREFIX = "h2";
+    public static final String POSTGRES_PREFIX = "postgresql";
+    public static final String SQLSERVER_PREFIX = "sqlserver";
 
     /* Driver Names of supported database types */
     public static final String MYSQL_DRIVER = "com.mysql.jdbc.Driver";
     public static final String ORACLE_DRIVER = "oracle.jdbc.driver.OracleDriver";
     public static final String MYSQL_XA_DRIVER = "com.mysql.jdbc.jdbc2.optional.MysqlXADataSource";
+    public static final String H2_DRIVER = "org.h2.Driver";
+    public static final String POSTGRES_DRIVER = "org.postgresql.Driver";
+    public static final String SQLSERVER_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 
     /* Database permissions */
     public static final String SELECT_PRIV = "Select_priv";
