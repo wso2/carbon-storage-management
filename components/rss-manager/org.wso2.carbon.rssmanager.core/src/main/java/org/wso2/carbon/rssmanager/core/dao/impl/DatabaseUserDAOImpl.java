@@ -64,7 +64,11 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 			conn = getDataSourceConnection();//acquire data source connection
 			//start transaction with setting auto commit value to false
 			conn.setAutoCommit(false);
-			String createDBUserQuery = "INSERT INTO RM_DATABASE_USER(USERNAME, ENVIRONMENT_ID, TYPE, TENANT_ID, RSS_INSTANCE_ID) VALUES(?,?,?,?,?)";
+			String createDBUserQuery = "INSERT INTO RM_DATABASE_USER(USERNAME, ENVIRONMENT_ID, TYPE, TENANT_ID) VALUES(?,?,?,?)";
+			if(!RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equalsIgnoreCase(user.getType())){
+				createDBUserQuery = "INSERT INTO RM_DATABASE_USER(USERNAME, ENVIRONMENT_ID, TYPE, TENANT_ID, RSS_INSTANCE_ID) VALUES(?,?,?,?,?)";
+			}
+			
 			createUserStatement = conn.prepareStatement(createDBUserQuery, Statement.RETURN_GENERATED_KEYS);
 			//insert user data to the statement to insert
 			createUserStatement.setString(1, user.getName());
@@ -76,7 +80,10 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 			} else {
 				createUserStatement.setString(5, user.getInstances().iterator().next().getName());
 			}*/
-			createUserStatement.setInt(5, user.getInstances().iterator().next().getId());
+			if(!RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equalsIgnoreCase(user.getType())){
+				createUserStatement.setInt(5, user.getInstances().iterator().next().getId());
+			}
+			
 			createUserStatement.executeUpdate();
 			//get the inserted database user id from result
 			//which will be inserted as a foreign key to user rss instance entry table
