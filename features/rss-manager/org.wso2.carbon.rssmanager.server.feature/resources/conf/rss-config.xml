@@ -35,9 +35,13 @@
   	<!-- 'SYSTEM' instances are predefined constant server instances to be used by users,
        	the other type is User Defined RSS instances, which are defined by individual tenants -->
         <Environments>
-	   <Environment>
+           <!--PrivateKeyConfiguration>
+             	<PrivateKeyPath>/data/private/my_keys/private.key</PrivateKeyPath>
+             	<PassPhrase>pass</PassPhrase>
+           </PrivateKeyConfiguration-->
+
+	    <Environment>
                 <Name>DEFAULT</Name>
-                <DbmsType>H2</DbmsType>
                 <RSSInstances>
                     <RSSInstance>
                         <Name>WSO2RSS1</Name>
@@ -62,11 +66,76 @@
                         </SnapshotConfiguration-->
                     </RSSInstance>
                 </RSSInstances>
-             </Environment>
-        </Environments>
-    	<!--PrivateKeyConfiguration>
-             <PrivateKeyPath>/data/private/my_keys/private.key</PrivateKeyPath>
-             <PassPhrase>pass</PassPhrase>
-    	</PrivateKeyConfiguration-->
-</RSSConfiguration>
+            </Environment>
 
+
+<!--Sample configurations for MySQL [below]-->
+
+	    <!--Environment>
+                <Name>DEFAULT</Name>
+                <RSSInstances>
+                    <RSSInstance>
+                        <Name>WSO2RSS1</Name>
+                        <InstanceType>SYSTEM</InstanceType>
+                        <DbmsType>MYSQL</DbmsType>
+                        <ServerCategory>LOCAL</ServerCategory>
+                        <DataSourceConfiguration>
+                            <Definition>
+                                <Url>jdbc:mysql://localhost:3306</Url>
+                                <Username>root</Username>
+                                <Password>root</Password>
+                                <DriverClassName>com.mysql.jdbc.Driver</DriverClassName>
+                            </Definition>
+                        </DataSourceConfiguration>
+                    </RSSInstance>
+                </RSSInstances>
+            </Environment-->
+
+
+<!--Sample configurations for PostgreSQL [below]-->
+
+	    <!--Environment>
+                <Name>DEFAULT</Name>
+                <RSSInstances>
+                    <RSSInstance>
+                        <Name>WSO2RSS1</Name>
+                        <InstanceType>SYSTEM</InstanceType>
+                        <DbmsType>POSTGRES</DbmsType>
+                        <ServerCategory>LOCAL</ServerCategory>
+                        <DataSourceConfiguration>
+                            <Definition>
+                                <Url>jdbc:postgresql://localhost:5432</Url>
+                                <Username>postgres</Username>
+                                <Password>postgres</Password>
+                                <DriverClassName>org.postgresql.Driver</DriverClassName>
+                            </Definition>
+                        </DataSourceConfiguration>
+                    </RSSInstance>
+                </RSSInstances>
+            </Environment-->
+
+
+<!--Sample configurations for SQL SERVER [below]-->
+
+	    <!--Environment>
+                <Name>DEFAULT</Name>
+                <RSSInstances>
+                    <RSSInstance>
+                        <Name>WSO2RSS1</Name>
+                        <InstanceType>SYSTEM</InstanceType>
+                        <DbmsType>SQLSERVER</DbmsType>
+                        <ServerCategory>LOCAL</ServerCategory>
+                        <DataSourceConfiguration>
+                            <Definition>
+                                <Url>jdbc:sqlserver://192.168.17.21</Url>
+                                <Username>RootUser</Username>
+                                <Password>RootPassword</Password>
+                                <DriverClassName>com.microsoft.sqlserver.jdbc.SQLServerDriver</DriverClassName>
+                            </Definition>
+                        </DataSourceConfiguration>
+                    </RSSInstance>
+                </RSSInstances>
+            </Environment-->
+
+       </Environments>
+</RSSConfiguration>
