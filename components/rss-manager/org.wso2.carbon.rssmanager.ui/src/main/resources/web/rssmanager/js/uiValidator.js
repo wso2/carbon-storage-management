@@ -768,7 +768,7 @@ function displayMessages(msg) {
     if (msg.search(/has been successfully created/) != -1) {
         jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'rssInstances.jsp';
+                window.location = 'rssInstances.jsp?ordinal=1';
             }
 
             CARBON.showInfoDialog(msg, handleOK);
@@ -776,7 +776,7 @@ function displayMessages(msg) {
     } else if (msg.search(/has been successfully edited/) != -1) {
         jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'rssInstances.jsp';
+                window.location = 'rssInstances.jsp?ordinal=1';
             }
 
             CARBON.showInfoDialog(msg, handleOK);
@@ -784,7 +784,7 @@ function displayMessages(msg) {
     } else if (msg.search(/has been successfully dropped/) != -1) {
         jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'rssInstances.jsp';
+                window.location = 'rssInstances.jsp?ordinal=1';
             }
 
             CARBON.showInfoDialog(msg, handleOK);
@@ -792,7 +792,7 @@ function displayMessages(msg) {
     } else if (msg.search(/Failed to drop database server instance/) != -1) {
         jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'rssInstances.jsp';
+                window.location = 'rssInstances.jsp?ordinal=1';
             }
 
             CARBON.showErrorDialog(msg, handleOK);
@@ -800,7 +800,7 @@ function displayMessages(msg) {
     } else if (msg.search(/Failed to create database server instance/) != -1) {
         jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'rssInstances.jsp';
+                window.location = 'rssInstances.jsp?ordinal=1';
             }
 
             CARBON.showErrorDialog(msg, handleOK);
@@ -808,7 +808,7 @@ function displayMessages(msg) {
     } else {
         jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'rssInstances.jsp';
+                window.location = 'rssInstances.jsp?ordinal=1';
             }
 
             CARBON.showErrorDialog(msg, handleOK);
