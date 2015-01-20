@@ -221,7 +221,7 @@ public class EnvironmentManager {
 		try {
 			final int tenantId = RSSManagerUtil.getTenantId();
 			RSSInstance[] UserDefinedInstances = rssInstanceDAO.getUserDefinedRSSInstances(environmentName, tenantId);
-			RSSInstance[] systemServers = rssInstanceDAO.getSystemRSSInstances(environmentName, 0);
+			RSSInstance[] systemServers = rssInstanceDAO.getSystemRSSInstances(environmentName, -1234);
 			if (UserDefinedInstances != null && UserDefinedInstances.length > 0) {
 				serverSet.addAll(Arrays.asList(UserDefinedInstances));
 			}
