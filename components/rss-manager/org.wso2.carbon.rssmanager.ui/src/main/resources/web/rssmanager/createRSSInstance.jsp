@@ -129,9 +129,13 @@
                                         <font color="red">*</font>
                                     </td>
                                     <td>
-                                        <input value="<%=rssProvider%>" id="provider"
-                                        name="provider"
-                                        size="30" type="text" readonly="readonly">
+                                        <label>
+                                            <select name="databaseEngine" id="databaseEngine"
+                                                    onchange="setJDBCValues(this,document)" disabled>
+                                                <option value="<%=rssProvider%>" selected="selected"><%=rssProvider%>
+                                                </option>
+                                            </select>
+                                        </label>
                                     </td>
                                 </tr>
                                 <tr>
@@ -151,7 +155,7 @@
                                         serverUrl = "jdbc:postgresql://[machine-name/ip]:[port]";
                                         driver = "org.postgresql.Driver";
                                     }if(RSSManagerConstants.SQLSERVER.equalsIgnoreCase(rssProvider)) {
-                                        serverUrl = "dbc:sqlserver://[machine-name/ip]";
+                                        serverUrl = "jdbc:sqlserver://[machine-name/ip]";
                                         driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
                                     }if(RSSManagerConstants.ORACLE.equalsIgnoreCase(rssProvider)) {
                                         serverUrl = "jdbc:oracle:thin:@//[machine-name/ip][:port]";

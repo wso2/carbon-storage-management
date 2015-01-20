@@ -467,7 +467,7 @@ public final class RSSManagerUtil {
         return createGenericDatabaseUrl(url, databaseName);
     }
 
-    private static String createDatabaseUrlForPostgresSQL(String url, String databaseName) {
+    public static String createDatabaseUrlForPostgresSQL(String url, String databaseName) {
         return createGenericDatabaseUrl(url, databaseName);
     }
 
