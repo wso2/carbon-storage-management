@@ -58,7 +58,7 @@ public abstract class AbstractScheduleDataPublisher extends AbstractTask impleme
 				
 			} 
 		} catch (Exception ex) {
-			log.error(ex);
+			log.error("Error occurred while executing data publisher", ex);
 		}
 
 	}
