@@ -86,12 +86,10 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 	/**
 	 * @see DatabaseDAO#removeDatabase(java.sql.PreparedStatement, org.wso2.carbon.rssmanager.core.dto.restricted.Database)
 	 */
-	public void removeDatabase(PreparedStatement nativeRemoveDBStatement, Database database)
+	public void removeDatabase(Connection conn, Database database)
 			throws RSSDAOException, RSSDatabaseConnectionException {
-		Connection conn = null;
 		PreparedStatement removeDBStatement = null;
 		try {
-			conn = getDataSourceConnection(); //acquire data source connection
 			//start transaction with setting auto commit value to false
 			conn.setAutoCommit(false);
 			String removeDBQuery = "DELETE FROM RM_DATABASE WHERE ID=?";
@@ -99,16 +97,13 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 			removeDBStatement.setInt(1, database.getId());
 			//execute remove database statement first to the meta repository as native sql queries not transactional
 			removeDBStatement.executeUpdate();
-			//execute native remove database statement which remove database in given rss instance
-			nativeRemoveDBStatement.executeUpdate();
-			conn.commit();
 		} catch (SQLException e) {
 			RSSDAOUtil.rollback(conn, RSSManagerConstants.DELETE_DATABASE_ENTRY);
 			String msg = "Failed to delete database" + database.getName() + "in rssInstance" + database.getRssInstanceName()
 			             + "from meta repository";
 			handleException(msg, e);
 		} finally {
-			RSSDAOUtil.cleanupResources(null, removeDBStatement, conn, RSSManagerConstants.DELETE_DATABASE_ENTRY);
+			RSSDAOUtil.cleanupResources(null, removeDBStatement, null, RSSManagerConstants.DELETE_DATABASE_ENTRY);
 		}
 	}
 
