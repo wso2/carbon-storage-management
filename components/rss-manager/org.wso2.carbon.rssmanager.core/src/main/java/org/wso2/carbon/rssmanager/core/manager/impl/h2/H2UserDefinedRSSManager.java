@@ -172,7 +172,7 @@ public class H2UserDefinedRSSManager extends UserDefinedRSSManager {
     public DatabaseUser addDatabaseUser(DatabaseUser user) throws RSSManagerException {
 	    /* Validating user information to avoid any possible SQL injection attacks */
         RSSManagerUtil.validateDatabaseUserInfo(user);
-        String qualifiedUsername = RSSManagerUtil.getFullyQualifiedUsername(user.getName());
+        String qualifiedUsername =  user.getUsername().trim();
         try {
             user.setEnvironmentId(this.getEnvironment().getId());
             super.addDatabaseUser(null, user, qualifiedUsername, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
