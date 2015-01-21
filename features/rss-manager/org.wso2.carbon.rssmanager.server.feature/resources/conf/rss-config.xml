@@ -32,14 +32,14 @@
 	    </DataSourceConfiguration>
 	</ManagementRepository>
 
+        <!--PrivateKeyConfiguration>
+             <PrivateKeyPath>/data/private/my_keys/private.key</PrivateKeyPath>
+             <PassPhrase>pass</PassPhrase>
+        </PrivateKeyConfiguration-->
+
   	<!-- 'SYSTEM' instances are predefined constant server instances to be used by users,
        	the other type is User Defined RSS instances, which are defined by individual tenants -->
         <Environments>
-           <!--PrivateKeyConfiguration>
-             	<PrivateKeyPath>/data/private/my_keys/private.key</PrivateKeyPath>
-             	<PassPhrase>pass</PassPhrase>
-           </PrivateKeyConfiguration-->
-
 	    <Environment>
                 <Name>DEFAULT</Name>
                 <RSSInstances>

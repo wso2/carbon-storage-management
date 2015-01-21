@@ -426,7 +426,7 @@ public class RSSManagerClient {
 				errorMessage = msg + rssException.getFaultMessage().getRSSManagerException().getErrorMessage();
 			}
 		} else {
-			errorMessage = msg + e.getMessage();
+			errorMessage = msg;
 		}
 		log.error(errorMessage, e);
 		throw new AxisFault(errorMessage, e);
