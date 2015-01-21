@@ -112,6 +112,7 @@ public class H2UserDefinedRSSManager extends UserDefinedRSSManager {
     public void removeDatabase(String rssInstanceName,
                                String databaseName) throws RSSManagerException {
         Connection conn = null;
+        Connection txConn = null;
         PreparedStatement nativeRemoveDBStatement = null;
         RSSInstance rssInstance = null;
         try {
@@ -126,6 +127,7 @@ public class H2UserDefinedRSSManager extends UserDefinedRSSManager {
             throw new RSSManagerException(msg);
         }
         try {
+        	txConn = RSSManagerUtil.getTxConnection();
             /* Validating database name to avoid any possible SQL injection attack */
             RSSManagerUtil.checkIfParameterSecured(databaseName);
             conn = this.getConnection(rssInstance.getName(), databaseName);
@@ -133,15 +135,19 @@ public class H2UserDefinedRSSManager extends UserDefinedRSSManager {
             RSSManagerUtil.checkIfParameterSecured(databaseName);
             String dropDBQuery = "DROP ALL OBJECTS DELETE FILES";
             nativeRemoveDBStatement = conn.prepareStatement(dropDBQuery);
-            super.removeDatabase(nativeRemoveDBStatement, rssInstance.getName(), databaseName, rssInstance,
+            super.removeDatabase(txConn, rssInstance.getName(), databaseName, rssInstance,
                                  RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+            nativeRemoveDBStatement.execute();
+            RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {
             String msg = "Error while dropping the database '" + databaseName +
                          "' on RSS " + "instance '" + rssInstance.getName() + "' : " +
                          e.getMessage();
+            RSSManagerUtil.rollBackTx(txConn);
             handleException(msg, e);
         } finally {
             RSSManagerUtil.cleanupResources(null, nativeRemoveDBStatement, conn);
+            RSSManagerUtil.cleanupResources(null, null, txConn);
         }
     }
 
@@ -166,7 +172,7 @@ public class H2UserDefinedRSSManager extends UserDefinedRSSManager {
     public DatabaseUser addDatabaseUser(DatabaseUser user) throws RSSManagerException {
 	    /* Validating user information to avoid any possible SQL injection attacks */
         RSSManagerUtil.validateDatabaseUserInfo(user);
-        String qualifiedUsername = RSSManagerUtil.getFullyQualifiedUsername(user.getName());
+        String qualifiedUsername =  user.getUsername().trim();
         try {
             user.setEnvironmentId(this.getEnvironment().getId());
             super.addDatabaseUser(null, user, qualifiedUsername, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);

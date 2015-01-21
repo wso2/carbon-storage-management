@@ -174,7 +174,7 @@ public class EnvironmentManager {
 					.getRdbmsConfiguration()
 					.getPassword());
 			entity.setTenantId((long) tenantId);
-			entity.setDbmsType(rssInstance.getInstanceType());
+			entity.setDbmsType(rssInstance.getDbmsType());
 			entity.setEnvironment(env);
 			entity.setSshInformationConfig(rssInstance.getSshInformationConfig());
 			entity.setSnapshotConfig(rssInstance.getSnapshotConfig());

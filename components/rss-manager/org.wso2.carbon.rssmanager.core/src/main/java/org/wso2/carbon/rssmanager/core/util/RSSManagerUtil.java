@@ -329,7 +329,7 @@ public final class RSSManagerUtil {
     }
 
 
-    public static synchronized void cleanupResources(ResultSet resultSet, PreparedStatement statement,
+    public static void cleanupResources(ResultSet resultSet, PreparedStatement statement,
                                                      Connection conn) {
         if (resultSet != null) {
             try {
@@ -935,6 +935,34 @@ public final class RSSManagerUtil {
 
     public static DataSource getDataSource() {
         return dataSource;
+    }
+    
+    public static Connection getTxConnection() throws RSSManagerException{
+    	Connection conn;
+		try {
+			conn = dataSource.getConnection();
+			conn.setAutoCommit(false);
+		} catch (SQLException ex) {
+			throw new RSSManagerException("Error occurred while creating connection", ex);
+		}    	
+    	
+    	return conn;
+    }
+    
+    public static void commitTx(Connection conn) throws RSSManagerException{
+    	try {
+			conn.commit();
+		} catch (SQLException ex) {
+			throw new RSSManagerException("Error occurred while commit transaction", ex);
+		}
+    }
+    
+    public static void rollBackTx(Connection conn) throws RSSManagerException{
+    	try {
+			conn.rollback();
+		} catch (SQLException ex) {
+			throw new RSSManagerException("Error occurred while roll back transaction", ex);
+		}
     }
 
     public static void setDataSource(DataSource dataSource) {
