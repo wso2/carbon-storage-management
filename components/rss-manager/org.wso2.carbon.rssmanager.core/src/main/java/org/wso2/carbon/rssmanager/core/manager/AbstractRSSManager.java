@@ -286,7 +286,7 @@ public abstract class AbstractRSSManager implements RSSManager{
 	 * @throws RSSManagerException
 	 * @throws RSSDAOException
 	 */
-	protected void removeDatabase(PreparedStatement statement, String rssInstanceName, String databaseName,
+	protected void removeDatabase(Connection conn, String rssInstanceName, String databaseName,
 	                              RSSInstance rssInstance, String instanceType)
 			throws RSSManagerException, RSSDAOException, RSSDatabaseConnectionException {
 
@@ -295,7 +295,7 @@ public abstract class AbstractRSSManager implements RSSManager{
 		Database database =
 				dao.getDatabase(getEnvironmentName(), rssInstanceName, databaseName, tenantId, instanceType);
 		this.getRSSDAO().getUserDatabaseEntryDAO().removeUserDatabaseEntriesByDatabase(database.getId());
-		this.getRSSDAO().getDatabaseDAO().removeDatabase(statement, database);
+		this.getRSSDAO().getDatabaseDAO().removeDatabase(conn, database);
 
 	}
 

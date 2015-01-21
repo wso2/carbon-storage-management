@@ -19,11 +19,12 @@
 
 package org.wso2.carbon.rssmanager.core.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
-
-import java.sql.PreparedStatement;
 
 /**
  * DatabaseDAO interface class
@@ -53,7 +54,7 @@ public interface DatabaseDAO {
 	 * @throws RSSDAOException If some error occurs while removing database configuration
 	 *                         information from RSS meta data repository
 	 */
-	void removeDatabase(PreparedStatement nativeRemoveDBStatement, Database database)
+	void removeDatabase(Connection conn, Database database)
 			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
