@@ -114,7 +114,7 @@
         <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
-            <version>0.1.51</version>
+            <version>${jsch.wso2.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -187,6 +187,7 @@
     <properties>
         <secure.vault.version>1.0.0-wso2v2</secure.vault.version>
         <commons.lang.version>2.6.0.wso2v1</commons.lang.version>
+        <jsch.wso2.version>0.1.51.wso2v1</jsch.wso2.version>
     </properties>
 </project>
 
