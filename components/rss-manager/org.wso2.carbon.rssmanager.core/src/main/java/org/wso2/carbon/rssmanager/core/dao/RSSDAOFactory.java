@@ -43,7 +43,7 @@ public class RSSDAOFactory {
 	private static final Log log = LogFactory.getLog(RSSDAOFactory.class);
 
 	public enum RDBMSType {
-		MYSQL, ORACLE, SQLSERVER, POSTGRES, H2, UNKNOWN
+		MYSQL, ORACLE, SQLSERVER, POSTGRES, H2, POSTGRESQL,UNKNOWN
 	}
 
 	/**
@@ -67,6 +67,9 @@ public class RSSDAOFactory {
 				rssDAO = new SQLServerRSSDAOImpl();
 				break;
 			case POSTGRES:
+				rssDAO = new PostgresRSSDAOImpl();
+				break;
+			case POSTGRESQL:
 				rssDAO = new PostgresRSSDAOImpl();
 				break;
 			case H2:

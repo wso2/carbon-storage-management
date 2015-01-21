@@ -213,7 +213,7 @@ public class RSSManagerHelper {
     }
 
     public static String constructConnectionUrl(String url) throws Exception {
-        if(RSSManagerConstants.H2.equalsIgnoreCase(getDatabasePrefix(url))) {
+        if(RSSManagerConstants.H2.equalsIgnoreCase(getDatabasePrefix(url)) || RSSManagerConstants.POSTGRESQL.equalsIgnoreCase(getDatabasePrefix(url))) {
             return url;
         }
         return RSSManagerConstants.JDBC_PREFIX + ":" + RSSManagerHelper.getDatabasePrefix(url) +
