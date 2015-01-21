@@ -609,6 +609,10 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
         }
         RSSConfig rssConfig= RSSConfigurationManager.getInstance().getCurrentRSSConfig();
         PrivateKeyConfig privateKeyConfig = rssConfig.getPrivateKeyConfig();
+        if (privateKeyConfig == null) {
+            throw new RSSManagerException("Please configure Private key information in "
+                                          + RSSManagerConstants.RSS_CONFIG_XML_NAME);
+        }
         SSHInformationConfig sshInformation = instance.getSshInformationConfig();
         SnapshotConfig snapshotConfig = instance.getSnapshotConfig();
         SSHConnection sshConnection = new SSHConnection(sshInformation.getHost(),
