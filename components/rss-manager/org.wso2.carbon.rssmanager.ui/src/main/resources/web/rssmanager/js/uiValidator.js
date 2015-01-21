@@ -396,9 +396,9 @@ function testConnection() {
         return false;
     }
     var jdbcUrl = trim(document.getElementById('serverUrl').value);
-    var driverClass = '';
+     var driverClass = trim(document.getElementById('dataSourceClassName').value);
     if (jdbcUrl != null && jdbcUrl != '') {
-        driverClass = trim(getJdbcDriver(jdbcUrl));
+        
         if (driverClass != null && driverClass != '') {
             var url = 'rssInstanceOps_ajaxprocessor.jsp?flag=testCon&driverClass=' + encodeURIComponent(
                     driverClass) + '&serverUrl=' + encodeURIComponent(retrieveValidatedUrl(jdbcUrl)) +
