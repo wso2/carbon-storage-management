@@ -278,7 +278,7 @@ public abstract class AbstractRSSManager implements RSSManager{
 	/**
 	 * Remove database
 	 *
-	 * @param statement       Atomic boolean value for the distributed transaction
+	 * @param conn            rss instance database connection
 	 * @param rssInstanceName name of the rss instance
 	 * @param databaseName    name of the database
 	 * @param rssInstance     name of the rss instance
@@ -394,7 +394,6 @@ public abstract class AbstractRSSManager implements RSSManager{
 			String msg = "RSS instance '" + entry.getRssInstanceName() + "' does not exist";
 			throw new RSSManagerException(msg);
 		}
-		int tenantId = RSSManagerUtil.getTenantId();
 		DatabaseUser databaseUser = this.getDatabaseUser(rssInstance.getName(), entry
 				.getUsername(), instanceType);
 		UserDatabaseEntryDAO dao = this.getRSSDAO().getUserDatabaseEntryDAO();

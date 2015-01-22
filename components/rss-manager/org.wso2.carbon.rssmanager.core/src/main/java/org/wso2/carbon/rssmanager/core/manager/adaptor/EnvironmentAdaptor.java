@@ -307,11 +307,11 @@ public class EnvironmentAdaptor implements RSSManagerService {
 	}
 
 	/**
-	 * @see RSSManagerService#attachUser(String, org.wso2.carbon.rssmanager.core.dto.UserDatabaseEntryInfo, String)
+	 * @see RSSManagerService#attachUser(String, String, String, String, String, java.lang.String)
 	 */
-	public void attachUser(String environmentName, UserDatabaseEntryInfo ude, String templateName)
+	public void attachUser(String environmentName, String instanceType, String templateName, String username, String
+			databaseName, String rssInstanceName)
 			throws RSSManagerException {
-		String instanceType = RSSManagerUtil.getCleanInstanceType(ude.getType());
 		RSSAuthorizer.isUserAuthorize(RSSAuthorizationUtils.getPermissionResource(environmentName, instanceType,
 				RSSAuthorizationUtils.ATTACH_DATABASE_USER_RESOURCE, RSSAuthorizationUtils.ActionResource.ADD.getAction()));
 		// TODO fix this with a proper DatabasePrivilegeTemplate
@@ -321,24 +321,30 @@ public class EnvironmentAdaptor implements RSSManagerService {
 					.getDatabasePrivilegeTemplate(environmentName, templateName);
 		}
 		catch (RSSDatabaseConnectionException e) {
-			String msg = "Database server error attach database user" + ude.getUsername() + e.getMessage();
+			String msg = "Database server error attach database user" + username + e.getMessage();
 			handleException(msg, e);
 		}
 		DatabasePrivilegeTemplateEntry entry = entity.getEntry();
 		UserDatabaseEntry userEntity = new UserDatabaseEntry();
-		RSSManagerUtil.createDatabaseUserEntry(ude, userEntity);
+		userEntity.setDatabaseName(databaseName);
+		userEntity.setRssInstanceName(rssInstanceName);
+		userEntity.setType(instanceType);
+		userEntity.setUsername(username);
 		this.getRSSManagerAdaptor(environmentName).attachUser(userEntity, entry);
 	}
 
 	/**
-	 * @see RSSManagerService#detachUser(String, org.wso2.carbon.rssmanager.core.dto.UserDatabaseEntryInfo)
+	 * @see RSSManagerService#detachUser(String, String, String, String, java.lang.String)
 	 */
-	public void detachUser(String environmentName, UserDatabaseEntryInfo databaseEntryInfo) throws RSSManagerException {
-		String instanceType = RSSManagerUtil.getCleanInstanceType(databaseEntryInfo.getType());
+	public void detachUser(String environmentName, String databaseName, String instanceType, String username, String rssInstanceName) throws
+			RSSManagerException {
 		RSSAuthorizer.isUserAuthorize(RSSAuthorizationUtils.getPermissionResource(environmentName, instanceType,
 				RSSAuthorizationUtils.ATTACH_DATABASE_USER_RESOURCE, RSSAuthorizationUtils.ActionResource.DELETE.getAction()));
 		UserDatabaseEntry entity = new UserDatabaseEntry();
-		RSSManagerUtil.createDatabaseUserEntry(databaseEntryInfo, entity);
+		entity.setDatabaseName(databaseName);
+		entity.setRssInstanceName(rssInstanceName);
+		entity.setType(instanceType);
+		entity.setUsername(username);
 		this.getRSSManagerAdaptor(environmentName).detachUser(entity);
 	}
 

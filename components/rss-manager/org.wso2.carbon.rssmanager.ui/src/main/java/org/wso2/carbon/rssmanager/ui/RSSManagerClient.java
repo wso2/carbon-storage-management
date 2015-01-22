@@ -329,12 +329,7 @@ public class RSSManagerClient {
 	public void attachUserToDatabase(String environmentName, String rssInstance, String databaseName, String username,
 	                                 String templateName, String type) throws AxisFault {
 		try {
-			UserDatabaseEntryInfo entry = new UserDatabaseEntryInfo();
-			entry.setRssInstanceName(rssInstance);
-			entry.setDatabaseName(databaseName);
-			entry.setUsername(username);
-			entry.setType(type);
-			stub.attachUser(environmentName, entry, templateName);
+			stub.attachUser(environmentName, type, templateName, username, databaseName, rssInstance);
 		} catch (Exception e) {
 			String msg = bundle.getString("rss.manager.failed.to.attach.user.to.database") + " '" + databaseName + "' : " + e.getMessage();
 			handleException(msg, e);
@@ -344,13 +339,7 @@ public class RSSManagerClient {
 	public void detachUserFromDatabase(String environmentName, String rssInstance, String databaseName, String username, String type)
 	                                                                                                                    throws AxisFault {
 		try {
-			UserDatabaseEntryInfo entry = new UserDatabaseEntryInfo();
-			entry.setDatabaseName(databaseName);
-			entry.setRssInstanceName(rssInstance);
-			entry.setUsername(username);
-			entry.setType(type);
-
-			stub.detachUser(environmentName, entry);
+			stub.detachUser(environmentName, databaseName, type, username, rssInstance);
 		} catch (Exception e) {
 			String msg = bundle.getString("rss.manager.failed.to.detach.user.from.database") + " '" + databaseName + "' : " + e.getMessage();
 			handleException(msg, e);
