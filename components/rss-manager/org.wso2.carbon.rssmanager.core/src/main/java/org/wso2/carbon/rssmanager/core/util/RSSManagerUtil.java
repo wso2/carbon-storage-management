@@ -715,22 +715,6 @@ public final class RSSManagerUtil {
     }
 
     /**
-     * create database user entry object from database user entry info to be use in internally
-     */
-    public static void createDatabaseUserEntry(UserDatabaseEntryInfo databaseEntryInfo, UserDatabaseEntry entry) {
-        if (databaseEntryInfo == null || entry == null) {
-            return;
-        }
-        entry.setDatabaseName(databaseEntryInfo.getDatabaseName());
-        DatabasePrivilegeSet privilegesEntity = new MySQLPrivilegeSet();
-        createDatabasePrivilegeSet(databaseEntryInfo.getPrivileges(), privilegesEntity);
-        entry.setPrivileges(privilegesEntity);
-        entry.setRssInstanceName(databaseEntryInfo.getRssInstanceName());
-        entry.setType(databaseEntryInfo.getType());
-        entry.setUsername(databaseEntryInfo.getUsername());
-    }
-
-    /**
      * create database privilege set object from database privilege set info to be use in internally
      */
     public static void createDatabasePrivilegeSet(DatabasePrivilegeSetInfo privilegeSetInfo,

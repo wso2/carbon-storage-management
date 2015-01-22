@@ -371,13 +371,13 @@ public class RSSManagerServiceImpl implements RSSManagerService {
 	/**
 	 * @see RSSManagerService#attachUser
 	 */
-	public void attachUser(String environmentName, UserDatabaseEntryInfo ude,
-	                       String templateName) throws RSSManagerException {
+	public void attachUser(String environmentName, String instanceType,
+	                       String templateName, String username, String databaseName, String rssInstanceName) throws RSSManagerException {
 		try {
-			this.getEnvironmentAdaptor().attachUser(environmentName, ude, templateName);
+			this.getEnvironmentAdaptor().attachUser(environmentName, instanceType, templateName, username, databaseName, rssInstanceName);
 		} catch (RSSManagerException e) {
-			String msg = "Error occurred while attaching database user '" + ude.getUsername() +
-			             "' to the database '" + ude.getDatabaseName() + "' with the database user " +
+			String msg = "Error occurred while attaching database user '" + username +
+			             "' to the database '" + databaseName + "' with the database user " +
 			             "privileges define in the database privilege template '" + templateName + "'";
 			handleException(msg, e);
 		}
@@ -386,13 +386,13 @@ public class RSSManagerServiceImpl implements RSSManagerService {
 	/**
 	 * @see RSSManagerService#detachUser
 	 */
-	public void detachUser(String environmentName,
-	                       UserDatabaseEntryInfo databaseEntryInfo) throws RSSManagerException {
+	public void detachUser(String environmentName, String databaseName, String instanceType, String username, String rssInstanceName) throws
+			RSSManagerException {
 		try {
-			this.getEnvironmentAdaptor().detachUser(environmentName, databaseEntryInfo);
+			this.getEnvironmentAdaptor().detachUser(environmentName, databaseName, instanceType, username, rssInstanceName);
 		} catch (RSSManagerException e) {
-			String msg = "Error occurred while detaching the database user '" + databaseEntryInfo.getUsername() +
-			             "' from the database '" + databaseEntryInfo.getDatabaseName() + "'";
+			String msg = "Error occurred while detaching the database user '" + username +
+			             "' from the database '" + databaseName + "'";
 			handleException(msg, e);
 		}
 	}
