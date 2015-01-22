@@ -279,7 +279,7 @@ public abstract class UserDefinedRSSManager extends AbstractRSSManager {
 			rssInstanceName = getRSSDAO().getDatabaseDAO()
 					.resolveRSSInstanceNameByDatabase(getEnvironmentName(),
 							databaseName,
-							RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM,
+							RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED,
 							tenantId);
 			RSSInstance rssInstance = this.getEnvironment().getRSSInstance(rssInstanceName);
 			if (rssInstance == null) {
@@ -291,8 +291,8 @@ public abstract class UserDefinedRSSManager extends AbstractRSSManager {
 			Database database = getDatabaseDAO().getDatabase(this.getEnvironmentName(), rssInstanceName,
 					databaseName, tenantId,
 					RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
-			DatabaseUser databaseUser = getDatabaseUserDAO().getSystemDatabaseUser(this.getEnvironmentName(),
-					username, tenantId,
+			DatabaseUser databaseUser = getDatabaseUserDAO().getUserDefineDatabaseUser(this.getEnvironmentName(),
+					rssInstanceName, username, tenantId,
 					RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
 			UserDatabaseEntry userDatabaseEntry = getUserDatabaseEntryDAO().getUserDatabaseEntry(database.getId(),
 					databaseUser.getId());
