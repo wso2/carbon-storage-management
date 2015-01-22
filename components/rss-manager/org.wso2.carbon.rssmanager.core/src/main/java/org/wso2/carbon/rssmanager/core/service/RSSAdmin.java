@@ -261,17 +261,17 @@ public class RSSAdmin extends AbstractAdmin implements RSSManagerService {
 	/**
 	 * @see RSSManagerService#attachUser
 	 */
-	public void attachUser(String environmentName, UserDatabaseEntryInfo ude,
-	                       String templateName) throws RSSManagerException {
-		this.getEnvironmentAdaptor().attachUser(environmentName, ude, templateName);
+	public void attachUser(String environmentName, String instanceType,
+	                       String templateName, String username, String databaseName, String rssInstanceName) throws RSSManagerException {
+		this.getEnvironmentAdaptor().attachUser(environmentName, instanceType, templateName, username, databaseName, rssInstanceName);
 	}
 
 	/**
 	 * @see RSSManagerService#detachUser
 	 */
-	public void detachUser(String environmentName,
-	                       UserDatabaseEntryInfo databaseEntryInfo) throws RSSManagerException {
-		this.getEnvironmentAdaptor().detachUser(environmentName, databaseEntryInfo);
+	public void detachUser(String environmentName, String databaseName, String instanceType, String username, String rssInstanceName) throws
+			RSSManagerException {
+		this.getEnvironmentAdaptor().detachUser(environmentName, databaseName, instanceType, username, rssInstanceName);
 	}
 
 	/**

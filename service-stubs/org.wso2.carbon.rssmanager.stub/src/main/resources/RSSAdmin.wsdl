@@ -394,7 +394,10 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="databaseEntryInfo" nillable="true" type="ax2349:UserDatabaseEntryInfo"></xs:element>
+                        <xs:element minOccurs="0" name="databaseName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="instanceType" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="rssInstanceName" nillable="true" type="xs:string"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -426,8 +429,11 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="environmentName" nillable="true" type="xs:string"></xs:element>
-                        <xs:element minOccurs="0" name="ude" nillable="true" type="ax2349:UserDatabaseEntryInfo"></xs:element>
+                        <xs:element minOccurs="0" name="instanceType" nillable="true" type="xs:string"></xs:element>
                         <xs:element minOccurs="0" name="templateName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="databaseName" nillable="true" type="xs:string"></xs:element>
+                        <xs:element minOccurs="0" name="rssInstanceName" nillable="true" type="xs:string"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -2182,13 +2188,13 @@
     </wsdl:binding>
     <wsdl:service name="RSSAdmin">
         <wsdl:port name="RSSAdminHttpsSoap11Endpoint" binding="ns:RSSAdminSoap11Binding">
-            <soap:address location="https://192.168.1.3:9443/services/RSSAdmin.RSSAdminHttpsSoap11Endpoint/"></soap:address>
+            <soap:address location="https://10.100.5.81:9443/services/RSSAdmin.RSSAdminHttpsSoap11Endpoint/"></soap:address>
         </wsdl:port>
         <wsdl:port name="RSSAdminHttpsSoap12Endpoint" binding="ns:RSSAdminSoap12Binding">
-            <soap12:address location="https://192.168.1.3:9443/services/RSSAdmin.RSSAdminHttpsSoap12Endpoint/"></soap12:address>
+            <soap12:address location="https://10.100.5.81:9443/services/RSSAdmin.RSSAdminHttpsSoap12Endpoint/"></soap12:address>
         </wsdl:port>
         <wsdl:port name="RSSAdminHttpsEndpoint" binding="ns:RSSAdminHttpBinding">
-            <http:address location="https://192.168.1.3:9443/services/RSSAdmin.RSSAdminHttpsEndpoint/"></http:address>
+            <http:address location="https://10.100.5.81:9443/services/RSSAdmin.RSSAdminHttpsEndpoint/"></http:address>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

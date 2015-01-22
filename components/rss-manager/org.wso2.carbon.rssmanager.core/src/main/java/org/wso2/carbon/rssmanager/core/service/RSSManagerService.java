@@ -213,21 +213,27 @@ public interface RSSManagerService {
 	 * Attach database user to a database
 	 *
 	 * @param environmentName name of the environment which database user and database resides
-	 * @param ude             user and database privileges template properties in Obj
+	 * @param username        database user's username
+	 * @param databaseName    name of the database which user going to attached
+	 * @param instanceType    instance type of the database user and database
 	 * @param templateName    database template name
 	 * @throws RSSManagerException if error occurred when attaching database user
 	 */
-	void attachUser(String environmentName, UserDatabaseEntryInfo ude, String templateName)
+	void attachUser(String environmentName, String instanceType, String templateName, String username, String
+			databaseName, String rssInstanceName)
 			throws RSSManagerException;
 
 	/**
 	 * Deattach user from the database
 	 *
 	 * @param environmentName name of the environment which database user resides
-	 * @param databaseEntryInfo             user and database privileges template properties in Obj
+	 * @param username        database user's username
+	 * @param databaseName    name of the database which user going to de-attached
+	 * @param instanceType    instance type of the database user and database
 	 * @throws RSSManagerException if error occurred when de-attaching database user
 	 */
-	void detachUser(String environmentName, UserDatabaseEntryInfo databaseEntryInfo) throws RSSManagerException;
+	void detachUser(String environmentName, String databaseName, String instanceType, String username, String rssInstanceName) throws
+			RSSManagerException;
 
 	/**
 	 * Get users attached to the database
