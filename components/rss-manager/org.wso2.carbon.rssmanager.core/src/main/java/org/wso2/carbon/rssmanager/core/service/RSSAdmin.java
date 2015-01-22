@@ -18,12 +18,17 @@
  */
 package org.wso2.carbon.rssmanager.core.service;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
+import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.common.exception.RSSManagerCommonException;
 import org.wso2.carbon.rssmanager.core.config.RSSConfigurationManager;
 import org.wso2.carbon.rssmanager.core.dto.DatabaseInfo;
@@ -35,10 +40,6 @@ import org.wso2.carbon.rssmanager.core.dto.UserDatabaseEntryInfo;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.manager.adaptor.EnvironmentAdaptor;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
 public class RSSAdmin extends AbstractAdmin implements RSSManagerService {
 
@@ -212,7 +213,7 @@ public class RSSAdmin extends AbstractAdmin implements RSSManagerService {
 	public void addDatabasePrivilegeTemplate(String environmentName,
 	                                         DatabasePrivilegeTemplateInfo template) throws RSSManagerException {
 		String tempplateName = template.getName().trim();
-		if (!StringUtils.isAlphanumeric(tempplateName)) {
+		if (!RSSManagerUtil.isValidTemplateName(tempplateName)) {
 			String msg = "Only Alphanumeric characters and underscores "
 			             + "are allowed in database privilege template name";
 			log.error(msg);
@@ -431,7 +432,7 @@ public class RSSAdmin extends AbstractAdmin implements RSSManagerService {
 			PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantId(tenantId);
 
 			Class.forName(driverClass).newInstance();
-			conn = DriverManager.getConnection(jdbcURL, username, password);
+			conn = DriverManager.getConnection(RSSManagerUtil.createDatabaseUrlForPostgresSQL(jdbcURL,RSSManagerConstants.POSTGRES.toLowerCase()), username, password);
 			if (conn == null) {
 				String msg = "Unable to establish a JDBC connection with the database server";
 				throw new RSSManagerException(msg);

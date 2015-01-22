@@ -109,7 +109,7 @@ public class TenantDBInfoReceiver {
 			                                                        .getRSSInstances(env);
 			if (rssInstances != null && rssInstances.length > 0) {
 				for (RSSInstanceInfo instance : rssInstances) {
-					RSSServer rssServer = new RSSServer((instance.getName()+instance.getServerURL()),
+					RSSServer rssServer = new RSSServer((instance.getRssInstanceName()+instance.getServerURL()),
 					                                    instance.getServerURL(), instance.getDbmsType(),
 					                                    instance.getUsername(), instance.getPassword());
 					rssServers.add(rssServer);

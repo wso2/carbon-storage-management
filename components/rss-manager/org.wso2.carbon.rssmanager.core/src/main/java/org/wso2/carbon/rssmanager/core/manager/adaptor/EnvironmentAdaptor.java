@@ -25,6 +25,7 @@ import org.wso2.carbon.ndatasource.core.CarbonDataSource;
 import org.wso2.carbon.ndatasource.core.DataSourceMetaInfo;
 import org.wso2.carbon.rssmanager.core.authorize.RSSAuthorizationUtils;
 import org.wso2.carbon.rssmanager.core.authorize.RSSAuthorizer;
+import org.wso2.carbon.rssmanager.core.config.RSSConfig;
 import org.wso2.carbon.rssmanager.core.config.RSSConfigurationManager;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.DatabaseInfo;
@@ -77,7 +78,7 @@ public class EnvironmentAdaptor implements RSSManagerService {
 			entity = this.getEnvironmentManager().addRSSInstance(entity);
 		}
 		catch (RSSDatabaseConnectionException e) {
-			String msg = "Database server error at adding rss instance " + rssInstance.getName() + e.getMessage();
+			String msg = "Database server error at adding rss instance " + rssInstance.getRssInstanceName() + e.getMessage();
 			handleException(msg, e);
 		}
 		environmentManager.getEnvironment(rssInstance.getEnvironmentName()).getDSWrapperRepository().addRSSInstanceDSWrapper(entity);
@@ -102,6 +103,9 @@ public class EnvironmentAdaptor implements RSSManagerService {
 	 */
 	public void updateRSSInstance(String environmentName, RSSInstanceInfo rssInstance)
 			throws RSSManagerException {
+		if(RSSManagerUtil.isRSSInstanceFromConfig(rssInstance.getRssInstanceName(), environmentName)) {
+			throw new RSSManagerException("RSS Instances define in the configuration cannot be edited");
+		}
 		String instanceType = RSSManagerUtil.getCleanInstanceType(rssInstance.getInstanceType());
 		RSSAuthorizer.isUserAuthorize(RSSAuthorizationUtils.getPermissionResource(environmentName, instanceType,
 				RSSAuthorizationUtils.RSSINSTANCE_RESOURCE, RSSAuthorizationUtils.ActionResource.EDIT.getAction()));
@@ -111,11 +115,11 @@ public class EnvironmentAdaptor implements RSSManagerService {
 			this.environmentManager.updateRSSInstance(environmentName, entity);
 		}
 		catch (RSSDatabaseConnectionException e) {
-			String msg = "Database server error at updating rss instance" + rssInstance.getName() + e.getMessage();
+			String msg = "Database server error at updating rss instance" + rssInstance.getRssInstanceName() + e.getMessage();
 			handleException(msg, e);
 		}
-		environmentManager.getEnvironment(environmentName).getDSWrapperRepository().removeRSSInstanceDSWrapper(rssInstance.getName());
-		environmentManager.getEnvironment(environmentName).removeRSSInstance(rssInstance.getName());
+		environmentManager.getEnvironment(environmentName).getDSWrapperRepository().removeRSSInstanceDSWrapper(rssInstance.getRssInstanceName());
+		environmentManager.getEnvironment(environmentName).removeRSSInstance(rssInstance.getRssInstanceName());
 		environmentManager.getEnvironment(rssInstance.getEnvironmentName()).getDSWrapperRepository().addRSSInstanceDSWrapper(entity);
 		environmentManager.getEnvironment(rssInstance.getEnvironmentName()).addRSSInstance(entity);
 	}

@@ -56,10 +56,12 @@ public class EnvironmentDAOImpl implements EnvironmentDAO {
 		PreparedStatement statement = null;
 		try {
 			conn = getDataSourceConnection();
+			conn.setAutoCommit(false);
 			String createEnvironmentQuery = "INSERT INTO RM_ENVIRONMENT(NAME) VALUES (?)";
 			statement = conn.prepareStatement(createEnvironmentQuery);
 			statement.setString(1, environment.getName());
 			statement.executeUpdate();
+			conn.commit();
 		} catch (SQLException e) {
 			String msg = "Failed to add environment " + environment.getName() + "to meta repository";
 			handleException(msg, e);

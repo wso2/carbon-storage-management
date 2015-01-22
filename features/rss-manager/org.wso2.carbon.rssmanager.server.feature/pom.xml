@@ -34,6 +34,11 @@
 	       <artifactId>asm</artifactId>
 	       <version>${asm.wso2.version}</version>
 	</dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>${jsch.wso2.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -90,6 +95,9 @@
                                 <bundleDef>
                                     org.wso2.carbon:org.wso2.carbon.rssmanager.common:${carbon.platform.version}
                                 </bundleDef>
+                                <bundleDef>
+                                    com.jcraft:jsch:${jsch.wso2.version}
+                                </bundleDef>
                             </bundles>
                         </configuration>
                     </execution>
@@ -119,6 +127,7 @@
 
    <properties>
         <asm.wso2.version>3.1.wso2v1</asm.wso2.version>
+        <jsch.wso2.version>0.1.51.wso2v1</jsch.wso2.version>
    </properties>
 
 </project>

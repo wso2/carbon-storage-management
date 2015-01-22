@@ -94,7 +94,7 @@ public class DatabaseUserInfo implements Serializable {
 			return false;
 		}
 		DatabaseUserInfo that = (DatabaseUserInfo) o;
-		if (!username.equals(that.username)) {
+		if (!username.equals(that.username) && !type.equals(that.type)) {
 			return false;
 		}
 		return true;
@@ -103,7 +103,7 @@ public class DatabaseUserInfo implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime +result + ((username == null) ? 0 : username.hashCode());
+		result = prime + result + ((username == null) ? 0 : username.hashCode()) + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
 }

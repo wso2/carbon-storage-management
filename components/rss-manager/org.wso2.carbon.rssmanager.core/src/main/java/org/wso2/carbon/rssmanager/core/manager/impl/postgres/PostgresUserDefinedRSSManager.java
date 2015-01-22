@@ -121,7 +121,9 @@ public class PostgresUserDefinedRSSManager extends UserDefinedRSSManager {
 	public void removeDatabase(String rssInstanceName,
 	                           String databaseName) throws RSSManagerException {
 		Connection conn = null;
+		Connection txConn = null;
 		PreparedStatement nativeRemoveDBStatement = null;
+		PreparedStatement nativeDetachUserStatement = null;
 		RSSInstance rssInstance = null;
 		try {
 			rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
@@ -135,20 +137,28 @@ public class PostgresUserDefinedRSSManager extends UserDefinedRSSManager {
 			throw new RSSManagerException(msg);
 		}
 		try {
+			txConn = RSSManagerUtil.getTxConnection();
 		    /* Validating database name to avoid any possible SQL injection attack */
 			RSSManagerUtil.checkIfParameterSecured(databaseName);
 			conn = getConnection(rssInstance.getName());
 			String removeDBQuery = "DROP DATABASE " + databaseName;
+			String detachUserQuery = "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '"+databaseName+"'   AND pid <> pg_backend_pid()";
 			nativeRemoveDBStatement = conn.prepareStatement(removeDBQuery);
-			super.removeDatabase(nativeRemoveDBStatement, rssInstance.getName(), databaseName, rssInstance,
+			nativeDetachUserStatement = conn.prepareStatement(detachUserQuery);
+			super.removeDatabase(txConn, rssInstance.getName(), databaseName, rssInstance,
 			                     RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+			nativeDetachUserStatement.execute();
+			nativeRemoveDBStatement.execute();
+			RSSManagerUtil.commitTx(txConn);
 		} catch (Exception e) {
 			String msg = "Error while dropping the database '" + databaseName +
 			             "' on RSS " + "instance '" + rssInstance.getName() + "' : " +
 			             e.getMessage();
+			RSSManagerUtil.rollBackTx(txConn);
 			handleException(msg, e);
 		} finally {
 			RSSManagerUtil.cleanupResources(null, nativeRemoveDBStatement, conn);
+			RSSManagerUtil.cleanupResources(null, nativeDetachUserStatement, txConn);
 		}
 	}
 
@@ -190,22 +200,18 @@ public class PostgresUserDefinedRSSManager extends UserDefinedRSSManager {
 	/**
 	 * @see RSSManager#removeDatabaseUser(String, String)
 	 */
-	public void removeDatabaseUser(String type, String username) throws RSSManagerException {
+	public void removeDatabaseUser(String rssInstanceName, String username) throws RSSManagerException {
 		Connection conn = null;
 		PreparedStatement dropOwnedStmt = null;
 		PreparedStatement dropUserStmt = null;
-		int tenantId = RSSManagerUtil.getTenantId();
 		try {
-			String rssInstanceName = getDatabaseUserDAO().resolveRSSInstanceNameByUser(this.getEnvironmentName(),
-			                                                                           RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED,
-			                                                                           username, tenantId);
 			conn = getConnection(rssInstanceName);
 			String sql = "drop owned by " + username;
 			dropOwnedStmt = conn.prepareStatement(sql);
 			dropUserStmt = conn.prepareStatement(" drop user " + username);
 			dropOwnedStmt.execute();
 			dropUserStmt.execute();
-			super.removeDatabaseUser(null, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+			super.removeDatabaseUser(null, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED, rssInstanceName);
 		} catch (Exception e) {
 			String msg = "Error while dropping the database user '" + username +
 			             "' on RSS instances : " + e.getMessage();

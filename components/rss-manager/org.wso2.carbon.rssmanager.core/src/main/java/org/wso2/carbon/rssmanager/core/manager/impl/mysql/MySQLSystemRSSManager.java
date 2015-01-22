@@ -116,6 +116,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
     public void removeDatabase(String rssInstanceName,
                                String databaseName) throws RSSManagerException {
         Connection conn = null;
+        Connection txConn = null;
         PreparedStatement nativeRemoveDBStatement = null;
         RSSInstance rssInstance = null;
         try {
@@ -130,20 +131,25 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
             throw new RSSManagerException(msg);
         }
         try {
+        	txConn = RSSManagerUtil.getTxConnection();
             /* Validating database name to avoid any possible SQL injection attack */
             RSSManagerUtil.checkIfParameterSecured(databaseName);
             conn = getConnection(rssInstance.getName());
             String removeDBQuery = "DROP DATABASE `" + databaseName + "`";
             nativeRemoveDBStatement = conn.prepareStatement(removeDBQuery);
-            super.removeDatabase(nativeRemoveDBStatement, rssInstance.getName(), databaseName, rssInstance,
+            super.removeDatabase(txConn, rssInstance.getName(), databaseName, rssInstance,
                                  RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            nativeRemoveDBStatement.execute();
+            RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {
             String msg = "Error while dropping the database '" + databaseName +
                          "' on RSS " + "instance '" + rssInstance.getName() + "' : " +
                          e.getMessage();
+            RSSManagerUtil.rollBackTx(txConn);
             handleException(msg, e);
         } finally {
             RSSManagerUtil.cleanupResources(null, nativeRemoveDBStatement, conn);
+            RSSManagerUtil.cleanupResources(null, null, txConn);
         }
     }
 
@@ -232,7 +238,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
     /**
      * @see RSSManager#removeDatabaseUser(String, String)
      */
-    public void removeDatabaseUser(String type, String username) throws RSSManagerException {
+    public void removeDatabaseUser(String rssInstanceName, String username) throws RSSManagerException {
         Connection conn = null;
         PreparedStatement nativeRemoveDBUserStatement = null;
         try {
@@ -240,7 +246,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
                     this.getEnvironmentName(), MultitenantConstants.SUPER_TENANT_ID);
             //check whether rss instances are available
             checkConnections(rssInstances);
-            super.removeDatabaseUser(null, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            super.removeDatabaseUser(null, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
             for (RSSInstance rssInstance : rssInstances) {
                 try {
                     conn = getConnection(rssInstance.getName());
@@ -603,6 +609,10 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
         }
         RSSConfig rssConfig= RSSConfigurationManager.getInstance().getCurrentRSSConfig();
         PrivateKeyConfig privateKeyConfig = rssConfig.getPrivateKeyConfig();
+        if (privateKeyConfig == null) {
+            throw new RSSManagerException("Please configure Private key information in "
+                                          + RSSManagerConstants.RSS_CONFIG_XML_NAME);
+        }
         SSHInformationConfig sshInformation = instance.getSshInformationConfig();
         SnapshotConfig snapshotConfig = instance.getSnapshotConfig();
         SSHConnection sshConnection = new SSHConnection(sshInformation.getHost(),

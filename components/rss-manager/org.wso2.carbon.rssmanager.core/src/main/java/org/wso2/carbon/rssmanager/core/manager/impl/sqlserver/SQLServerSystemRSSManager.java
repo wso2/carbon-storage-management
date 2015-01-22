@@ -117,6 +117,7 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
 	public void removeDatabase(String rssInstanceName,
 	                           String databaseName) throws RSSManagerException {
 		Connection conn = null;
+		Connection txConn = null;
 		PreparedStatement nativeRemoveDBStatement = null;
 		RSSInstance rssInstance = null;
 		try {
@@ -131,20 +132,25 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
 			throw new RSSManagerException(msg);
 		}
 		try {
+			txConn = RSSManagerUtil.getTxConnection();
 	        /* Validating database name to avoid any possible SQL injection attack */
 			RSSManagerUtil.checkIfParameterSecured(databaseName);
 			conn = getConnection(rssInstance.getName());
 			String removeDBQuery = "DROP DATABASE " + databaseName;
 			nativeRemoveDBStatement = conn.prepareStatement(removeDBQuery);
-			super.removeDatabase(nativeRemoveDBStatement, rssInstance.getName(), databaseName, rssInstance,
+			super.removeDatabase(txConn, rssInstance.getName(), databaseName, rssInstance,
 			                     RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+			nativeRemoveDBStatement.execute();
+			RSSManagerUtil.commitTx(txConn);
 		} catch (Exception e) {
 			String msg = "Error while dropping the database '" + databaseName +
 			             "' on RSS " + "instance '" + rssInstance.getName() + "' : " +
 			             e.getMessage();
+			RSSManagerUtil.rollBackTx(txConn);
 			handleException(msg, e);
 		} finally {
 			RSSManagerUtil.cleanupResources(null, nativeRemoveDBStatement, conn);
+			RSSManagerUtil.cleanupResources(null, null, txConn);
 		}
 	}
 
@@ -226,7 +232,7 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
 			int tenantId = RSSManagerUtil.getTenantId();
 			RSSInstance[] rssInstances = getEnvironmentManagementDAO().getRSSInstanceDAO().getSystemRSSInstances(
 					this.getEnvironmentName(), MultitenantConstants.SUPER_TENANT_ID);
-			super.removeDatabaseUser(null, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+			super.removeDatabaseUser(null, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
 			for (RSSInstance rssInstance : rssInstances) {
 				try {
 					conn = getConnection(rssInstance.getName());

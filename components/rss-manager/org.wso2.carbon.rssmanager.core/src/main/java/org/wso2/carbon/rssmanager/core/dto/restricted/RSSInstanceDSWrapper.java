@@ -19,12 +19,15 @@
 
 package org.wso2.carbon.rssmanager.core.dto.restricted;
 
+import org.apache.commons.lang.StringUtils;
 import org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration;
+import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 
 import javax.sql.DataSource;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -40,7 +43,7 @@ public class RSSInstanceDSWrapper {
 	private RSSInstance rssInstance;
 
 	private final ConcurrentHashMap<String, RSSDatabaseDSWrapper> dbDSMap = new ConcurrentHashMap<String, RSSDatabaseDSWrapper>();
-
+	
 	public RSSInstanceDSWrapper(RSSInstance rssInstance) {
 		this.name = rssInstance.getName();
 		this.rssInstance = rssInstance;
@@ -85,7 +88,12 @@ public class RSSInstanceDSWrapper {
 	 */
 	private DataSource initDataSource() {
 		org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration config = new RDBMSConfiguration();
-		config.setUrl(getRssInstance().getServerURL());
+		
+		if(RSSManagerConstants.POSTGRES.equalsIgnoreCase(getRssInstance().getDbmsType()) || RSSManagerConstants.POSTGRESQL.equalsIgnoreCase(getRssInstance().getDbmsType())){
+			config.setUrl(RSSManagerUtil.createDatabaseUrlForPostgresSQL(getRssInstance().getServerURL(),RSSManagerConstants.POSTGRES.toLowerCase()));
+		}else{
+			config.setUrl(getRssInstance().getServerURL());
+		}		
 		config.setUsername(getRssInstance().getAdminUserName());
 		config.setPassword(getRssInstance().getAdminPassword());
 		config.setDriverClassName(getRssInstance().getDriverClassName());

@@ -265,7 +265,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 		try {
 			conn = getDataSourceConnection();//aquire data source connection
 			String getDatabaseUserQuery = "SELECT RM_DATABASE_USER.ID, RM_DATABASE_USER.USERNAME, RM_DATABASE_USER.TYPE," +
-			                              "RM_DATABASE_USER.TENANT_ID FROM RM_DATABASE_USER INNER JOIN RM_USER_DATABASE_ENTRY " +
+			                              "RM_DATABASE_USER.TENANT_ID FROM RM_DATABASE_USER , RM_USER_DATABASE_ENTRY " +
 			                              "WHERE RM_DATABASE_USER.ID=RM_USER_DATABASE_ENTRY.DATABASE_USER_ID AND RM_DATABASE_USER.ENVIRONMENT_ID=? " +
 			                              "AND RM_DATABASE_USER.TYPE=? AND RM_DATABASE_USER.TENANT_ID=? AND RM_USER_DATABASE_ENTRY.DATABASE_ID=?";
 			statement = conn.prepareStatement(getDatabaseUserQuery);
@@ -311,7 +311,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 		try {
 			conn = getDataSourceConnection();//acquire data source connection
 			String getAvailableDatabaseUserQuery = "SELECT RM_DATABASE_USER.ID, RM_DATABASE_USER.USERNAME, RM_DATABASE_USER.TYPE, RM_DATABASE_USER.TENANT_ID " +
-			                              "FROM RM_DATABASE_USER INNER JOIN RM_USER_INSTANCE_ENTRY " +
+			                              "FROM RM_DATABASE_USER  , RM_USER_INSTANCE_ENTRY " +
 			                              "WHERE RM_DATABASE_USER.ID=RM_USER_INSTANCE_ENTRY.DATABASE_USER_ID AND RM_DATABASE_USER.ENVIRONMENT_ID=? " +
 			                              "AND RM_DATABASE_USER.TYPE=? AND RM_DATABASE_USER.TENANT_ID=? AND RM_USER_INSTANCE_ENTRY.RSS_INSTANCE_ID=? " +
 			                              "AND RM_DATABASE_USER.ID NOT IN (SELECT DATABASE_USER_ID FROM RM_USER_DATABASE_ENTRY WHERE DATABASE_ID=?)";

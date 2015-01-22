@@ -396,12 +396,12 @@ function testConnection() {
         return false;
     }
     var jdbcUrl = trim(document.getElementById('serverUrl').value);
-    var driverClass = '';
+     var driverClass = trim(document.getElementById('dataSourceClassName').value);
     if (jdbcUrl != null && jdbcUrl != '') {
-        driverClass = trim(getJdbcDriver(jdbcUrl));
+        
         if (driverClass != null && driverClass != '') {
             var url = 'rssInstanceOps_ajaxprocessor.jsp?flag=testCon&driverClass=' + encodeURIComponent(
-                    driverClass) + '&serverUrl=' + encodeURIComponent(retrieveValidatedUrl(jdbcUrl)) +
+                    driverClass) + '&serverUrl=' + encodeURIComponent(jdbcUrl) +
                     '&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(
                     password);
             sessionAwareFunction(function() {
@@ -414,11 +414,7 @@ function testConnection() {
     return false;
 }
 
-function retrieveValidatedUrl(url) {
-    var prefix = url.split(':')[1];
-    var hostname = url.split('//')[1].split('/')[0];
-    return 'jdbc:' + prefix + "://" + hostname;
-}
+
 
 function dropDatabaseUser(rssInstanceName, username, envName, instanceType) {
     function forwardToDel() {
@@ -768,7 +764,7 @@ function displayMessages(msg) {
     if (msg.search(/has been successfully created/) != -1) {
         jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'rssInstances.jsp';
+                window.location = 'rssInstances.jsp?ordinal=1';
             }
 
             CARBON.showInfoDialog(msg, handleOK);
@@ -776,7 +772,7 @@ function displayMessages(msg) {
     } else if (msg.search(/has been successfully edited/) != -1) {
         jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'rssInstances.jsp';
+                window.location = 'rssInstances.jsp?ordinal=1';
             }
 
             CARBON.showInfoDialog(msg, handleOK);
@@ -784,7 +780,7 @@ function displayMessages(msg) {
     } else if (msg.search(/has been successfully dropped/) != -1) {
         jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'rssInstances.jsp';
+                window.location = 'rssInstances.jsp?ordinal=1';
             }
 
             CARBON.showInfoDialog(msg, handleOK);
@@ -792,7 +788,7 @@ function displayMessages(msg) {
     } else if (msg.search(/Failed to drop database server instance/) != -1) {
         jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'rssInstances.jsp';
+                window.location = 'rssInstances.jsp?ordinal=1';
             }
 
             CARBON.showErrorDialog(msg, handleOK);
@@ -800,7 +796,7 @@ function displayMessages(msg) {
     } else if (msg.search(/Failed to create database server instance/) != -1) {
         jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'rssInstances.jsp';
+                window.location = 'rssInstances.jsp?ordinal=1';
             }
 
             CARBON.showErrorDialog(msg, handleOK);
@@ -808,7 +804,7 @@ function displayMessages(msg) {
     } else {
         jQuery(document).ready(function() {
             function handleOK() {
-                window.location = 'rssInstances.jsp';
+                window.location = 'rssInstances.jsp?ordinal=1';
             }
 
             CARBON.showErrorDialog(msg, handleOK);
