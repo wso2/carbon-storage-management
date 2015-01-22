@@ -1,3 +1,8 @@
+function resetPermissions(){
+    location.href = "#permissionArea";
+    window.location.reload();
+}
+
 function deleteKeyspace(index) {
     var opCount = document.getElementById("keyspaceCount");
     opCount.value = parseInt(opCount.value) - 1;

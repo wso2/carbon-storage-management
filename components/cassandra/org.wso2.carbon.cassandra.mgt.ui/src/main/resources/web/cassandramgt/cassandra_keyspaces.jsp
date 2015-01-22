@@ -325,8 +325,8 @@
                             <td class="buttonRow" colspan="2" style="padding-top:10px;">
                                <input class="button" type="submit" value="Save">
                                <input id="cancelKSButton" class="button" name="cancelKSButton" type="button" href="#"
-                                       onclick="location.href = 'cassandra_keyspaces.jsp?region=region1&item=cassandra_ks_list_menu#permissionArea';"
-                                       value="<fmt:message key="cassandra.actions.cancel"/>"/>
+                                       onclick="resetPermissions()"
+                                       value="<fmt:message key="cassandra.actions.reset"/>"/>
                             </td>
                         </tr>
                     </tbody>

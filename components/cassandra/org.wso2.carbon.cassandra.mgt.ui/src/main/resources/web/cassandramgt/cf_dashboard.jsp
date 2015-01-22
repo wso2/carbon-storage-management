@@ -556,8 +556,8 @@
                                <input type="hidden" name="cfName" id="cfName" value="<%=columnFamily%>"/>
                                <input class="button" type="submit" value="Save">
                                <input id="cancelKSButton" class="button" name="cancelKSButton" type="button" href="#"
-                                  onclick="location.href = 'cf_dashboard.jsp?keyspaceName=<%=keyspace%>&cfName=<%=columnFamily%>#permissionArea';"
-                                  value="<fmt:message key="cassandra.actions.cancel"/>"/>
+                                  onclick="resetPermissions()"
+                                  value="<fmt:message key="cassandra.actions.reset"/>"/>
                             </td>
                         </tr>
                     </tbody>
