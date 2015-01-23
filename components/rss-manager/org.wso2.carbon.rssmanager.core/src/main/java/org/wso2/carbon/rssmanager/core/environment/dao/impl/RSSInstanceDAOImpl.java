@@ -21,8 +21,6 @@ package org.wso2.carbon.rssmanager.core.environment.dao.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.core.util.CryptoException;
-import org.wso2.carbon.core.util.CryptoUtil;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.config.databasemanagement.SnapshotConfig;
 import org.wso2.carbon.rssmanager.core.config.ssh.SSHInformationConfig;
@@ -58,7 +56,6 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		PreparedStatement statement = null;
 		int environmentID = getEnvionmentIdByName(environmentName);
 		SSHInformationConfig sshInformationConfig = rssInstance.getSshInformationConfig();
-		String encryptedPassword;
 		try {
 			conn = getDataSourceConnection();
 			conn.setAutoCommit(true);//there may be connections in the pool which have the auto commit state as false
@@ -66,7 +63,6 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			                             "DBMS_TYPE, INSTANCE_TYPE, SERVER_CATEGORY, ADMIN_USERNAME, ADMIN_PASSWORD, " +
 			                             "TENANT_ID, DRIVER_CLASS, SSH_HOST, SSH_PORT, SSH_USERNAME, " +
 			                             "SNAPSHOT_TARGET_DIRECTORY) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-			encryptedPassword = CryptoUtil.getDefaultCryptoUtil().encrypt(rssInstance.getAdminPassword().getBytes()).toString();
 			statement = conn.prepareStatement(createInstanceQuery);
 			statement.setInt(1, environmentID);
 			statement.setString(2, rssInstance.getName());
@@ -75,7 +71,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			statement.setString(5, rssInstance.getInstanceType());
 			statement.setString(6, rssInstance.getServerCategory());
 			statement.setString(7, rssInstance.getAdminUserName());
-			statement.setString(8, encryptedPassword);
+			statement.setString(8, rssInstance.getAdminPassword());
 			statement.setLong(9, rssInstance.getTenantId());
 			statement.setString(10, rssInstance.getDriverClassName());
 			if (sshInformationConfig != null) {
@@ -96,10 +92,6 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		} catch (SQLException e) {
 			String msg = "Failed to add rss instance " + rssInstance.getName() + "in rssInstance in environment" + environmentName
 			             + "to meta repository";
-			handleException(msg, e);
-		} catch (CryptoException e) {
-			String msg = "Failed to add rss instance " + rssInstance.getName() + "in rssInstance in environment" + environmentName
-			             + "to meta repository because of password encryption failure";
 			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(null, statement, conn, RSSManagerConstants.ADD_RSS_INSTANCE_ENTRY);
@@ -167,10 +159,8 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		Connection conn = null;
 		PreparedStatement entryUpdateStatement = null;
 		int environmentId = getEnvionmentIdByName(environmentName);
-		String encryptedPassword;
 		SSHInformationConfig sshInformationConfig = rssInstance.getSshInformationConfig();
 		try {
-			encryptedPassword = CryptoUtil.getDefaultCryptoUtil().encrypt(rssInstance.getAdminPassword().getBytes()).toString();
 			conn = getDataSourceConnection();
 			conn.setAutoCommit(true);//there may be connections in the pool which have the auto commit state as false
 			String updateInstanceEntryQuery = "UPDATE RM_SERVER_INSTANCE SET NAME =?, SERVER_URL=?, DBMS_TYPE=?, " +
@@ -185,7 +175,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			entryUpdateStatement.setString(4, rssInstance.getInstanceType());
 			entryUpdateStatement.setString(5, rssInstance.getServerCategory());
 			entryUpdateStatement.setString(6, rssInstance.getAdminUserName());
-			entryUpdateStatement.setString(7, encryptedPassword);
+			entryUpdateStatement.setString(7, rssInstance.getAdminPassword());
 			entryUpdateStatement.setLong(8, rssInstance.getTenantId());
 			entryUpdateStatement.setString(9, rssInstance.getDriverClassName());
 			if (sshInformationConfig != null) {
@@ -208,10 +198,6 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		} catch (SQLException e) {
 			String msg = "Failed to update rss instance entry " + rssInstance.getName() + " in the metadata repository";
 			handleException(msg, e);
-		} catch (CryptoException e) {
-			String msg = "Failed to update rss instance entry " + rssInstance.getName() + " in the metadata repository "
-			             + "because of password encryption failure";
-			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(null, entryUpdateStatement, conn, RSSManagerConstants.UPDATE_RSS_INSTANCE_ENTRY);
 		}
@@ -229,7 +215,6 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		RSSInstance rssInstance = null;
 		SSHInformationConfig sshInformationConfig = null;
 		SnapshotConfig snapshotConfig = null;
-		String decryptedPassword;
 		try {
 			conn = getDataSourceConnection();
 			String selectInstancesQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, " +
@@ -262,9 +247,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 				rssInstance.setInstanceType(resultSet.getString("INSTANCE_TYPE"));
 				rssInstance.setServerCategory(resultSet.getString("SERVER_CATEGORY"));
 				rssInstance.setAdminUserName(resultSet.getString("ADMIN_USERNAME"));
-				decryptedPassword = CryptoUtil.getDefaultCryptoUtil().decrypt(resultSet.getString("ADMIN_PASSWORD")
-						.getBytes()).toString();
-				rssInstance.setAdminPassword(decryptedPassword);
+				rssInstance.setAdminPassword(resultSet.getString("ADMIN_PASSWORD"));
 				rssInstance.setTenantId(resultSet.getLong("TENANT_ID"));
 				rssInstance.setDriverClassName(resultSet.getString("DRIVER_CLASS"));
 				rssInstance.setEnvironmentId(resultSet.getInt("ENVIRONMENT_ID"));
@@ -277,9 +260,6 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Error while getting rss instance info of" + rssInstanceName;
-			handleException(msg, e);
-		} catch (CryptoException e) {
-			String msg = "Error occurred when decrypting the password while getting rss instance info of" + rssInstanceName;
 			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_RSS_INSTANCE_ENTRY);
