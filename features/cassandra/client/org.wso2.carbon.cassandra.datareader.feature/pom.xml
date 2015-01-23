@@ -30,7 +30,7 @@
     <artifactId>org.wso2.carbon.cassandra.datareader.feature</artifactId>
     <version>4.3.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - Cassandra client Feature</name>
+    <name>WSO2 Carbon - Cassandra Data Reader Feature</name>
     <url>http://wso2.org</url>
     <description>This feature contains the bundles required for Cassandra client</description>
 
