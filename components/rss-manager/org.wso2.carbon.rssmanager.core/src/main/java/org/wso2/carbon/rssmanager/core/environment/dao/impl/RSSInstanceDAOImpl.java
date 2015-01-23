@@ -66,7 +66,8 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			                             "DBMS_TYPE, INSTANCE_TYPE, SERVER_CATEGORY, ADMIN_USERNAME, ADMIN_PASSWORD, " +
 			                             "TENANT_ID, DRIVER_CLASS, SSH_HOST, SSH_PORT, SSH_USERNAME, " +
 			                             "SNAPSHOT_TARGET_DIRECTORY) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-			encryptedPassword = CryptoUtil.getDefaultCryptoUtil().encrypt(rssInstance.getAdminPassword().getBytes()).toString();
+			encryptedPassword = CryptoUtil.getDefaultCryptoUtil().encryptAndBase64Encode(
+					rssInstance.getAdminPassword().getBytes());
 			statement = conn.prepareStatement(createInstanceQuery);
 			statement.setInt(1, environmentID);
 			statement.setString(2, rssInstance.getName());
@@ -170,7 +171,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		String encryptedPassword;
 		SSHInformationConfig sshInformationConfig = rssInstance.getSshInformationConfig();
 		try {
-			encryptedPassword = CryptoUtil.getDefaultCryptoUtil().encrypt(rssInstance.getAdminPassword().getBytes()).toString();
+			encryptedPassword = CryptoUtil.getDefaultCryptoUtil().encryptAndBase64Encode(rssInstance.getAdminPassword().getBytes());
 			conn = getDataSourceConnection();
 			conn.setAutoCommit(true);//there may be connections in the pool which have the auto commit state as false
 			String updateInstanceEntryQuery = "UPDATE RM_SERVER_INSTANCE SET NAME =?, SERVER_URL=?, DBMS_TYPE=?, " +
@@ -229,7 +230,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		RSSInstance rssInstance = null;
 		SSHInformationConfig sshInformationConfig = null;
 		SnapshotConfig snapshotConfig = null;
-		String decryptedPassword;
+		byte[] decryptedPassword;
 		try {
 			conn = getDataSourceConnection();
 			String selectInstancesQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, " +
@@ -262,9 +263,9 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 				rssInstance.setInstanceType(resultSet.getString("INSTANCE_TYPE"));
 				rssInstance.setServerCategory(resultSet.getString("SERVER_CATEGORY"));
 				rssInstance.setAdminUserName(resultSet.getString("ADMIN_USERNAME"));
-				decryptedPassword = CryptoUtil.getDefaultCryptoUtil().decrypt(resultSet.getString("ADMIN_PASSWORD")
-						.getBytes()).toString();
-				rssInstance.setAdminPassword(decryptedPassword);
+				decryptedPassword = CryptoUtil.getDefaultCryptoUtil().base64DecodeAndDecrypt(resultSet.getString(
+						"ADMIN_PASSWORD"));
+				rssInstance.setAdminPassword(new String(decryptedPassword));
 				rssInstance.setTenantId(resultSet.getLong("TENANT_ID"));
 				rssInstance.setDriverClassName(resultSet.getString("DRIVER_CLASS"));
 				rssInstance.setEnvironmentId(resultSet.getInt("ENVIRONMENT_ID"));
@@ -610,6 +611,9 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		} catch (SQLException e) {
 			String msg = "Error while getting all system rss instances information";
 			handleException(msg, e);
+		} catch (CryptoException e) {
+			String msg = "Error while getting all system rss instances information due to password decryption failure";
+			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants.SELECT_ALL_SYSTEM_RSS_INSTANCES);
 		}
@@ -627,6 +631,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		RSSInstance rssInstance;
 		SSHInformationConfig sshInformationConfig = null;
 		SnapshotConfig snapshotConfig = null;
+		byte[] decryptedPassword;
 		try {
 			conn = getDataSourceConnection();
 			String selectInstanceQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, " +
