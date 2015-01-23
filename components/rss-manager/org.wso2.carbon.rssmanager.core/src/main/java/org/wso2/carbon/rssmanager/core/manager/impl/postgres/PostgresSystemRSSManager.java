@@ -102,10 +102,10 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
             /* Validating database name to avoid any possible SQL injection attack */
             RSSManagerUtil.checkIfParameterSecured(qualifiedDatabaseName);
             conn = this.getConnection(rssInstance.getName());
-            String createDBQuery = "CREATE DATABASE " + qualifiedDatabaseName;
+            String createDBQuery = "CREATE DATABASE \"" + qualifiedDatabaseName + "\"";
             nativeAddDBStatement = conn.prepareStatement(createDBQuery);
             super.addDatabase(nativeAddDBStatement, database, rssInstance, qualifiedDatabaseName);
-            disAllowedConnect(conn, qualifiedDatabaseName, "PUBLIC");
+            disAllowedConnect(conn, qualifiedDatabaseName, "public");
         } catch (Exception e) {
             String msg = "Error while creating the database '" + qualifiedDatabaseName +
                          "' on RSS instance '" + rssInstance.getName() + "' : " + e.getMessage();
@@ -143,8 +143,9 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
             RSSManagerUtil.checkIfParameterSecured(databaseName);
             conn = getConnection(rssInstance.getName());
             conn.setAutoCommit(true);
-            String removeDBQuery = "DROP DATABASE " + databaseName;
-            String detachUserQuery = "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '"+databaseName+"'   AND pid <> pg_backend_pid()";
+            String removeDBQuery = "DROP DATABASE \"" + databaseName + "\"";
+            String detachUserQuery = "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE " +
+                                     "pg_stat_activity.datname = \"" + databaseName + "\" AND pid <> pg_backend_pid()";
             nativeRemoveDBStatement = conn.prepareStatement(removeDBQuery);
             nativeDetachUserStatement = conn.prepareStatement(detachUserQuery);
             super.removeDatabase(txConn, rssInstance.getName(), databaseName, rssInstance,
@@ -185,7 +186,7 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
                 try {
                     conn = getConnection(rssInstance.getName());
                     boolean hasPassword = (!StringUtils.isEmpty(user.getPassword()));
-                    StringBuilder sql = new StringBuilder(" CREATE USER " + qualifiedUsername);
+                    StringBuilder sql = new StringBuilder("CREATE USER \"" + qualifiedUsername + "\"");
                     if (hasPassword) {
                         RSSManagerUtil.checkIfParameterSecured(user.getPassword());
                         sql.append(" WITH PASSWORD '").append(user.getPassword()).append("'");
@@ -226,9 +227,9 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
             try {
                 conn = getConnection(instanceName);
                 conn.setAutoCommit(true);
-                String sql = "drop owned by " + userName;
+                String sql = "drop owned by \"" + userName + "\"";
                 dropOwnedStmt = conn.prepareStatement(sql);
-                dropUserStmt = conn.prepareStatement(" drop user " + userName);
+                dropUserStmt = conn.prepareStatement(" drop user \"" + userName + "\"");
                 dropOwnedStmt.execute();
                 dropUserStmt.execute();
             } catch (Exception ex) {
@@ -278,9 +279,9 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
             for (RSSInstance rssInstance : rssInstances) {
                 try {
                     conn = getConnection(rssInstance.getName());
-                    String sql = "drop owned by " + username;
+                    String sql = "drop owned by \"" + username + "\"";
                     dropOwnedStmt = conn.prepareStatement(sql);
-                    dropUserStmt = conn.prepareStatement(" drop user " + username);
+                    dropUserStmt = conn.prepareStatement(" drop user \"" + username + "\"");
                     dropOwnedStmt.execute();
                     dropUserStmt.execute();
                 } finally {
@@ -455,16 +456,16 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
         if (type.equals(PrivilegeTypes.TABLE) || type.equals(PrivilegeTypes.SEQUENCE) || type.equals(PrivilegeTypes.FUNCTION)) {
             grantee = " ALL " + type.name() + "S IN SCHEMA PUBLIC ";
         } else if (type.equals(PrivilegeTypes.DATABASE)) {
-            grantee = type.name() + " " + databaseName;
+            grantee = type.name() + " \"" + databaseName + "\"";
         } else if (type.equals(PrivilegeTypes.SCHEMA)) {
-            grantee = type.name() + " PUBLIC ";
+            grantee = type.name() + " public ";
         }
         String privilegesString = createPrivilegesString(privileges, type);
         if (privilegesString == null) {
             return;
         }
         StringBuilder sql = new StringBuilder(
-                "GRANT " + privilegesString + " ON " + grantee + " TO " + username);
+                "GRANT " + privilegesString + " ON " + grantee + " TO \"" + username + "\"");
         if (grantEnable) {
             sql.append(grantOption);
         }
@@ -480,7 +481,8 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
                                                                                            RSSManagerException {
         RSSManagerUtil.checkIfParameterSecured(databaseName);
         RSSManagerUtil.checkIfParameterSecured(username);
-        PreparedStatement st = con.prepareStatement(" GRANT CONNECT ON DATABASE " + databaseName + " TO " + username);
+        PreparedStatement st = con.prepareStatement(" GRANT CONNECT ON DATABASE \"" + databaseName + "\" TO \"" +
+                                                    username + "\"");
         st.executeUpdate();
         st.close();
     }
@@ -489,7 +491,7 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
                                                                                          RSSManagerException {
         RSSManagerUtil.checkIfParameterSecured(databaseName);
         RSSManagerUtil.checkIfParameterSecured(username);
-        PreparedStatement st = con.prepareStatement(" GRANT USAGE ON SCHEMA public TO " + username);
+        PreparedStatement st = con.prepareStatement(" GRANT USAGE ON SCHEMA public TO \"" + username + "\"");
         st.executeUpdate();
         st.close();
     }
@@ -578,7 +580,8 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
                                                                                                  RSSManagerException {
         RSSManagerUtil.checkIfParameterSecured(databaseName);
         RSSManagerUtil.checkIfParameterSecured(userName);
-        PreparedStatement statement = conn.prepareStatement("REVOKE connect ON DATABASE " + databaseName + " FROM " + userName);
+        PreparedStatement statement = conn.prepareStatement("REVOKE connect ON DATABASE \"" + databaseName + "\" FROM" +
+                                                            " \"" + userName + "\"");
         statement.executeUpdate();
         statement.close();
     }
@@ -596,7 +599,8 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
                                                                                                    RSSManagerException {
         RSSManagerUtil.checkIfParameterSecured(databaseName);
         RSSManagerUtil.checkIfParameterSecured(userName);
-        PreparedStatement statement = conn.prepareStatement("revoke all on database " + databaseName + " from " + userName);
+        PreparedStatement statement = conn.prepareStatement("revoke all on database \"" + databaseName + "\" from \"" +
+                                                            userName + "\"");
         statement.executeUpdate();
         statement.close();
     }
@@ -687,7 +691,7 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
         command.append(RSSManagerConstants.SPACE);
         command.append(instance.getAdminUserName());
         command.append(RSSManagerConstants.SPACE);
-        command.append(databaseName.toLowerCase());
+        command.append(databaseName);
         command.append(RSSManagerConstants.SPACE);
         command.append(RSSManagerConstants.Snapshots.POSTGRE_OUTPUT_FILE_OPTION);
         command.append(RSSManagerConstants.SPACE);
