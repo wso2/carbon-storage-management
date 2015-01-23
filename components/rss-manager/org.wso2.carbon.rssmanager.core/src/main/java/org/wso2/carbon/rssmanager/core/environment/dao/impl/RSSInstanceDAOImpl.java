@@ -299,6 +299,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		RSSInstance rssInstance = null;
 		SSHInformationConfig sshInformationConfig = null;
 		SnapshotConfig snapshotConfig = null;
+		byte[] decryptedPassword;
 		try {
 			conn = getDataSourceConnection();
 			String selectInstancesQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, " +
@@ -330,7 +331,9 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 				rssInstance.setInstanceType(resultSet.getString("INSTANCE_TYPE"));
 				rssInstance.setServerCategory(resultSet.getString("SERVER_CATEGORY"));
 				rssInstance.setAdminUserName(resultSet.getString("ADMIN_USERNAME"));
-				rssInstance.setAdminPassword(resultSet.getString("ADMIN_PASSWORD"));
+				decryptedPassword = CryptoUtil.getDefaultCryptoUtil().base64DecodeAndDecrypt(resultSet.getString(
+						"ADMIN_PASSWORD"));
+				rssInstance.setAdminPassword(new String(decryptedPassword));
 				rssInstance.setTenantId(resultSet.getLong("TENANT_ID"));
 				rssInstance.setDriverClassName(resultSet.getString("DRIVER_CLASS"));
 				rssInstance.setEnvironmentId(resultSet.getInt("ENVIRONMENT_ID"));
@@ -344,6 +347,9 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Error while getting rss instances information of a environment";
+			handleException(msg, e);
+		} catch (CryptoException e) {
+			String msg = "Error while getting rss instances information of a environment due to password decryption failure";
 			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants
@@ -363,6 +369,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		RSSInstance rssInstance = null;
 		SSHInformationConfig sshInformationConfig = null;
 		SnapshotConfig snapshotConfig = null;
+		byte[] decryptedPassword;
 		try {
 			conn = getDataSourceConnection();
 			String selectInstancesQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, " +
@@ -392,7 +399,9 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 				rssInstance.setInstanceType(resultSet.getString("INSTANCE_TYPE"));
 				rssInstance.setServerCategory(resultSet.getString("SERVER_CATEGORY"));
 				rssInstance.setAdminUserName(resultSet.getString("ADMIN_USERNAME"));
-				rssInstance.setAdminPassword(resultSet.getString("ADMIN_PASSWORD"));
+				decryptedPassword = CryptoUtil.getDefaultCryptoUtil().base64DecodeAndDecrypt(resultSet.getString(
+						"ADMIN_PASSWORD"));
+				rssInstance.setAdminPassword(new String(decryptedPassword));
 				rssInstance.setTenantId(resultSet.getLong("TENANT_ID"));
 				rssInstance.setDriverClassName(resultSet.getString("DRIVER_CLASS"));
 				rssInstance.setEnvironmentId(resultSet.getInt("ENVIRONMENT_ID"));
@@ -406,6 +415,10 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Error while getting rss instances information of a environment";
+			handleException(msg, e);
+		} catch (CryptoException e) {
+			String msg = "Error while getting rss instances information of a environment due to password decryption "
+			             + "failure";
 			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants
@@ -425,6 +438,7 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 		RSSInstance rssInstance;
 		SSHInformationConfig sshInformationConfig = null;
 		SnapshotConfig snapshotConfig = null;
+		byte[] decryptedPassword;
 		try {
 			conn = getDataSourceConnection();
 			String selectInstancesQuery = "SELECT RM_ENVIRONMENT.NAME AS ENVIRONMENT_NAME, " +
@@ -457,7 +471,9 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 				rssInstance.setInstanceType(resultSet.getString("INSTANCE_TYPE"));
 				rssInstance.setServerCategory(resultSet.getString("SERVER_CATEGORY"));
 				rssInstance.setAdminUserName(resultSet.getString("ADMIN_USERNAME"));
-				rssInstance.setAdminPassword(resultSet.getString("ADMIN_PASSWORD"));
+				decryptedPassword = CryptoUtil.getDefaultCryptoUtil().base64DecodeAndDecrypt(resultSet.getString(
+						"ADMIN_PASSWORD"));
+				rssInstance.setAdminPassword(new String(decryptedPassword));
 				rssInstance.setTenantId(resultSet.getLong("TENANT_ID"));
 				rssInstance.setDriverClassName(resultSet.getString("DRIVER_CLASS"));
 				rssInstance.setEnvironmentId(resultSet.getInt("ENVIRONMENT_ID"));
@@ -471,6 +487,10 @@ public class RSSInstanceDAOImpl implements RSSInstanceDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Error while getting system rss instances information of a environment";
+			handleException(msg, e);
+		} catch (CryptoException e) {
+			String msg = "Error while getting system rss instances information of a environment due to password decryption"
+			             + " failure";
 			handleException(msg, e);
 		} finally {
 			RSSDAOUtil.cleanupResources(resultSet, statement, conn, RSSManagerConstants
