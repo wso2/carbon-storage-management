@@ -445,8 +445,8 @@
                            <input type="hidden" name="keyspaceName" id="keyspaceName" value="<%=keyspace%>"/>
                            <input class="button" type="submit" value="Save">
                            <input id="cancelKSButton" class="button" name="cancelKSButton" type="button" href="#"
-                                   onclick="location.href = 'keyspace_dashboard.jsp?name=<%=keyspace%>&cluster=<%=clusterName%>#permissionArea';"
-                                   value="<fmt:message key="cassandra.actions.cancel"/>"/>
+                                   onclick="resetPermissions();"
+                                   value="<fmt:message key="cassandra.actions.reset"/>"/>
                         </td>
                     </tr>
                 </tbody>
