@@ -433,9 +433,10 @@ public class RSSAdmin extends AbstractAdmin implements RSSManagerService {
 
 			Class.forName(driverClass).newInstance();
 			
-			if(driverClass.contains(RSSManagerConstants.POSTGRES.toLowerCase())){
-				conn = DriverManager.getConnection(RSSManagerUtil.createDatabaseUrlForPostgresSQL(jdbcURL,RSSManagerConstants.POSTGRES.toLowerCase()), username, password);
-			}else{
+			if (driverClass.contains(RSSManagerConstants.POSTGRES.toLowerCase())) {
+				conn = DriverManager.getConnection(RSSManagerUtil.createDatabaseUrlForPostgresSQL
+						(jdbcURL,RSSManagerConstants.POSTGRES.toLowerCase()), username, password);
+			} else {
 				conn = DriverManager.getConnection(jdbcURL, username, password);
 			}
 			
