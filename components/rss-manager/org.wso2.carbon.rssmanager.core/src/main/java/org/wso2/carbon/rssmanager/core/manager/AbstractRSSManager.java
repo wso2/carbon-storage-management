@@ -596,6 +596,10 @@ public abstract class AbstractRSSManager implements RSSManager{
 	public DatabaseDAO getDatabaseDAO() {
 		return databaseDAO;
 	}
+	
+	protected String getDatabaseVersion(Connection conn) throws RSSManagerException{
+		return null;
+	}
 
     /**
      * Creates a database snapshot of a database.

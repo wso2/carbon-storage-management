@@ -47,10 +47,13 @@ import org.wso2.carbon.utils.xml.StringUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -142,12 +145,17 @@ public class PostgresUserDefinedRSSManager extends UserDefinedRSSManager {
 			RSSManagerUtil.checkIfParameterSecured(databaseName);
 			conn = getConnection(rssInstance.getName());
 			String removeDBQuery = "DROP DATABASE \"" + databaseName + "\"";
-			String detachUserQuery = "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE " +
-			                         "pg_stat_activity.datname = \"" + databaseName + "\" AND pid <> pg_backend_pid()";
+			String version = getDatabaseVersion(conn);
+            String detachUserQuery = "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE " +
+                                     "pg_stat_activity.datname = '" + databaseName + "' AND pid <> pg_backend_pid()";
+            if(version.equals("9.1")){
+            	detachUserQuery = "SELECT pg_terminate_backend(pg_stat_activity.procpid) FROM pg_stat_activity WHERE " +
+                        "pg_stat_activity.datname = '" + databaseName + "' AND procpid <> pg_backend_pid()";
+            }
 			nativeRemoveDBStatement = conn.prepareStatement(removeDBQuery);
 			nativeDetachUserStatement = conn.prepareStatement(detachUserQuery);
 			super.removeDatabase(txConn, rssInstance.getName(), databaseName, rssInstance,
-			                     RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+			                     RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
 			nativeDetachUserStatement.execute();
 			nativeRemoveDBStatement.execute();
 			RSSManagerUtil.commitTx(txConn);
@@ -161,6 +169,35 @@ public class PostgresUserDefinedRSSManager extends UserDefinedRSSManager {
 			RSSManagerUtil.cleanupResources(null, nativeRemoveDBStatement, conn);
 			RSSManagerUtil.cleanupResources(null, nativeDetachUserStatement, txConn);
 		}
+	}
+	
+	public String getDatabaseVersion(Connection conn) throws RSSManagerException{
+    	String version = "9.2";
+    	String versionQuery = "select version()";
+    	try {
+			PreparedStatement versionStatement = conn.prepareStatement(versionQuery);
+			ResultSet result = versionStatement.executeQuery();
+			
+			
+			if (result != null && result.next()) {
+				String value = result.getString(1);
+				if(value != null && value.trim().length() > 0){
+					Pattern pattern = Pattern.compile("\\s(\\b9)\\.[2-9]|(\\s\\b10)\\.[0-9]");
+					Matcher matcher = pattern.matcher(value);
+					if (matcher.find())
+					{
+						version = "9.2";
+					}else{
+						version = "9.1";
+					}
+				}
+				
+				
+			}
+		} catch (SQLException ex) {
+			handleException("Error while getting Postgres version", ex);
+		}
+		return version;
 	}
 
 	/**
@@ -252,7 +289,7 @@ public class PostgresUserDefinedRSSManager extends UserDefinedRSSManager {
 			revokeAllPrivileges(conn, databaseName, user.getName());
 			composePreparedStatement(databaseConn, databaseName, user.getName(), postgresPrivs);
 			super.updateDatabaseUserPrivileges(null, rssInstanceName, databaseName, privileges, user.getUsername(),
-			                                   RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+			                                   RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
 		} catch (Exception e) {
 			String msg = "Error occurred while updating database user privileges: " + e.getMessage();
 			handleException(msg, e);
