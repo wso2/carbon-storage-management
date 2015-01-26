@@ -432,7 +432,13 @@ public class RSSAdmin extends AbstractAdmin implements RSSManagerService {
 			PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantId(tenantId);
 
 			Class.forName(driverClass).newInstance();
-			conn = DriverManager.getConnection(RSSManagerUtil.createDatabaseUrlForPostgresSQL(jdbcURL,RSSManagerConstants.POSTGRES.toLowerCase()), username, password);
+			
+			if(driverClass.contains(RSSManagerConstants.POSTGRES.toLowerCase())){
+				conn = DriverManager.getConnection(RSSManagerUtil.createDatabaseUrlForPostgresSQL(jdbcURL,RSSManagerConstants.POSTGRES.toLowerCase()), username, password);
+			}else{
+				conn = DriverManager.getConnection(jdbcURL, username, password);
+			}
+			
 			if (conn == null) {
 				String msg = "Unable to establish a JDBC connection with the database server";
 				throw new RSSManagerException(msg);
