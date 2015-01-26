@@ -18,6 +18,20 @@
 
 package org.wso2.carbon.rssmanager.core.manager.impl.postgres;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
@@ -43,17 +57,6 @@ import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 import org.wso2.carbon.rssmanager.core.util.databasemanagement.SSHConnection;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.utils.xml.StringUtils;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 /**
  * @see org.wso2.carbon.rssmanager.core.manager.RSSManager for the method java doc comments
@@ -143,9 +146,20 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
             RSSManagerUtil.checkIfParameterSecured(databaseName);
             conn = getConnection(rssInstance.getName());
             conn.setAutoCommit(true);
+            String version = getDatabaseVersion(conn);
+            
             String removeDBQuery = "DROP DATABASE \"" + databaseName + "\"";
             String detachUserQuery = "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE " +
-                                     "pg_stat_activity.datname = \"" + databaseName + "\" AND pid <> pg_backend_pid()";
+                                     "pg_stat_activity.datname = '" + databaseName + "' AND pid <> pg_backend_pid()";
+            if(version.equals("9.1")){
+            	detachUserQuery = "SELECT pg_terminate_backend(pg_stat_activity.procpid) FROM pg_stat_activity WHERE " +
+                        "pg_stat_activity.datname = '" + databaseName + "' AND procpid <> pg_backend_pid()";
+            }
+            
+            /*SELECT pg_terminate_backend(pg_stat_activity.procpid)
+            FROM pg_stat_activity
+            WHERE pg_stat_activity.datname = 'TARGET_DB'
+              AND procpid <> pg_backend_pid();*/
             nativeRemoveDBStatement = conn.prepareStatement(removeDBQuery);
             nativeDetachUserStatement = conn.prepareStatement(detachUserQuery);
             super.removeDatabase(txConn, rssInstance.getName(), databaseName, rssInstance,
@@ -164,6 +178,35 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
             RSSManagerUtil.cleanupResources(null, nativeDetachUserStatement, txConn);
         }
     }
+    
+    public String getDatabaseVersion(Connection conn) throws RSSManagerException{
+    	String version = "9.2";
+    	String versionQuery = "select version()";
+    	try {
+			PreparedStatement versionStatement = conn.prepareStatement(versionQuery);
+			ResultSet result = versionStatement.executeQuery();
+			
+			
+			if (result != null && result.next()) {
+				String value = result.getString(1);
+				if(value != null && value.trim().length() > 0){
+					Pattern pattern = Pattern.compile("\\s(\\b9)\\.[2-9]|(\\s\\b10)\\.[0-9]");
+					Matcher matcher = pattern.matcher(value);
+					if (matcher.find())
+					{
+						version = "9.2";
+					}else{
+						version = "9.1";
+					}
+				}
+				
+				
+			}
+		} catch (SQLException ex) {
+			handleException("Error while getting Postgres version", ex);
+		}
+		return version;
+	}
 
     /**
      * @see RSSManager#addDatabaseUser(org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser)

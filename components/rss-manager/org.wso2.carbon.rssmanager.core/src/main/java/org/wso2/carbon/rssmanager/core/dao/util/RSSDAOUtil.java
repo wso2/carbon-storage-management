@@ -78,7 +78,7 @@ public class RSSDAOUtil {
 	 * @param connection database connection
 	 * @param task       task which was executing at the error.
 	 */
-	public static synchronized void rollback(Connection connection, String task) {
+	public static void rollback(Connection connection, String task) {
 		if (connection != null) {
 			try {
 				connection.rollback();
