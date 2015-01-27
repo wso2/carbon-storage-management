@@ -22,7 +22,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.CarbonContext;
@@ -156,7 +155,7 @@ public class RSSAdmin extends AbstractAdmin implements RSSManagerService {
 	public DatabaseUserInfo addDatabaseUser(String environmentName,
 	                                        DatabaseUserInfo user) throws RSSManagerException {
 		String username = user.getName().trim();
-		if (!StringUtils.isAlphanumeric(username)) {
+		if (!RSSManagerUtil.isAlphanumericOrUnderscore(username)) {
 			String msg = "Only Alphanumeric characters and underscores "
 			             + "are allowed in database username";
 			log.error(msg);
@@ -213,7 +212,7 @@ public class RSSAdmin extends AbstractAdmin implements RSSManagerService {
 	public void addDatabasePrivilegeTemplate(String environmentName,
 	                                         DatabasePrivilegeTemplateInfo template) throws RSSManagerException {
 		String tempplateName = template.getName().trim();
-		if (!RSSManagerUtil.isValidTemplateName(tempplateName)) {
+		if (!RSSManagerUtil.isAlphanumericOrUnderscore(tempplateName)) {
 			String msg = "Only Alphanumeric characters and underscores "
 			             + "are allowed in database privilege template name";
 			log.error(msg);
