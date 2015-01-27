@@ -120,18 +120,25 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 		int environmentId = getEnvionmentIdByName(environmentName);
 		try {
 			conn = getDataSourceConnection();//acquire data source connection
-			String checkDBExistQuery = "SELECT RM_DATABASE.ID FROM RM_DATABASE , RM_SERVER_INSTANCE WHERE " +
-			                           "RM_DATABASE.RSS_INSTANCE_ID = RM_SERVER_INSTANCE.ID AND RM_SERVER_INSTANCE.NAME=? AND RM_DATABASE.NAME=? " +
-			                           "AND RM_DATABASE.TYPE=? AND RM_DATABASE.TENANT_ID=? AND RM_SERVER_INSTANCE.ENVIRONMENT_ID=?";
-			statement = conn.prepareStatement(checkDBExistQuery);
-			//set required fields to check the database existence
-			statement.setString(1, rssInstanceName);
-			statement.setString(2, databaseName);
-			statement.setString(3, instanceType);
-			statement.setInt(4, tenantId);
-			statement.setInt(5, environmentId);
-			resultSet = statement.executeQuery();
-			if (resultSet.next()) {
+            StringBuilder checkDBExistQuery = new StringBuilder("SELECT RM_DATABASE.ID FROM RM_DATABASE ," +
+                                                                "RM_SERVER_INSTANCE WHERE RM_DATABASE.RSS_INSTANCE_ID " +
+                                                                "= RM_SERVER_INSTANCE.ID AND RM_DATABASE.NAME=? AND " +
+                                                                "RM_DATABASE.TYPE=? AND RM_DATABASE.TENANT_ID=? AND " +
+                                                                "RM_SERVER_INSTANCE.ENVIRONMENT_ID=?");
+            if (instanceType == RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED) {
+                checkDBExistQuery.append(" AND RM_SERVER_INSTANCE.NAME=?");
+            }
+            statement = conn.prepareStatement(checkDBExistQuery.toString());
+            //set required fields to check the database existence
+            statement.setString(1, databaseName);
+            statement.setString(2, instanceType);
+            statement.setInt(3, tenantId);
+            statement.setInt(4, environmentId);
+            if (instanceType == RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED) {
+                statement.setString(5, rssInstanceName);
+            }
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
 				isExist = true;
 			}
 		} catch (SQLException e) {
