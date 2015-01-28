@@ -153,7 +153,6 @@
     </modules>
 
     <properties>
-        <hector-core.version>1.1.0.wso2v1</hector-core.version>
         <axis2.osgi.version.range.cassandra>${axis2.osgi.version.range}
         </axis2.osgi.version.range.cassandra>
         <axiom.osgi.version.range.cassandra>${axiom.osgi.version.range}
