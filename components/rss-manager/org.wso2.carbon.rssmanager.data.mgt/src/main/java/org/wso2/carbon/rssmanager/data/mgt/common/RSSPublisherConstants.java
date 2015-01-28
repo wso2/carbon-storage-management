@@ -34,9 +34,19 @@ public class RSSPublisherConstants {
 	public static final String MYSQL_DATA_SOURCE_CLASS_NAME = "com.mysql.jdbc.jdbc2.optional.MysqlXADataSource";
 	public static final String ORACLE_DATA_SOURCE_CLASS_NAME = "oracle.jdbc.xa.client.OracleXADataSource";
 	public static final String MSSQL_DATA_SOURCE_CLASS_NAME = "com.mysql.jdbc.jdbc2.optional.MysqlXADataSource";
+	public static final String POSTGRES_DATA_SOURCE_CLASS_NAME = "org.postgresql.xa.PGXADataSource";
+	public static final String H2_DATA_SOURCE_CLASS_NAME = "org.h2.Driver";
+	
+	
 	public static final String URL_PROPERTY = "URL";
 	public static final String USERNAME_PROPERTY = "user";
 	public static final String PASSWORD_PROPERTY = "password";
+	public static final String SERVERNAME_PROPERTY = "serverName";
+	public static final String SERVER_PORT_PROPERTY = "portNumber";
+	public static final String DATABASE_NAME_PROPERTY = "databaseName";
+	
+	public static final String POSTGRES_DEFAULT_DATABASE = "postgres";
+	
 	
 	public static final String ENCODING = "UTF-8";
 	

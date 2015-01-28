@@ -109,24 +109,57 @@ public class StorageMetaDataConfig {
     			case MSSQL:
     				dsConfig.setDataSourceClassName(RSSPublisherConstants.MSSQL_DATA_SOURCE_CLASS_NAME);
     				break;
+    			case POSTGRES:
+    				dsConfig.setDataSourceClassName(RSSPublisherConstants.POSTGRES_DATA_SOURCE_CLASS_NAME);
+    				break;
+    			case H2:
+    				dsConfig.setDataSourceClassName(RSSPublisherConstants.H2_DATA_SOURCE_CLASS_NAME);
+    				break;
     		}
     		
     		List<DataSourceProperty> dataSourceProps = new ArrayList<DataSourceProperty>();
     		
     		DataSourceProperty url = new DataSourceProperty();
     		url.setName(RSSPublisherConstants.URL_PROPERTY);
-    		url.setValue(instance.getServerURL());
-    		dataSourceProps.add(url);
+    		url.setValue(instance.getServerURL());    		
     		
     		DataSourceProperty user = new DataSourceProperty();
     		user.setName(RSSPublisherConstants.USERNAME_PROPERTY);
-    		user.setValue(instance.getAdminUsername());
-    		dataSourceProps.add(user);
+    		user.setValue(instance.getAdminUsername());    		
     		
     		DataSourceProperty password = new DataSourceProperty();
     		password.setName(RSSPublisherConstants.PASSWORD_PROPERTY);
     		password.setValue(instance.getAdminPassword());
-    		dataSourceProps.add(password);    		
+    		 
+    		
+			switch (type) {
+			case POSTGRES: 
+				
+				DataSourceProperty serverName = new DataSourceProperty();
+				serverName.setName(RSSPublisherConstants.SERVERNAME_PROPERTY);
+				serverName.setValue(getServerNameFromURL(instance.getServerURL()));    		
+	    		
+	    		DataSourceProperty serverPort = new DataSourceProperty();
+	    		serverPort.setName(RSSPublisherConstants.SERVER_PORT_PROPERTY);
+	    		serverPort.setValue(getServerPortNameFromURL(instance.getServerURL()));    		
+	    		
+	    		DataSourceProperty databaseName = new DataSourceProperty();
+	    		databaseName.setName(RSSPublisherConstants.DATABASE_NAME_PROPERTY);
+	    		databaseName.setValue(RSSPublisherConstants.POSTGRES_DEFAULT_DATABASE);
+	    		
+	    		dataSourceProps.add(user);
+				dataSourceProps.add(password);
+				dataSourceProps.add(serverName);
+				dataSourceProps.add(serverPort);
+				dataSourceProps.add(databaseName);
+
+				break;
+			default:
+				dataSourceProps.add(url);
+				dataSourceProps.add(user);
+				dataSourceProps.add(password);   
+				break;
+			}    				
     		
     		dsConfig.setDataSourceProps(dataSourceProps);    		
     		DataSource dataSource = (new RDBMSDataSource(dsConfig)).getDataSource();
@@ -137,6 +170,20 @@ public class StorageMetaDataConfig {
             
                 		
     	}
+    }
+    
+    private static String getServerNameFromURL(String url){
+    	String [] urlParts = url.split(":");
+    	String serverName = urlParts [2];
+    	return serverName = serverName.substring(2);
+    	
+    }
+    
+    private static String getServerPortNameFromURL(String url){
+    	String [] urlParts = url.split(":");
+    	String serverName = urlParts [3];
+    	return serverName;
+    	
     }
 
     public DataSource getDataSource(DataSourceIdentifier identifier) {
@@ -163,6 +210,7 @@ public class StorageMetaDataConfig {
     	
     	addToQueryMap(UsageManagerConstants.SQL_SCRIPT_LOCATION+File.separator +UsageManagerConstants.ORACLE_STORAGE_SIZE_QUERY, UsageManagerConstants.ORACLE_STORAGE_SIZE_QUERY);
     	addToQueryMap(UsageManagerConstants.SQL_SCRIPT_LOCATION+File.separator +UsageManagerConstants.MYSQL_STORAGE_SIZE_QUERY, UsageManagerConstants.MYSQL_STORAGE_SIZE_QUERY);
+    	addToQueryMap(UsageManagerConstants.SQL_SCRIPT_LOCATION+File.separator +UsageManagerConstants.POSTGRES_STORAGE_SIZE_QUERY, UsageManagerConstants.POSTGRES_STORAGE_SIZE_QUERY);
     }
     
     public ConcurrentMap<String,String> getQueryMap(){
