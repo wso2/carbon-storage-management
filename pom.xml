@@ -715,7 +715,8 @@
         <imp.pkg.version.javax.servlet>[2.6.0, 3.0.0)</imp.pkg.version.javax.servlet>
 
         <!-- Misc -->
-        <google.guava.wso2.version>12.0.0.wso2v1</google.guava.wso2.version>
+        <guava.version>14.0.1</guava.version>
+	<hector-core.version>1.1.4.wso2v1</hector-core.version>
         <carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
         <version.solr>1.4.1.wso2v1</version.solr>
         <derby.version>10.4.2.0</derby.version>
@@ -779,6 +780,6 @@
         <gson.version>1.7.1</gson.version>
         <jboss-transaction-api.version>1.0.0.Final</jboss-transaction-api.version>
         <slf4j.wso2.version>1.5.10.wso2v1</slf4j.wso2.version>
-        <wso2.cassandra.version>1.2.13.wso2v3</wso2.cassandra.version>
+        <wso2.cassandra.version>1.2.13.wso2v6</wso2.cassandra.version>
     </properties>
 </project>
