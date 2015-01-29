@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum DBType{
-	MYSQL,ORACLE,MSSQL;
+	MYSQL,ORACLE,MSSQL,POSTGRES,H2;
 	
 	private static final Map<String,DBType> typeMap = new HashMap<String,DBType>();
 	

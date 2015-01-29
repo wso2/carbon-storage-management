@@ -42,6 +42,7 @@ public class UsageManagerConstants {
     public static final String SQL_SCRIPT_LOCATION = CarbonUtils.getCarbonHome() + File.separator +"dbscripts/rss-monitor";
     public static final String ORACLE_STORAGE_SIZE_QUERY = "oracle_storage_size.sql";
     public static final String MYSQL_STORAGE_SIZE_QUERY = "mysql_storage_size.sql";
+    public static final String POSTGRES_STORAGE_SIZE_QUERY = "postgres_storage_size.sql";
 
 
 }
