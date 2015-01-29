@@ -37,17 +37,17 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cassandra.cluster.mgt.ui</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cassandra.cluster.mgt.stub</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cassandra.cluster.proxy.stub</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -79,13 +79,12 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.cluster.mgt.ui</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.cluster.mgt.stub</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.cluster.proxy.stub</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.cluster.mgt.ui:${carbon.storage.management.version}</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.cluster.mgt.stub:${carbon.storage.management.version}</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.cluster.proxy.stub:${carbon.storage.management.version}</bundleDef>
                             </bundles>
                             <importBundles>
-                                <importBundleDef>org.wso2.carbon:org.wso2.carbon.ui.menu.tools:${carbon.kernel.version}
-                                </importBundleDef>
+                                <importBundleDef>org.wso2.carbon:org.wso2.carbon.ui.menu.tools:${carbon.kernel.version}</importBundleDef>
                             </importBundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.ui:${carbon.kernel.version}</importFeatureDef>

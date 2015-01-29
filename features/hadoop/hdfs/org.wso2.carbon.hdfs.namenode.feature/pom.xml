@@ -66,9 +66,9 @@
             <version>${json.version}</version>
         </dependency>
         <dependency>
-            <groupId>slf4j.wso2</groupId>
+            <groupId>org.slf4j</groupId>
             <artifactId>slf4j</artifactId>
-            <version>${slf4j.wso2.version}</version>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-configuration.wso2</groupId>
@@ -112,7 +112,7 @@
                                 <bundleDef>org.mortbay.wso2:jetty</bundleDef>
                                 <bundleDef>org.mortbay.jetty.wso2:jetty-util</bundleDef>
                                 <bunldeDef>org.json.wso2:json</bunldeDef>
-                                <bundleDef>slf4j.wso2:slf4j</bundleDef>
+                                <bundleDef>org.slf4j:slf4j</bundleDef>
                                 <bundleDef>commons-configuration.wso2:commons-configuration</bundleDef>
                             </bundles>
                             <importFeatures>
