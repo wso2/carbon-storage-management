@@ -29,17 +29,17 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.rssmanager.core</artifactId>
-                <version>${carbon.platform.version}</version>
+                <version>${carbon.storage.management.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.rssmanager.ui</artifactId>
-                <version>${carbon.platform.version}</version>
+                <version>${carbon.storage.management.version}</version>
             </dependency>
 	    <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.rssmanager.data.mgt</artifactId>
-                <version>${carbon.platform.version}</version>
+                <version>${carbon.storage.management.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

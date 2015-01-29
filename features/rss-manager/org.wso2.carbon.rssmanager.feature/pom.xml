@@ -22,19 +22,19 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.rssmanager.server.feature</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
             <type>zip</type>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.rssmanager.ui.feature</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
             <type>zip</type>
         </dependency>
 	<dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.rssmanager.data.mgt.feature</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
             <type>zip</type>
         </dependency>
     </dependencies>
@@ -64,9 +64,9 @@
                                <importFeatureDef>org.wso2.carbon.transaction.manager:${carbon.platform.version}</importFeatureDef>
 			    </importFeatures>
                             <includedFeatures>
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.rssmanager.server.feature:${carbon.platform.version}</includedFeatureDef>
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.rssmanager.ui.feature:${carbon.platform.version}</includedFeatureDef>						
-				<includedFeatureDef>org.wso2.carbon:org.wso2.carbon.rssmanager.data.mgt.feature:${carbon.platform.version}</includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.rssmanager.server.feature:${carbon.storage.management.version}</includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.rssmanager.ui.feature:${carbon.storage.management.version}</includedFeatureDef>					
+				<includedFeatureDef>org.wso2.carbon:org.wso2.carbon.rssmanager.data.mgt.feature:${carbon.storage.management.version}</includedFeatureDef>
                             </includedFeatures>
                         </configuration>
                     </execution>

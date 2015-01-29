@@ -448,6 +448,12 @@
                 <artifactId>org.wso2.carbon.ntask.core</artifactId>
                 <version>${project.version}</version>
             </dependency>
+		<dependency>
+		    <groupId>org.wso2.carbon.commons</groupId>
+		    <artifactId>org.wso2.carbon.ntask.common</artifactId>
+		    <version>${carbon.commons.version}</version>
+		</dependency>
+
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.governance.notifications.worklist.stub</artifactId>
@@ -674,6 +680,103 @@
                 <version>${testng.version}</version>
                 <scope>test</scope>
             </dependency>
+		<dependency>
+		    <groupId>org.wso2.carbon</groupId>
+		    <artifactId>org.wso2.carbon.rssmanager.core</artifactId>
+		    <version>${carbon.storage.management.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.wso2.carbon</groupId>
+		    <artifactId>org.wso2.carbon.rssmanager.common</artifactId>
+		    <version>${carbon.storage.management.version}</version>
+		</dependency>
+		 <dependency>
+		    <groupId>org.wso2.carbon</groupId>
+		    <artifactId>org.wso2.carbon.rssmanager.stub</artifactId>
+		    <version>${carbon.storage.management.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>commons-codec.wso2</groupId>
+		    <artifactId>commons-codec</artifactId>
+		    <version>${commons-codec.wso2.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.jcraft</groupId>
+		    <artifactId>jsch</artifactId>
+		    <version>${jsch.wso2.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.wso2.carbon</groupId>
+		    <artifactId>org.wso2.carbon.identity.application.mgt</artifactId>
+		    <version>${carbon.identity.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.wso2.carbon</groupId>
+		    <artifactId>org.wso2.carbon.identity.application.common</artifactId>
+		    <version>${carbon.identity.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.wso2.securevault</groupId>
+		    <artifactId>org.wso2.securevault</artifactId>
+		    <version>${secure.vault.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>commons-lang.wso2</groupId>
+		    <artifactId>commons-lang</artifactId>
+		    <version>${commons-lang.wso2.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>commons-lang</groupId>
+		    <artifactId>commons-lang</artifactId>
+		    <version>${commons.lang.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.wso2.carbon.commons</groupId>
+		    <artifactId>org.wso2.carbon.databridge.commons</artifactId>
+		    <version>${carbon.commons.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>commons-pool</groupId>
+		    <artifactId>commons-pool</artifactId>
+		    <version>${commons-pool.version}</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>org.wso2.carbon.commons</groupId>
+		    <artifactId>org.wso2.carbon.databridge.agent.thrift</artifactId>
+		    <version>${carbon.commons.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.wso2.carbon.commons</groupId>
+		    <artifactId>org.wso2.carbon.ntask.core</artifactId>
+		    <version>${carbon.commons.version}</version>
+		</dependency>
+		 <dependency>
+		    <groupId>org.wso2.carbon</groupId>
+		    <artifactId>org.wso2.carbon.ndatasource.rdbms</artifactId>
+		    <version>${carbon.kernel.version}</version>
+		</dependency>
+	        <dependency>
+		    <groupId>org.wso2.carbon</groupId>
+		    <artifactId>org.wso2.carbon.ndatasource.common</artifactId>
+		    <version>${carbon.kernel.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.tomcat.wso2</groupId>
+		    <artifactId>jdbc-pool</artifactId>
+		    <version>${tomcat.jdbc.pool.version}</version>
+		</dependency>
+		 <dependency>
+		    <groupId>asm.wso2</groupId>
+		    <artifactId>asm</artifactId>
+		    <version>${asm.wso2.version}</version>
+		</dependency>
+		 <dependency>
+		    <groupId>org.wso2.carbon.commons</groupId>
+		    <artifactId>org.wso2.carbon.transaction.manager</artifactId>
+		    <version>${carbon.commons.version}</version>
+		</dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -798,13 +901,13 @@
         <commons-pool.version>1.6</commons-pool.version>
 
 	<secure.vault.version>1.0.0-wso2v2</secure.vault.version>
-        <commons.lang.version>2.6.0.wso2v1</commons.lang.version>
+        <commons.lang.version>2.3</commons.lang.version>
         <jsch.wso2.version>0.1.51.wso2v1</jsch.wso2.version>
 	 <tomcat.jdbc.pool.version>7.0.34.wso2v2</tomcat.jdbc.pool.version>
         <jboss.transaction.api.spec.version>1.0.0.Final</jboss.transaction.api.spec.version>
 
 	<commons-codec.wso2.version>1.4.0.wso2v1</commons-codec.wso2.version>
-
+	<asm.wso2.version>3.1.wso2v1</asm.wso2.version>
 
     </properties>
 </project>

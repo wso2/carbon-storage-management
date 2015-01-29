@@ -115,7 +115,7 @@
             <version>${commons-pool.version}</version>
         </dependency>
         <dependency>
-            <groupId>commons-lang</groupId>
+            <groupId>commons-lang.wso2</groupId>
             <artifactId>commons-lang</artifactId>
             <version>${commons-lang.wso2.version}</version>
         </dependency>
@@ -127,20 +127,20 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.logging</artifactId>
-            <version>${commons-logging.version}</version>
+            <version>${carbon.kernel.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.commons</groupId>
             <artifactId>org.wso2.carbon.databridge.commons</artifactId>
             <version>${carbon.commons.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.commons</groupId>
             <artifactId>org.wso2.carbon.databridge.agent.thrift</artifactId>
             <version>${carbon.commons.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.commons</groupId>
             <artifactId>org.wso2.carbon.ntask.core</artifactId>
             <version>${carbon.commons.version}</version>
         </dependency>
@@ -163,10 +163,10 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.ndatasource.rdbms</artifactId>
-            <version>${carbon.commons.version}</version>
+            <version>${carbon.kernel.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.commons</groupId>
             <artifactId>org.wso2.carbon.transaction.manager</artifactId>
             <version>${carbon.commons.version}</version>
         </dependency>
@@ -184,14 +184,14 @@
 	    <version>${carbon.kernel.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.commons</groupId>
             <artifactId>org.wso2.carbon.ntask.common</artifactId>
             <version>${carbon.commons.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.ndatasource.common</artifactId>
-            <version>${carbon.commons.version}</version>
+            <version>${carbon.kernel.version}</version>
         </dependency>
 
         <dependency>

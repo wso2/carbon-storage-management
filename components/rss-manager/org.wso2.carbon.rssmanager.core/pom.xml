@@ -181,7 +181,7 @@
         <dependency>
             <groupId>commons-lang.wso2</groupId>
             <artifactId>commons-lang</artifactId>
-            <version>${commons.lang.version}</version>
+            <version>${commons-lang.wso2.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.axis2.wso2</groupId>
