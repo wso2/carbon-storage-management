@@ -172,6 +172,7 @@
         <dependency>
             <groupId>org.apache.ws.commons.axiom.wso2</groupId>
             <artifactId>axiom</artifactId>
+	     <version>${axiom.wso2.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-lang.wso2</groupId>
@@ -181,13 +182,10 @@
         <dependency>
             <groupId>org.apache.axis2.wso2</groupId>
             <artifactId>axis2</artifactId>
+	    <version>${axis2.wso2.version}</version>
+		
         </dependency>
     </dependencies>
 
-    <properties>
-        <secure.vault.version>1.0.0-wso2v2</secure.vault.version>
-        <commons.lang.version>2.6.0.wso2v1</commons.lang.version>
-        <jsch.wso2.version>0.1.51.wso2v1</jsch.wso2.version>
-    </properties>
 </project>
 
