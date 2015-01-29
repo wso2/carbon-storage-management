@@ -77,21 +77,23 @@
         <dependency>
             <groupId>org.hectorclient.wso2</groupId>
             <artifactId>hector-core</artifactId>
-            <version>1.1.4.wso2v1</version>
+            <version>${hector-core.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.core</artifactId>
+            <version>${carbon.kernel.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.identity.authentication</artifactId>
+            <version>${carbon.identity.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>6.3.1</version>
+            <version>${testng.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -205,13 +207,13 @@
         <dependency>
             <groupId>edu.stanford.ppl</groupId>
             <artifactId>snaptree</artifactId>
-            <version>0.1</version>
+            <version>${snaptree.wso2.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty</artifactId>
-            <version>3.6.6.Final</version>
+            <version>${netty.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
