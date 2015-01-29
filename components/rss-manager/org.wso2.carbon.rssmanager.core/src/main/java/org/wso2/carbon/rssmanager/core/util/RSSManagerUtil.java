@@ -1080,13 +1080,13 @@ public final class RSSManagerUtil {
     }
 
     /**
-     * Check whether the database template name created with alphanumeric charactors and underscores
-     * @param templateName mame of the template
-     * @return true if valid template else false
+     * Check whether the input only contain alphanumeric characters and underscores
+     * @param str
+     * @return true if only contain alphanumeric characters and underscores else false
      */
-    public static boolean isValidTemplateName(String templateName) {
+    public static boolean isAlphanumericOrUnderscore(String str) {
             String pattern= "^[a-zA-Z0-9_]*$";
-            if(templateName.matches(pattern)){
+            if(str.matches(pattern)){
                 return true;
             }
             return false;
