@@ -89,7 +89,6 @@
             <artifactId>org.wso2.carbon.identity.authentication</artifactId>
             <version>${carbon.identity.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -204,12 +203,12 @@
             <version>${highscale.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>edu.stanford.ppl</groupId>
             <artifactId>snaptree</artifactId>
             <version>${snaptree.wso2.version}</version>
             <scope>test</scope>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty</artifactId>
