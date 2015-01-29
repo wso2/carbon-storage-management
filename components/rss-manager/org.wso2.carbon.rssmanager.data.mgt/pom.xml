@@ -210,10 +210,4 @@
         </dependency>
     </dependencies>
 
-    <properties>
-        <commons-lang.wso2.version>2.6.0.wso2v1</commons-lang.wso2.version>
-        <secure.vault.version>1.0.0-wso2v2</secure.vault.version>
-        <tomcat.jdbc.pool.version>7.0.34.wso2v2</tomcat.jdbc.pool.version>
-        <jboss.transaction.api.spec.version>1.0.0.Final</jboss.transaction.api.spec.version>
-    </properties>
 </project>
