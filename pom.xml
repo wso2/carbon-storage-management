@@ -476,7 +476,7 @@
             <dependency>
                 <groupId>org.apache.axis2</groupId>
                 <artifactId>axis2-transport-base</artifactId>
-                <version>${axis2.version}</version>
+                <version>${axis2.wso2.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.neethi.wso2</groupId>
@@ -699,15 +699,15 @@
                 <version>4.2.0</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.ws.commons.axiom</groupId>
-                <artifactId>axiom-api</artifactId>
-                <version>${axiom.version}</version>
+                <groupId>org.apache.ws.commons.axiom.wso2</groupId>
+                <artifactId>axiom</artifactId>
+                <version>${axiom.wso2.version}</version>
             </dependency>
-            <dependency>
+            <!--dependency>
                 <groupId>org.apache.ws.commons.axiom</groupId>
                 <artifactId>axiom-impl</artifactId>
-                <version>${axiom.version}</version>
-            </dependency>
+                <version>${axiom.wso2.version}</version>
+            </dependency-->
             <dependency>
                 <groupId>org.apache.ws.commons.axiom.wso2</groupId>
                 <artifactId>axiom</artifactId>
@@ -763,15 +763,12 @@
     </dependencyManagement>
 
     <properties>
+
         <!-- Carbon kernel version -->
         <carbon.kernel.version>4.3.0</carbon.kernel.version>
         <carbon.kernel.imp.pkg.version>[4.3.0, 4.4.0)</carbon.kernel.imp.pkg.version>
 
         <!-- Carbon platform versions comes here-->
-        <carbon.platform.version>4.3.0-SNAPSHOT</carbon.platform.version>
-        <carbon.platform.package.export.version>4.3.0-SNAPSHOT</carbon.platform.package.export.version>
-        <carbon.platform.package.import.version.range>[4.3.0.SNAPSHOT, 4.4.0)
-        </carbon.platform.package.import.version.range>
         <carbon.commons.version>4.3.0</carbon.commons.version>
         <carbon.identity.version>4.3.0-SNAPSHOT</carbon.identity.version>
         <carbon.registry.version>4.3.0-SNAPSHOT</carbon.registry.version>
@@ -781,17 +778,15 @@
 
         <!-- Axis2 Version -->
         <axis2.wso2.version>1.6.1.wso2v11</axis2.wso2.version>
-        <orbit.version.axis2>1.6.1.wso2v11</orbit.version.axis2>
         <axis2-transports.version>1.1.0-wso2v10-SNAPSHOT</axis2-transports.version>
-        <axis2.osgi.version.range>[1.6.1.wso2v11, 1.7.0)</axis2.osgi.version.range>
+        <axis2.wso2.imp.pkg.version>[1.6.1.wso2v11, 1.7.0)</axis2.wso2.imp.pkg.version>
         <orbit.version.wsdl4j>1.6.2.wso2v4</orbit.version.wsdl4j>
         <orbit.version.neethi>2.0.4.wso2v4</orbit.version.neethi>
         <rampart.wso2.version>1.7.0-SNAPSHOT</rampart.wso2.version>
 
         <!-- Axiom Version -->
-        <axiom.version>1.2.11-wso2v5</axiom.version>
         <axiom.wso2.version>1.2.11.wso2v5</axiom.wso2.version>
-        <axiom.osgi.version.range>[1.2.11.wso2v5, 1.3.0)</axiom.osgi.version.range>
+        <axiom.wso2.imp.pkg.version>[1.2.11.wso2v5, 1.3.0)</axiom.wso2.imp.pkg.version>
 
         <!-- Servet Version -->
         <version.javax.servlet.jsp>2.2.0.v201112011158</version.javax.servlet.jsp>
@@ -880,5 +875,16 @@
         <commons-dbcp.version>1.2.2</commons-dbcp.version>
         <commons-logging.version>1.1</commons-logging.version>
         <commons-lang.wso2.version>2.6.0.wso2v1</commons-lang.wso2.version>
+        <commons-pool.version>1.6</commons-pool.version>
+
+	<secure.vault.version>1.0.0-wso2v2</secure.vault.version>
+        <commons.lang.version>2.6.0.wso2v1</commons.lang.version>
+        <jsch.wso2.version>0.1.51.wso2v1</jsch.wso2.version>
+	 <tomcat.jdbc.pool.version>7.0.34.wso2v2</tomcat.jdbc.pool.version>
+        <jboss.transaction.api.spec.version>1.0.0.Final</jboss.transaction.api.spec.version>
+
+	<commons-codec.wso2.version>1.4.0.wso2v1</commons-codec.wso2.version>
+
+
     </properties>
 </project>
