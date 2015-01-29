@@ -400,7 +400,37 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.identity.authentication</artifactId>
-                <version>${carbon.platform.version}</version>
+                <version>${carbon.identity.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.cassandra.common.feature</artifactId>
+                <version>${carbon.storage.management.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.cassandra.mgt.feature</artifactId>
+                <version>${carbon.storage.management.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.cassandra.mgt.ui.feature</artifactId>
+                <version>${carbon.storage.management.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.cassandra.server.feature</artifactId>
+                <version>${carbon.storage.management.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.cassandra.dataaccess.feature</artifactId>
+                <version>${carbon.storage.management.version}</version>
+                <type>zip</type>
             </dependency>
 
             <!-- Event dependencies -->
@@ -437,7 +467,7 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.registry.common</artifactId>
-                <version>${carbon.platform.version}</version>
+                <version>${carbon.registry.version}</version>
             </dependency>
 
             <!-- OSGi dependencies -->
