@@ -99,7 +99,7 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cassandra.server</artifactId>
-            <version>${wso2.cassandra.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
     </dependencies>
 

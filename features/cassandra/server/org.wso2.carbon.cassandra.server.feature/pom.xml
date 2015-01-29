@@ -38,7 +38,7 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cassandra.server</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.cassandra.wso2</groupId>
@@ -48,57 +48,67 @@
         <dependency>
             <groupId>libthrift.wso2</groupId>
             <artifactId>libthrift</artifactId>
-            <version>0.7.0.wso2v2</version>
+            <version>${libthrift.version}</version>
         </dependency>
         <dependency>
             <groupId>org.perf4j.wso2</groupId>
             <artifactId>perf4j</artifactId>
+            <version>${perf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.cliffc.high_scale_lib.wso2</groupId>
             <artifactId>high-scale-lib</artifactId>
+            <version>${highscale.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.identity.authentication</artifactId>
+            <version>${carbon.identity.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cassandra.mgt</artifactId>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
         <dependency>
             <groupId>org.yaml.wso2</groupId>
             <artifactId>snakeyaml</artifactId>
+            <version>${snakeyaml.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>14.0.1</version>
+            <version>${guava.version}</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.concurrentlinkedhashmap</groupId>
             <artifactId>concurrentlinkedhashmap-lru</artifactId>
-            <version>1.3</version>
+            <version>${concurrentlinkedhashmap.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop.wso2</groupId>
             <artifactId>avro</artifactId>
+            <version>${avro.version}</version>
         </dependency>
         <dependency>
             <groupId>org.safehaus.jug.wso2</groupId>
             <artifactId>jug</artifactId>
+            <version>${jug.version}</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.json-simple.wso2</groupId>
             <artifactId>json-simple</artifactId>
+            <version>${simple-json.version}</version>
         </dependency>
         <!--dependency>
             <groupId>org.mortbay.jetty</groupId>
@@ -107,53 +117,62 @@
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-core-asl</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cassandra.sharedkey</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
         <dependency>
             <groupId>org.github.wso2</groupId>
             <artifactId>jamm</artifactId>
+            <version>${jamm.version}</version>
         </dependency>
         <dependency>
             <groupId>antlr.wso2</groupId>
             <artifactId>antlr</artifactId>
+            <version>${antlr.version}</version>
         </dependency>
 	<dependency>
             <groupId>org.antlr.wso2</groupId>
             <artifactId>antlr-runtime</artifactId>
+            <version>${antlr.version}</version>
         </dependency>
         <dependency>
             <groupId>org.xerial.snappy</groupId>
             <artifactId>snappy-java</artifactId>
+            <version>${snappy-java.version}</version>
         </dependency>
         <dependency>
             <groupId>snaptree.wso2</groupId>
             <artifactId>snaptree</artifactId>
+            <version>${snaptree.version}</version>
         </dependency>
         <dependency>
             <groupId>metrics-core.wso2</groupId>
             <artifactId>metrics-core</artifactId>
+            <version>${metrics-core.version}</version>
         </dependency>
 	<dependency>
 	    <groupId>com.ning</groupId>
 	    <artifactId>compress-lzf</artifactId>
+            <version>${compress-lzf.version}</version>
 	</dependency>
 	<dependency>
 	    <groupId>io.netty</groupId>
 	    <artifactId>netty</artifactId>
-	    <version>3.9.0.Final</version>
+	    <version>${netty.version}</version>
 	</dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.tenant.common.feature</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.commons.version}</version>
 	    <type>zip</type>
         </dependency>
     </dependencies>
@@ -207,11 +226,11 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.server:4.3.0-SNAPSHOT</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.sharedkey:4.3.0-SNAPSHOT</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.identity.authentication:${carbon.platform.version}</bundleDef>
-                                <bundleDef>org.apache.cassandra.wso2:apache-cassandra</bundleDef>
-                                <bundleDef>libthrift.wso2:libthrift</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.server:${carbon.storage.management.version}</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.sharedkey:${carbon.storage.management.version}</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.identity.authentication:${carbon.identity.version}</bundleDef>
+                                <bundleDef>org.apache.cassandra.wso2:apache-cassandra:${wso2.cassandra.version}</bundleDef>
+                                <bundleDef>libthrift.wso2:libthrift:${libthrift.version}</bundleDef>
                                 <bundleDef>org.perf4j.wso2:perf4j</bundleDef>
                                 <bundleDef>org.cliffc.high_scale_lib.wso2:high-scale-lib</bundleDef>
                                 <bundleDef>org.slf4j:slf4j-api</bundleDef>
@@ -235,7 +254,7 @@
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.tenant.common:${carbon.platform.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.tenant.common:${carbon.commons.version}</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>
