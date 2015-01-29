@@ -21,7 +21,7 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cassandra.explorer.mgt</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
 
         <!--Cassandra -->
@@ -36,12 +36,12 @@
         <dependency>
             <groupId>org.hectorclient.wso2</groupId>
             <artifactId>hector-core</artifactId>
-            <version>1.1.4.wso2v1</version>
+            <version>${hector-core.version}</version>
         </dependency>
         <dependency>
             <groupId>libthrift.wso2</groupId>
             <artifactId>libthrift</artifactId>
-            <version>${libthrift.patch.version}</version>
+            <version>${libthrift.version}</version>
         </dependency>
         <dependency>
             <groupId>org.perf4j.wso2</groupId>
@@ -66,7 +66,7 @@
         <dependency>
             <groupId>org.yaml.wso2</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>${yaml.version}</version>
+            <version>${snakeyaml.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -91,9 +91,9 @@
             <version>${carbon.kernel.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.commons</groupId>
             <artifactId>org.wso2.carbon.identity.authentication</artifactId>
-            <version>${wso2carbon.version.cassandra}</version>
+            <version>${carbon.commons.version}</version>
         </dependency>
         <dependency>
             <groupId>org.safehaus.jug.wso2</groupId>
@@ -214,9 +214,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <properties>
-     	<jamm.version>0.2.5.wso2v2</jamm.version>
-	<libthrift.patch.version>0.7.0.wso2v2</libthrift.patch.version>
-    </properties>
 </project>

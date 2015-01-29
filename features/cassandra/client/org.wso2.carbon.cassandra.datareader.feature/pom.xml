@@ -63,19 +63,19 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.ndatasource.common</artifactId>
-            <version>${carbon.commons.version}</version>
+            <version>${carbon.kernel.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.ndatasource.core</artifactId>
-            <version>${carbon.commns.version}</version>
+            <version>${carbon.kernel.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.utils</artifactId>
-            <version>${carbon.commons.version}</version>
+            <version>${carbon.kernel.version}</version>
         </dependency>
 
         <dependency>
@@ -85,19 +85,19 @@
         </dependency>
 
         <dependency>
-            <groupId>org.xerial.snappy</groupId>
+            <groupId>snappy-java.wso2</groupId>
             <artifactId>snappy-java</artifactId>
-            <version>${carbon.storage.management.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>metrics-core.wso2</groupId>
-            <artifactId>metrics-core</artifactId>
-            <version>${carbon.storage.management.version}</version>
+            <version>${snappy-java.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.codahale.metrics</groupId>
+            <artifactId>metrics-core</artifactId>
+            <version>${codahale.metrics.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>metrics-core.wso2</groupId>
             <artifactId>metrics-core</artifactId>
             <version>${metrics-core.version}</version>
         </dependency>
@@ -140,9 +140,9 @@
                                 <bundleDef>io.netty:netty</bundleDef>
                                 <bundleDef>org.slf4j:slf4j-api</bundleDef>
                                 <bundleDef>com.google.guava:guava</bundleDef>
-                                <bundleDef>org.xerial.snappy:snappy-java</bundleDef>
-                                <bundleDef>metrics-core.wso2:metrics-core</bundleDef>
-                                <bundleDef>com.codahale.metrics:metrics-core</bundleDef>
+                                <bundleDef>snappy-java.wso2:snappy-java</bundleDef>
+                                <!--bundleDef>com.codahale.metrics:metrics-core</bundleDef>
+                                <bundleDef>com.codahale.metrics:metrics-core</bundleDef-->
                                 <bundleDef>org.apache.cassandra.wso2:cassandra-thrift</bundleDef>
                             </bundles>
                             <importFeatures>

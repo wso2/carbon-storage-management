@@ -34,6 +34,7 @@
 
 
     <modules>
+        <module>common/org.wso2.carbon.cassandra.common.feature</module>
         <module>server/org.wso2.carbon.cassandra.server.feature</module>
         <module>client/org.wso2.carbon.cassandra.client.feature</module>
         <module>client/org.wso2.carbon.cassandra.datareader.feature</module>
@@ -46,8 +47,6 @@
         <module>server-monitor/org.wso2.carbon.cassandra.cluster.mgt.ui.feature</module>
         <module>server-monitor/org.wso2.carbon.cassandra.cluster.proxy.feature</module>
         <module>server-monitor/org.wso2.carbon.cassandra.monitor.feature</module>
-        <module>common/org.wso2.carbon.cassandra.common.feature</module>
-
     </modules>
 
     <dependencyManagement>
@@ -98,37 +97,37 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.cassandra.dataaccess</artifactId>
-                <version>${wso2carbon.version.cassandra}</version>
+                <version>${carbon.storage.management.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.cassandra.server</artifactId>
-                <version>${wso2carbon.version.cassandra}</version>
+                <version>${carbon.storage.management.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.cassandra.sharedkey</artifactId>
-                <version>${wso2carbon.version.cassandra}</version>
+                <version>${carbon.storage.management.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.cassandra.mgt</artifactId>
-                <version>${wso2carbon.version.cassandra}</version>
+                <version>${carbon.storage.management.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.cassandra.mgt.ui</artifactId>
-                <version>${wso2carbon.version.cassandra}</version>
+                <version>${carbon.storage.management.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.cassandra.mgt.stub</artifactId>
-                <version>${wso2carbon.version.cassandra}</version>
+                <version>${carbon.storage.management.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.yaml.wso2</groupId>
                 <artifactId>snakeyaml</artifactId>
-                <version>${yaml.version}</version>
+                <version>${snakeyaml.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -159,9 +158,9 @@
                 <type>zip</type>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.commons</groupId>
                 <artifactId>org.wso2.carbon.identity.authentication</artifactId>
-                <version>${wso2carbon.version.cassandra}</version>
+                <version>${carbon.commons.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.safehaus.jug.wso2</groupId>
@@ -204,7 +203,7 @@
                 <version>${antlr.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.xerial.snappy</groupId>
+                <groupId>snappy-java.wso2</groupId>
                 <artifactId>snappy-java</artifactId>
                 <version>${snappy-java.version}</version>
             </dependency>
