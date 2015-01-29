@@ -118,6 +118,7 @@
         <dependency>
             <groupId>org.apache.ws.commons.axiom.wso2</groupId>
             <artifactId>axiom</artifactId>
+	    <version>${axiom.wso2.version}</version>
         </dependency>
     </dependencies>
 </project>
