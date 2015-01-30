@@ -24,7 +24,10 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
+<<<<<<< HEAD
     <groupId>org.wso2.carbon.storagemgt</groupId>
+=======
+>>>>>>> added mapred component files
     <artifactId>hdfs</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - HDFS Aggregator Module</name>
@@ -57,6 +60,9 @@
     </build>
 
     <modules>
+        <module>org.wso2.carbon.identity.authenticator.krb5</module>
+        <module>org.wso2.carbon.identity.authenticator.krb5.ui</module>
+        <module>org.wso2.carbon.hadoop.security</module>
         <module>org.wso2.carbon.hdfs.namenode</module>
         <module>org.wso2.carbon.hdfs.datanode</module>
 	<module>org.wso2.carbon.hdfs.mgt</module>

@@ -37,6 +37,9 @@
                 <module>org.wso2.carbon.hdfs.mgt.ui.feature</module>
                 <module>org.wso2.carbon.hdfs.namenode.feature</module>
                 <module>org.wso2.carbon.hdfs.datanode.feature</module>
+                <module>org.wso2.carbon.hadoop.security.feature</module>
+                <module>org.wso2.carbon.identity.authenticator.krb5.feature</module>
+                <module>org.wso2.carbon.identity.authenticator.krb5.ui.feature</module>
                 <!--module>org.wso2.carbon.hadoopkrb5auth.mgt.feature</module-->
                 <!--module>org.wso2.carbon.hadoopkrb5auth.mgt.ui.feature</module-->
                 <!--module>org.wso2.carbon.mapreduce.mgt.feature</module-->

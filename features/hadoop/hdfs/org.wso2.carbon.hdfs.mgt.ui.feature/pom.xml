@@ -38,19 +38,14 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.hdfs.mgt.ui</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.hdfs.mgt.stub</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
-        <!--dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.core.server.feature</artifactId>
-            <type>zip</type>
-        </dependency-->
-    </dependencies>
+     </dependencies>
 
     <build>
         <plugins>

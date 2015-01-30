@@ -38,27 +38,15 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.hdfs.mgt</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.tenant.common.feature</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.multitenancy.version}</version>
             <type>zip</type>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.wso2.carbon</groupId>-->
-            <!--<artifactId>org.wso2.carbon.hdfs.dataaccess.feature</artifactId>-->
-            <!--<version>${project.version}</version>-->
-            <!--<type>zip</type>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>org.wso2.carbon</groupId>-->
-            <!--<artifactId>org.wso2.carbon.core.server.feature</artifactId>-->
-            <!--<version>${project.version}</version>-->
-            <!--<type>zip</type>-->
-        <!--</dependency>-->
-    </dependencies>
+     </dependencies>
 
     <build>
         <plugins>
@@ -87,20 +75,12 @@
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}</importFeatureDef>
-				<importFeatureDef>org.wso2.carbon.tenant.common:${carbon.platform.version}</importFeatureDef>
+				                <importFeatureDef>org.wso2.carbon.tenant.common:${carbon.multitenancy.version}</importFeatureDef>
                             </importFeatures>
-                            <!--<includedFeatures>-->
-                                <!--<includedFeatureDef>org.wso2.carbon:org.wso2.carbon.hdfs.dataaccess.feature:${project.version}</includedFeatureDef>-->
-                            <!--</includedFeatures>-->
-                        </configuration>
+                          </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
-
-    <properties>
-        <org.wso2.carbon.tenant.common.feature.version>4.3.0-SNAPSHOT</org.wso2.carbon.tenant.common.feature.version>
-    </properties>
-
 </project>
