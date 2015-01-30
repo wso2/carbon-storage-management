@@ -27,20 +27,19 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.carbon</groupId>
     <artifactId>mapred</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - Hadoop Map Reduce Components and Kerberos 5 Authenticator</name>
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.carbon.identity.authenticator.krb5</module>
+        <!-- module>org.wso2.carbon.identity.authenticator.krb5</module>
         <module>org.wso2.carbon.identity.authenticator.krb5.ui</module>
-        <!--module>org.wso2.carbon.mapred.mgt</module>
+        <module>org.wso2.carbon.mapred.mgt</module>
         <module>org.wso2.carbon.mapred.mgt.ui</module>
-        <module>org.wso2.carbon.mapred.jobtracker</module-->
+        <module>org.wso2.carbon.mapred.jobtracker</module
         <module>org.wso2.carbon.hadoop.security</module>
-        <!--module>org.wso2.carbon.mapred.reporting</module-->
+        module>org.wso2.carbon.mapred.reporting</module-->
     </modules>
 
 </project>

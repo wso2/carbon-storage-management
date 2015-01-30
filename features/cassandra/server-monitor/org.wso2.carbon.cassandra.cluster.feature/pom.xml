@@ -3,10 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
+        <groupId>org.wso2.carbon.storagemgt</groupId>
         <artifactId>cassandra-feature</artifactId>
-        <groupId>org.wso2.carbon</groupId>
         <version>4.3.0-SNAPSHOT</version>
-	<relativePath>../../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.cassandra.cluster.feature</artifactId>
@@ -16,14 +16,14 @@
     <url>http://wso2.org</url>
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.cassandra.cluster</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
-	<dependency>
-            <groupId>org.wso2.carbon</groupId>
+        <dependency>
+            <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.cassandra.cluster.mgt.stub</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -49,14 +49,18 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.cluster</bundleDef>
-                           <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.cluster.mgt.stub</bundleDef>
-			  </bundles>
+                                <bundleDef>
+                                    org.wso2.carbon.storagemgt:org.wso2.carbon.cassandra.cluster:${carbon.storage.management.version}
+                                </bundleDef>
+                                <bundleDef>
+                                    org.wso2.carbon.storagemgt:org.wso2.carbon.cassandra.cluster.mgt.stub:${carbon.storage.management.version}
+                                </bundleDef>
+                            </bundles>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-	   <plugin>
+            <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>

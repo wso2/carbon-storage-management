@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!--
  ~ Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
@@ -15,10 +16,11 @@
  ~ KIND, either express or implied.  See the License for the
  ~ specific language governing permissions and limitations
  ~ under the License.
- --><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-	<groupId>org.wso2.carbon</groupId>
+	<groupId>org.wso2.carbon.storagemgt</groupId>
         <artifactId>carbon-storage-management</artifactId>
         <version>4.3.0-SNAPSHOT</version>
 	<relativePath>../pom.xml</relativePath>
@@ -37,7 +39,7 @@
         <module>org.wso2.carbon.cassandra.mgt.stub</module>
         <module>org.wso2.carbon.hdfs.mgt.stub</module>
         <module>org.wso2.carbon.rssmanager.stub</module>
-        <module>org.wso2.carbon.mapred.mgt.stub</module>
+        <!--module>org.wso2.carbon.mapred.mgt.stub</module-->
         <module>org.wso2.carbon.identity.authenticator.krb5.stub</module>
     </modules>
 
@@ -57,8 +59,9 @@
             <artifactId>axis2</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.ws.commons.axiom</groupId>
-            <artifactId>axiom-api</artifactId>
+            <groupId>org.apache.ws.commons.axiom.wso2</groupId>
+            <artifactId>axiom</artifactId>
+	    <version>${axiom.wso2.version}</version>
         </dependency>
         <dependency>
             <groupId>wsdl4j.wso2</groupId>

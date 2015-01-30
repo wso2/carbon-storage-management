@@ -18,14 +18,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>org.wso2.carbon</groupId>
+        <groupId>org.wso2.carbon.storagemgt</groupId>
         <artifactId>carbon-storage-management</artifactId>
         <version>4.3.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.carbon</groupId>
     <artifactId>cassandra</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - Cassandra Aggregator Module</name>
@@ -67,24 +66,24 @@
             <!--Carbon-->
 
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.commons</groupId>
                 <artifactId>org.wso2.carbon.identity.authentication</artifactId>
-                <version>${carbon.platform.version}</version>
+                <version>${carbon.commons.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.commons</groupId>
                 <artifactId>org.wso2.carbon.um.ws.api</artifactId>
-                <version>${carbon.platform.version}</version>
+                <version>${carbon.commons.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.commons</groupId>
                 <artifactId>org.wso2.carbon.databridge.commons</artifactId>
-                <version>${carbon.platform.version}</version>
+                <version>${carbon.commons.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.commons</groupId>
                 <artifactId>org.wso2.carbon.databridge.agent.thrift</artifactId>
-                <version>${carbon.platform.version}</version>
+                <version>${carbon.commons.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -151,13 +150,5 @@
         <module>org.wso2.carbon.cassandra.cluster.proxy</module>
         <module>org.wso2.carbon.cassandra.datareader</module>
     </modules>
-
-    <properties>
-        <axis2.osgi.version.range.cassandra>${axis2.osgi.version.range}
-        </axis2.osgi.version.range.cassandra>
-        <axiom.osgi.version.range.cassandra>${axiom.osgi.version.range}
-        </axiom.osgi.version.range.cassandra>
-        <wso2carbon.version.cassandra>${wso2carbon.version}</wso2carbon.version.cassandra>
-    </properties>
 
 </project>

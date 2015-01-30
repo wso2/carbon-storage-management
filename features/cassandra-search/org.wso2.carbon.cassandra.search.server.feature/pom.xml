@@ -3,8 +3,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
+        <groupId>org.wso2.carbon.storagemgt</groupId>
         <artifactId>cassandra-search-feature</artifactId>
-        <groupId>org.wso2.carbon</groupId>
         <version>4.3.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -20,26 +20,26 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.cassandra.search.mgt</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.commons</groupId>
             <artifactId>org.wso2.carbon.databridge.commons</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.commons.version}</version>
         </dependency>
 
         <!--Hector-->
         <dependency>
             <groupId>org.hectorclient.wso2</groupId>
             <artifactId>hector-core</artifactId>
-            <version>1.1.4.wso2v1</version>
+            <version>${hector-core.version}</version>
         </dependency>
         <dependency>
             <groupId>libthrift.wso2</groupId>
             <artifactId>libthrift</artifactId>
-            <version>${libthrift.patch.version}</version>
+            <version>${libthrift.version}</version>
         </dependency>
         <dependency>
             <groupId>org.perf4j.wso2</groupId>
@@ -91,8 +91,8 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.search.mgt:${project.version}</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.databridge.commons:4.3.0-SNAPSHOT</bundleDef>
+                                <bundleDef>org.wso2.carbon.storagemgt:org.wso2.carbon.cassandra.search.mgt:${carbon.storage.management.version}</bundleDef>
+                                <bundleDef>org.wso2.carbon.commons:org.wso2.carbon.databridge.commons:${carbon.commons.version}</bundleDef>
                                 <bundleDef>libthrift.wso2:libthrift</bundleDef>
                                 <bundleDef>org.perf4j.wso2:perf4j</bundleDef>
                                 <bundleDef>org.cliffc.high_scale_lib.wso2:high-scale-lib</bundleDef>
@@ -110,8 +110,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <properties>
-        <libthrift.patch.version>0.7.0.wso2v2</libthrift.patch.version>
-    </properties>
 </project>

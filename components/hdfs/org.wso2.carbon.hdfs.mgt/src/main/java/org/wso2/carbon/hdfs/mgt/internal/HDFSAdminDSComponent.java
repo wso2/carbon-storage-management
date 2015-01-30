@@ -24,7 +24,6 @@ import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.hdfs.dataaccess.DataAccessService;
 import org.wso2.carbon.hdfs.mgt.HDFSAdminComponentManager;
 import org.wso2.carbon.hdfs.mgt.HDFSMgtServiceListener;
-import org.wso2.carbon.hdfs.mgt.HDFSTenantCreationListener;
 import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
 import org.wso2.carbon.user.core.listener.UserOperationEventListener;
 import org.wso2.carbon.user.core.service.RealmService;
@@ -58,8 +57,8 @@ public class HDFSAdminDSComponent {
         	bundleContext.registerService(UserOperationEventListener.class.getName(),
         	                new HDFSMgtServiceListener(realmService), null);
         }
-        bundleContext.registerService(TenantMgtListener.class.getName(),
-                new HDFSTenantCreationListener(realmService), null);
+//        bundleContext.registerService(TenantMgtListener.class.getName(),
+//                new HDFSTenantCreationListener(realmService), null);
         
         bundleContext.registerService(Axis2ConfigurationContextObserver.class.getName(),
                 new HDFSAdminAxis2ConfigContextObserver(), null);

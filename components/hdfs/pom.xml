@@ -17,14 +17,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-	    <groupId>org.wso2.carbon</groupId>
+	    <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>carbon-storage-management</artifactId>
             <version>4.3.0-SNAPSHOT</version>
             <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.carbon</groupId>
+    <groupId>org.wso2.carbon.storagemgt</groupId>
     <artifactId>hdfs</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - HDFS Aggregator Module</name>
@@ -33,14 +33,14 @@
     <dependencyManagement>
         <dependencies>
              <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.commons</groupId>
                 <artifactId>org.wso2.carbon.um.ws.api</artifactId>
-                <version>${carbon.platform.version}</version>
+                <version>${carbon.commons.version}</version>
             </dependency>
 	    <dependency>
                 <groupId>org.apache.hadoop.wso2</groupId>
 		<artifactId>hadoop-core</artifactId>
-                <version>${hadoop.version}</version>
+                <version>${wso2.hadoop.version}</version>
 	    </dependency>
         </dependencies>
     </dependencyManagement>
@@ -57,20 +57,13 @@
     </build>
 
     <modules>
+        <module>org.wso2.carbon.identity.authenticator.krb5</module>
+        <module>org.wso2.carbon.identity.authenticator.krb5.ui</module>
+        <module>org.wso2.carbon.hadoop.security</module>
         <module>org.wso2.carbon.hdfs.namenode</module>
         <module>org.wso2.carbon.hdfs.datanode</module>
-	    <module>org.wso2.carbon.hdfs.mgt</module>
+	<module>org.wso2.carbon.hdfs.mgt</module>
         <module>org.wso2.carbon.hdfs.dataaccess</module>
         <module>org.wso2.carbon.hdfs.mgt.ui</module>
     </modules>
-
-    <properties>
-        <axis2.osgi.version.range.hdfs>${axis2.osgi.version.range}
-        </axis2.osgi.version.range.hdfs>
-        <axiom.osgi.version.range.hdfs>${axiom.osgi.version.range}
-        </axiom.osgi.version.range.hdfs>
-        <hadoop.version>0.20.203.1.wso2v4</hadoop.version>
-        <wso2carbon.version.hdfs>${wso2carbon.version}</wso2carbon.version.hdfs>
-    </properties>
-
 </project>

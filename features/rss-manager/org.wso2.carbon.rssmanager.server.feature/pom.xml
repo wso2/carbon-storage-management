@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>rss-manager-feature</artifactId>
-        <groupId>org.wso2.carbon</groupId>
+        <groupId>org.wso2.carbon.storagemgt</groupId>
         <version>4.3.0-SNAPSHOT</version>
 	<relativePath>../pom.xml</relativePath>
     </parent>
@@ -20,14 +20,14 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.rssmanager.core</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.rssmanager.common</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
 	<dependency>
 	       <groupId>asm.wso2</groupId>
@@ -90,10 +90,10 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>
-                                    org.wso2.carbon:org.wso2.carbon.rssmanager.core:${carbon.platform.version}
+                                    org.wso2.carbon.storagemgt:org.wso2.carbon.rssmanager.core:${carbon.storage.management.version}
                                 </bundleDef>
                                 <bundleDef>
-                                    org.wso2.carbon:org.wso2.carbon.rssmanager.common:${carbon.platform.version}
+                                    org.wso2.carbon.storagemgt:org.wso2.carbon.rssmanager.common:${carbon.storage.management.version}
                                 </bundleDef>
                                 <bundleDef>
                                     com.jcraft:jsch:${jsch.wso2.version}
@@ -125,9 +125,5 @@
         </plugins>
     </build>
 
-   <properties>
-        <asm.wso2.version>3.1.wso2v1</asm.wso2.version>
-        <jsch.wso2.version>0.1.51.wso2v1</jsch.wso2.version>
-   </properties>
-
+   
 </project>

@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>cassandra-feature</artifactId>
-        <groupId>org.wso2.carbon</groupId>
+        <groupId>org.wso2.carbon.storagemgt</groupId>
         <version>4.3.0-SNAPSHOT</version>
 	<relativePath>../../pom.xml</relativePath>
     </parent>
@@ -16,14 +16,14 @@
     <url>http://wso2.org</url>
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.cassandra.cluster.proxy</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
 	<dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.cassandra.cluster.mgt.stub</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
 
     </dependencies>
@@ -50,8 +50,8 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.cluster.proxy</bundleDef>
-                           <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.cluster.mgt.stub</bundleDef>
+                                <bundleDef>org.wso2.carbon.storagemgt:org.wso2.carbon.cassandra.cluster.proxy:${carbon.storage.management.version}</bundleDef>
+                           	<bundleDef>org.wso2.carbon.storagemgt:org.wso2.carbon.cassandra.cluster.mgt.stub:${carbon.storage.management.version}</bundleDef>
 			  </bundles>
                         </configuration>
                     </execution>
@@ -101,7 +101,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 </project>

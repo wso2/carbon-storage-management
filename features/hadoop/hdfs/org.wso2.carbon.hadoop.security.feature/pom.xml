@@ -27,20 +27,26 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.hdfs.mgt.feature</artifactId>
-    <version>4.3.0-SNAPSHOT</version>
+    <artifactId>org.wso2.carbon.hadoop.security.feature</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - HDFS Management Feature</name>
+    <version>4.3.0-SNAPSHOT</version>
+    <name>WSO2 Carbon - Hadoop - Carbon Security  Feature</name>
     <url>http://wso2.org</url>
-    <description>This feature contains the bundles required for managing the HDFS backend</description>
+    <description>This feature contains various security features related to hadoop infrastructure running on carbon</description>
 
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon.storagemgt</groupId>
-            <artifactId>org.wso2.carbon.hdfs.mgt</artifactId>
-            <version>${carbon.storage.management.version}</version>
+            <artifactId>org.wso2.carbon.hadoop.security</artifactId>
+	    <version>${carbon.storage.management.version}</version>
         </dependency>
-     </dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.core.server.feature</artifactId>
+	    <version>${carbon.kernel.version}</version>
+            <type>zip</type>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -56,24 +62,25 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.carbon.hdfs.mgt</id>
+                            <id>org.wso2.carbon.hadoop.security</id>
                             <propertiesFile>../../../../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
-                                    <propertyDef>org.wso2.carbon.p2.category.type:server</propertyDef>
-                                    <propertyDef>org.eclipse.equinox.p2.type.group:false</propertyDef>
+                                    <propertyDef>org.wso2.carbon.p2.category.type:console</propertyDef>
+                                    <propertyDef>org.eclipse.equinox.p2.type.group:false</propertyDef>  
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon.storagemgt:org.wso2.carbon.hdfs.mgt</bundleDef>
+                                <bundleDef>org.wso2.carbon.storagemgt:org.wso2.carbon.hadoop.security</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}</importFeatureDef>
                             </importFeatures>
-                          </configuration>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
+
 </project>

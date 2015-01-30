@@ -20,7 +20,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>org.wso2.carbon</groupId>
+        <groupId>org.wso2.carbon.storagemgt</groupId>
         <artifactId>hadoop.hdfs-feature</artifactId>
         <version>4.3.0-SNAPSHOT</version>
 	<relativePath>../pom.xml</relativePath>
@@ -36,17 +36,17 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.hdfs.namenode</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop.wso2</groupId>
             <artifactId>hadoop-core</artifactId>
-            <version>${hadoop-core.version}</version>
+            <version>${wso2.hadoop.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.jackson.wso2</groupId>
+            <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson</artifactId>
             <version>${jackson.version}</version>
         </dependency>
@@ -66,21 +66,15 @@
             <version>${json.version}</version>
         </dependency>
         <dependency>
-            <groupId>slf4j.wso2</groupId>
+            <groupId>org.slf4j</groupId>
             <artifactId>slf4j</artifactId>
-            <version>${slf4j.wso2.version}</version>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-configuration.wso2</groupId>
     	    <artifactId>commons-configuration</artifactId>
             <version>${commons-configuration.version}</version>
         </dependency>
-
-        <!--dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.core.server.feature</artifactId>
-            <type>zip</type>
-        </dependency-->
     </dependencies>
 
     <build>
@@ -106,13 +100,13 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.hdfs.namenode</bundleDef>
+                                <bundleDef>org.wso2.carbon.storagemgt:org.wso2.carbon.hdfs.namenode</bundleDef>
                                 <bundleDef>org.apache.hadoop.wso2:hadoop-core</bundleDef>
-                                <bundleDef>org.codehaus.jackson.wso2:jackson</bundleDef>
+                                <bundleDef>org.codehaus.jackson:jackson</bundleDef>
                                 <bundleDef>org.mortbay.wso2:jetty</bundleDef>
                                 <bundleDef>org.mortbay.jetty.wso2:jetty-util</bundleDef>
                                 <bunldeDef>org.json.wso2:json</bunldeDef>
-                                <bundleDef>slf4j.wso2:slf4j</bundleDef>
+                                <bundleDef>org.slf4j:slf4j</bundleDef>
                                 <bundleDef>commons-configuration.wso2:commons-configuration</bundleDef>
                             </bundles>
                             <importFeatures>
@@ -124,12 +118,4 @@
             </plugin>
         </plugins>
     </build>
-    <properties>
-        <hadoop-core.version>0.20.203.1.wso2v4</hadoop-core.version>
-        <jackson.version>1.0.1.wso2v1</jackson.version>
-        <json.version>2.0.0.wso2v1</json.version>
-        <slf4j.version>1.5.10.wso2v1</slf4j.version>
-        <commons-configuration.version>1.6.0.wso2v1</commons-configuration.version>
-    </properties>
-
 </project>
