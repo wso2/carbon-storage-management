@@ -733,7 +733,7 @@
                 <version>${axiom.wso2.version}</version>
             </dependency>
             <dependency>
-            <groupId>org.apache.abdera.wso2</groupId>
+                <groupId>org.apache.abdera.wso2</groupId>
                 <artifactId>abdera</artifactId>
                 <version>${orbit.version.abdera}</version>
                 <exclusions>
@@ -868,43 +868,43 @@
                 <artifactId>org.wso2.carbon.transaction.manager</artifactId>
                 <version>${carbon.commons.version}</version>
             </dependency>
-		    <dependency>
-		    <groupId>org.wso2.carbon.storagemgt</groupId>
-		    <artifactId>org.wso2.carbon.identity.authenticator.krb5.stub</artifactId>
-		    <version>${carbon.storage.management.version}</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.wso2.carbon.storagemgt</groupId>
-		    <artifactId>org.wso2.carbon.identity.authenticator.krb5</artifactId>
-		    <version>${carbon.storage.management.version}</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.wso2.carbon.storagemgt</groupId>
-		    <artifactId>org.wso2.carbon.identity.authenticator.krb5.ui</artifactId>
-		    <version>${carbon.storage.management.version}</version>
-		</dependency>
-		<dependency>		
-		        <groupId>org.wso2.carbon.storagemgt</groupId>		
-		        <artifactId>org.wso2.carbon.hdfs.mgt</artifactId>		
-		        <version>${carbon.storage.management.version}</version>		
-		  </dependency>
-		<dependency>
-		        <groupId>org.yaml.wso2</groupId>		
-		        <artifactId>snakeyaml</artifactId>		
-		        <version>${snakeyaml.version}</version>		
-		    </dependency>		
-            	<dependency>		
-		        <groupId>org.apache.hadoop.wso2</groupId>		
-		        <artifactId>avro</artifactId>		
-		        <version>${avro.version}</version>		
-		  </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
+                <artifactId>org.wso2.carbon.identity.authenticator.krb5.stub</artifactId>
+                <version>${carbon.storage.management.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
+                <artifactId>org.wso2.carbon.identity.authenticator.krb5</artifactId>
+                <version>${carbon.storage.management.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
+                <artifactId>org.wso2.carbon.identity.authenticator.krb5.ui</artifactId>
+                <version>${carbon.storage.management.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
+                <artifactId>org.wso2.carbon.hdfs.mgt</artifactId>
+                <version>${carbon.storage.management.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.yaml.wso2</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${snakeyaml.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.hadoop.wso2</groupId>
+                <artifactId>avro</artifactId>
+                <version>${avro.version}</version>
+            </dependency>
 
-		<dependency>		
-		        <groupId>org.wso2.carbon.commons</groupId>		
-		        <artifactId>org.wso2.carbon.tenant.common</artifactId>		
-		        <version>${carbon.commons.version}</version>		
-		  </dependency>
-		
+            <dependency>
+                <groupId>org.wso2.carbon.commons</groupId>
+                <artifactId>org.wso2.carbon.tenant.common</artifactId>
+                <version>${carbon.commons.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -952,9 +952,9 @@
         <libthrift.version>0.7.0.wso2v2</libthrift.version>
         <perf4j.version>0.9.12.wso2v1</perf4j.version>
         <highscale.version>1.1.2.wso2v1</highscale.version>
-   	 <slf4j.version>1.7.2</slf4j.version>
+        <slf4j.version>1.7.2</slf4j.version>
         <snakeyaml.version>1.6.wso2v1</snakeyaml.version>
-       <concurrentlinkedhashmap.version>1.3</concurrentlinkedhashmap.version>
+        <concurrentlinkedhashmap.version>1.3</concurrentlinkedhashmap.version>
         <yaml.version>1.6.wso2v1</yaml.version>
         <avro.version>1.4.0-fixes.wso2v1</avro.version>
         <jug.version>2.0.0.wso2v1</jug.version>
@@ -962,11 +962,11 @@
         <jackson.version>1.9.2</jackson.version>
         <jamm.version>0.2.5.wso2v2</jamm.version>
         <antlr.version>3.2.0.wso2v1</antlr.version>
-        <metrics-core.version>3.0.2</metrics-core.version>
+        <metrics-core.version>2.0.3.wso2v1</metrics-core.version>
         <snappy-java.version>1.0.4.1.wso2v1</snappy-java.version>
         <compress-lzf.version>0.8.4</compress-lzf.version>
         <netty.version>3.9.0.Final</netty.version>
-	<snaptree.version>0.1.wso2v1</snaptree.version>
+        <snaptree.version>0.1.wso2v1</snaptree.version>
         <hector-core.version>1.1.4.wso2v1</hector-core.version>
         <carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
         <version.solr>1.4.1.wso2v1</version.solr>
@@ -1033,15 +1033,15 @@
         <commons-logging.version>1.1</commons-logging.version>
         <commons-lang.wso2.version>2.6.0.wso2v1</commons-lang.wso2.version>
 
-	 <commons-pool.version>1.6</commons-pool.version>		
-		
-        <secure.vault.version>1.0.0-wso2v2</secure.vault.version>		
-        <commons.lang.version>2.3</commons.lang.version>		
-        <jsch.wso2.version>0.1.51.wso2v1</jsch.wso2.version>		
-        <tomcat.jdbc.pool.version>7.0.34.wso2v2</tomcat.jdbc.pool.version>		
-        <jboss.transaction.api.spec.version>1.0.0.Final</jboss.transaction.api.spec.version>		
-		
-        <commons-codec.wso2.version>1.4.0.wso2v1</commons-codec.wso2.version>		
+        <commons-pool.version>1.6</commons-pool.version>
+
+        <secure.vault.version>1.0.0-wso2v2</secure.vault.version>
+        <commons.lang.version>2.3</commons.lang.version>
+        <jsch.wso2.version>0.1.51.wso2v1</jsch.wso2.version>
+        <tomcat.jdbc.pool.version>7.0.34.wso2v2</tomcat.jdbc.pool.version>
+        <jboss.transaction.api.spec.version>1.0.0.Final</jboss.transaction.api.spec.version>
+
+        <commons-codec.wso2.version>1.4.0.wso2v1</commons-codec.wso2.version>
         <asm.wso2.version>3.1.wso2v1</asm.wso2.version>
     </properties>
 </project>
