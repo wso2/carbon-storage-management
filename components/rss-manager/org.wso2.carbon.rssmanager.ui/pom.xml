@@ -53,22 +53,18 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.logging</artifactId>
-            <version>${carbon.kernel.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.axis2.wso2</groupId>
             <artifactId>axis2</artifactId>
-            <version>${axis2.wso2.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.rssmanager.stub</artifactId>
-            <version>${carbon.storage.management.version}</version>
         </dependency> 
 	<dependency>
 	    <groupId>org.wso2.carbon.storagemgt</groupId>
 	    <artifactId>org.wso2.carbon.rssmanager.core</artifactId>
-	    <version>${carbon.storage.management.version}</version>
 	</dependency>
     </dependencies>
 

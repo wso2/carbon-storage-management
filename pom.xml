@@ -889,6 +889,22 @@
             <version>${jackson.wso2.version}</version>
         </dependency>
 
+	<dependency>
+            <groupId>org.jboss.spec.javax.transaction</groupId>
+            <artifactId>jboss-transaction-api_1.1_spec</artifactId>
+            <version>${jboss-transaction-api.version}</version>
+        </dependency>
+	<dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ndatasource.core</artifactId>
+            <version>${carbon.kernel.version}</version>
+        </dependency>
+	<dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.securevault</artifactId>
+            <version>${carbon.kernel.version}</version>
+        </dependency>
+
         </dependencies>
     </dependencyManagement>
 
