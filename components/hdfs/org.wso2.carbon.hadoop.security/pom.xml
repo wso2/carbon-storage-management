@@ -17,7 +17,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
-        <groupId>org.wso2.carbon</groupId>
+        <groupId>org.wso2.carbon.storagemgt</groupId>
         <artifactId>hdfs</artifactId>
         <version>4.3.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -81,7 +81,7 @@
             <version>${carbon.commons.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.identity.authenticator.krb5.stub</artifactId>
             <version>${carbon.storage.management.version}</version>
         </dependency>
