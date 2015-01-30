@@ -91,7 +91,7 @@
             <version>${guava.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.googlecode.concurrentlinkedhashmap</groupId>
+            <groupId>com.googlecode.concurrentlinkedhashmap.wso2</groupId>
             <artifactId>concurrentlinkedhashmap-lru</artifactId>
             <version>${concurrentlinkedhashmap.version}</version>
         </dependency>
@@ -145,7 +145,7 @@
             <version>${antlr.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.xerial.snappy</groupId>
+            <groupId>snappy-java.wso2</groupId>
             <artifactId>snappy-java</artifactId>
             <version>${snappy-java.version}</version>
         </dependency>
@@ -169,12 +169,12 @@
 	    <artifactId>netty</artifactId>
 	    <version>${netty.version}</version>
 	</dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.tenant.common.feature</artifactId>
             <version>${carbon.commons.version}</version>
 	    <type>zip</type>
-        </dependency>
+        </dependency-->
     </dependencies>
 
     <build>
@@ -237,7 +237,7 @@
                                 <bundleDef>org.slf4j:slf4j-log4j12</bundleDef>
                                 <bundleDef>org.yaml.wso2:snakeyaml</bundleDef>
                                 <bundleDef>com.google.guava:guava</bundleDef>
-                                <bundleDef>com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru</bundleDef>
+                                <bundleDef>com.googlecode.concurrentlinkedhashmap.wso2:concurrentlinkedhashmap-lru</bundleDef>
                                 <bundleDef>org.apache.hadoop.wso2:avro</bundleDef>
                                 <bundleDef>org.safehaus.jug.wso2:jug</bundleDef>
                                 <bundleDef>com.googlecode.json-simple.wso2:json-simple</bundleDef>
@@ -246,7 +246,7 @@
                                 <bundleDef>org.github.wso2:jamm</bundleDef>
                                 <bundleDef>antlr.wso2:antlr</bundleDef>
                                 <bundleDef>org.antlr.wso2:antlr-runtime</bundleDef>
-                                <bundleDef>org.xerial.snappy:snappy-java</bundleDef>
+                                <bundleDef>snappy-java.wso2:snappy-java</bundleDef>
                                 <bundleDef>snaptree.wso2:snaptree</bundleDef>
                                 <bundleDef>metrics-core.wso2:metrics-core</bundleDef>
 				<bundleDef>com.ning:compress-lzf</bundleDef>
@@ -254,7 +254,7 @@
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.tenant.common:${carbon.commons.version}</importFeatureDef>
+                                <!--importFeatureDef>org.wso2.carbon.tenant.common:${carbon.commons.version}</importFeatureDef-->
                             </importFeatures>
                         </configuration>
                     </execution>
