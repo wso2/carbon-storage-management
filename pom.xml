@@ -22,12 +22,12 @@
         <module>components/cassandra-explorer</module>
         <module>components/cassandra-search</module>
         <!--module>components/mapred</module-->
-        <module>components/hdfs</module>
+        <!--module>components/hdfs</module-->
         <module>components/rss-manager</module>
         <module>features/cassandra</module>
         <module>features/cassandra-explorer</module>
         <module>features/cassandra-search</module>
-        <module>features/hadoop</module>
+        <!--module>features/hadoop</module-->
         <module>features/rss-manager</module>
     </modules>
 
