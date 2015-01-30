@@ -20,25 +20,8 @@
     <modules>
         <module>org.wso2.carbon.rssmanager.server.feature</module>
         <module>org.wso2.carbon.rssmanager.ui.feature</module>
-	<module>org.wso2.carbon.rssmanager.data.mgt.feature</module>
+        <module>org.wso2.carbon.rssmanager.data.mgt.feature</module>
         <module>org.wso2.carbon.rssmanager.feature</module>
     </modules>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.wso2.carbon.storagemgt</groupId>
-                <artifactId>org.wso2.carbon.rssmanager.core</artifactId>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.storagemgt</groupId>
-                <artifactId>org.wso2.carbon.rssmanager.ui</artifactId>
-            </dependency>
-	    <dependency>
-                <groupId>org.wso2.carbon.storagemgt</groupId>
-                <artifactId>org.wso2.carbon.rssmanager.data.mgt</artifactId>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
 </project>
