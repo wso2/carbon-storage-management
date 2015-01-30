@@ -42,7 +42,7 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
-                        <Bundle-Version>${project.version}</Bundle-Version>
+                        <Bundle-Version>${carbon.storage.management.version}</Bundle-Version>
                         <Bundle-Description>RSS Manager Core Bundle</Bundle-Description>
                         <Private-Package>org.wso2.carbon.rssmanager.core.internal</Private-Package>
                         <Import-Package>
