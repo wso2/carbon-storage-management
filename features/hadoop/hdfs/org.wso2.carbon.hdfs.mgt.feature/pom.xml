@@ -41,9 +41,9 @@
             <version>${carbon.storage.management.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.multitenancy</groupId>
+            <groupId>org.wso2.carbon.commons</groupId>
             <artifactId>org.wso2.carbon.tenant.common.feature</artifactId>
-            <version>${carbon.multitenancy.version}</version>
+            <version>${carbon.commons.version}</version>
             <type>zip</type>
         </dependency>
      </dependencies>
@@ -75,7 +75,7 @@
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}</importFeatureDef>
-		                <importFeatureDef>org.wso2.carbon.tenant.common:${carbon.multitenancy.version}</importFeatureDef>
+		                <importFeatureDef>org.wso2.carbon.tenant.common:${carbon.commons.version}</importFeatureDef>
                             </importFeatures>
                           </configuration>
                     </execution>
