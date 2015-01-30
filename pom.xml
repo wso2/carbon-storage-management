@@ -463,7 +463,7 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.registry</groupId>
                 <artifactId>org.wso2.carbon.registry.common</artifactId>
                 <version>${carbon.registry.version}</version>
             </dependency>
@@ -804,12 +804,12 @@
                 <version>${jsch.wso2.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.application.mgt</artifactId>
                 <version>${carbon.identity.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.application.common</artifactId>
                 <version>${carbon.identity.version}</version>
             </dependency>
@@ -915,8 +915,8 @@
 
         <!-- Carbon platform versions comes here-->
         <carbon.commons.version>4.3.1</carbon.commons.version>
-        <carbon.identity.version>4.3.0-SNAPSHOT</carbon.identity.version>
-        <carbon.registry.version>4.3.0-SNAPSHOT</carbon.registry.version>
+        <carbon.identity.version>4.3.0</carbon.identity.version>
+        <carbon.registry.version>4.3.0</carbon.registry.version>
         <carbon.storage.management.version>4.3.0-SNAPSHOT</carbon.storage.management.version>
         <wso2.cassandra.version>1.2.13.wso2v6</wso2.cassandra.version>
         <wso2.cassandra.version>1.2.13.wso2v6</wso2.cassandra.version>
