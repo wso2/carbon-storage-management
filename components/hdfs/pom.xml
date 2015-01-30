@@ -30,19 +30,6 @@
     <name>WSO2 Carbon - HDFS Aggregator Module</name>
     <url>http://wso2.org</url>
 
-    <dependencyManagement>
-        <dependencies>
-             <dependency>
-                <groupId>org.wso2.carbon.commons</groupId>
-                <artifactId>org.wso2.carbon.um.ws.api</artifactId>
-                  </dependency>
-	    <dependency>
-                <groupId>org.apache.hadoop.wso2</groupId>
-		<artifactId>hadoop-core</artifactId>
-          	    </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <build>
         <plugins>
             
