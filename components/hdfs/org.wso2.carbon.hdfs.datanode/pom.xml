@@ -32,23 +32,20 @@
 			<version>${carbon.kernel.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.wso2.carbon</groupId>
-			<artifactId>org.wso2.carbon.identity.authentication</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.hadoop.wso2</groupId>
 			<artifactId>hadoop-core</artifactId>
+			<version>${wso2.hadoop.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mortbay.wso2</groupId>
 			<artifactId>jetty</artifactId>
-			<version>6.1.26.wso2v1</version>
+			<version>${jetty.version}</version>
 		</dependency>
 		
 	</dependencies>
@@ -62,7 +59,6 @@
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
-				<version>1.4.0</version>
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
@@ -80,9 +76,6 @@
 					</instructions>
 				</configuration>
 			</plugin>
-
-
-
 		</plugins>
 	</build>
 </project>
