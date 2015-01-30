@@ -46,9 +46,9 @@
             <version>${wso2.hadoop.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
+            <groupId>org.codehaus.jackson.wso2</groupId>
             <artifactId>jackson</artifactId>
-            <version>${jackson.version}</version>
+            <version>${jackson.wso2.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mortbay.wso2</groupId>
@@ -67,7 +67,7 @@
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j</artifactId>
+            <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
         <dependency>
@@ -102,11 +102,11 @@
                             <bundles>
                                 <bundleDef>org.wso2.carbon.storagemgt:org.wso2.carbon.hdfs.namenode</bundleDef>
                                 <bundleDef>org.apache.hadoop.wso2:hadoop-core</bundleDef>
-                                <bundleDef>org.codehaus.jackson:jackson</bundleDef>
+                                <bundleDef>org.codehaus.jackson.wso2:jackson</bundleDef>
                                 <bundleDef>org.mortbay.wso2:jetty</bundleDef>
                                 <bundleDef>org.mortbay.jetty.wso2:jetty-util</bundleDef>
                                 <bunldeDef>org.json.wso2:json</bunldeDef>
-                                <bundleDef>org.slf4j:slf4j</bundleDef>
+                                <bundleDef>org.slf4j:slf4j-api</bundleDef>
                                 <bundleDef>commons-configuration.wso2:commons-configuration</bundleDef>
                             </bundles>
                             <importFeatures>
