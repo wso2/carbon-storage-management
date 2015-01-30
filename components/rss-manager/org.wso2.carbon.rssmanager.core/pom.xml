@@ -98,9 +98,9 @@
             <version>${carbon.kernel.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.commons</groupId>
             <artifactId>org.wso2.carbon.transaction.manager</artifactId>
-            <version>4.3.0-SNAPSHOT</version>
+            <version>${carbon.commons.version}</version>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>
