@@ -40,12 +40,6 @@
             <artifactId>org.wso2.carbon.hdfs.mgt</artifactId>
             <version>${carbon.storage.management.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.commons</groupId>
-            <artifactId>org.wso2.carbon.tenant.common.feature</artifactId>
-            <version>${carbon.commons.version}</version>
-            <type>zip</type>
-        </dependency>
      </dependencies>
 
     <build>
@@ -75,7 +69,6 @@
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}</importFeatureDef>
-		                <importFeatureDef>org.wso2.carbon.tenant.common:${carbon.commons.version}</importFeatureDef>
                             </importFeatures>
                           </configuration>
                     </execution>

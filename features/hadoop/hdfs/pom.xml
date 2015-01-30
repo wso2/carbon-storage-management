@@ -52,30 +52,30 @@
             
             <!--Hadoop Component-->
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
                 <artifactId>org.wso2.carbon.hdfs.namenode</artifactId>
-                <version>${wso2.hadoop.version}</version>
+                <version>${carbon.storage.management.version}</version>
             </dependency>
 	    <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
                 <artifactId>org.wso2.carbon.hdfs.datanode</artifactId>
-                <version>${wso2.hadoop.version}</version>
+                <version>${carbon.storage.management.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
                 <artifactId>org.wso2.carbon.hdfs.dataaccess</artifactId>
-                <version>${wso2.hadoop.version}</version>
+                <version>${carbon.storage.management.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
                 <artifactId>org.wso2.carbon.hdfs.mgt</artifactId>
-                <version>${wso2.hadoop.version}</version>
+                <version>${carbon.storage.management.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
                 <artifactId>org.wso2.carbon.hdfs.mgt.ui</artifactId>
-                <version>${wso2.hadoop.version}</version>
+                <version>${carbon.storage.management.version}</version>
             </dependency>
             <!--dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -111,9 +111,9 @@
                 <type>zip</type>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.commons</groupId>
                 <artifactId>org.wso2.carbon.identity.authentication</artifactId>
-                <version>${wso2.hadoop.version}</version>
+                <version>${carbon.commons.version}</version>
             </dependency>
           </dependencies>
     </dependencyManagement>
@@ -130,12 +130,6 @@
             </releases>
         </repository>
      </repositories>
-
-    <!--properties>
-        <wso2carbon.version.hadoop>${wso2carbon.version}</wso2carbon.version.hadoop>
-        <wso2carbon.version.hadoop.feature>${wso2carbon.version}</wso2carbon.version.hadoop.feature>
-        <hadoop.version>0.20.203.1.wso2v4</hadoop.version>
-    </properties-->
 
 </project>
 
