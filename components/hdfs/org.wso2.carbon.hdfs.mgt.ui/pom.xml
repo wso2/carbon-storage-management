@@ -19,14 +19,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>org.wso2.carbon</groupId>
+        <groupId>org.wso2.carbon.storagemgt</groupId>
         <artifactId>hdfs</artifactId>
         <version>4.3.0-SNAPSHOT</version>
 	<relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.carbon</groupId>
+    <groupId>org.wso2.carbon.storagemgt</groupId>
     <artifactId>org.wso2.carbon.hdfs.mgt.ui</artifactId>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - HDFS Management UI</name>
@@ -44,12 +44,12 @@
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Carbon-Component>UIBundle</Carbon-Component>
                         <Import-Package>
-                        	org.wso2.carbon.hdfs.mgt.stub.*;version="${carbon.platform.package.import.version.range}",
+                        	org.wso2.carbon.hdfs.mgt.stub.*;version="${carbon.storage.management.version}",
                             javax.servlet.*;version="${imp.pkg.version.javax.servlet}",
                             *;resolution:=optional
                         </Import-Package>
                         <Export-Package>
-                            org.wso2.carbon.hdfs.mgt.ui.*;version="${carbon.platform.package.export.version}"
+                            org.wso2.carbon.hdfs.mgt.ui.*;version="${carbon.storage.management.version}"
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
