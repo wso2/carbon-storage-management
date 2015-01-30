@@ -68,27 +68,22 @@
         <dependency>
             <groupId>org.apache.hadoop.wso2</groupId>
             <artifactId>hadoop-core</artifactId>
-            <version>${wso2.hadoop.version}</version>
         </dependency>
          <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
-            <version>${commons-logging.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.commons</groupId>
             <artifactId>org.wso2.carbon.um.ws.api</artifactId>
-            <version>${carbon.commons.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.identity.authenticator.krb5.stub</artifactId>
-            <version>${carbon.storage.management.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
-            <version>${carbon.kernel.version}</version>
         </dependency>
     </dependencies>
 </project>
