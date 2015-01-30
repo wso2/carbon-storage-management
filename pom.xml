@@ -201,12 +201,12 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
                 <artifactId>org.wso2.carbon.cassandra.cluster</artifactId>
                 <version>${carbon.storage.management.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
                 <artifactId>org.wso2.carbon.cassandra.cluster.mgt.stub</artifactId>
                 <version>${carbon.storage.management.version}</version>
             </dependency>
@@ -221,22 +221,22 @@
                 <version>${carbon.commons.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
                 <artifactId>org.wso2.carbon.cassandra.cluster.proxy</artifactId>
                 <version>${carbon.storage.management.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
                 <artifactId>org.wso2.carbon.cassandra.cluster.mgt</artifactId>
                 <version>${carbon.storage.management.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
                 <artifactId>org.wso2.carbon.cassandra.cluster.mgt.ui</artifactId>
                 <version>${carbon.storage.management.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
                 <artifactId>org.wso2.carbon.cassandra.cluster.proxy.stub</artifactId>
                 <version>${carbon.storage.management.version}</version>
             </dependency>
@@ -267,7 +267,7 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
                 <artifactId>org.wso2.carbon.cassandra.common</artifactId>
                 <version>${carbon.storage.management.version}</version>
             </dependency>
@@ -403,31 +403,31 @@
                 <version>${carbon.identity.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
                 <artifactId>org.wso2.carbon.cassandra.common.feature</artifactId>
                 <version>${carbon.storage.management.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
                 <artifactId>org.wso2.carbon.cassandra.mgt.feature</artifactId>
                 <version>${carbon.storage.management.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
                 <artifactId>org.wso2.carbon.cassandra.mgt.ui.feature</artifactId>
                 <version>${carbon.storage.management.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
                 <artifactId>org.wso2.carbon.cassandra.server.feature</artifactId>
                 <version>${carbon.storage.management.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
                 <artifactId>org.wso2.carbon.cassandra.dataaccess.feature</artifactId>
                 <version>${carbon.storage.management.version}</version>
                 <type>zip</type>
@@ -801,17 +801,17 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
                 <artifactId>org.wso2.carbon.rssmanager.core</artifactId>
                 <version>${carbon.storage.management.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
                 <artifactId>org.wso2.carbon.rssmanager.common</artifactId>
                 <version>${carbon.storage.management.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.storagemgt</groupId>
                 <artifactId>org.wso2.carbon.rssmanager.stub</artifactId>
                 <version>${carbon.storage.management.version}</version>
             </dependency>
