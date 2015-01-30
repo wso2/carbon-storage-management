@@ -680,17 +680,17 @@
             </dependency>
 
             <dependency>
-                <groupId>org.apache.rampart</groupId>
+                <groupId>org.apache.rampart.wso2</groupId>
                 <artifactId>rampart-core</artifactId>
                 <version>${rampart.wso2.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.rampart</groupId>
+                <groupId>org.apache.rampart.wso2</groupId>
                 <artifactId>rampart-policy</artifactId>
                 <version>${rampart.wso2.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.rampart</groupId>
+                <groupId>org.apache.rampart.wso2</groupId>
                 <artifactId>rampart-trust</artifactId>
                 <version>${rampart.wso2.version}</version>
             </dependency>
@@ -925,7 +925,7 @@
         <axis2.osgi.version.range>[1.6.1.wso2v11, 1.7.0)</axis2.osgi.version.range>
         <orbit.version.wsdl4j>1.6.2.wso2v4</orbit.version.wsdl4j>
         <orbit.version.neethi>2.0.4.wso2v4</orbit.version.neethi>
-        <rampart.wso2.version>1.7.0</rampart.wso2.version>
+        <rampart.wso2.version>1.6.1.wso2v13</rampart.wso2.version>
 
         <!-- Axiom Version -->
         <axiom.version>1.2.11-wso2v5</axiom.version>
