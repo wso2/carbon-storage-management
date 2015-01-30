@@ -38,12 +38,10 @@
         <dependency>
             <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.cassandra.dataaccess</artifactId>
-            <version>${carbon.storage.management.version}</version>
         </dependency>
          <dependency>
             <groupId>org.hectorclient.wso2</groupId>
             <artifactId>hector-core</artifactId>
-             <version>${hector-core.version}</version>
         </dependency>
     </dependencies>
 

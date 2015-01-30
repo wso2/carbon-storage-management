@@ -39,73 +39,61 @@
 	<dependency>
 	    <groupId>io.netty</groupId>
 	    <artifactId>netty</artifactId>
-	    <version>${netty.version}</version>
 	</dependency>
 
 	<dependency>
 	    <groupId>org.slf4j</groupId>
 	    <artifactId>slf4j-api</artifactId>
-	    <version>${slf4j.version}</version>
 	</dependency>
 
         <dependency>
 	    <groupId>com.google.guava</groupId>
 	    <artifactId>guava</artifactId>
-	    <version>${guava.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.datastax.cassandra</groupId>
             <artifactId>cassandra-driver-core</artifactId>
-            <version>${datastax.cassandra.driver.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.ndatasource.common</artifactId>
-            <version>${carbon.kernel.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.ndatasource.core</artifactId>
-            <version>${carbon.kernel.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.utils</artifactId>
-            <version>${carbon.kernel.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.cassandra.datareader</artifactId>
-            <version>${carbon.storage.management.version}</version>
         </dependency>
 
         <dependency>
             <groupId>snappy-java.wso2</groupId>
             <artifactId>snappy-java</artifactId>
-            <version>${snappy-java.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.codahale.metrics</groupId>
             <artifactId>metrics-core</artifactId>
-            <version>${codahale.metrics.version}</version>
         </dependency>
 
         <dependency>
             <groupId>metrics-core.wso2</groupId>
             <artifactId>metrics-core</artifactId>
-            <version>${metrics-core.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.cassandra.wso2</groupId>
             <artifactId>cassandra-thrift</artifactId>
-            <version>${wso2.cassandra.thrift.version}</version>
         </dependency>
     </dependencies>
 

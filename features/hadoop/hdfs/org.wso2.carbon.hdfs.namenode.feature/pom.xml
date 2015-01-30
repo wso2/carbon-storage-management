@@ -38,42 +38,34 @@
         <dependency>
             <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.hdfs.namenode</artifactId>
-            <version>${carbon.storage.management.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop.wso2</groupId>
             <artifactId>hadoop-core</artifactId>
-            <version>${wso2.hadoop.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.jackson.wso2</groupId>
             <artifactId>jackson</artifactId>
-            <version>${jackson.wso2.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mortbay.wso2</groupId>
             <artifactId>jetty</artifactId>
-            <version>${jetty.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mortbay.jetty.wso2</groupId>
             <artifactId>jetty-util</artifactId>
-            <version>${jetty-util.version}</version>
         </dependency>
         <dependency>
             <groupId>org.json.wso2</groupId>
             <artifactId>json</artifactId>
-            <version>${json.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-configuration.wso2</groupId>
     	    <artifactId>commons-configuration</artifactId>
-            <version>${commons-configuration.version}</version>
         </dependency>
     </dependencies>
 
