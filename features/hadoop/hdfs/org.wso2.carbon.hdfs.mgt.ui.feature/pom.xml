@@ -38,12 +38,10 @@
         <dependency>
             <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.hdfs.mgt.ui</artifactId>
-            <version>${carbon.storage.management.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.hdfs.mgt.stub</artifactId>
-            <version>${carbon.storage.management.version}</version>
         </dependency>
      </dependencies>
 
