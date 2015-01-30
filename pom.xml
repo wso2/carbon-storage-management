@@ -882,7 +882,12 @@
                 <groupId>org.wso2.carbon.commons</groupId>
                 <artifactId>org.wso2.carbon.tenant.common</artifactId>
                 <version>${carbon.commons.version}</version>
-            </dependency>
+           </dependency>
+              <dependency>
+            <groupId>org.codehaus.jackson.wso2</groupId>
+            <artifactId>jackson</artifactId>
+            <version>${jackson.wso2.version}</version>
+        </dependency>
 
         </dependencies>
     </dependencyManagement>
@@ -937,6 +942,7 @@
         <jug.version>2.0.0.wso2v1</jug.version>
         <simple-json.version>1.1.wso2v1</simple-json.version>
         <jackson.version>1.9.2</jackson.version>
+        <jackson.wso2.version>1.0.1.wso2v1</jackson.wso2.version>
         <jamm.version>0.2.5.wso2v2</jamm.version>
         <antlr.version>3.2.0.wso2v1</antlr.version>
         <metrics-core.version>2.0.3.wso2v1</metrics-core.version>
