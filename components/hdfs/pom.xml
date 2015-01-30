@@ -35,13 +35,11 @@
              <dependency>
                 <groupId>org.wso2.carbon.commons</groupId>
                 <artifactId>org.wso2.carbon.um.ws.api</artifactId>
-                <version>${carbon.commons.version}</version>
-            </dependency>
+                  </dependency>
 	    <dependency>
                 <groupId>org.apache.hadoop.wso2</groupId>
 		<artifactId>hadoop-core</artifactId>
-                <version>${wso2.hadoop.version}</version>
-	    </dependency>
+          	    </dependency>
         </dependencies>
     </dependencyManagement>
 

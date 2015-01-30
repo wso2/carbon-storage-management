@@ -19,33 +19,27 @@
 		<dependency>
 			<groupId>org.wso2.carbon</groupId>
 			<artifactId>org.wso2.carbon.core</artifactId>
-			<version>${carbon.kernel.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon</groupId>
 			<artifactId>org.wso2.carbon.user.api</artifactId>
-			<version>${carbon.kernel.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon</groupId>
 			<artifactId>org.wso2.carbon.logging</artifactId>
-			<version>${carbon.kernel.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.hadoop.wso2</groupId>
 			<artifactId>hadoop-core</artifactId>
-			<version>${wso2.hadoop.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mortbay.wso2</groupId>
 			<artifactId>jetty</artifactId>
-			<version>${jetty.version}</version>
 		</dependency>
 		
 	</dependencies>
