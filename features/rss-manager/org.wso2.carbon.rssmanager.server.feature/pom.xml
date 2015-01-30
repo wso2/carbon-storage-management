@@ -22,22 +22,18 @@
         <dependency>
             <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.rssmanager.core</artifactId>
-            <version>${carbon.storage.management.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.rssmanager.common</artifactId>
-            <version>${carbon.storage.management.version}</version>
         </dependency>
 	<dependency>
 	       <groupId>asm.wso2</groupId>
 	       <artifactId>asm</artifactId>
-	       <version>${asm.wso2.version}</version>
 	</dependency>
         <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
-            <version>${jsch.wso2.version}</version>
         </dependency>
     </dependencies>
 

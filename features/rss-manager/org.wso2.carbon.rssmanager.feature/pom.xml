@@ -22,19 +22,16 @@
         <dependency>
             <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.rssmanager.server.feature</artifactId>
-            <version>${carbon.storage.management.version}</version>
             <type>zip</type>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.rssmanager.ui.feature</artifactId>
-            <version>${carbon.storage.management.version}</version>
             <type>zip</type>
         </dependency>
 	<dependency>
             <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.rssmanager.data.mgt.feature</artifactId>
-            <version>${carbon.storage.management.version}</version>
             <type>zip</type>
         </dependency>
     </dependencies>

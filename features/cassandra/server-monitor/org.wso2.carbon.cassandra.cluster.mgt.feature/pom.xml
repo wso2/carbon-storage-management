@@ -18,7 +18,6 @@
         <dependency>
             <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.cassandra.cluster.mgt</artifactId>
-            <version>${carbon.storage.management.version}</version>
         </dependency>
     </dependencies>
     <build>
