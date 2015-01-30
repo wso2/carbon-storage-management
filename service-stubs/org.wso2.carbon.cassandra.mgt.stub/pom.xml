@@ -28,7 +28,6 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.cassandra.mgt.stub</artifactId>
-    <version>4.3.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - Cassandra Management Stub</name>
     <url>http://wso2.org</url>
@@ -105,7 +104,7 @@
 			 	!org.wso2.carbon.cassandra.mgt.stub.*,
                         </Import-Package>
                         <Export-Package>
-                            org.wso2.carbon.cassandra.mgt.stub.*;version="4.3.0.SNAPSHOT",
+                            org.wso2.carbon.cassandra.mgt.stub.*;version="${carbon.storage.management.version}",
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
