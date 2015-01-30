@@ -47,12 +47,12 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.utils</artifactId>
-	    <version>${carbon.kernel.version}</version>
+
         </dependency>
         <dependency>
             <groupId>commons-codec.wso2</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>${commons-codec.wso2.version}</version>
+
         </dependency>
 
 	
