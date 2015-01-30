@@ -149,7 +149,7 @@
             <version>${carbon.storage.management.version}</version>
         </dependency>
           <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.multitenancy</groupId>
             <artifactId>org.wso2.carbon.tenant.common</artifactId>
             <version>${carbon.multitenancy.version}</version>
         </dependency> 

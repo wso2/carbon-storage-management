@@ -20,7 +20,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>org.wso2.carbon</groupId>
+        <groupId>org.wso2.carbon.storagemgt</groupId>
         <artifactId>carbon-storage-management</artifactId>
         <version>4.3.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
@@ -33,24 +33,9 @@
     <url>http://wso2.org</url>
     <modules>
     	<module>hdfs</module>
-	    <module>mapred</module>
+	    <!--module>mapred</module-->
     </modules>
-    <properties>
-        <wso2carbon.version.hadoop>${wso2carbon.version}</wso2carbon.version.hadoop>
-        <wso2carbon.version.hadoop.feature>${wso2carbon.version}</wso2carbon.version.hadoop.feature>
-        <hadoop.version>0.20.203.1.wso2v4</hadoop.version>
-        <!--libthrift.version>0.5.wso2v1</libthrift.version>
-        <perf4j.version>0.9.12.wso2v1</perf4j.version>
-        <highscale.version>1.0.wso2v1</highscale.version>
-        <slf4j.version>1.6.1</slf4j.version>
-        <guava.version>0.5.0.wso2v1</guava.version>
-        <concurrentlinkedhashmap.version>1.1.wso2v1</concurrentlinkedhashmap.version>
-        <avro.version>1.4.0-fixes.wso2v1</avro.version>
-        <jug.version>2.0.0.wso2v1</jug.version>
-        <simple-json.version>1.1.wso2v1</simple-json.version>
-        <jetty.version>6.1.21</jetty.version>
-        <jackson.version>1.4.0</jackson.version-->
-    </properties>
+    
 
 </project>
 
