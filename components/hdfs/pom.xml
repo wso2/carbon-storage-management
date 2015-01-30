@@ -24,10 +24,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-<<<<<<< HEAD
     <groupId>org.wso2.carbon.storagemgt</groupId>
-=======
->>>>>>> added mapred component files
     <artifactId>hdfs</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - HDFS Aggregator Module</name>
