@@ -94,7 +94,7 @@
             <version>${carbon.kernel.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.registry</groupId>
             <artifactId>org.wso2.carbon.registry.common</artifactId>
             <version>${carbon.registry.version}</version>
         </dependency>
