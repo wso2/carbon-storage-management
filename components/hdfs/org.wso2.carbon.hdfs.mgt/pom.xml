@@ -89,7 +89,6 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>1.4.0</version>
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
@@ -101,8 +100,8 @@
                         </Export-Package>
                         <Import-Package>
                             !org.wso2.carbon.hdfs.mgt.*,
-                            org.apache.axis2.*; version="${axis2.osgi.version.range.hdfs}",
-                            org.apache.axiom.*; version="${axiom.osgi.version.range.hdfs}",
+                            org.apache.axis2.*; version="${axis2.osgi.version.range}",
+                            org.apache.axiom.*; version="${axiom.osgi.version.range}",
                             *;resolution:=optional,
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
@@ -121,7 +120,7 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.identity.authenticator.krb5</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -134,33 +133,25 @@
             <version>${carbon.kernel.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.identity.authentication</artifactId>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.1</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.hdfs.dataaccess</artifactId>
-            <version>${project.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.hadoop.security</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
           <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.tenant.common</artifactId>
-            <version>${org.wso2.carbon.tenant.common.version}</version>
+            <version>${carbon.multitenancy.version}</version>
         </dependency> 
     </dependencies>
-    
-        <properties>
-        <org.wso2.carbon.tenant.common.version>4.3.0-SNAPSHOT</org.wso2.carbon.tenant.common.version>
-    </properties>
-</project>
+   </project>
