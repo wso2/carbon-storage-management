@@ -341,14 +341,14 @@
                 <version>${carbon.kernel.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.commons</groupId>
                 <artifactId>org.wso2.carbon.user.mgt</artifactId>
                 <version>${carbon.commons.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.commons</groupId>
                 <artifactId>org.wso2.carbon.user.mgt.ui</artifactId>
-                <version>${carbon.kernel.version}</version>
+                <version>${carbon.commons.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -883,6 +883,11 @@
 		    <artifactId>org.wso2.carbon.identity.authenticator.krb5.ui</artifactId>
 		    <version>${carbon.storage.management.version}</version>
 		</dependency>
+		<dependency>		
+		        <groupId>org.wso2.carbon.storagemgt</groupId>		
+		        <artifactId>org.wso2.carbon.hdfs.mgt</artifactId>		
+		        <version>${carbon.storage.management.version}</version>		
+		  </dependency>
 		<dependency>
 		        <groupId>org.yaml.wso2</groupId>		
 		        <artifactId>snakeyaml</artifactId>		
@@ -893,6 +898,7 @@
 		        <artifactId>avro</artifactId>		
 		        <version>${avro.version}</version>		
 		  </dependency>
+		
         </dependencies>
     </dependencyManagement>
 
