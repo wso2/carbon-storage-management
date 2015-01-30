@@ -23,12 +23,10 @@
         <dependency>
             <groupId>org.hectorclient.wso2</groupId>
             <artifactId>hector-core</artifactId>
-            <version>${hector-core.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.core</artifactId>
-            <version>${carbon.kernel.version}</version>
         </dependency>
     </dependencies>
 
