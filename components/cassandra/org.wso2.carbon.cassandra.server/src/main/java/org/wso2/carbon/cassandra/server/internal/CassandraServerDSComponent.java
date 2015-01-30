@@ -24,12 +24,10 @@ import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.cassandra.server.CassandraServerConstants;
 import org.wso2.carbon.cassandra.server.CassandraServerController;
-import org.wso2.carbon.cassandra.server.TenantCreationListener;
 import org.wso2.carbon.cassandra.server.service.CassandraServerService;
 import org.wso2.carbon.cassandra.server.service.CassandraServerServiceImpl;
 import org.wso2.carbon.cassandra.server.util.CassandraServerUtil;
 import org.wso2.carbon.identity.authentication.AuthenticationService;
-import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
 import org.wso2.carbon.utils.CarbonUtils;
@@ -124,8 +122,6 @@ public class CassandraServerDSComponent {
 
             componentContext.getBundleContext().registerService(
                     CassandraServerService.class.getName(), cassandraServerService, null);
-            componentContext.getBundleContext().registerService(TenantMgtListener.class.getName(),
-                    new TenantCreationListener(), null);
             //Disable Cassandra server
             String disableServerStartup = System.getProperty(DISABLE_CASSANDRA_SERVER_STARTUP);
             if ("true".equals(disableServerStartup)) {

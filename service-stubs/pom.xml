@@ -57,8 +57,9 @@
             <artifactId>axis2</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.ws.commons.axiom</groupId>
-            <artifactId>axiom-api</artifactId>
+            <groupId>org.apache.ws.commons.axiom.wso2</groupId>
+            <artifactId>axiom</artifactId>
+	    <version>${axiom.wso2.version}</version>
         </dependency>
         <dependency>
             <groupId>wsdl4j.wso2</groupId>

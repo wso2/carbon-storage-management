@@ -18,7 +18,7 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cassandra.cluster.mgt</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -44,7 +44,7 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.cluster.mgt</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.cluster.mgt:${carbon.storage.management.version}</bundleDef>
                             </bundles>
                         </configuration>
                     </execution>

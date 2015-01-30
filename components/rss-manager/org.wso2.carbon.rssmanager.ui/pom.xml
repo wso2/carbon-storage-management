@@ -38,7 +38,8 @@
                             javax.xml.namespace.*;version="0.0.0",
                             *;resolution:=optional,
                             org.wso2.carbon.rssmanager.ui.*,
-                            org.wso2.carbon.rssmanager.core.dto.*
+                            org.wso2.carbon.rssmanager.core.dto.*;
+                            version="0.0.0",
                             org.wso2.carbon.rssmanager.stub.*
                         </Import-Package>
                         <Carbon-Component>UIBundle</Carbon-Component>
@@ -52,17 +53,23 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.logging</artifactId>
+            <version>${carbon.commons.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.axis2.wso2</groupId>
             <artifactId>axis2</artifactId>
-            <version>${orbit.version.axis2}</version>
+            <version>${axis2.wso2.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.rssmanager.stub</artifactId>
-            <version>${carbon.platform.version}</version>
-        </dependency>
+            <version>${carbon.storage.management.version}</version>
+        </dependency> 
+	<dependency>
+	    <groupId>org.wso2.carbon</groupId>
+	    <artifactId>org.wso2.carbon.rssmanager.core</artifactId>
+	    <version>${carbon.storage.management.version}</version>
+	</dependency>
     </dependencies>
 
 </project>

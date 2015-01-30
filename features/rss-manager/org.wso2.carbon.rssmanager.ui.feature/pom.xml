@@ -21,17 +21,17 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.rssmanager.ui</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.rssmanager.stub</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.rssmanager.common</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
     </dependencies>
 
@@ -58,9 +58,9 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.rssmanager.ui:${carbon.platform.version}</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.rssmanager.stub:${carbon.platform.version}</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.rssmanager.common:${carbon.platform.version}</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.rssmanager.ui:${carbon.storage.management.version}</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.rssmanager.stub:${carbon.storage.management.version}</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.rssmanager.common:${carbon.storage.management.version}</bundleDef>
                             </bundles>
                         </configuration>
                     </execution>

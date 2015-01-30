@@ -18,12 +18,12 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cassandra.cluster.proxy</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
 	<dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cassandra.cluster.mgt.stub</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
 
     </dependencies>
@@ -50,8 +50,8 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.cluster.proxy</bundleDef>
-                           <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.cluster.mgt.stub</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.cluster.proxy:${carbon.storage.management.version}</bundleDef>
+                           	<bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.cluster.mgt.stub:${carbon.storage.management.version}</bundleDef>
 			  </bundles>
                         </configuration>
                     </execution>
@@ -101,7 +101,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 </project>

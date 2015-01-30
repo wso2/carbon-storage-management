@@ -20,12 +20,12 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cassandra.explorer.ui</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.cassandra.explorer.stub</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.storage.management.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -40,7 +40,7 @@
         <dependency>
             <groupId>org.hectorclient.wso2</groupId>
             <artifactId>hector-core</artifactId>
-            <version>1.1.4.wso2v1</version>
+            <version>${hector-core.version}</version>
         </dependency>
     </dependencies>
 
@@ -69,10 +69,8 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.explorer.ui:4.3.0-SNAPSHOT
-                                </bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.explorer.stub:4.3.0-SNAPSHOT
-                                </bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.explorer.ui:${carbon.storage.management.version}</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.explorer.stub:${carbon.storage.management.version}</bundleDef>
                             </bundles>
                             <importBundles>
                                 <importBundleDef>org.wso2.carbon:org.wso2.carbon.ui.menu.tools:${carbon.kernel.version}
@@ -87,6 +85,4 @@
             </plugin>
         </plugins>
     </build>
-    <properties>
-    </properties>
 </project>

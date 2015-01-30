@@ -43,7 +43,7 @@
         <dependency>
             <groupId>org.hectorclient.wso2</groupId>
             <artifactId>hector-core</artifactId>
-            <version>1.1.4.wso2v1</version>
+            <version>${hector-core.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -53,14 +53,17 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.github.wso2</groupId>
             <artifactId>jamm</artifactId>
+            <version>${jamm.version}</version>
         </dependency>
     </dependencies>
 
