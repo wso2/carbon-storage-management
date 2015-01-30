@@ -113,7 +113,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.googlecode.concurrentlinkedhashmap.wso2</groupId>
+            <groupId>com.googlecode.concurrentlinkedhashmap</groupId>
             <artifactId>concurrentlinkedhashmap-lru</artifactId>
             <version>${concurrentlinkedhashmap.version}</version>
             <scope>test</scope>
