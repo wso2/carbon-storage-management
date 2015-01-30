@@ -28,7 +28,7 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
-                        <Bundle-Version>${project.version}</Bundle-Version>
+                        <Bundle-Version>${carbon.storage.management.version}</Bundle-Version>
                         <Export-Package>
                             org.wso2.carbon.rssmanager.ui.*,
                             org.wso2.carbon.rssmanager.core.dto.*
