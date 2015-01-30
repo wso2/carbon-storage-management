@@ -74,7 +74,7 @@
             <version>${carbon.kernel.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.hdfs.mgt.stub</artifactId>
             <version>${carbon.storage.management.version}</version>
         </dependency>

@@ -118,7 +118,7 @@
             <version>${carbon.kernel.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.identity.authenticator.krb5</artifactId>
             <version>${carbon.storage.management.version}</version>
         </dependency>
@@ -139,12 +139,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.hdfs.dataaccess</artifactId>
             <version>${carbon.storage.management.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.hadoop.security</artifactId>
             <version>${carbon.storage.management.version}</version>
         </dependency>
