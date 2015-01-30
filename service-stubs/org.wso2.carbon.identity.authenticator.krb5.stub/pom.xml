@@ -90,7 +90,7 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Export-Package>
-                            org.wso2.carbon.identity.authenticator.krb5.stub.*;version="${carbon.platform.package.export.version}",
+                            org.wso2.carbon.identity.authenticator.krb5.stub.*;version="${carbon.storage.management.version}",
                         </Export-Package>
                         <Import-Package>
                             !org.wso2.carbon.identity.authenticator.krb5.stub.*,   

@@ -83,7 +83,7 @@
                         <Private-Package>org.wso2.carbon.identity.authenticator.krb5.ui.internal</Private-Package>
                         <Export-Package>
                             !org.wso2.carbon.identity.authenticator.krb5.ui.internal,
-                            org.wso2.carbon.identity.authenticator.krb5.ui.*;version="${carbon.platform.package.export.version}",
+                            org.wso2.carbon.identity.authenticator.krb5.ui.*;version="${carbon.storage.management.version}",
                         </Export-Package>
                         <Import-Package>
                             !org.wso2.carbon.identity.authenticator.krb5.ui,
