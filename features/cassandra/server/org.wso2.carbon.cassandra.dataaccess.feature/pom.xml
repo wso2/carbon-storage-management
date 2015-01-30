@@ -20,7 +20,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>org.wso2.carbon</groupId>
+        <groupId>org.wso2.carbon.storagemgt</groupId>
         <artifactId>cassandra-feature</artifactId>
         <version>4.3.0-SNAPSHOT</version>
 	<relativePath>../../pom.xml</relativePath>
@@ -36,7 +36,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.cassandra.dataaccess</artifactId>
             <version>${carbon.storage.management.version}</version>
         </dependency>
@@ -70,7 +70,7 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.dataaccess:${carbon.storage.management.version}</bundleDef>
+                                <bundleDef>org.wso2.carbon.storagemgt:org.wso2.carbon.cassandra.dataaccess:${carbon.storage.management.version}</bundleDef>
                                 <bundleDef>org.hectorclient.wso2:hector-core:${hector-core.version}</bundleDef>
                             </bundles>
                             <importFeatures>

@@ -3,8 +3,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
+        <groupId>org.wso2.carbon.storagemgt</groupId>
         <artifactId>cassandra-explorer-feature</artifactId>
-        <groupId>org.wso2.carbon</groupId>
         <version>4.3.0-SNAPSHOT</version>
 	<relativePath>../pom.xml</relativePath>
     </parent>
@@ -19,7 +19,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.cassandra.explorer.mgt</artifactId>
             <version>${carbon.storage.management.version}</version>
         </dependency>
@@ -180,7 +180,7 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.explorer.mgt</bundleDef>
+                                <bundleDef>org.wso2.carbon.storagemgt:org.wso2.carbon.cassandra.explorer.mgt</bundleDef>
                                 <bundleDef>org.apache.cassandra.wso2:apache-cassandra</bundleDef>
                                 <bundleDef>libthrift.wso2:libthrift</bundleDef>
                                 <bundleDef>org.perf4j.wso2:perf4j</bundleDef>

@@ -20,7 +20,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>org.wso2.carbon</groupId>
+        <groupId>org.wso2.carbon.storagemgt</groupId>
         <artifactId>cassandra-feature</artifactId>
         <version>4.3.0-SNAPSHOT</version>
 	<relativePath>../../pom.xml</relativePath>
@@ -36,7 +36,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.cassandra.server</artifactId>
             <version>${carbon.storage.management.version}</version>
         </dependency>
@@ -76,7 +76,7 @@
             <version>${carbon.identity.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.cassandra.mgt</artifactId>
             <version>${carbon.storage.management.version}</version>
         </dependency>
@@ -125,7 +125,7 @@
             <version>${jackson.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.cassandra.sharedkey</artifactId>
             <version>${carbon.storage.management.version}</version>
         </dependency>
@@ -226,8 +226,8 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.server:${carbon.storage.management.version}</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cassandra.sharedkey:${carbon.storage.management.version}</bundleDef>
+                                <bundleDef>org.wso2.carbon.storagemgt:org.wso2.carbon.cassandra.server:${carbon.storage.management.version}</bundleDef>
+                                <bundleDef>org.wso2.carbon.storagemgt:org.wso2.carbon.cassandra.sharedkey:${carbon.storage.management.version}</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.identity.authentication:${carbon.identity.version}</bundleDef>
                                 <bundleDef>org.apache.cassandra.wso2:apache-cassandra:${wso2.cassandra.version}</bundleDef>
                                 <bundleDef>libthrift.wso2:libthrift:${libthrift.version}</bundleDef>

@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.carbon</groupId>
+    <groupId>org.wso2.carbon.storagemgt</groupId>
     <artifactId>carbon-storage-management</artifactId>
     <packaging>pom</packaging>
     <version>4.3.0-SNAPSHOT</version>
@@ -14,13 +14,13 @@
         <module>components/cassandra</module>
         <module>components/cassandra-explorer</module>
         <module>components/cassandra-search</module>
-        <!--module>components/mapred</module>
-        <module>components/hdfs</module-->
+        <module>components/mapred</module>
+        <module>components/hdfs</module>
         <module>components/rss-manager</module>
         <module>features/cassandra</module>
         <module>features/cassandra-explorer</module>
         <module>features/cassandra-search</module>
-        <!--module>features/hadoop</module-->
+        <module>features/hadoop</module>
         <module>features/rss-manager</module>
     </modules>
 
@@ -920,7 +920,7 @@
         <axis2.wso2.imp.pkg.version>[1.6.1.wso2v11, 1.7.0)</axis2.wso2.imp.pkg.version>
         <orbit.version.wsdl4j>1.6.2.wso2v4</orbit.version.wsdl4j>
         <orbit.version.neethi>2.0.4.wso2v4</orbit.version.neethi>
-        <rampart.wso2.version>1.7.0-SNAPSHOT</rampart.wso2.version>
+        <rampart.wso2.version>1.7.0</rampart.wso2.version>
 
         <!-- Axiom Version -->
         <axiom.wso2.version>1.2.11.wso2v5</axiom.wso2.version>
