@@ -84,9 +84,9 @@
             <version>${carbon.kernel.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.commons</groupId>
             <artifactId>org.wso2.carbon.identity.authentication</artifactId>
-            <version>${carbon.identity.version}</version>
+            <version>${carbon.commons.version}</version>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>
