@@ -306,11 +306,6 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.caching.core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.logging</artifactId>
                 <version>${carbon.kernel.version}</version>
             </dependency>
