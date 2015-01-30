@@ -22,7 +22,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.hectorclient</groupId>
+            <groupId>org.hectorclient.wso2</groupId>
             <artifactId>hector-core</artifactId>
             <version>${hector-core.version}</version>
         </dependency>
