@@ -1934,7 +1934,7 @@
         <!-- Axis2 Version -->
         <axis2.wso2.version>1.6.1.wso2v11</axis2.wso2.version>
         <orbit.version.axis2>1.6.1.wso2v11</orbit.version.axis2>
-        <axis2.osgi.version.range>[1.6.1.wso2v11, 1.7.0)</axis2.osgi.version.range>
+	<axis2.wso2.imp.pkg.version>[1.6.1.wso2v11, 1.7.0)</axis2.wso2.imp.pkg.version>
         <orbit.version.wsdl4j>1.6.2.wso2v4</orbit.version.wsdl4j>
         <orbit.version.neethi>2.0.4.wso2v4</orbit.version.neethi>
 
