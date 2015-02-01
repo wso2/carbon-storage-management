@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.wso2.carbon.storagemgt</groupId>
         <artifactId>carbon-service-stubs</artifactId>
-        <version>4.3.0</version>
+        <version>4.3.1-SNAPSHOT</version>
 	<relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -52,11 +52,11 @@
                                     <pathelement location="${settings.localRepository}/org/apache/axis2/wso2/axis2/${axis2.wso2.version}/axis2-${axis2.wso2.version}.jar" />
                                 </path>
                                 <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
-                                    <arg line="-uri src/main/resources/CassandraKeyspaceAdmin.wsdl -u -uw -o target/generated-code -p org.wso2.carbon.cassandra.mgt.stub.ks                                     -ns2p http://mgt.cassandra.carbon.wso2.org=org.wso2.carbon.cassandra.mgt.stub.ks,http://mgt.cassandra.carbon.wso2.org/xsd=org.wso2.carbon.cassandra.mgt.stub.ks.xsd,http://org.apache.axis2/xsd=org.wso2.carbon.cassandra.mgt.stub.ks.axis2.xsd" />
+                                    <arg line="-uri src/main/resources/CassandraKeyspaceAdmin.wsdl -u -uw -o target/generated-code -p org.wso2.carbon.cassandra.mgt.stub.ks -ns2p http://mgt.cassandra.carbon.wso2.org=org.wso2.carbon.cassandra.mgt.stub.ks,http://mgt.cassandra.carbon.wso2.org/xsd=org.wso2.carbon.cassandra.mgt.stub.ks.xsd,http://org.apache.axis2/xsd=org.wso2.carbon.cassandra.mgt.stub.ks.axis2.xsd" />
                                     <classpath refid="wsdl2java.classpath" />
                                 </java>
                                 <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
-                                    <arg line="-uri src/main/resources/CassandraClusterAdmin.wsdl -u -uw -o target/generated-code -p org.wso2.carbon.cassandra.mgt.stub.cluster                                     -ns2p http://mgt.cassandra.carbon.wso2.org=org.wso2.carbon.cassandra.mgt.stub.cluster,http://mgt.cassandra.carbon.wso2.org/xsd=org.wso2.carbon.cassandra.mgt.stub.cluster.xsd,http://org.apache.axis2/xsd=org.wso2.carbon.cassandra.mgt.stub.cluster.axis2.xsd" />
+                                    <arg line="-uri src/main/resources/CassandraClusterAdmin.wsdl -u -uw -o target/generated-code -p org.wso2.carbon.cassandra.mgt.stub.cluster -ns2p http://mgt.cassandra.carbon.wso2.org=org.wso2.carbon.cassandra.mgt.stub.cluster,http://mgt.cassandra.carbon.wso2.org/xsd=org.wso2.carbon.cassandra.mgt.stub.cluster.xsd,http://org.apache.axis2/xsd=org.wso2.carbon.cassandra.mgt.stub.cluster.axis2.xsd" />
                                     <classpath refid="wsdl2java.classpath" />
                                 </java>
                             </tasks>
