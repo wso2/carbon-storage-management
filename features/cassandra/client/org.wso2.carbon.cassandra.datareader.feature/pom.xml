@@ -127,8 +127,8 @@
                                 <bundleDef>org.slf4j:slf4j-api</bundleDef>
                                 <bundleDef>com.google.guava:guava</bundleDef>
                                 <bundleDef>snappy-java.wso2:snappy-java</bundleDef>
-                                <!--bundleDef>com.codahale.metrics:metrics-core</bundleDef>
-                                <bundleDef>com.codahale.metrics:metrics-core</bundleDef-->
+                                <!--bundleDef>com.codahale.metrics:metrics-core</bundleDef-->
+                                <bundleDef>com.codahale.metrics:metrics-core</bundleDef>
                                 <bundleDef>org.apache.cassandra.wso2:cassandra-thrift</bundleDef>
                             </bundles>
                             <importFeatures>
