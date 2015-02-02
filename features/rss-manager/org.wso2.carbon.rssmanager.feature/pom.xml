@@ -56,7 +56,7 @@
                                 </properties>
                             </adviceFile>
                             <importFeatures>
-                               <importFeatureDef>org.wso2.carbon.commons:org.wso2.carbon.transaction.manager:${carbon.commons.version}</importFeatureDef>
+                               <importFeatureDef>org.wso2.carbon.transaction.manager:${carbon.commons.version}</importFeatureDef>
 			    </importFeatures>
                             <includedFeatures>
                                 <includedFeatureDef>org.wso2.carbon.storagemgt:org.wso2.carbon.rssmanager.server.feature:${carbon.storage.management.version}</includedFeatureDef>
