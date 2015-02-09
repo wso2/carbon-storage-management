@@ -44,11 +44,10 @@ public class MySQLUserPrivilegesDAOImpl implements UserPrivilegesDAO {
 		dataSource = RSSManagerUtil.getDataSource();
 	}
 	/**
-	 * @see UserPrivilegesDAO#updateUserPrivileges(PreparedStatement, UserDatabasePrivilege)
+	 * @see UserPrivilegesDAO#updateUserPrivileges(Connection, UserDatabasePrivilege)
 	 */
-	public void updateUserPrivileges(PreparedStatement nativePrivilegeUpdateStatement, UserDatabasePrivilege privileges)
+	public void updateUserPrivileges(Connection conn, UserDatabasePrivilege privileges)
 			throws RSSDAOException, RSSDatabaseConnectionException {
-		Connection conn = null;
 		PreparedStatement userPrivilegeEntryStatement = null;
 		try {
 			conn = getDataSourceConnection(); //acquire data source connection
@@ -86,11 +85,6 @@ public class MySQLUserPrivilegesDAOImpl implements UserPrivilegesDAO {
 			userPrivilegeEntryStatement.setInt(20, privileges.getId());
 			//execute update first to the meta repository as native sql queries not transactional
 			userPrivilegeEntryStatement.executeUpdate();
-			//execute native update statement which updates the privileges in given rss instance
-			if (nativePrivilegeUpdateStatement != null) {
-				nativePrivilegeUpdateStatement.executeUpdate();
-			}
-			conn.commit();
 		} catch (SQLException e) {
 			RSSDAOUtil.rollback(conn, RSSManagerConstants.UPDATE_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
 			String msg = "Error while rollback at updating privilege template";

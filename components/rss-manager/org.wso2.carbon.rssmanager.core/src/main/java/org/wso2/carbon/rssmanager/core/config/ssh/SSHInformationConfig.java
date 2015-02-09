@@ -18,9 +18,6 @@
 
 package org.wso2.carbon.rssmanager.core.config.ssh;
 
-import org.wso2.carbon.rssmanager.core.config.datasource.JNDILookupDefinition;
-import org.wso2.carbon.rssmanager.core.config.datasource.RDBMSConfig;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 

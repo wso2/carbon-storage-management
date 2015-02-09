@@ -52,11 +52,10 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 	}
 
 	/**
-	 * @see DatabaseUserDAO#addDatabaseUser(java.sql.PreparedStatement, org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser)
+	 * @see DatabaseUserDAO#addDatabaseUser(java.sql.Connection, org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser)
 	 */
-	public void addDatabaseUser(PreparedStatement nativeAddUserStatement, DatabaseUser user)
+	public void addDatabaseUser(Connection conn, DatabaseUser user)
 			throws RSSDAOException, RSSDatabaseConnectionException {
-		Connection conn = null;
 		PreparedStatement createUserStatement = null;
 		PreparedStatement createUserEntryStatement;
 		ResultSet result = null;
@@ -99,12 +98,6 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 				}
 				createUserEntryStatement.executeBatch();
 			}
-			if (nativeAddUserStatement != null) {
-				//since native user add statements are not transactional, execute add user statement will add new
-				//user to the rss instance
-				nativeAddUserStatement.executeUpdate();
-			}
-			conn.commit();
 		} catch (SQLException e) {
 			RSSDAOUtil.rollback(conn, RSSManagerConstants.ADD_DATABASE_USER_ENTRY);
 			String msg = "Failed to add database user" + user.getName() + "in rssInstance" + user.getRssInstanceName()
@@ -116,11 +109,10 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 	}
 
 	/**
-	 * @see DatabaseUserDAOImpl#removeDatabaseUser(java.sql.PreparedStatement, org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser)
+	 * @see DatabaseUserDAOImpl#removeDatabaseUser(java.sql.Connection, org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser)
 	 */
-	public void removeDatabaseUser(PreparedStatement nativeRemoveUserStatement, DatabaseUser user)
+	public void removeDatabaseUser(Connection conn, DatabaseUser user)
 			throws RSSDAOException, RSSDatabaseConnectionException {
-		Connection conn = null;
 		PreparedStatement removeUserStatement = null;
 		try {
 			conn = getDataSourceConnection();//acquire data source connection
@@ -131,11 +123,6 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 			removeUserStatement.setInt(1, user.getId());
 			//execute remove user statement in the meta data repository
 			removeUserStatement.executeUpdate();
-			if (nativeRemoveUserStatement != null) {
-				//execute native remove user statement will remove database user from rss instance as it's not transactional
-				nativeRemoveUserStatement.executeUpdate();
-			}
-			conn.commit();
 		} catch (SQLException e) {
 			RSSDAOUtil.rollback(conn, RSSManagerConstants.DELETE_DATABASE_USER_ENTRY);
 			String msg = "Failed to delete database user" + user.getName() + "in rssInstance" + user.getRssInstanceName()

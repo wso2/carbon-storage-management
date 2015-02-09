@@ -27,7 +27,6 @@ import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dao.util.RSSDAOUtil;
 import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
-import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 
 import javax.sql.DataSource;
@@ -50,11 +49,10 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 		dataSource = RSSManagerUtil.getDataSource();
 	}
 	/**
-	 * @see DatabaseDAO#addDatabase(java.sql.PreparedStatement, org.wso2.carbon.rssmanager.core.dto.restricted.Database)
+	 * @see DatabaseDAO#addDatabase(java.sql.Connection, org.wso2.carbon.rssmanager.core.dto.restricted.Database)
 	 */
-	public void addDatabase(PreparedStatement nativeAddDBStatement, Database database)
+	public void addDatabase(Connection conn, Database database)
 			throws RSSDAOException, RSSDatabaseConnectionException {
-		Connection conn = null;
 		PreparedStatement addDBStatement = null;
 		try {
 			conn = getDataSourceConnection();//acquire data source connection
@@ -68,11 +66,6 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 			addDBStatement.setInt(4, database.getTenantId());
 			//execute add database statement first to the meta repository as native sql queries not transactional
 			addDBStatement.executeUpdate();
-			//execute native add database statement which add database in given rss instance
-			if (nativeAddDBStatement != null) {
-				nativeAddDBStatement.executeUpdate();
-			}
-			conn.commit();
 		} catch (SQLException e) {
 			RSSDAOUtil.rollback(conn, RSSManagerConstants.ADD_DATABASE_ENTRY);
 			String msg = "Failed to add database " + database.getName() + " in rssInstance " + database.getRssInstanceName()
@@ -84,7 +77,7 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 	}
 
 	/**
-	 * @see DatabaseDAO#removeDatabase(java.sql.PreparedStatement, org.wso2.carbon.rssmanager.core.dto.restricted.Database)
+	 * @see DatabaseDAO#removeDatabase(java.sql.Connection, org.wso2.carbon.rssmanager.core.dto.restricted.Database)
 	 */
 	public void removeDatabase(Connection conn, Database database)
 			throws RSSDAOException, RSSDatabaseConnectionException {

@@ -23,7 +23,7 @@ import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 
-import java.sql.PreparedStatement;
+import java.sql.Connection;
 
 /**
  * DatabaseUserDAO interface
@@ -35,11 +35,11 @@ public interface DatabaseUserDAO {
 	 * add database user prepared statement which needs to be executed along with the meta repository insert as native
 	 * sql operations not transactional
 	 *
-	 * @param nativeAddUserStatement native add database user statement
+	 * @param conn meta repository database connection
 	 * @param user database user configuration
 	 * @throws RSSDAOException if something went wrong when adding database configuration details to the meta repository
 	 */
-	void addDatabaseUser(PreparedStatement nativeAddUserStatement, DatabaseUser user)
+	void addDatabaseUser(Connection conn, DatabaseUser user)
 			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
@@ -47,11 +47,11 @@ public interface DatabaseUserDAO {
 	 * remove database user prepared statement which needs to be executed along with the meta repository database entry removal as native
 	 * sql operations not transactional
 	 *
-	 * @param nativeRemoveUserStatement native remove database user statement
+	 * @param conn meta repository database connection
 	 * @param user database user configuration to removed
 	 * @throws RSSDAOException if something went wrong when remove database configuration details from the meta repository
 	 */
-	void removeDatabaseUser(PreparedStatement nativeRemoveUserStatement, DatabaseUser user)
+	void removeDatabaseUser(Connection conn, DatabaseUser user)
 			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**

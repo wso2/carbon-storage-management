@@ -22,7 +22,6 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.core.config.datasource.DataSourceConfig;
 import org.wso2.carbon.rssmanager.core.config.datasource.JNDILookupDefinition;
 import org.wso2.carbon.rssmanager.core.config.datasource.RDBMSConfig;
-import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dao.impl.AbstractRSSDAO;
 import org.wso2.carbon.rssmanager.core.dao.impl.h2.H2RSSDAOImpl;
 import org.wso2.carbon.rssmanager.core.dao.impl.mysql.MySQLRSSDAOImpl;

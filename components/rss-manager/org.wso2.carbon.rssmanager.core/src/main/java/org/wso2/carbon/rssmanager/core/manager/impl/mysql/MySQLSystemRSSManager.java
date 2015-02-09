@@ -38,8 +38,8 @@ import org.wso2.carbon.rssmanager.core.environment.dao.RSSInstanceDAO;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.manager.RSSManager;
 import org.wso2.carbon.rssmanager.core.manager.SystemRSSManager;
-import org.wso2.carbon.rssmanager.core.util.databasemanagement.SSHConnection;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
+import org.wso2.carbon.rssmanager.core.util.databasemanagement.SSHConnection;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.sql.Connection;
@@ -68,6 +68,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
      */
     public Database addDatabase(Database database) throws RSSManagerException {
         Connection conn = null;
+        Connection txConn = null;
         PreparedStatement nativeAddDBStatement = null;
         //get qualified name for database which specific to tenant
         final String qualifiedDatabaseName = RSSManagerUtil.getFullyQualifiedDatabaseName(database.getName());
@@ -96,16 +97,21 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
             /* Validating database name to avoid any possible SQL injection attack */
             RSSManagerUtil.checkIfParameterSecured(qualifiedDatabaseName);
             conn = this.getConnection(rssInstance.getName());
+            txConn = RSSManagerUtil.getTxConnection();
             String createDBQuery = "CREATE DATABASE `" + qualifiedDatabaseName + "`";
             nativeAddDBStatement = conn.prepareStatement(createDBQuery);
-            super.addDatabase(nativeAddDBStatement, database, rssInstance, qualifiedDatabaseName);
+            super.addDatabase(txConn, database, rssInstance, qualifiedDatabaseName);
+            nativeAddDBStatement.execute();
+            RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {
+            RSSManagerUtil.rollBackTx(txConn);
             String msg = "Error while creating the database '" + qualifiedDatabaseName
                          + "' on RSS instance '" + (rssInstance != null ? rssInstance.getName() : null)
                          + "' : " + e.getMessage();
             handleException(msg, e);
         } finally {
             RSSManagerUtil.cleanupResources(null, nativeAddDBStatement, conn);
+            RSSManagerUtil.cleanupResources(null, null, txConn);
         }
         return database;
     }
@@ -135,6 +141,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
             /* Validating database name to avoid any possible SQL injection attack */
             RSSManagerUtil.checkIfParameterSecured(databaseName);
             conn = getConnection(rssInstance.getName());
+            txConn = RSSManagerUtil.getTxConnection();
             String removeDBQuery = "DROP DATABASE `" + databaseName + "`";
             nativeRemoveDBStatement = conn.prepareStatement(removeDBQuery);
             super.removeDatabase(txConn, rssInstance.getName(), databaseName, rssInstance,
@@ -169,6 +176,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
      */
     public DatabaseUser addDatabaseUser(DatabaseUser user) throws RSSManagerException {
         Connection conn = null;
+        Connection txConn = null;
         PreparedStatement nativeCreateDBUserStatement = null;
         Map<String, String> mapUserWithInstance = new HashMap<String, String>();
         /* Validating user information to avoid any possible SQL injection attacks */
@@ -179,6 +187,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
                     this.getEnvironmentName(), MultitenantConstants.SUPER_TENANT_ID);
             checkConnections(rssInstances);
             user.setEnvironmentId(this.getEnvironment().getId());
+            txConn = RSSManagerUtil.getTxConnection();
             //Iterate and add database user to each system rss instance
             for (RSSInstance rssInstance : rssInstances) {
                 try {
@@ -194,8 +203,10 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
             for (RSSInstance rssInstance : rssInstances) {
                 this.flushPrivileges(rssInstance);
             }
-            super.addDatabaseUser(null, user, qualifiedUsername, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            super.addDatabaseUser(txConn, user, qualifiedUsername, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {
+            RSSManagerUtil.rollBackTx(txConn);
             String msg = "Error occurred while creating the database " + "user '" + qualifiedUsername;
             if (!mapUserWithInstance.isEmpty()) {
                 //dropped added users at error
@@ -203,6 +214,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
             }
             handleException(msg, e);
         } finally {
+            RSSManagerUtil.cleanupResources(null, null, txConn);
             RSSManagerUtil.cleanupResources(null, nativeCreateDBUserStatement, conn);
         }
         return user;
@@ -240,13 +252,14 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
      */
     public void removeDatabaseUser(String rssInstanceName, String username) throws RSSManagerException {
         Connection conn = null;
+        Connection txConn = null;
         PreparedStatement nativeRemoveDBUserStatement = null;
         try {
             RSSInstance[] rssInstances = rssInstanceDAO.getSystemRSSInstances(
                     this.getEnvironmentName(), MultitenantConstants.SUPER_TENANT_ID);
             //check whether rss instances are available
             checkConnections(rssInstances);
-            super.removeDatabaseUser(null, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            txConn = RSSManagerUtil.getTxConnection();
             for (RSSInstance rssInstance : rssInstances) {
                 try {
                     conn = getConnection(rssInstance.getName());
@@ -259,13 +272,19 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
                     RSSManagerUtil.cleanupResources(null, nativeRemoveDBUserStatement, conn);
                 }
             }
+            super.removeDatabaseUser(txConn, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, RSSManagerConstants
+                    .RSSManagerTypes.RM_TYPE_SYSTEM);
+            RSSManagerUtil.commitTx(txConn);
             for (RSSInstance rssInstance : rssInstanceDAO.getSystemRSSInstances(this.getEnvironmentName(), MultitenantConstants.SUPER_TENANT_ID)) {
                 this.flushPrivileges(rssInstance);
             }
         } catch (Exception e) {
+            RSSManagerUtil.rollBackTx(txConn);
             String msg = "Error while dropping the database user '" + username +
                          "' on RSS instances : " + e.getMessage();
             handleException(msg, e);
+        } finally {
+            RSSManagerUtil.cleanupResources(null, null, txConn);
         }
     }
 
@@ -275,6 +294,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
     public void updateDatabaseUserPrivileges(DatabasePrivilegeSet privileges, DatabaseUser user,
                                              String databaseName) throws RSSManagerException {
         Connection conn = null;
+        Connection txConn = null;
         PreparedStatement updatePrivilegesStatement = null;
         try {
             if (privileges == null) {
@@ -291,14 +311,19 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
             }
             user.setRssInstanceName(rssInstance.getName());
             conn = getConnection(rssInstanceName);
+            txConn = RSSManagerUtil.getTxConnection();
             //create update privilege statement
             updatePrivilegesStatement = updateUserPriviledgesPreparedStatement(conn, databaseName, user.getUsername(), privileges);
-            super.updateDatabaseUserPrivileges(updatePrivilegesStatement, rssInstanceName, databaseName, privileges, user.getUsername(),
+            super.updateDatabaseUserPrivileges(txConn, rssInstanceName, databaseName, privileges, user.getUsername(),
                                                RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            updatePrivilegesStatement.execute();
+            RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {
+            RSSManagerUtil.rollBackTx(txConn);
             String msg = "Error occurred while updating database user privileges: " + e.getMessage();
             handleException(msg, e);
         } finally {
+            RSSManagerUtil.cleanupResources(null, null, txConn);
             RSSManagerUtil.cleanupResources(null, updatePrivilegesStatement, conn);
         }
     }
@@ -377,6 +402,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
     public void attachUser(UserDatabaseEntry entry,
                            DatabasePrivilegeSet privileges) throws RSSManagerException {
         Connection conn = null;
+        Connection txConn = null;
         PreparedStatement nativeAttacheUserStatement = null;
         String databaseName = entry.getDatabaseName();
         String username = entry.getUsername();
@@ -394,14 +420,19 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
                 privileges = entry.getPrivileges();
             }
             nativeAttacheUserStatement = this.composePreparedStatement(conn, databaseName, username, privileges);
-            super.attachUser(nativeAttacheUserStatement, entry, privileges, rssInstance);
+            txConn = RSSManagerUtil.getTxConnection();
+            super.attachUser(txConn, entry, privileges, rssInstance);
             this.flushPrivileges(rssInstance);
+            nativeAttacheUserStatement.execute();
+            RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {
+            RSSManagerUtil.rollBackTx(txConn);
             String msg = "Error occurred while attaching the database user '" + username + "' to " +
                          "the database '" + databaseName + "' : " + e.getMessage();
             handleException(msg, e);
         } finally {
             RSSManagerUtil.cleanupResources(null, nativeAttacheUserStatement, conn);
+            RSSManagerUtil.cleanupResources(null, null, txConn);
         }
     }
 
@@ -411,6 +442,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
     public void detachUser(UserDatabaseEntry entry) throws RSSManagerException {
         Connection conn = null;
         PreparedStatement stmt = null;
+        Connection txConn = null;
 
         try {
             int tenantId = RSSManagerUtil.getTenantId();
@@ -418,21 +450,26 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
                                                       entry.getDatabaseName(), entry.getType(), tenantId);
             RSSInstance rssInstance = rssInstanceDAO.getRSSInstance(this.getEnvironmentName(), rssInstanceName,
                     MultitenantConstants.SUPER_TENANT_ID);
+            txConn = RSSManagerUtil.getTxConnection();
             conn = getConnection(rssInstanceName);
             String sql = "DELETE FROM mysql.db WHERE host = ? AND user = ? AND db = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, "%");
             stmt.setString(2, entry.getUsername());
             stmt.setString(3, entry.getDatabaseName());
-            super.detachUser(stmt, entry, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            super.detachUser(txConn, entry, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            stmt.execute();
             this.flushPrivileges(rssInstance);
+            RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {
+            RSSManagerUtil.rollBackTx(txConn);
             String msg = "Error occurred while attaching the database user '" +
                          entry.getUsername() + "' to " + "the database '" + entry.getDatabaseName() +
                          "': " + e.getMessage();
             handleException(msg, e);
         } finally {
             RSSManagerUtil.cleanupResources(null, stmt, conn);
+            RSSManagerUtil.cleanupResources(null, null, txConn);
         }
     }
 

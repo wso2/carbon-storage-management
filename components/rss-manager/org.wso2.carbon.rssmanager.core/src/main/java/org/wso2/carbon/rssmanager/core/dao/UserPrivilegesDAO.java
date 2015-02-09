@@ -23,7 +23,7 @@ import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.common.UserDatabasePrivilege;
 
-import java.sql.PreparedStatement;
+import java.sql.Connection;
 
 public interface UserPrivilegesDAO {
 
@@ -32,10 +32,10 @@ public interface UserPrivilegesDAO {
 	 * update database user privileges prepared statement which needs to be executed along with the meta repository database entry removal as native
 	 * sql operations not transactional
 	 *
-	 * @param nativePrivilegeUpdateStatement native update privileges statement
+	 * @param conn mata repository database connection
 	 * @param privileges update privileges
 	 * @throws RSSDAOException if something went wrong when updating user privileges
 	 */
-	public void updateUserPrivileges(PreparedStatement nativePrivilegeUpdateStatement, UserDatabasePrivilege privileges)
+	public void updateUserPrivileges(Connection conn, UserDatabasePrivilege privileges)
 			throws RSSDAOException, RSSDatabaseConnectionException;;
 }

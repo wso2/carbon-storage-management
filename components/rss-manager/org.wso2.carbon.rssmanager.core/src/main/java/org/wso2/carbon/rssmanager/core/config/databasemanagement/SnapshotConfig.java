@@ -18,8 +18,6 @@
 
 package org.wso2.carbon.rssmanager.core.config.databasemanagement;
 
-import org.wso2.carbon.rssmanager.core.config.ssh.SSHInformationConfig;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 

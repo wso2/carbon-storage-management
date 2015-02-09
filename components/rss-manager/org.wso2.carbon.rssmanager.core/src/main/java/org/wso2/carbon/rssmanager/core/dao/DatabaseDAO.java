@@ -19,12 +19,11 @@
 
 package org.wso2.carbon.rssmanager.core.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
+
+import java.sql.Connection;
 
 /**
  * DatabaseDAO interface class
@@ -36,12 +35,12 @@ public interface DatabaseDAO {
 	 * add database prepared statement which needs to be executed along with the meta repository insert as native
 	 * sql operations not transactional
 	 *
-	 * @param nativeAddDBStatement native add database statement which needs to be executed
+	 * @param conn meta repository database connection
 	 * @param database Database configuration
 	 * @throws RSSDAOException If some error occurs while adding database configuration
 	 *                         information to RSS meta data repository
 	 */
-	void addDatabase(PreparedStatement nativeAddDBStatement, Database database)
+	void addDatabase(Connection conn, Database database)
 			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
@@ -49,7 +48,7 @@ public interface DatabaseDAO {
 	 * remove database prepared statement which needs to be executed along with the meta repository database entry removal as native
 	 * sql operations not transactional
 	 *
-	 * @param nativeRemoveDBStatement native remove database statement to be executed
+	 * @param conn meta
 	 * @param database database object that needs to be removed
 	 * @throws RSSDAOException If some error occurs while removing database configuration
 	 *                         information from RSS meta data repository

@@ -22,7 +22,6 @@ package org.wso2.carbon.rssmanager.core.dao.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
-import org.wso2.carbon.rssmanager.core.dao.RSSDAO;
 import org.wso2.carbon.rssmanager.core.dao.UserDatabaseEntryDAO;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
@@ -54,14 +53,13 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 	}
 
 	/**
-	 * @see UserDatabaseEntryDAO#addUserDatabaseEntry(java.sql.PreparedStatement, String, UserDatabaseEntry, int)
+	 * @see UserDatabaseEntryDAO#addUserDatabaseEntry(java.sql.Connection, String, UserDatabaseEntry, int)
 	 */
-	public int addUserDatabaseEntry(PreparedStatement nativeAttachUserStatement, String environmentName, UserDatabaseEntry entry,
+	public int addUserDatabaseEntry(Connection conn, String environmentName, UserDatabaseEntry entry,
 	                                int tenantId) throws RSSDAOException, RSSDatabaseConnectionException {
 		if (entry == null) {
 			return -1;
 		}
-		Connection conn = null;
 		PreparedStatement userEntryStatement = null;
 		PreparedStatement userPrivilegeEntryStatement = null;
 		ResultSet resultSet = null;
@@ -110,12 +108,6 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 				userPrivilegeEntryStatement.setString(20, privileges.getTriggerPriv());
 				userPrivilegeEntryStatement.executeUpdate();
 			}
-			//native user attachment to database statement is not transactional since it will executed after entry is insert
-			//user entry to meta repository
-			if(nativeAttachUserStatement != null) {
-				nativeAttachUserStatement.executeUpdate();
-			}
-			conn.commit();
 		} catch (SQLException e) {
 			RSSDAOUtil.rollback(conn, RSSManagerConstants.ADD_USER_PRIVILEGE_TEMPLATE_ENTRY);
 			String msg = "Failed to add database user entry to meta repository";
@@ -151,11 +143,10 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 	}
 
 	/**
-	 * @see UserDatabaseEntryDAO#removeUserDatabaseEntry(java.sql.PreparedStatement, int, int)
+	 * @see UserDatabaseEntryDAO#removeUserDatabaseEntry(java.sql.Connection, int, int)
 	 */
-	public void removeUserDatabaseEntry(PreparedStatement nativeDeattachUserStatement, int databaseId, int userId)
+	public void removeUserDatabaseEntry(Connection conn, int databaseId, int userId)
 			throws RSSDAOException, RSSDatabaseConnectionException {
-		Connection conn = null;
 		PreparedStatement removeUserEntryStatement = null;
 		try {
 			conn = getDataSourceConnection();//acquire data source connection
@@ -167,10 +158,6 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 			removeUserEntryStatement.setInt(2, userId);
 			//execute remove user statement first from meta repository as native queries not transactional
 			removeUserEntryStatement.executeUpdate();
-			if(nativeDeattachUserStatement != null) {
-				//execute native deattach user query which deattach specified user from database
-				nativeDeattachUserStatement.executeUpdate();
-			}
 			conn.commit();
 		} catch (SQLException e) {
 			RSSDAOUtil.rollback(conn, RSSManagerConstants.DELETE_USER_DATABASE_ENTRY);

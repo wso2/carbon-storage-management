@@ -22,12 +22,13 @@ package org.wso2.carbon.rssmanager.core.manager;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.config.RSSManagementRepository;
 import org.wso2.carbon.rssmanager.core.environment.Environment;
-//import org.wso2.carbon.rssmanager.core.manager.impl.h2.H2RSSManagerFactory;
 import org.wso2.carbon.rssmanager.core.manager.impl.h2.H2RSSManagerFactory;
 import org.wso2.carbon.rssmanager.core.manager.impl.mysql.MySQLRSSManagerFactory;
 import org.wso2.carbon.rssmanager.core.manager.impl.oracle.OracleRSSManagerFactory;
 import org.wso2.carbon.rssmanager.core.manager.impl.postgres.PostgresRSSManagerFactory;
 import org.wso2.carbon.rssmanager.core.manager.impl.sqlserver.SQLServerRSSManagerFactory;
+
+//import org.wso2.carbon.rssmanager.core.manager.impl.h2.H2RSSManagerFactory;
 //import org.wso2.carbon.rssmanager.core.manager.impl.oracle.OracleRSSManagerFactory;
 //import org.wso2.carbon.rssmanager.core.manager.impl.postgres.PostgresRSSManagerFactory;
 //import org.wso2.carbon.rssmanager.core.manager.impl.sqlserver.SQLServerRSSManagerFactory;
