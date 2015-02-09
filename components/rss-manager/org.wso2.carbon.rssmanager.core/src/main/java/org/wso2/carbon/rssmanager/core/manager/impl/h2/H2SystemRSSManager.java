@@ -334,7 +334,7 @@ public class H2SystemRSSManager extends SystemRSSManager {
             //create update privilege statement
             revokeAllPrivileges(conn, databaseName, user.getName());
             composePrivilegePreparedStatement(conn, databaseName, user.getName(), h2Privileges);
-            super.updateDatabaseUserPrivileges(null, rssInstanceName, databaseName, privileges, user.getUsername(),
+            super.updateDatabaseUserPrivileges(txConn, rssInstanceName, databaseName, privileges, user.getUsername(),
                                                RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
             RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {

@@ -231,6 +231,7 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
             checkConnections(rssInstances);
             user.setEnvironmentId(this.getEnvironment().getId());
             //Iterate and add database user to each system rss instance
+            super.addDatabaseUser(txConn, user, qualifiedUsername, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
             for (RSSInstance rssInstance : rssInstances) {
                 try {
                     txConn = RSSManagerUtil.getTxConnection();
@@ -248,7 +249,6 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
                     RSSManagerUtil.cleanupResources(null, nativeCreateDBUserStatement, conn);
                 }
             }
-            super.addDatabaseUser(txConn, user, qualifiedUsername, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
             RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {
             RSSManagerUtil.rollBackTx(txConn);
@@ -330,6 +330,9 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
                     this.getEnvironmentName(), MultitenantConstants.SUPER_TENANT_ID);
             //check whether rss instances are available
             checkConnections(rssInstances);
+            txConn = RSSManagerUtil.getTxConnection();
+            super.removeDatabaseUser(txConn, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, RSSManagerConstants
+                    .RSSManagerTypes.RM_TYPE_SYSTEM);
             for (RSSInstance rssInstance : rssInstances) {
                 try {
                     conn = getConnection(rssInstance.getName());
@@ -343,8 +346,6 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
                     RSSManagerUtil.cleanupResources(null, dropOwnedStmt, conn);
                 }
             }
-            txConn = RSSManagerUtil.getTxConnection();
-            super.removeDatabaseUser(null, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
             RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {
             RSSManagerUtil.rollBackTx(txConn);

@@ -458,8 +458,8 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
             stmt.setString(2, entry.getUsername());
             stmt.setString(3, entry.getDatabaseName());
             super.detachUser(txConn, entry, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
-            this.flushPrivileges(rssInstance);
             stmt.execute();
+            this.flushPrivileges(rssInstance);
             RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {
             RSSManagerUtil.rollBackTx(txConn);
