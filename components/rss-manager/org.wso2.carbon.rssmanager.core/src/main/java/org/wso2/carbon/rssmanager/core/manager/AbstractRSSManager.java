@@ -49,7 +49,6 @@ import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 
 /**
  * Abstract class contains the common operations related to metadata handling

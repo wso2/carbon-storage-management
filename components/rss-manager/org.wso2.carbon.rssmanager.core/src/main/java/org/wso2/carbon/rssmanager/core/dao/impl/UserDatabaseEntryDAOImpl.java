@@ -22,7 +22,6 @@ package org.wso2.carbon.rssmanager.core.dao.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
-import org.wso2.carbon.rssmanager.core.dao.RSSDAO;
 import org.wso2.carbon.rssmanager.core.dao.UserDatabaseEntryDAO;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;

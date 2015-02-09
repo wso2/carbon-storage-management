@@ -19,12 +19,11 @@
 
 package org.wso2.carbon.rssmanager.core.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
+
+import java.sql.Connection;
 
 /**
  * DatabaseDAO interface class

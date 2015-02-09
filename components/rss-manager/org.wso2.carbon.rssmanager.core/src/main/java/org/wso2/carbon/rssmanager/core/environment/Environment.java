@@ -24,9 +24,10 @@ import org.wso2.carbon.rssmanager.core.dto.restricted.RSSInstance;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.manager.adaptor.RSSManagerAdaptor;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
-import javax.xml.bind.annotation.XmlRootElement;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

@@ -36,7 +36,6 @@ import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;

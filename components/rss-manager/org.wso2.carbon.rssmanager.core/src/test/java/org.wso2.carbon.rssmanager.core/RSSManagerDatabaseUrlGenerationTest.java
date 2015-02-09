@@ -20,7 +20,6 @@ package org.wso2.carbon.rssmanager.core;
 
 import junit.framework.TestCase;
 import org.testng.annotations.Test;
-
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 
 public class RSSManagerDatabaseUrlGenerationTest extends TestCase {

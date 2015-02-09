@@ -36,7 +36,6 @@ import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.util.HashSet;
 import java.util.Set;
 

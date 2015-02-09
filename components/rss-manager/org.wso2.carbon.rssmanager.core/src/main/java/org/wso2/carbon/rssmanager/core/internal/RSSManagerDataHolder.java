@@ -20,7 +20,6 @@
 package org.wso2.carbon.rssmanager.core.internal;
 
 import org.wso2.carbon.context.CarbonContext;
-import org.wso2.carbon.identity.application.mgt.ApplicationManagementOSGIService;
 import org.wso2.carbon.identity.application.mgt.ApplicationManagementService;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.rssmanager.common.exception.RSSManagerCommonException;

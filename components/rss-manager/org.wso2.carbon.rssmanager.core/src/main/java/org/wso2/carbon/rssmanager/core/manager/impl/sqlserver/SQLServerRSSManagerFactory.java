@@ -20,7 +20,6 @@
 
 package org.wso2.carbon.rssmanager.core.manager.impl.sqlserver;
 
-import org.wso2.carbon.rssmanager.core.config.RSSManagementRepository;
 import org.wso2.carbon.rssmanager.core.environment.Environment;
 import org.wso2.carbon.rssmanager.core.manager.AbstractRSSManagerFactory;
 import org.wso2.carbon.rssmanager.core.manager.SystemRSSManager;

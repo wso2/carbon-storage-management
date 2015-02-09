@@ -38,8 +38,8 @@ import org.wso2.carbon.rssmanager.core.environment.dao.RSSInstanceDAO;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.manager.RSSManager;
 import org.wso2.carbon.rssmanager.core.manager.SystemRSSManager;
-import org.wso2.carbon.rssmanager.core.util.databasemanagement.SSHConnection;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
+import org.wso2.carbon.rssmanager.core.util.databasemanagement.SSHConnection;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.sql.Connection;

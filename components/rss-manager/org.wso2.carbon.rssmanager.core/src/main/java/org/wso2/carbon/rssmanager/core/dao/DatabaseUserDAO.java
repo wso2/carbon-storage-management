@@ -24,7 +24,6 @@ import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionExcept
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 
 /**
  * DatabaseUserDAO interface

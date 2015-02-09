@@ -19,7 +19,6 @@
 
 package org.wso2.carbon.rssmanager.core.manager;
 
-import org.wso2.carbon.rssmanager.core.config.RSSManagementRepository;
 import org.wso2.carbon.rssmanager.core.environment.Environment;
 
 /**

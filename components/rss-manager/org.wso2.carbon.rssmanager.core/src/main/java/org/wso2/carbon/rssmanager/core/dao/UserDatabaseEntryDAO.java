@@ -25,7 +25,6 @@ import org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 
 public interface UserDatabaseEntryDAO {
 

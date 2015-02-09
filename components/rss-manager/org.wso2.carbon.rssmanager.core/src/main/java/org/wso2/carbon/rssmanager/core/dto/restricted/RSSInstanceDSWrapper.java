@@ -19,7 +19,6 @@
 
 package org.wso2.carbon.rssmanager.core.dto.restricted;
 
-import org.apache.commons.lang.StringUtils;
 import org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
@@ -27,7 +26,6 @@ import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 
 import javax.sql.DataSource;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;

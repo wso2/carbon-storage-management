@@ -18,10 +18,6 @@
  */
 package org.wso2.carbon.rssmanager.core.service;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.CarbonContext;
@@ -39,6 +35,10 @@ import org.wso2.carbon.rssmanager.core.dto.UserDatabaseEntryInfo;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.manager.adaptor.EnvironmentAdaptor;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class RSSAdmin extends AbstractAdmin implements RSSManagerService {
 
