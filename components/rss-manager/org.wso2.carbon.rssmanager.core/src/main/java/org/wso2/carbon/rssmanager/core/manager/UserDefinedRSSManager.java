@@ -35,6 +35,7 @@ import org.wso2.carbon.rssmanager.core.environment.dao.EnvironmentManagementDAOF
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
 import org.wso2.carbon.rssmanager.core.util.RSSManagerUtil;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.HashSet;
 import java.util.Set;
@@ -136,7 +137,7 @@ public abstract class UserDefinedRSSManager extends AbstractRSSManager {
 	/**
 	 * Add database user
 	 *
-	 * @param statement         Atomic boolean value for the distributed transaction
+	 * @param conn            rss meta repository instance database connection
 	 * @param user              database user properties
 	 * @param qualifiedUsername fully qualified username
 	 * @param rssInstance       name of the rss instance
@@ -144,7 +145,7 @@ public abstract class UserDefinedRSSManager extends AbstractRSSManager {
 	 * @throws RSSManagerException
 	 * @throws RSSDAOException
 	 */
-	protected DatabaseUser addDatabaseUser(PreparedStatement statement, DatabaseUser user,
+	protected DatabaseUser addDatabaseUser(Connection conn, DatabaseUser user,
 	                                       String qualifiedUsername, RSSInstance rssInstance)
 			throws RSSManagerException, RSSDAOException, RSSDatabaseConnectionException {
 		boolean isExist = this.isDatabaseUserExist(user.getRssInstanceName(), qualifiedUsername, rssInstance.getInstanceType());
@@ -163,7 +164,7 @@ public abstract class UserDefinedRSSManager extends AbstractRSSManager {
 		user.setInstances(servers);
 		final int tenantId = RSSManagerUtil.getTenantId();
 		user.setTenantId(tenantId);
-		this.getRSSDAO().getDatabaseUserDAO().addDatabaseUser(statement, user);
+		this.getRSSDAO().getDatabaseUserDAO().addDatabaseUser(conn, user);
 		return user;
 	}
 
@@ -319,7 +320,7 @@ public abstract class UserDefinedRSSManager extends AbstractRSSManager {
 	/**
 	 * Add database user
 	 *
-	 * @param statement         Atomic boolean value for the distributed transaction
+	 * @param conn            rss meta repository instance database connection
 	 * @param user              database user properties
 	 * @param qualifiedUsername fully qualified username
 	 * @param instanceType      rss instance type
@@ -327,7 +328,7 @@ public abstract class UserDefinedRSSManager extends AbstractRSSManager {
 	 * @throws RSSManagerException
 	 * @throws RSSDAOException
 	 */
-	protected DatabaseUser addDatabaseUser(PreparedStatement statement, DatabaseUser user,
+	protected DatabaseUser addDatabaseUser(Connection conn, DatabaseUser user,
 	                                       String qualifiedUsername, String instanceType)
 			throws RSSManagerException, RSSDAOException, RSSDatabaseConnectionException {
 
@@ -345,7 +346,7 @@ public abstract class UserDefinedRSSManager extends AbstractRSSManager {
 				tenantId));
 		user.setInstances(servers);
 		user.setTenantId(tenantId);
-		this.getRSSDAO().getDatabaseUserDAO().addDatabaseUser(statement, user);
+		this.getRSSDAO().getDatabaseUserDAO().addDatabaseUser(conn, user);
 		return user;
 	}
 }

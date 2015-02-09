@@ -64,6 +64,7 @@ public class H2SystemRSSManager extends SystemRSSManager {
      */
     public Database addDatabase(Database database) throws RSSManagerException {
         Connection conn = null;
+        Connection txConn = null;
         //get qualified name for database which specific to tenant
         final String qualifiedDatabaseName = RSSManagerUtil.getFullyQualifiedDatabaseName(database.getName());
         boolean isExist = false;
@@ -92,14 +93,18 @@ public class H2SystemRSSManager extends SystemRSSManager {
             RSSManagerUtil.checkIfParameterSecured(qualifiedDatabaseName);
             //H2 Database creates the database at the time it's get the connection
             conn = this.getConnection(rssInstance.getName(), qualifiedDatabaseName);
-            super.addDatabase(null, database, rssInstance, qualifiedDatabaseName);
+            txConn = RSSManagerUtil.getTxConnection();
+            super.addDatabase(txConn, database, rssInstance, qualifiedDatabaseName);
+            RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {
+            RSSManagerUtil.rollBackTx(txConn);
             String msg = "Error while creating the database '" + qualifiedDatabaseName
                          + "' on RSS instance '" + (rssInstance != null ? rssInstance.getName() : null)
                          + "' : " + e.getMessage();
             handleException(msg, e);
         } finally {
             RSSManagerUtil.cleanupResources(null, null, conn);
+            RSSManagerUtil.cleanupResources(null, null, txConn);
         }
         return database;
     }
@@ -156,12 +161,18 @@ public class H2SystemRSSManager extends SystemRSSManager {
         /* Validating user information to avoid any possible SQL injection attacks */
         RSSManagerUtil.validateDatabaseUserInfo(user);
         String qualifiedUsername = RSSManagerUtil.getFullyQualifiedUsername(user.getName());
+        Connection txConn = null;
         try {
+            txConn = RSSManagerUtil.getTxConnection();
             user.setEnvironmentId(this.getEnvironment().getId());
-            super.addDatabaseUser(null, user, qualifiedUsername, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            super.addDatabaseUser(txConn, user, qualifiedUsername, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {
+            RSSManagerUtil.rollBackTx(txConn);
             String msg = "Error occurred while creating the database " + "user '" + qualifiedUsername + e.getMessage();
             handleException(msg, e);
+        } finally {
+            RSSManagerUtil.cleanupResources(null, null, txConn);
         }
         return user;
     }
@@ -170,12 +181,18 @@ public class H2SystemRSSManager extends SystemRSSManager {
      * @see RSSManager#removeDatabaseUser(String, String)
      */
     public void removeDatabaseUser(String type, String username) throws RSSManagerException {
+        Connection txConn = null;
         try {
-            super.removeDatabaseUser(null, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            txConn = RSSManagerUtil.getTxConnection();
+            super.removeDatabaseUser(txConn, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {
+            RSSManagerUtil.rollBackTx(txConn);
             String msg = "Error while dropping the database user '" + username +
                          "' on RSS instances : " + e.getMessage();
             handleException(msg, e);
+        } finally {
+            RSSManagerUtil.cleanupResources(null, null, txConn);
         }
     }
 
@@ -185,6 +202,7 @@ public class H2SystemRSSManager extends SystemRSSManager {
     public void attachUser(UserDatabaseEntry entry,
                            DatabasePrivilegeSet privileges) throws RSSManagerException {
         Connection conn = null;
+        Connection txConn = null;
         PreparedStatement createUserStmt = null;
         PreparedStatement alterUserStmt = null;
         PreparedStatement createTableStmt = null;
@@ -203,6 +221,7 @@ public class H2SystemRSSManager extends SystemRSSManager {
             handleException(msg, e);
         }
         try {
+            txConn = RSSManagerUtil.getTxConnection();
             conn = this.getConnection(rssInstance.getName(), databaseName);
             if (privileges == null) {
                 privileges = entry.getPrivileges();
@@ -220,8 +239,10 @@ public class H2SystemRSSManager extends SystemRSSManager {
             H2PrivilegeSet h2Privileges = new H2PrivilegeSet();
             createH2PrivilegeSet(h2Privileges, privileges);
             this.composePrivilegePreparedStatement(conn, databaseName, username, h2Privileges);
-            super.attachUser(null, entry, privileges, rssInstance);
+            super.attachUser(txConn, entry, privileges, rssInstance);
+            RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {
+            RSSManagerUtil.rollBackTx(txConn);
             String msg = "Error occurred while attaching the database user '" + username + "' to " +
                          "the database '" + databaseName + "' : " + e.getMessage();
             handleException(msg, e);
@@ -229,6 +250,7 @@ public class H2SystemRSSManager extends SystemRSSManager {
             RSSManagerUtil.cleanupResources(null, alterUserStmt, null);
             RSSManagerUtil.cleanupResources(null, createTableStmt, null);
             RSSManagerUtil.cleanupResources(null, createUserStmt, conn);
+            RSSManagerUtil.cleanupResources(null, null, txConn);
         }
     }
 
@@ -239,8 +261,9 @@ public class H2SystemRSSManager extends SystemRSSManager {
         Connection conn = null;
         PreparedStatement removeUserStatement = null;
         PreparedStatement dropTableStmt = null;
-
+        Connection txConn = null;
         try {
+            txConn = RSSManagerUtil.getTxConnection();
             int tenantId = RSSManagerUtil.getTenantId();
             String rssInstanceName = getDatabaseDAO().resolveRSSInstanceNameByDatabase(this.getEnvironmentName(), entry
                     .getDatabaseName(), entry.getType(), tenantId);
@@ -248,11 +271,14 @@ public class H2SystemRSSManager extends SystemRSSManager {
             conn = this.getConnection(rssInstance.getName(), entry.getDatabaseName());
             String removeUserQuery = "drop user " + entry.getUsername();
             removeUserStatement = conn.prepareStatement(removeUserQuery);
-            super.detachUser(removeUserStatement, entry, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            removeUserStatement.execute();
             String dropTable = "DROP TABLE IF EXISTS " + entry.getDatabaseName() + "_" + entry.getUsername();
             dropTableStmt = conn.prepareStatement(dropTable);
             dropTableStmt.execute();
+            super.detachUser(txConn, entry, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {
+            RSSManagerUtil.rollBackTx(txConn);
             String msg = "Error occurred while attaching the database user '" +
                          entry.getUsername() + "' to " + "the database '" + entry.getDatabaseName() +
                          "': " + e.getMessage();
@@ -260,6 +286,7 @@ public class H2SystemRSSManager extends SystemRSSManager {
         } finally {
             RSSManagerUtil.cleanupResources(null, dropTableStmt, null);
             RSSManagerUtil.cleanupResources(null, removeUserStatement, conn);
+            RSSManagerUtil.cleanupResources(null, null, txConn);
         }
     }
 
@@ -284,6 +311,7 @@ public class H2SystemRSSManager extends SystemRSSManager {
     public void updateDatabaseUserPrivileges(DatabasePrivilegeSet privileges, DatabaseUser user,
                                              String databaseName) throws RSSManagerException {
         Connection conn = null;
+        Connection txConn = null;
         H2PrivilegeSet h2Privileges = new H2PrivilegeSet();
         createH2PrivilegeSet(h2Privileges, privileges);
         try {
@@ -300,6 +328,7 @@ public class H2SystemRSSManager extends SystemRSSManager {
                              "in RSS instance '" + user.getRssInstanceName() + "'";
                 throw new RSSManagerException(msg);
             }
+            txConn = RSSManagerUtil.getTxConnection();
             user.setRssInstanceName(rssInstance.getName());
             conn = getConnection(rssInstance.getName(), databaseName);
             //create update privilege statement
@@ -307,11 +336,14 @@ public class H2SystemRSSManager extends SystemRSSManager {
             composePrivilegePreparedStatement(conn, databaseName, user.getName(), h2Privileges);
             super.updateDatabaseUserPrivileges(null, rssInstanceName, databaseName, privileges, user.getUsername(),
                                                RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+            RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {
+            RSSManagerUtil.rollBackTx(txConn);
             String msg = "Error occurred while updating database user privileges: " + e.getMessage();
             handleException(msg, e);
         } finally {
             RSSManagerUtil.cleanupResources(null, null, conn);
+            RSSManagerUtil.cleanupResources(null, null, txConn);
         }
     }
 

@@ -37,6 +37,7 @@ import org.wso2.carbon.rssmanager.core.config.RSSConfigurationManager;
 import org.wso2.carbon.rssmanager.core.config.databasemanagement.SnapshotConfig;
 import org.wso2.carbon.rssmanager.core.config.datasource.RDBMSConfig;
 import org.wso2.carbon.rssmanager.core.config.ssh.SSHInformationConfig;
+import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionException;
 import org.wso2.carbon.rssmanager.core.dto.*;
 import org.wso2.carbon.rssmanager.core.dto.common.*;
 import org.wso2.carbon.rssmanager.core.dto.restricted.Database;
@@ -921,13 +922,13 @@ public final class RSSManagerUtil {
         return dataSource;
     }
     
-    public static Connection getTxConnection() throws RSSManagerException{
+    public static Connection getTxConnection() throws RSSDatabaseConnectionException {
     	Connection conn;
 		try {
 			conn = dataSource.getConnection();
 			conn.setAutoCommit(false);
 		} catch (SQLException ex) {
-			throw new RSSManagerException("Error occurred while creating connection", ex);
+			throw new RSSDatabaseConnectionException("Error occurred while creating connection", ex);
 		}    	
     	
     	return conn;

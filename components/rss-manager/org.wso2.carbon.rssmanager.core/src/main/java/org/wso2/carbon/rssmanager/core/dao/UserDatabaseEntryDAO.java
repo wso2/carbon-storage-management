@@ -24,6 +24,7 @@ import org.wso2.carbon.rssmanager.core.dao.exception.RSSDatabaseConnectionExcept
 import org.wso2.carbon.rssmanager.core.dto.common.UserDatabaseEntry;
 import org.wso2.carbon.rssmanager.core.dto.restricted.DatabaseUser;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 public interface UserDatabaseEntryDAO {
@@ -33,14 +34,14 @@ public interface UserDatabaseEntryDAO {
 	 * add database user entry prepared statement which needs to be executed along with the meta repository insert as native
 	 * sql operations not transactional
 	 *
-	 * @param nativeAttachUserStatement native attach user statement
+	 * @param conn mata repository database connection
 	 * @param environmentName name of the environment
 	 * @param entry user database entry which hold the user details and privileges
 	 * @param tenantId tenant id
 	 * @return database user entry id
 	 * @throws RSSDAOException if something went wrong when adding database user data to meta repository
 	 */
-	int addUserDatabaseEntry(PreparedStatement nativeAttachUserStatement, String environmentName, UserDatabaseEntry entry,
+	int addUserDatabaseEntry(Connection conn, String environmentName, UserDatabaseEntry entry,
 	                         int tenantId) throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**
@@ -101,12 +102,12 @@ public interface UserDatabaseEntryDAO {
 	 * remove database user from database prepared statement which needs to be executed along with the meta repository database entry removal as native
 	 * sql operations not transactional
 	 *
-	 * @param nativeDeattachUserStatement native deattach user statement
+	 * @param conn mata repository database connection
 	 * @param dbId database id
 	 * @param userId database user if
 	 * @throws RSSDAOException if something went wrong when removing database user entry
 	 */
-	public void removeUserDatabaseEntry(PreparedStatement nativeDeattachUserStatement, int dbId, int userId)
+	public void removeUserDatabaseEntry(Connection conn, int dbId, int userId)
 			throws RSSDAOException, RSSDatabaseConnectionException;
 
 	/**

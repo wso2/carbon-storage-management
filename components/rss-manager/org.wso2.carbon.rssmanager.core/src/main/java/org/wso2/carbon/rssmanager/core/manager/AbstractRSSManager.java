@@ -200,7 +200,7 @@ public abstract class AbstractRSSManager implements RSSManager{
 	/**
 	 * Add database to metadata repo
 	 *
-	 * @param statement             native transaction to be committed
+	 * @param conn            rss meta repository instance database connection
 	 * @param database              name of the database
 	 * @param rssInstance           name of the rss instance
 	 * @param qualifiedDatabaseName fully qualified database name
@@ -208,7 +208,7 @@ public abstract class AbstractRSSManager implements RSSManager{
 	 * @throws RSSManagerException
 	 * @throws RSSDAOException
 	 */
-	protected Database addDatabase(PreparedStatement statement, Database database, RSSInstance rssInstance,
+	protected Database addDatabase(Connection conn, Database database, RSSInstance rssInstance,
 	                               String qualifiedDatabaseName)
 			throws RSSManagerException, RSSDAOException, RSSDatabaseConnectionException {
 		RSSManagerUtil.checkIfParameterSecured(qualifiedDatabaseName);
@@ -221,7 +221,7 @@ public abstract class AbstractRSSManager implements RSSManager{
         /* creates a reference to the database inside the metadata repository */
 		database.setRssInstance(rssInstance);
 		database.setTenantId(tenantId);
-		this.getRSSDAO().getDatabaseDAO().addDatabase(statement, database);
+		this.getRSSDAO().getDatabaseDAO().addDatabase(conn, database);
 		return database;
 	}
 
@@ -278,7 +278,7 @@ public abstract class AbstractRSSManager implements RSSManager{
 	/**
 	 * Remove database
 	 *
-	 * @param conn            rss instance database connection
+	 * @param conn            rss meta repository instance database connection
 	 * @param rssInstanceName name of the rss instance
 	 * @param databaseName    name of the database
 	 * @param rssInstance     name of the rss instance
@@ -302,7 +302,7 @@ public abstract class AbstractRSSManager implements RSSManager{
 	/**
 	 * Update user database privileges
 	 *
-	 * @param statement       Atomic boolean value for the distributed transaction
+	 * @param conn            rss meta repository instance database connection
 	 * @param rssInstanceName name of the rss instance
 	 * @param databaseName    name of the database
 	 * @param privileges      updated database privileges
@@ -311,7 +311,7 @@ public abstract class AbstractRSSManager implements RSSManager{
 	 * @throws RSSManagerException
 	 * @throws RSSDAOException
 	 */
-	protected void updateDatabaseUserPrivileges(PreparedStatement statement, String rssInstanceName, String databaseName,
+	protected void updateDatabaseUserPrivileges(Connection conn, String rssInstanceName, String databaseName,
 	                                            DatabasePrivilegeSet privileges, String username, String instanceType)
 			throws RSSManagerException, RSSDAOException, RSSDatabaseConnectionException {
 
@@ -323,7 +323,7 @@ public abstract class AbstractRSSManager implements RSSManager{
 		UserDatabaseEntry userDatabaseEntry = getRSSDAO().getUserDatabaseEntryDAO().getUserDatabaseEntry(database.getId(), databaseUser.getId());
 		UserDatabasePrivilege entity = userDatabaseEntry.getUserPrivileges();
 		RSSManagerUtil.createDatabasePrivilege(privileges, entity);
-		this.getRSSDAO().getUserPrivilegesDAO().updateUserPrivileges(statement, entity);
+		this.getRSSDAO().getUserPrivilegesDAO().updateUserPrivileges(conn, entity);
 	}
 
 	/**
@@ -373,14 +373,14 @@ public abstract class AbstractRSSManager implements RSSManager{
 	/**
 	 * Deattach user from a given data source
 	 *
-	 * @param statement    Atomic boolean value for the distributed transaction
+	 * @param conn            rss meta repository instance database connection
 	 * @param entry        database user property object
 	 * @param instanceType rss instance type
 	 * @return RSSInstance
 	 * @throws RSSManagerException
 	 * @throws RSSDAOException
 	 */
-	protected void detachUser(PreparedStatement statement,
+	protected void detachUser(Connection conn,
 	                          UserDatabaseEntry entry, String instanceType)
 			throws RSSManagerException, RSSDAOException, RSSDatabaseConnectionException {
 		Database database = this.getDatabase(entry.getType(), entry.getDatabaseName());
@@ -402,18 +402,18 @@ public abstract class AbstractRSSManager implements RSSManager{
 			String msg = "Database '" + entry.getDatabaseName() + "' does not attached User " + entry.getUsername();
 			throw new RSSManagerException(msg);
 		}
-		dao.removeUserDatabaseEntry(statement, userDBEntry.getDatabaseId(), userDBEntry.getUserId());
+		dao.removeUserDatabaseEntry(conn, userDBEntry.getDatabaseId(), userDBEntry.getUserId());
 	}
 
 	/**
 	 * Remove database user
 	 *
-	 * @param statement    Atomic boolean value for the distributed transaction
+	 * @param conn            rss meta repository instance database connection
 	 * @param username     username of the database user
 	 * @param instanceType rss instance type
 	 * @throws RSSManagerException
 	 */
-	protected void removeDatabaseUser(PreparedStatement statement, String username, String instanceType, String rssInstanceName)
+	protected void removeDatabaseUser(Connection conn, String username, String instanceType, String rssInstanceName)
 			throws RSSManagerException, RSSDatabaseConnectionException {
 		DatabaseUser dbUser;
 		try {
@@ -443,7 +443,7 @@ public abstract class AbstractRSSManager implements RSSManager{
 				String msg = "Database user '" + dbUser.getName() + "' already attached to a Database ";
 				throw new RSSManagerException(msg);
 			}
-			databaseUserDAO.removeDatabaseUser(statement, dbUser);
+			databaseUserDAO.removeDatabaseUser(conn, dbUser);
 		} catch (RSSDAOException e) {
 			throw new RSSManagerException("Error occurred while retrieving metadata related to " +
 			                              "database user '" + username + "' belongs to the RSS instance type'" +
@@ -517,14 +517,14 @@ public abstract class AbstractRSSManager implements RSSManager{
 	/**
 	 * Attache database user to the database
 	 *
-	 * @param statement   Atomic boolean value for the distributed transaction
+	 * @param conn            rss meta repository instance database connection
 	 * @param entry       database user entry
 	 * @param privileges  database privilege set
 	 * @param rssInstance rss  rss instance Obj
 	 * @throws RSSManagerException
 	 * @throws RSSDAOException
 	 */
-	protected void attachUser(PreparedStatement statement, UserDatabaseEntry entry,
+	protected void attachUser(Connection conn, UserDatabaseEntry entry,
 	                          DatabasePrivilegeSet privileges, RSSInstance rssInstance)
 			throws RSSManagerException,
 			RSSDAOException, RSSDatabaseConnectionException {
@@ -557,7 +557,7 @@ public abstract class AbstractRSSManager implements RSSManager{
 		entry.setUserPrivileges(privilegeEntity);
 		privilegeEntity.setUserDatabaseEntry(entry);
 		final int tenantId = RSSManagerUtil.getTenantId();
-		this.getRSSDAO().getUserDatabaseEntryDAO().addUserDatabaseEntry(statement, environment.getName(), entry, tenantId);
+		this.getRSSDAO().getUserDatabaseEntryDAO().addUserDatabaseEntry(conn, environment.getName(), entry, tenantId);
 	}
 
 	public EnvironmentManagementDAO getEnvironmentManagementDAO() {
