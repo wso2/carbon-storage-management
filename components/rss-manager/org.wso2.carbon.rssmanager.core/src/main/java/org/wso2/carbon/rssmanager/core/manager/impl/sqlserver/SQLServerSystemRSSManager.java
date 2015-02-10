@@ -192,7 +192,7 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
 			RSSManagerUtil.commitTx(txConn);
 		} catch (Exception e) {
 			RSSManagerUtil.rollBackTx(txConn);
-			String msg = "Error occurred while creating the database " + "user '" + qualifiedUsername;
+			String msg = "Error occurred while creating the database " + "user '" + qualifiedUsername + " " +  e.getMessage();
 			if (!mapUserwithInstance.isEmpty()) {
 				dropAddedUsers(mapUserwithInstance);
 			}
