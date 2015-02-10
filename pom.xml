@@ -1154,9 +1154,8 @@
         <carbon.identity.version>4.3.2</carbon.identity.version>
         <carbon.registry.version>4.3.0</carbon.registry.version>
         <carbon.storage.management.version>4.3.1-SNAPSHOT</carbon.storage.management.version>
-        <wso2.cassandra.version>1.2.13.wso2v6</wso2.cassandra.version>
-        <wso2.cassandra.version>1.2.13.wso2v6</wso2.cassandra.version>
-        <wso2.cassandra.thrift.version>1.2.13.wso2v4</wso2.cassandra.thrift.version>
+        <wso2.cassandra.version>1.2.13-wso2v7</wso2.cassandra.version>
+        <wso2.cassandra.thrift.version>1.2.13-wso2v7</wso2.cassandra.thrift.version>
         <wso2.hadoop.version>0.20.203.1.wso2v4</wso2.hadoop.version>
 
         <!-- Axis2 Version -->
