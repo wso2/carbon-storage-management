@@ -221,6 +221,7 @@ public class PostgresUserDefinedRSSManager extends UserDefinedRSSManager {
 			                                                                                                user.getRssInstanceName(), tenantId);
 			try {
 				txConn = RSSManagerUtil.getTxConnection();
+				super.addDatabaseUser(txConn, user, qualifiedUsername, rssInstance);
 				conn = getConnection(rssInstance.getName());
 				boolean hasPassword = (!StringUtils.isEmpty(user.getPassword()));
 				StringBuilder addDatabaseUserQuery = new StringBuilder("CREATE USER \"" + qualifiedUsername + "\"");
@@ -229,7 +230,6 @@ public class PostgresUserDefinedRSSManager extends UserDefinedRSSManager {
 					addDatabaseUserQuery.append(" WITH PASSWORD '").append(user.getPassword()).append("'");
 				}
 				addDatabaseUserStmt = conn.prepareStatement(addDatabaseUserQuery.toString());
-				super.addDatabaseUser(txConn, user, qualifiedUsername, rssInstance);
 				addDatabaseUserStmt.execute();
 				RSSManagerUtil.commitTx(txConn);
 			} finally {
@@ -237,7 +237,7 @@ public class PostgresUserDefinedRSSManager extends UserDefinedRSSManager {
 			}
 		} catch (Exception e) {
 			RSSManagerUtil.rollBackTx(txConn);
-			String msg = "Error occurred while creating the database " + "user '" + qualifiedUsername;
+			String msg = "Error occurred while creating the database " + "user '" + qualifiedUsername  + " " + e.getMessage();
 			handleException(msg, e);
 		} finally {
 			RSSManagerUtil.cleanupResources(null, null, txConn);

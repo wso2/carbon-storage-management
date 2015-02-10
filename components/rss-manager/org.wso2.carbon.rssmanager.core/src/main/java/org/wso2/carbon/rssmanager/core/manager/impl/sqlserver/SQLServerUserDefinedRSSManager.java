@@ -171,10 +171,10 @@ public class SQLServerUserDefinedRSSManager extends UserDefinedRSSManager {
 			                                                                                                user.getRssInstanceName(),tenantId);
 			try {
 				txConn = RSSManagerUtil.getTxConnection();
+				super.addDatabaseUser(txConn, user, qualifiedUsername, rssInstance);
 				conn = getConnection(rssInstance.getName());
 				String addDatabaseQuery = "CREATE LOGIN " + qualifiedUsername + " WITH PASSWORD = '" + password + "'";
 				addDatabaseUserStmt = conn.prepareStatement(addDatabaseQuery);
-				super.addDatabaseUser(txConn, user, qualifiedUsername, rssInstance);
 				addDatabaseUserStmt.execute();
 				RSSManagerUtil.commitTx(txConn);
 			} finally {

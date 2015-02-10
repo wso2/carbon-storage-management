@@ -193,12 +193,12 @@ public class MySQLUserDefinedRSSManager extends UserDefinedRSSManager {
         try {
             RSSInstance rssInstance = this.getEnvironmentManagementDAO().getRSSInstanceDAO().getRSSInstance(this.getEnvironmentName(),
                                                                                                             user.getRssInstanceName(), tenantId);
+            txConn = RSSManagerUtil.getTxConnection();
+            super.addDatabaseUser(txConn, user, qualifiedUsername, rssInstance);
             try {
                 conn = getConnection(rssInstance.getName());
                 String addDatabaseQuery = createUserSqlQuery(qualifiedUsername, user.getPassword());
                 addDatabaseUserStmt = conn.prepareStatement(addDatabaseQuery);
-                txConn = RSSManagerUtil.getTxConnection();
-                super.addDatabaseUser(txConn, user, qualifiedUsername, rssInstance);
                 addDatabaseUserStmt.execute();
                 RSSManagerUtil.commitTx(txConn);
             } finally {
@@ -207,7 +207,7 @@ public class MySQLUserDefinedRSSManager extends UserDefinedRSSManager {
             this.flushPrivileges(rssInstance);
         } catch (Exception e) {
             RSSManagerUtil.rollBackTx(txConn);
-            String msg = "Error occurred while creating the database " + "user '" + qualifiedUsername;
+            String msg = "Error occurred while creating the database " + "user '" + qualifiedUsername  + " " + e.getMessage();
             handleException(msg, e);
         } finally {
             RSSManagerUtil.cleanupResources(null, null, txConn);
