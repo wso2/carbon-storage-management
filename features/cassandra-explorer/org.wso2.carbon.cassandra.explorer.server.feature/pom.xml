@@ -87,11 +87,6 @@
             <groupId>com.googlecode.json-simple.wso2</groupId>
             <artifactId>json-simple</artifactId>
         </dependency>
-        <!--dependency>
-            <groupId>org.mortbay.jetty</groupId>
-            <artifactId>jetty-util</artifactId>
-            <version>${jetty.version}</version>
-        </dependency-->
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-core-asl</artifactId>
@@ -127,10 +122,6 @@
         <dependency>
             <groupId>com.ning</groupId>
             <artifactId>compress-lzf</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cassandra.wso2</groupId>
-            <artifactId>apache-cassandra-thrift</artifactId>
         </dependency>
     </dependencies>
 

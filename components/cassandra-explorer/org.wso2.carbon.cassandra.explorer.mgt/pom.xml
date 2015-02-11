@@ -67,9 +67,5 @@
             <groupId>org.apache.cassandra.wso2</groupId>
             <artifactId>apache-cassandra</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.apache.cassandra.wso2</groupId>
-            <artifactId>apache-cassandra-thrift</artifactId>
-        </dependency>
     </dependencies>
 </project>
