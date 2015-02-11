@@ -110,10 +110,6 @@
             <artifactId>apache-cassandra</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.cassandra.wso2</groupId>
-            <artifactId>apache-cassandra-thrift</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.ndatasource.common</artifactId>
         </dependency>
