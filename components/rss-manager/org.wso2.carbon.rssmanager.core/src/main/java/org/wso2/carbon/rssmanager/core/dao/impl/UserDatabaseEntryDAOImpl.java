@@ -115,7 +115,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 		} finally {
 			RSSDAOUtil.cleanupResources(null, userPrivilegeEntryStatement, null,
 					RSSManagerConstants.ADD_USER_PRIVILEGE_TEMPLATE_ENTRY);
-			RSSDAOUtil.cleanupResources(resultSet, userEntryStatement, conn, RSSManagerConstants
+			RSSDAOUtil.cleanupResources(resultSet, userEntryStatement, null, RSSManagerConstants
 					.ADD_USER_PRIVILEGE_TEMPLATE_ENTRY);
 		}
 		return userEntryId;
@@ -164,7 +164,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 			String msg = "Failed to delete database user entry from meta repository";
 			handleException(msg, e);
 		} finally {
-			RSSDAOUtil.cleanupResources(null, removeUserEntryStatement, conn, RSSManagerConstants
+			RSSDAOUtil.cleanupResources(null, removeUserEntryStatement, null, RSSManagerConstants
 					.DELETE_USER_DATABASE_ENTRY);
 		}
 	}
