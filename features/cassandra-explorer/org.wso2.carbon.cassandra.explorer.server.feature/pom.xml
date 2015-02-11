@@ -128,6 +128,10 @@
             <groupId>com.ning</groupId>
             <artifactId>compress-lzf</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.cassandra.wso2</groupId>
+            <artifactId>apache-cassandra-thrift</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -155,6 +159,7 @@
                             <bundles>
                                 <bundleDef>org.wso2.carbon.storagemgt:org.wso2.carbon.cassandra.explorer.mgt</bundleDef>
                                 <bundleDef>org.apache.cassandra.wso2:apache-cassandra</bundleDef>
+                                <bundleDef>org.apache.cassandra.wso2:apache-cassandra-thrift</bundleDef>
                                 <bundleDef>libthrift.wso2:libthrift</bundleDef>
                                 <bundleDef>org.perf4j.wso2:perf4j</bundleDef>
                                 <bundleDef>org.cliffc.high_scale_lib.wso2:high-scale-lib</bundleDef>
