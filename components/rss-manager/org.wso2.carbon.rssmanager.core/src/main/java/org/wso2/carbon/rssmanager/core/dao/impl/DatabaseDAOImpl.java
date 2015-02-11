@@ -72,7 +72,7 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 			             + " to meta repository";
 			handleException(msg, e);
 		} finally {
-			RSSDAOUtil.cleanupResources(null, addDBStatement, conn, RSSManagerConstants.ADD_DATABASE_ENTRY);
+			RSSDAOUtil.cleanupResources(null, addDBStatement, null, RSSManagerConstants.ADD_DATABASE_ENTRY);
 		}
 	}
 

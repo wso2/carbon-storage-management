@@ -90,7 +90,7 @@ public class MySQLUserPrivilegesDAOImpl implements UserPrivilegesDAO {
 			String msg = "Error while rollback at updating privilege template";
 			handleException(msg, e);
 		} finally {
-			RSSDAOUtil.cleanupResources(null, userPrivilegeEntryStatement, conn, RSSManagerConstants
+			RSSDAOUtil.cleanupResources(null, userPrivilegeEntryStatement, null, RSSManagerConstants
 					.UPDATE_PRIVILEGE_TEMPLATE_PRIVILEGE_SET_ENTRY);
 		}
 	}

@@ -104,7 +104,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 			             + "to meta repository";
 			handleException(msg, e);
 		} finally {
-			RSSDAOUtil.cleanupResources(result, createUserStatement, conn, RSSManagerConstants.ADD_DATABASE_USER_ENTRY);
+			RSSDAOUtil.cleanupResources(result, createUserStatement, null, RSSManagerConstants.ADD_DATABASE_USER_ENTRY);
 		}
 	}
 
@@ -129,7 +129,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 			             + "from meta repository";
 			handleException(msg, e);
 		} finally {
-			RSSDAOUtil.cleanupResources(null, removeUserStatement, conn, RSSManagerConstants.DELETE_DATABASE_USER_ENTRY);
+			RSSDAOUtil.cleanupResources(null, removeUserStatement, null, RSSManagerConstants.DELETE_DATABASE_USER_ENTRY);
 		}
 	}
 
