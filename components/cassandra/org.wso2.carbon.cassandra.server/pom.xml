@@ -75,6 +75,10 @@
             <artifactId>apache-cassandra</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.apache.cassandra.wso2</groupId>
+            <artifactId>cassandra-thrift</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon.storagemgt</groupId>
             <artifactId>org.wso2.carbon.cassandra.common</artifactId>
         </dependency>
