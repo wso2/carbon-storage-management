@@ -111,7 +111,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.cassandra.wso2</groupId>
-            <artifactId>cassandra-thrift</artifactId>
+            <artifactId>apache-cassandra-thrift</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
