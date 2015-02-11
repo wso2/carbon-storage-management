@@ -149,6 +149,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 		int instanceId = getRSSInstanceIdByName(rssInstanceName, environmentId);
 		try {
 			conn = getDataSourceConnection();
+			conn.setAutoCommit(true);
 			String checkDatabaseUserExistenceQuery = "SELECT RM_DATABASE_USER.ID, RM_DATABASE_USER.USERNAME, RM_DATABASE_USER.TYPE, " +
 			                              "RM_DATABASE_USER.TENANT_ID FROM RM_DATABASE_USER , RM_USER_INSTANCE_ENTRY WHERE " +
 			                              "RM_USER_INSTANCE_ENTRY.DATABASE_USER_ID =  RM_DATABASE_USER.ID " +
@@ -190,6 +191,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 		int environmentId = getEnvionmentIdByName(environmentName);
 		try {
 			conn = getDataSourceConnection();//acquire data source connection
+			conn.setAutoCommit(true);
 			String databaseUserExistenceQuery = "SELECT * FROM RM_DATABASE_USER WHERE USERNAME=? AND TYPE=? " +
 			                                    "AND  TENANT_ID=? AND ENVIRONMENT_ID=? ";
 			statement = conn.prepareStatement(databaseUserExistenceQuery);
@@ -227,6 +229,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 		int instanceId = getRSSInstanceIdByName(rssInstanceName, environmentId);
 		try {
 			conn = getDataSourceConnection();
+			conn.setAutoCommit(true);
 			String getDatabaseUserQuery = "SELECT RM_DATABASE_USER.ID, RM_DATABASE_USER.USERNAME, RM_DATABASE_USER.TYPE, " +
 			                              "RM_DATABASE_USER.TENANT_ID FROM RM_DATABASE_USER , RM_USER_INSTANCE_ENTRY WHERE " +
 			                              "RM_USER_INSTANCE_ENTRY.DATABASE_USER_ID =  RM_DATABASE_USER.ID " +
@@ -273,6 +276,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 		int environmentId = getEnvionmentIdByName(environmentName);
 		try {
 			conn = getDataSourceConnection();
+			conn.setAutoCommit(true);
 			String getDatabaseUserQuery = "SELECT * FROM RM_DATABASE_USER WHERE USERNAME= ? AND TYPE= ? " +
 			                              "AND  TENANT_ID= ? AND ENVIRONMENT_ID=? ";
 			statement = conn.prepareStatement(getDatabaseUserQuery);
@@ -315,6 +319,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 		int environmentId = getEnvionmentIdByName(environmentName);
 		try {
 			conn = getDataSourceConnection();
+			conn.setAutoCommit(true);
 			String getDatabaseUserQuery = "SELECT RM_DATABASE_USER.ID, RM_DATABASE_USER.USERNAME, RM_DATABASE_USER.TYPE, " +
 			                              "RM_DATABASE_USER.TENANT_ID, RM_SERVER_INSTANCE.NAME AS RSS_INSTANCE_NAME FROM " +
 			                              "RM_DATABASE_USER , RM_USER_INSTANCE_ENTRY , RM_SERVER_INSTANCE WHERE " +
@@ -360,6 +365,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 		int environmentId = 0;
 		try {
 			conn = getDataSourceConnection();
+			conn.setAutoCommit(true);
 			String selectEnvQuery = "SELECT ID FROM RM_ENVIRONMENT WHERE NAME = ?";
 			statement = conn.prepareStatement(selectEnvQuery);
 			statement.setString(1, environmentName);
@@ -389,6 +395,7 @@ public class DatabaseUserDAOImpl implements DatabaseUserDAO {
 		ResultSet resultSet = null;
 		try {
 			conn = getDataSourceConnection();
+			conn.setAutoCommit(true);
 			String selectEnvQuery = "SELECT ID FROM RM_SERVER_INSTANCE WHERE NAME = ? AND ENVIRONMENT_ID = ?";
 			statement = conn.prepareStatement(selectEnvQuery);
 			statement.setString(1, rssInstanceName);
