@@ -202,7 +202,6 @@
                                 <bundleDef>org.wso2.carbon.storagemgt:org.wso2.carbon.cassandra.sharedkey:${carbon.storage.management.version}</bundleDef>
                                 <bundleDef>org.wso2.carbon.commons:org.wso2.carbon.identity.authentication:${carbon.commons.version}</bundleDef>
                                 <bundleDef>org.apache.cassandra.wso2:apache-cassandra:${wso2.cassandra.version}</bundleDef>
-                                <bundleDef>org.apache.cassandra.wso2:apache-cassandra-thrift:${wso2.cassandra.thrift.version}</bundleDef>
                                 <bundleDef>libthrift.wso2:libthrift:${libthrift.version}</bundleDef>
                                 <bundleDef>org.perf4j.wso2:perf4j</bundleDef>
                                 <bundleDef>org.cliffc.high_scale_lib.wso2:high-scale-lib</bundleDef>
