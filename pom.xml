@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 
     <parent>
@@ -12,7 +11,7 @@
     <groupId>org.wso2.carbon.storagemgt</groupId>
     <artifactId>carbon-storage-management</artifactId>
     <packaging>pom</packaging>
-    <version>4.3.1-SNAPSHOT</version>
+    <version>4.3.2-SNAPSHOT</version>
     <name>WSO2 Carbon - Platform Aggregator Pom</name>
     <url>http://wso2.org</url>
 
@@ -1153,9 +1152,16 @@
         <carbon.commons.version>4.3.4</carbon.commons.version>
         <carbon.identity.version>4.3.2</carbon.identity.version>
         <carbon.registry.version>4.3.0</carbon.registry.version>
+<<<<<<< HEAD
         <carbon.storage.management.version>4.3.1-SNAPSHOT</carbon.storage.management.version>
         <wso2.cassandra.version>1.2.13.wso2v8</wso2.cassandra.version>
         <wso2.cassandra.thrift.version>1.2.13.wso2v8</wso2.cassandra.thrift.version>
+=======
+        <carbon.storage.management.version>4.3.2-SNAPSHOT</carbon.storage.management.version>
+        <wso2.cassandra.version>1.2.13.wso2v6</wso2.cassandra.version>
+        <wso2.cassandra.version>1.2.13.wso2v6</wso2.cassandra.version>
+        <wso2.cassandra.thrift.version>1.2.13.wso2v4</wso2.cassandra.thrift.version>
+>>>>>>> upstream/release-4.3.1
         <wso2.hadoop.version>0.20.203.1.wso2v4</wso2.hadoop.version>
 
         <!-- Axis2 Version -->
