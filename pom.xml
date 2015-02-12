@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 
     <parent>
@@ -1144,7 +1145,6 @@
                 <version>${carbon.kernel.version}</version>
                 <type>zip</type>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 
@@ -1155,8 +1155,8 @@
 
         <!-- Carbon platform versions comes here-->
         <carbon.commons.version>4.3.4</carbon.commons.version>
-        <carbon.identity.version>4.3.2</carbon.identity.version>
-        <carbon.registry.version>4.3.0</carbon.registry.version>
+        <carbon.identity.version>4.3.3</carbon.identity.version>
+        <carbon.registry.version>4.3.1-SNAPSHOT</carbon.registry.version>
         <carbon.storage.management.version>4.3.2-SNAPSHOT</carbon.storage.management.version>
         <wso2.cassandra.version>1.2.13.wso2v8-SNAPSHOT</wso2.cassandra.version>
         <wso2.cassandra.thrift.version>1.2.13.wso2v8-SNAPSHOT</wso2.cassandra.thrift.version>

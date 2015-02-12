@@ -58,15 +58,6 @@
                 <checksumPolicy>fail</checksumPolicy>
             </releases>
         </repository>
-        <!--moved to nexus
-
-        <repository>
-            <id>riptano</id>
-            <name>riptano</name>
-            <url>http://mvn.riptano.com/content/repositories/public/</url>
-        </repository>
-
-        -->
     </repositories>
 
 </project>
