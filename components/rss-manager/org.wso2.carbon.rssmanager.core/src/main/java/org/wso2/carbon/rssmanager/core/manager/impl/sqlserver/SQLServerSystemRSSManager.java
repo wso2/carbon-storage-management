@@ -368,9 +368,10 @@ public class SQLServerSystemRSSManager extends SystemRSSManager {
 				privileges = entry.getPrivileges();
 			}
 
-			if (!(privileges instanceof SQLServerPrivilegeSet)) {
-				throw new RuntimeException("Invalid privilege set defined");
-			}
+			String sqlUseDb = "USE " + databaseName;
+			stmtUseDb = conn.prepareStatement(sqlUseDb);
+			String sqlAddUser = "CREATE USER " + username + " FOR LOGIN " + username;
+			stmtAddUser = conn.prepareStatement(sqlAddUser);
 
 			String[] privilegeQueries = getPrivilegeQueries((MySQLPrivilegeSet) privileges,
 			                                                username);
