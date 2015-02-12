@@ -65,7 +65,6 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 		ResultSet resultSet = null;
 		int userEntryId = 0;
 		try {
-			conn = getDataSourceConnection();//acquire data source connection
 			//start transaction with setting auto commit value to false
 			conn.setAutoCommit(false);
 			String userEntrySql = "INSERT INTO RM_USER_DATABASE_ENTRY(DATABASE_USER_ID, DATABASE_ID) VALUES (?,?)";
@@ -130,6 +129,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 		PreparedStatement statement = null;
 		try {
 			conn = getDataSourceConnection();//acquire data source connection
+			conn.setAutoCommit(true);
 			String removeDBQuery = "DELETE FROM RM_USER_DATABASE_ENTRY WHERE DATABASE_ID = ?";
 			statement = conn.prepareStatement(removeDBQuery);
 			statement.setInt(1, databaseId);
@@ -149,7 +149,6 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 			throws RSSDAOException, RSSDatabaseConnectionException {
 		PreparedStatement removeUserEntryStatement = null;
 		try {
-			conn = getDataSourceConnection();//acquire data source connection
 			conn.setAutoCommit(false);
 			//start transaction with setting auto commit value to false
 			String removeDBQuery = "DELETE FROM RM_USER_DATABASE_ENTRY WHERE DATABASE_ID = ? AND DATABASE_USER_ID = ?";
@@ -183,6 +182,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 		UserDatabasePrivilege entry = null;
 		try {
 			conn = getDataSourceConnection();//acquire data source connection
+			conn.setAutoCommit(true);
 			String getDatabaseEntryIdQuery = "SELECT ID FROM RM_USER_DATABASE_ENTRY WHERE DATABASE_USER_ID=? AND DATABASE_ID=?";
 			entryIdStatement = conn.prepareStatement(getDatabaseEntryIdQuery);
 			entryIdStatement.setInt(1, userId);
@@ -251,6 +251,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 		int databaseId = getDatabaseIdByName(databaseName, rssInstanceId);
 		try {
 			conn = getDataSourceConnection();//aquire data source connection
+			conn.setAutoCommit(true);
 			String getDatabaseUserQuery = "SELECT RM_DATABASE_USER.ID, RM_DATABASE_USER.USERNAME, RM_DATABASE_USER.TYPE," +
 			                              "RM_DATABASE_USER.TENANT_ID FROM RM_DATABASE_USER , RM_USER_DATABASE_ENTRY " +
 			                              "WHERE RM_DATABASE_USER.ID=RM_USER_DATABASE_ENTRY.DATABASE_USER_ID AND RM_DATABASE_USER.ENVIRONMENT_ID=? " +
@@ -297,6 +298,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 		int databaseId = getDatabaseIdByName(databaseName, rssInstanceId);
 		try {
 			conn = getDataSourceConnection();//acquire data source connection
+			conn.setAutoCommit(true);
 			String getAvailableDatabaseUserQuery = "SELECT RM_DATABASE_USER.ID, RM_DATABASE_USER.USERNAME, RM_DATABASE_USER.TYPE, RM_DATABASE_USER.TENANT_ID " +
 			                              "FROM RM_DATABASE_USER  , RM_USER_INSTANCE_ENTRY " +
 			                              "WHERE RM_DATABASE_USER.ID=RM_USER_INSTANCE_ENTRY.DATABASE_USER_ID AND RM_DATABASE_USER.ENVIRONMENT_ID=? " +
@@ -342,6 +344,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 		int environmentId = 0;
 		try {
 			conn = getDataSourceConnection();
+			conn.setAutoCommit(true);
 			String selectEnvQuery = "SELECT ID FROM RM_ENVIRONMENT WHERE NAME = ?";
 			statement = conn.prepareStatement(selectEnvQuery);
 			statement.setString(1, environmentName);
@@ -371,6 +374,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 		ResultSet resultSet = null;
 		try {
 			conn = getDataSourceConnection();
+			conn.setAutoCommit(true);
 			String selectEnvQuery = "SELECT ID FROM RM_SERVER_INSTANCE WHERE NAME = ? AND ENVIRONMENT_ID=?";
 			statement = conn.prepareStatement(selectEnvQuery);
 			statement.setString(1, rssInstanceName);
@@ -401,6 +405,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 		int databaseId = 0;
 		try {
 			conn = getDataSourceConnection();
+			conn.setAutoCommit(true);
 			String getDatabaseQuery = "SELECT ID FROM RM_DATABASE WHERE NAME =? AND RSS_INSTANCE_ID=?";
 			statement = conn.prepareStatement(getDatabaseQuery);
 			statement.setString(1, databaseName);
@@ -429,6 +434,7 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 		boolean isExist = false;
 		try {
 			conn = getDataSourceConnection();//acquire data source connection
+			conn.setAutoCommit(true);
 			String databaseUserEntriesExistenceQuery = "SELECT ID FROM RM_USER_DATABASE_ENTRY WHERE DATABASE_USER_ID=?";
 			statement = conn.prepareStatement(databaseUserEntriesExistenceQuery);
 			statement.setInt(1, userId);
