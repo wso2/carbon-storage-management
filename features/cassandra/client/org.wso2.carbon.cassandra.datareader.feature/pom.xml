@@ -99,11 +99,6 @@
             <artifactId>hector-core</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>net.jpountz.lz4</groupId>
-            <artifactId>lz4</artifactId>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -141,7 +136,6 @@
                                 <bundleDef>com.codahale.metrics:metrics-core</bundleDef>
                                 <bundleDef>org.apache.cassandra.wso2:apache-cassandra-thrift</bundleDef>
                                 <bundleDef>org.hectorclient.wso2:hector-core</bundleDef>
-                                <bundleDef>net.jpountz.lz4:lz4</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}</importFeatureDef>
