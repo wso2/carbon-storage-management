@@ -55,7 +55,6 @@ public class DatabaseDAOImpl implements DatabaseDAO {
 			throws RSSDAOException, RSSDatabaseConnectionException {
 		PreparedStatement addDBStatement = null;
 		try {
-			conn = getDataSourceConnection();//acquire data source connection
 			//start transaction with setting auto commit value to false
 			conn.setAutoCommit(false);
 			String createDBQuery = "INSERT INTO RM_DATABASE(NAME, RSS_INSTANCE_ID, TYPE, TENANT_ID) VALUES (?,?,?,?)";
