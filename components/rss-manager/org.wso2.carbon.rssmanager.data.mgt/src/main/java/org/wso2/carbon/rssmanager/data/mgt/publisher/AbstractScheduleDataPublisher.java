@@ -47,7 +47,7 @@ public abstract class AbstractScheduleDataPublisher extends AbstractTask impleme
 			}
 			
 			if (eventData.isEmpty()) {
-				log.error(" Unexpected Error : No event Data to publish ");
+				log.warn(" Warning : No event Data to publish ");
 				proceed = false;
 			}
 			
@@ -55,7 +55,6 @@ public abstract class AbstractScheduleDataPublisher extends AbstractTask impleme
 				for (PublishEventData event : eventData) {
 					publishStats(dataPublisher, streamId, event);
 				}
-				
 			} 
 		} catch (Exception ex) {
 			log.error("Error occurred while executing data publisher", ex);

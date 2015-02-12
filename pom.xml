@@ -284,6 +284,11 @@
                 <version>${wso2.cassandra.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.cassandra.wso2</groupId>
+                <artifactId>apache-cassandra-thrift</artifactId>
+                <version>${wso2.cassandra.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.datastax.cassandra</groupId>
                 <artifactId>cassandra-driver-core</artifactId>
                 <version>${datastax.cassandra.driver.version}</version>
@@ -986,11 +991,6 @@
                 <groupId>com.codahale.metrics</groupId>
                 <artifactId>metrics-core</artifactId>
                 <version>${codahale.metrics.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cassandra.wso2</groupId>
-                <artifactId>apache-cassandra-thrift</artifactId>
-                <version>${wso2.cassandra.thrift.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.storagemgt</groupId>
