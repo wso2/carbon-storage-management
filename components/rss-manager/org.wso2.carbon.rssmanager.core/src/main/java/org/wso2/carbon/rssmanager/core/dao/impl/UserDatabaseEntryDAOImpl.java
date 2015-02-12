@@ -65,7 +65,6 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 		ResultSet resultSet = null;
 		int userEntryId = 0;
 		try {
-			conn = getDataSourceConnection();//acquire data source connection
 			//start transaction with setting auto commit value to false
 			conn.setAutoCommit(false);
 			String userEntrySql = "INSERT INTO RM_USER_DATABASE_ENTRY(DATABASE_USER_ID, DATABASE_ID) VALUES (?,?)";
@@ -150,7 +149,6 @@ public class UserDatabaseEntryDAOImpl implements UserDatabaseEntryDAO {
 			throws RSSDAOException, RSSDatabaseConnectionException {
 		PreparedStatement removeUserEntryStatement = null;
 		try {
-			conn = getDataSourceConnection();//acquire data source connection
 			conn.setAutoCommit(false);
 			//start transaction with setting auto commit value to false
 			String removeDBQuery = "DELETE FROM RM_USER_DATABASE_ENTRY WHERE DATABASE_ID = ? AND DATABASE_USER_ID = ?";
