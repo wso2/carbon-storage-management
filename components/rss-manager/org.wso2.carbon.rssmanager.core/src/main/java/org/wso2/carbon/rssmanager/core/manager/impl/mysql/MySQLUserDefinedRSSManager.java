@@ -282,6 +282,7 @@ public class MySQLUserDefinedRSSManager extends UserDefinedRSSManager {
             super.updateDatabaseUserPrivileges(txConn, rssInstanceName, databaseName, privileges, user.getUsername(),
                                                RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
             updatePrivilegesNativeStmt.execute();
+            this.flushPrivileges(rssInstance);
             RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {
             RSSManagerUtil.rollBackTx(txConn);
@@ -350,8 +351,8 @@ public class MySQLUserDefinedRSSManager extends UserDefinedRSSManager {
             nativeAttachUserStmt = this.composePreparedStatement(conn, databaseName, username, privileges);
             super.attachUser(txConn, entry, privileges, rssInstance);
             nativeAttachUserStmt.execute();
-            RSSManagerUtil.commitTx(txConn);
             this.flushPrivileges(rssInstance);
+            RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {
             RSSManagerUtil.rollBackTx(txConn);
             String msg = "Error occurred while attaching the database user '" + username + "' to " +
@@ -385,8 +386,8 @@ public class MySQLUserDefinedRSSManager extends UserDefinedRSSManager {
             nativeDeattacheUserStmt.setString(3, entry.getDatabaseName());
             super.detachUser(txConn, entry, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
             nativeDeattacheUserStmt.execute();
-            RSSManagerUtil.commitTx(txConn);
             this.flushPrivileges(rssInstance);
+            RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {
             RSSManagerUtil.rollBackTx(txConn);
             String msg = "Error occurred while attaching the database user '" +
