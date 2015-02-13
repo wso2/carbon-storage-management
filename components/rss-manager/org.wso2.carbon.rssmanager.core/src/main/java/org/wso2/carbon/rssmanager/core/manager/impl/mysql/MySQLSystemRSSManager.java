@@ -317,6 +317,7 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
             super.updateDatabaseUserPrivileges(txConn, rssInstanceName, databaseName, privileges, user.getUsername(),
                                                RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
             updatePrivilegesStatement.execute();
+            this.flushPrivileges(rssInstance);
             RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {
             RSSManagerUtil.rollBackTx(txConn);
@@ -422,8 +423,8 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
             nativeAttacheUserStatement = this.composePreparedStatement(conn, databaseName, username, privileges);
             txConn = RSSManagerUtil.getTxConnection();
             super.attachUser(txConn, entry, privileges, rssInstance);
-            this.flushPrivileges(rssInstance);
             nativeAttacheUserStatement.execute();
+            this.flushPrivileges(rssInstance);
             RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {
             RSSManagerUtil.rollBackTx(txConn);
