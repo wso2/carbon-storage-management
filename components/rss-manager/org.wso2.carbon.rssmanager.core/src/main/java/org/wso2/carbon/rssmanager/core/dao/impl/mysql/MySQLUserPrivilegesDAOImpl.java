@@ -50,7 +50,6 @@ public class MySQLUserPrivilegesDAOImpl implements UserPrivilegesDAO {
 			throws RSSDAOException, RSSDatabaseConnectionException {
 		PreparedStatement userPrivilegeEntryStatement = null;
 		try {
-			conn = getDataSourceConnection(); //acquire data source connection
 			//start transaction with setting auto commit value to false
 			conn.setAutoCommit(false);
 			String updateTemplateEntryQuery = "UPDATE RM_USER_DATABASE_PRIVILEGE SET " +
