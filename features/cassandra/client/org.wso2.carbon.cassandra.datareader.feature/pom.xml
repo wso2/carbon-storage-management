@@ -125,9 +125,6 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>com.datastax.cassandra:cassandra-driver-core</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.ndatasource.common</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.ndatasource.core</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.utils</bundleDef>
                                 <bundleDef>org.wso2.carbon.storagemgt:org.wso2.carbon.cassandra.datareader</bundleDef>
                                 <bundleDef>io.netty:netty</bundleDef>
                                 <bundleDef>org.slf4j:slf4j-api</bundleDef>
@@ -139,6 +136,9 @@
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.ndatasource.commoni:${carbon.kernel.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.ndatasource.core:${carbon.kernel.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.utils:${carbon.kernel.version}</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>
