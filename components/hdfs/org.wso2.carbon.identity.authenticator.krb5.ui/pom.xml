@@ -19,13 +19,13 @@
     <parent>
         <groupId>org.wso2.carbon.storagemgt</groupId>
         <artifactId>hdfs</artifactId>
-        <version>4.3.2-SNAPSHOT</version>
+        <version>4.3.3-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.identity.authenticator.krb5.ui</artifactId>
-    <version>4.3.2-SNAPSHOT</version>
+    <version>4.3.3-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>Kerberos 5 Authenticator - UI bundle</name>
     <description>Kerberos 5 Authenticator - UI bundle</description>
