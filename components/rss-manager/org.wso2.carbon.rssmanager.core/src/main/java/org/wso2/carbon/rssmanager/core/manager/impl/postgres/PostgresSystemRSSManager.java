@@ -231,10 +231,10 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
             checkConnections(rssInstances);
             user.setEnvironmentId(this.getEnvironment().getId());
             //Iterate and add database user to each system rss instance
+            txConn = RSSManagerUtil.getTxConnection();
             super.addDatabaseUser(txConn, user, qualifiedUsername, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
             for (RSSInstance rssInstance : rssInstances) {
                 try {
-                    txConn = RSSManagerUtil.getTxConnection();
                     conn = getConnection(rssInstance.getName());
                     boolean hasPassword = (!StringUtils.isEmpty(user.getPassword()));
                     StringBuilder sql = new StringBuilder("CREATE USER \"" + qualifiedUsername + "\"");
