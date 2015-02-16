@@ -136,8 +136,8 @@
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.ndatasource.common:${carbon.kernel.version}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.ndatasource.core:${carbon.kernel.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.ndatasource.common:${carbon.commons.version}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.ndatasource.core:${carbon.commons.version}</importFeatureDef>
                                 <importFeatureDef>org.wso2.carbon.utils:${carbon.kernel.version}</importFeatureDef>
                             </importFeatures>
                         </configuration>
