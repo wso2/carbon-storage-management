@@ -169,7 +169,8 @@ public class H2SystemRSSManager extends SystemRSSManager {
             RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {
             RSSManagerUtil.rollBackTx(txConn);
-            String msg = "Error occurred while creating the database " + "user '" + qualifiedUsername + e.getMessage();
+            String msg = "Error occurred while creating the database "
+                         + "user '" + qualifiedUsername + "'. " + e.getMessage();
             handleException(msg, e);
         } finally {
             RSSManagerUtil.cleanupResources(null, null, txConn);
