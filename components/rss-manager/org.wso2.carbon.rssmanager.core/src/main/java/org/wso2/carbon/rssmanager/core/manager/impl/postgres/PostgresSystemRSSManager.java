@@ -252,7 +252,8 @@ public class PostgresSystemRSSManager extends SystemRSSManager {
             RSSManagerUtil.commitTx(txConn);
         } catch (Exception e) {
             RSSManagerUtil.rollBackTx(txConn);
-            String msg = "Error occurred while creating the database " + "user '" + qualifiedUsername + " " + e.getMessage();
+            String msg = "Error occurred while creating the database "
+                         + "user '" + qualifiedUsername + "'. " + e.getMessage();
             if (!mapUserWithInstance.isEmpty()) {
                 //dropped added users at error
                 dropAddedUsers(mapUserWithInstance);

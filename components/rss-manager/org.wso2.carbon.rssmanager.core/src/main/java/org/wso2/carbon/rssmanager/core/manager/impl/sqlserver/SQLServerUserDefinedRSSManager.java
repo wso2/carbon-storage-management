@@ -49,7 +49,7 @@ import java.util.List;
  * @see org.wso2.carbon.rssmanager.core.manager.RSSManager for the method java doc comments
  */
 public class SQLServerUserDefinedRSSManager extends UserDefinedRSSManager {
-	private static final Log log = LogFactory.getLog(SQLServerSystemRSSManager.class);
+	private static final Log log = LogFactory.getLog(SQLServerUserDefinedRSSManager.class);
 	private RSSInstanceDAO rssInstanceDAO;
 
 
@@ -182,7 +182,8 @@ public class SQLServerUserDefinedRSSManager extends UserDefinedRSSManager {
 			}
 		} catch (Exception e) {
 			RSSManagerUtil.rollBackTx(txConn);
-			String msg = "Error occurred while creating the database " + "user '" + qualifiedUsername + " " +  e.getMessage();
+			String msg = "Error occurred while creating the database "
+                         + "user '" + qualifiedUsername + "'. " +  e.getMessage();
 			handleException(msg, e);
 		} finally {
 			RSSManagerUtil.cleanupResources(null, null, txConn);
@@ -277,7 +278,7 @@ public class SQLServerUserDefinedRSSManager extends UserDefinedRSSManager {
 				stmtDeny.execute();
 			}
 			super.updateDatabaseUserPrivileges(txConn, rssInstanceName, databaseName, privileges, user.getUsername(),
-			                                   RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+			                                   RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
 			RSSManagerUtil.commitTx(txConn);
 		} catch (Exception e) {
 			RSSManagerUtil.rollBackTx(txConn);
@@ -311,7 +312,8 @@ public class SQLServerUserDefinedRSSManager extends UserDefinedRSSManager {
 		//resolve rss instance by database
 		RSSInstance rssInstance = null;
 		try {
-			rssInstance = resolveRSSInstanceByDatabase(databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
+			rssInstance = resolveRSSInstanceByDatabase(databaseName,
+                                                       RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
 		} catch (RSSDatabaseConnectionException e) {
 			String msg = "Database server error at attach database user" + username + e.getMessage();
 			handleException(msg, e);
@@ -541,7 +543,8 @@ public class SQLServerUserDefinedRSSManager extends UserDefinedRSSManager {
 	public boolean isDatabaseExist(String rssInstanceName, String databaseName) throws RSSManagerException {
 		boolean isExist = false;
 		try {
-			isExist = super.isDatabaseExist(rssInstanceName, databaseName, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+			isExist = super.isDatabaseExist(rssInstanceName, databaseName,
+                                            RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
 		} catch (Exception ex) {
 			String msg = "Error while check whether database '" + databaseName +
 			             "' on RSS instance : " + rssInstanceName + "exists" + ex.getMessage();
@@ -554,7 +557,7 @@ public class SQLServerUserDefinedRSSManager extends UserDefinedRSSManager {
 	 * @see org.wso2.carbon.rssmanager.core.manager.RSSManager#getDatabase(String, String)
 	 */
 	public Database getDatabase(String rssInstanceName, String databaseName) throws RSSManagerException {
-		return super.getDatabase(RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, databaseName);
+		return super.getDatabase(RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED, databaseName);
 	}
 
 	/**
@@ -563,7 +566,8 @@ public class SQLServerUserDefinedRSSManager extends UserDefinedRSSManager {
 	public boolean isDatabaseUserExist(String rssInstanceName, String username) throws RSSManagerException {
 		boolean isExist = false;
 		try {
-			isExist = super.isDatabaseUserExist(rssInstanceName, username, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+			isExist = super.isDatabaseUserExist(rssInstanceName, username,
+                                                RSSManagerConstants.RSSManagerTypes.RM_TYPE_USER_DEFINED);
 		} catch (Exception ex) {
 			String msg = "Error while check whether user '" + username +
 			             "' on RSS instance : " + rssInstanceName + "exists" + ex.getMessage();
