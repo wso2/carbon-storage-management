@@ -141,7 +141,6 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
             /* Validating database name to avoid any possible SQL injection attack */
             RSSManagerUtil.checkIfParameterSecured(databaseName);
             conn = getConnection(rssInstance.getName());
-            txConn = RSSManagerUtil.getTxConnection();
             String removeDBQuery = "DROP DATABASE `" + databaseName + "`";
             nativeRemoveDBStatement = conn.prepareStatement(removeDBQuery);
             super.removeDatabase(txConn, rssInstance.getName(), databaseName, rssInstance,
