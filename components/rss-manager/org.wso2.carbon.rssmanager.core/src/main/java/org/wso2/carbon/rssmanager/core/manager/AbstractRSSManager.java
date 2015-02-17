@@ -316,9 +316,9 @@ public abstract class AbstractRSSManager implements RSSManager{
 
 		int tenantId = RSSManagerUtil.getTenantId();
 		Database database = getRSSDAO().getDatabaseDAO().getDatabase(this.getEnvironmentName(), databaseName, tenantId,
-		                                                             RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+		                                                             instanceType);
 		DatabaseUser databaseUser = getRSSDAO().getDatabaseUserDAO().getSystemDatabaseUser(this.getEnvironmentName(),
-				username, tenantId, RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM);
+				username, tenantId, instanceType);
 		UserDatabaseEntry userDatabaseEntry = getRSSDAO().getUserDatabaseEntryDAO().getUserDatabaseEntry(database.getId(), databaseUser.getId());
 		UserDatabasePrivilege entity = userDatabaseEntry.getUserPrivileges();
 		RSSManagerUtil.createDatabasePrivilege(privileges, entity);
