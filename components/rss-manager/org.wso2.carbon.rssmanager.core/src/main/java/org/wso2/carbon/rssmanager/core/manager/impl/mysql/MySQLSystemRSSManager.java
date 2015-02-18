@@ -300,9 +300,10 @@ public class MySQLSystemRSSManager extends SystemRSSManager {
             if (privileges == null) {
                 throw new RSSManagerException("Database privileges-set is null");
             }
+            int tenantId = RSSManagerUtil.getTenantId();
             String rssInstanceName = this.getRSSDAO().getDatabaseDAO().resolveRSSInstanceNameByDatabase(
                     this.getEnvironmentName(), databaseName,
-                    RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, MultitenantConstants.SUPER_TENANT_ID);
+                    RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM, tenantId);
             RSSInstance rssInstance = this.getEnvironment().getRSSInstance(rssInstanceName);
             if (rssInstance == null) {
                 String msg = "Database '" + databaseName + "' does not exist " +

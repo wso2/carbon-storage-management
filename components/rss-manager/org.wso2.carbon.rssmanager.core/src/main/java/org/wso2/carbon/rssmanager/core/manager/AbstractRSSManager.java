@@ -315,13 +315,20 @@ public abstract class AbstractRSSManager implements RSSManager{
 			throws RSSManagerException, RSSDAOException, RSSDatabaseConnectionException {
 
 		int tenantId = RSSManagerUtil.getTenantId();
-		Database database = getRSSDAO().getDatabaseDAO().getDatabase(this.getEnvironmentName(), databaseName, tenantId,
-		                                                             instanceType);
-		DatabaseUser databaseUser = getRSSDAO().getDatabaseUserDAO().getSystemDatabaseUser(this.getEnvironmentName(),
-				username, tenantId, instanceType);
-		UserDatabaseEntry userDatabaseEntry = getRSSDAO().getUserDatabaseEntryDAO().getUserDatabaseEntry(database.getId(), databaseUser.getId());
-		UserDatabasePrivilege entity = userDatabaseEntry.getUserPrivileges();
-		RSSManagerUtil.createDatabasePrivilege(privileges, entity);
+        DatabaseUser databaseUser;
+        Database database = getRSSDAO().getDatabaseDAO().getDatabase(this.getEnvironmentName(), databaseName, tenantId,
+                                                                     instanceType);
+        if (RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equals(instanceType)) {
+            databaseUser = getRSSDAO().getDatabaseUserDAO().getSystemDatabaseUser(this.getEnvironmentName(),
+                                                                                  username, tenantId, instanceType);
+        } else {
+            databaseUser = getRSSDAO().getDatabaseUserDAO().getUserDefineDatabaseUser(
+                    this.getEnvironmentName(), rssInstanceName, username, tenantId, instanceType);
+        }
+        UserDatabaseEntry userDatabaseEntry = getRSSDAO().getUserDatabaseEntryDAO().getUserDatabaseEntry(
+                database.getId(), databaseUser.getId());
+        UserDatabasePrivilege entity = userDatabaseEntry.getUserPrivileges();
+        RSSManagerUtil.createDatabasePrivilege(privileges, entity);
 		this.getRSSDAO().getUserPrivilegesDAO().updateUserPrivileges(conn, entity);
 	}
 
