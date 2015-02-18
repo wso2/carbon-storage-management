@@ -135,8 +135,7 @@
                                 color='red'>*</font>
                         <td>
                             <select id="rssInstances" name="rssInstances">
-                                <option value="">
-                                </option>
+                                <option id="SELECT" value="SELECT">---SELECT---</option>
                                 <%
                                     for (RSSInstanceInfo rssInstanceInfo : rssInstances) {
                                         if (rssInstanceInfo.getRssInstanceName() != null &&

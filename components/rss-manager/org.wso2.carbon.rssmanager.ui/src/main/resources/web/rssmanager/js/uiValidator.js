@@ -277,6 +277,10 @@ function createDatabaseUser(envName) {
 	var rssInstanceName = ""
 	if (rssInstances != null) {
 		rssInstanceName = rssInstances[rssInstances.selectedIndex].value;
+        if (rssInstanceName == '' || rssInstanceName == null || rssInstanceName == 'SELECT') {
+            CARBON.showWarningDialog("Select a valid database instance");
+            return false;
+        }
 	}
 	if (username == '' || username == null) {
 		CARBON.showWarningDialog("Username field cannot be left blank");
