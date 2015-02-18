@@ -298,32 +298,39 @@ public abstract class AbstractRSSManager implements RSSManager{
 
 	}
 
-	/**
-	 * Update user database privileges
-	 *
-	 * @param conn            rss meta repository instance database connection
-	 * @param rssInstanceName name of the rss instance
-	 * @param databaseName    name of the database
-	 * @param privileges      updated database privileges
-	 * @param username        username of the database user
-	 * @param instanceType    rss instance type
-	 * @throws RSSManagerException
-	 * @throws RSSDAOException
-	 */
-	protected void updateDatabaseUserPrivileges(Connection conn, String rssInstanceName, String databaseName,
-	                                            DatabasePrivilegeSet privileges, String username, String instanceType)
-			throws RSSManagerException, RSSDAOException, RSSDatabaseConnectionException {
+    /**
+     * Update user database privileges
+     *
+     * @param conn            rss meta repository instance database connection
+     * @param rssInstanceName name of the rss instance
+     * @param databaseName    name of the database
+     * @param privileges      updated database privileges
+     * @param username        username of the database user
+     * @param instanceType    rss instance type
+     * @throws RSSManagerException
+     * @throws RSSDAOException
+     */
+    protected void updateDatabaseUserPrivileges(Connection conn, String rssInstanceName, String databaseName,
+                                                DatabasePrivilegeSet privileges, String username, String instanceType)
+            throws RSSManagerException, RSSDAOException, RSSDatabaseConnectionException {
 
-		int tenantId = RSSManagerUtil.getTenantId();
-		Database database = getRSSDAO().getDatabaseDAO().getDatabase(this.getEnvironmentName(), databaseName, tenantId,
-		                                                             instanceType);
-		DatabaseUser databaseUser = getRSSDAO().getDatabaseUserDAO().getSystemDatabaseUser(this.getEnvironmentName(),
-				username, tenantId, instanceType);
-		UserDatabaseEntry userDatabaseEntry = getRSSDAO().getUserDatabaseEntryDAO().getUserDatabaseEntry(database.getId(), databaseUser.getId());
-		UserDatabasePrivilege entity = userDatabaseEntry.getUserPrivileges();
-		RSSManagerUtil.createDatabasePrivilege(privileges, entity);
-		this.getRSSDAO().getUserPrivilegesDAO().updateUserPrivileges(conn, entity);
-	}
+        int tenantId = RSSManagerUtil.getTenantId();
+        DatabaseUser databaseUser;
+        Database database = getRSSDAO().getDatabaseDAO().getDatabase(this.getEnvironmentName(), databaseName, tenantId,
+                                                                     instanceType);
+        if (RSSManagerConstants.RSSManagerTypes.RM_TYPE_SYSTEM.equals(instanceType)) {
+            databaseUser = getRSSDAO().getDatabaseUserDAO().getSystemDatabaseUser(this.getEnvironmentName(),
+                                                                                  username, tenantId, instanceType);
+        } else {
+            databaseUser = getRSSDAO().getDatabaseUserDAO().getUserDefineDatabaseUser(
+                    this.getEnvironmentName(), rssInstanceName, username, tenantId, instanceType);
+        }
+        UserDatabaseEntry userDatabaseEntry = getRSSDAO().getUserDatabaseEntryDAO().getUserDatabaseEntry(
+                database.getId(), databaseUser.getId());
+        UserDatabasePrivilege entity = userDatabaseEntry.getUserPrivileges();
+        RSSManagerUtil.createDatabasePrivilege(privileges, entity);
+        this.getRSSDAO().getUserPrivilegesDAO().updateUserPrivileges(conn, entity);
+    }
 
 	/**
 	 * Get database info
