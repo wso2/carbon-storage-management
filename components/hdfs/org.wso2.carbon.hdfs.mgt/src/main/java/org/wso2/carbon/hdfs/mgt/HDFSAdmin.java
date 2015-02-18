@@ -78,7 +78,7 @@ public class HDFSAdmin extends AbstractAdmin {
 	    try {
 	    	hdfsFS = hdfsAdminHelperInstance.getFSforUser();
         } catch (IOException e1) {
-        	String msg = "Error occurred while trying to get File system instance";
+        	String msg = "Unable to get File system instance. Please make sure you have configured HDFS properly.";
 			handleException(msg, e1);
         }
 		FileStatus[] fileStatusList = null;
