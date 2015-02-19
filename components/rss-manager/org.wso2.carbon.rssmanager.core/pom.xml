@@ -3,14 +3,14 @@
     <parent>
         <groupId>org.wso2.carbon.storagemgt</groupId>
         <artifactId>rss-manager</artifactId>
-        <version>4.3.3-SNAPSHOT</version>
+        <version>4.3.3</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.carbon.storagemgt</groupId>
     <artifactId>org.wso2.carbon.rssmanager.core</artifactId>
-    <version>4.3.3-SNAPSHOT</version>
+    <version>4.3.3</version>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - RSS Manager Core</name>
     <description>WSO2 Carbon - RSS Manager Core</description>

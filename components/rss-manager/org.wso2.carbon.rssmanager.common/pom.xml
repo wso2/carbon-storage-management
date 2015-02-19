@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.wso2.carbon.storagemgt</groupId>
         <artifactId>rss-manager</artifactId>
-        <version>4.3.3-SNAPSHOT</version>
+        <version>4.3.3</version>
 	<relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -11,7 +11,7 @@
     <groupId>org.wso2.carbon.storagemgt</groupId>
     <artifactId>org.wso2.carbon.rssmanager.common</artifactId>
     <packaging>bundle</packaging>
-    <version>4.3.3-SNAPSHOT</version>
+    <version>4.3.3</version>
     <name>WSO2 Carbon - RSS Manager Commons</name>
     <description>WSO2 Carbon - RSS Manager Commons</description>
     <url>http://wso2.org</url>
