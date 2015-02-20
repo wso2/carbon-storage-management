@@ -163,6 +163,7 @@ public class EnvironmentDAOImpl implements EnvironmentDAO {
 		PreparedStatement statement = null;
 		try {
 			conn = getDataSourceConnection();
+			conn.setAutoCommit(true);
 			String removeEnvironmentQuery = "DELETE FROM RM_ENVIRONMENT WHERE NAME = ? ";
 			statement = conn.prepareStatement(removeEnvironmentQuery);
 			statement.setString(1, environmentName);
