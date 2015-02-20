@@ -220,6 +220,7 @@ public class DatabasePrivilegeTemplateDAOImpl implements DatabasePrivilegeTempla
 		PreparedStatement statement = null;
 		try {
 			conn = getDataSourceConnection();//acquire data source connection
+			conn.setAutoCommit(false);
 			String removePrivilegeTemplateQuery = "DELETE FROM RM_DB_PRIVILEGE_TEMPLATE WHERE ENVIRONMENT_ID=? AND NAME=? AND TENANT_ID=?";
 			statement = conn.prepareStatement(removePrivilegeTemplateQuery);
 			statement.setInt(1, environmentId);
