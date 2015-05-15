@@ -1185,7 +1185,7 @@
         <guava.version>14.0.1</guava.version>
         <codahale.metrics.version>3.0.2</codahale.metrics.version>
         <datastax.cassandra.driver.version>2.0.0</datastax.cassandra.driver.version>
-        <libthrift.version>0.9.1.wso2v1</libthrift.version>
+        <libthrift.version>0.9.2.wso2v1</libthrift.version>
         <perf4j.version>0.9.12.wso2v1</perf4j.version>
         <highscale.version>1.1.2.wso2v1</highscale.version>
         <slf4j.version>1.7.2</slf4j.version>
