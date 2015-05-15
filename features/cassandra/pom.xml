@@ -40,11 +40,11 @@
         <module>server/org.wso2.carbon.cassandra.mgt.feature</module>
         <module>server/org.wso2.carbon.cassandra.mgt.ui.feature</module>
         <module>server/org.wso2.carbon.cassandra.feature</module>
-        <module>server-monitor/org.wso2.carbon.cassandra.cluster.feature</module>
-        <module>server-monitor/org.wso2.carbon.cassandra.cluster.mgt.feature</module>
-        <module>server-monitor/org.wso2.carbon.cassandra.cluster.mgt.ui.feature</module>
-        <module>server-monitor/org.wso2.carbon.cassandra.cluster.proxy.feature</module>
-        <module>server-monitor/org.wso2.carbon.cassandra.monitor.feature</module>
+        <!--<module>server-monitor/org.wso2.carbon.cassandra.cluster.feature</module>-->
+        <!--<module>server-monitor/org.wso2.carbon.cassandra.cluster.mgt.feature</module>-->
+        <!--<module>server-monitor/org.wso2.carbon.cassandra.cluster.mgt.ui.feature</module>-->
+        <!--<module>server-monitor/org.wso2.carbon.cassandra.cluster.proxy.feature</module>-->
+        <!--<module>server-monitor/org.wso2.carbon.cassandra.monitor.feature</module>-->
     </modules>
 
     <repositories>

@@ -49,7 +49,7 @@
             <artifactId>org.wso2.carbon.cassandra.explorer.stub</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.hectorclient.wso2</groupId>
+            <groupId>org.hectorclient</groupId>
             <artifactId>hector-core</artifactId>
         </dependency>
         <dependency>

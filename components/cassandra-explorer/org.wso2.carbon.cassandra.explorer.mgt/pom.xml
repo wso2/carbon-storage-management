@@ -59,7 +59,7 @@
     </build>
     <dependencies>
         <dependency>
-            <groupId>org.hectorclient.wso2</groupId>
+            <groupId>org.hectorclient</groupId>
             <artifactId>hector-core</artifactId>
         </dependency>
         <dependency>

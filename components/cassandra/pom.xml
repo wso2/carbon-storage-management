@@ -85,10 +85,10 @@
         <module>org.wso2.carbon.cassandra.mgt.ui</module>
         <module>org.wso2.carbon.cassandra.examples</module>
         <module>org.wso2.carbon.cassandra.sharedkey</module>
-        <module>org.wso2.carbon.cassandra.cluster</module>
-        <module>org.wso2.carbon.cassandra.cluster.mgt</module>
-        <module>org.wso2.carbon.cassandra.cluster.mgt.ui</module>
-        <module>org.wso2.carbon.cassandra.cluster.proxy</module>
+        <!--<module>org.wso2.carbon.cassandra.cluster</module>-->
+        <!--<module>org.wso2.carbon.cassandra.cluster.mgt</module>-->
+        <!--<module>org.wso2.carbon.cassandra.cluster.mgt.ui</module>-->
+        <!--<module>org.wso2.carbon.cassandra.cluster.proxy</module>-->
         <module>org.wso2.carbon.cassandra.datareader</module>
     </modules>
 

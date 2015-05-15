@@ -92,10 +92,11 @@
         <dependency>
             <groupId>org.apache.cassandra.wso2</groupId>
             <artifactId>apache-cassandra-thrift</artifactId>
+            <version>${wso2.cassandra.thrift.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.hectorclient.wso2</groupId>
+            <groupId>org.hectorclient</groupId>
             <artifactId>hector-core</artifactId>
         </dependency>
 
@@ -132,7 +133,7 @@
                                 <bundleDef>org.xerial.snappy:snappy-java</bundleDef>
                                 <bundleDef>com.codahale.metrics:metrics-core</bundleDef>
                                 <bundleDef>org.apache.cassandra.wso2:apache-cassandra-thrift</bundleDef>
-                                <bundleDef>org.hectorclient.wso2:hector-core</bundleDef>
+                                <bundleDef>org.hectorclient:hector-core</bundleDef>
                             </bundles>
                             <importBundles>
                                 <importBundleDef>org.wso2.carbon:org.wso2.carbon.ndatasource.common:${carbon.kernel.version}</importBundleDef>

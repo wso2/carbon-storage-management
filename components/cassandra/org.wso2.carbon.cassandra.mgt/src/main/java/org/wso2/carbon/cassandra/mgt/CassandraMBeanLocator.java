@@ -24,8 +24,8 @@ import org.apache.cassandra.db.ColumnFamilyStoreMBean;
 import org.apache.cassandra.db.compaction.CompactionManager;
 import org.apache.cassandra.db.compaction.CompactionManagerMBean;
 import org.apache.cassandra.service.StorageServiceMBean;
-import org.apache.cassandra.streaming.StreamingService;
-import org.apache.cassandra.streaming.StreamingServiceMBean;
+import org.apache.cassandra.streaming.StreamManager;
+import org.apache.cassandra.streaming.StreamManagerMBean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -43,7 +43,7 @@ public class CassandraMBeanLocator {
     private MBeanServerConnection mBeanServerConnection;
     private static final String SS_OBJECT_NAME = "org.apache.cassandra.db:type=StorageService";
     private StorageServiceMBean storageServiceProxy;
-    private StreamingServiceMBean streamProxy;
+    private StreamManagerMBean streamProxy;
     private CompactionManagerMBean compactionProxy;
     private ColumnFamilyStoreMBean columnFamilyStoreMBean;
 
@@ -72,10 +72,10 @@ public class CassandraMBeanLocator {
      * @throws CassandraServerManagementException
      *          for error during locating <code>StreamingServiceMBean </code>
      */
-    public StreamingServiceMBean locateStreamingServiceMBean() throws CassandraServerManagementException {
+    public StreamManagerMBean locateStreamingServiceMBean() throws CassandraServerManagementException {
         if (streamProxy == null) {
             streamProxy =
-                    locateMBean(StreamingService.MBEAN_OBJECT_NAME, StreamingServiceMBean.class);
+                    locateMBean(StreamManager.OBJECT_NAME, StreamManagerMBean.class);
         }
         return streamProxy;
     }

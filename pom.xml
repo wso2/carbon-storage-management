@@ -24,7 +24,7 @@
         <module>components/hdfs</module>
         <module>components/rss-manager</module>
         <module>features/cassandra</module>
-        <module>features/cassandra-explorer</module>
+        <!--<module>features/cassandra-explorer</module>-->
         <module>features/cassandra-search</module>
         <module>features/hadoop</module>
         <module>features/rss-manager</module>
@@ -285,8 +285,8 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.cassandra.wso2</groupId>
-                <artifactId>apache-cassandra-thrift</artifactId>
-                <version>${wso2.cassandra.version}</version>
+                <artifactId>cassandra-thrift</artifactId>
+                <version>${wso2.cassandra.thrift.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.datastax.cassandra</groupId>
@@ -890,7 +890,7 @@
                 <version>${carbon.kernel.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.hectorclient.wso2</groupId>
+                <groupId>org.hectorclient</groupId>
                 <artifactId>hector-core</artifactId>
                 <version>${hector-core.version}</version>
             </dependency>
@@ -1157,8 +1157,8 @@
         <carbon.identity.version>4.3.3</carbon.identity.version>
         <carbon.registry.version>4.3.1</carbon.registry.version>
         <carbon.storage.management.version>4.3.4-SNAPSHOT</carbon.storage.management.version>
-        <wso2.cassandra.version>1.2.13.wso2v8</wso2.cassandra.version>
-        <wso2.cassandra.thrift.version>1.2.13.wso2v8</wso2.cassandra.thrift.version>
+        <wso2.cassandra.version>2.1.5.wso2v1</wso2.cassandra.version>
+        <wso2.cassandra.thrift.version>2.1.5.wso2v1</wso2.cassandra.thrift.version>
         <wso2.hadoop.version>0.20.203.1.wso2v4</wso2.hadoop.version>
 
         <!-- Axis2 Version -->
@@ -1184,8 +1184,8 @@
         <!-- Misc -->
         <guava.version>14.0.1</guava.version>
         <codahale.metrics.version>3.0.2</codahale.metrics.version>
-        <datastax.cassandra.driver.version>2.1.5</datastax.cassandra.driver.version>
-        <libthrift.version>0.7.0.wso2v2</libthrift.version>
+        <datastax.cassandra.driver.version>2.0.0</datastax.cassandra.driver.version>
+        <libthrift.version>0.9.1.wso2v1</libthrift.version>
         <perf4j.version>0.9.12.wso2v1</perf4j.version>
         <highscale.version>1.1.2.wso2v1</highscale.version>
         <slf4j.version>1.7.2</slf4j.version>
@@ -1204,7 +1204,7 @@
         <compress-lzf.version>0.8.4</compress-lzf.version>
         <netty.version>3.9.0.Final</netty.version>
         <snaptree.version>0.1.wso2v1</snaptree.version>
-        <hector-core.version>1.1.4.wso2v1</hector-core.version>
+        <hector-core.version>2.0-0</hector-core.version>
         <carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
         <version.solr>1.4.1.wso2v1</version.solr>
         <derby.version>10.4.2.0</derby.version>
