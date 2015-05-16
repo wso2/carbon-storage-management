@@ -285,7 +285,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.cassandra.wso2</groupId>
-                <artifactId>cassandra-thrift</artifactId>
+                <artifactId>apache-cassandra-thrift</artifactId>
                 <version>${wso2.cassandra.thrift.version}</version>
             </dependency>
             <dependency>
