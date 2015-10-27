@@ -19,7 +19,7 @@
 package org.wso2.carbon.rssmanager.core.authorize;
 
 import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.identity.application.mgt.ApplicationMgtOSGIUtil;
+import org.wso2.carbon.identity.application.mgt.ApplicationMgtUtil;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.exception.RSSManagerException;
@@ -161,7 +161,7 @@ public class RSSAuthorizationUtils {
 		StringBuilder applicationResourcePath = new StringBuilder();
 		applicationResourcePath.append(CarbonConstants.UI_PERMISSION_NAME);
 		applicationResourcePath.append(RegistryConstants.PATH_SEPARATOR);
-		applicationResourcePath.append(ApplicationMgtOSGIUtil.APPLICATION_ROOT_PERMISSION);
+		applicationResourcePath.append(ApplicationMgtUtil.APPLICATION_ROOT_PERMISSION);
 		applicationResourcePath.append(RegistryConstants.PATH_SEPARATOR);
 		applicationResourcePath.append(SERVICE_PROVIDER_NAME);
 		applicationResourcePath.append(RegistryConstants.PATH_SEPARATOR);

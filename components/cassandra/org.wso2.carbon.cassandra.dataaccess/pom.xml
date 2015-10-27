@@ -90,8 +90,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.cassandra.wso2</groupId>
-            <artifactId>apache-cassandra</artifactId>
+            <groupId>org.apache.cassandra</groupId>
+            <artifactId>cassandra-all</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

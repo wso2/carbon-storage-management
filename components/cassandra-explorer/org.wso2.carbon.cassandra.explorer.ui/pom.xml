@@ -52,9 +52,9 @@
             <groupId>org.hectorclient</groupId>
             <artifactId>hector-core</artifactId>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.apache.cassandra.wso2</groupId>
             <artifactId>apache-cassandra</artifactId>
-        </dependency>
+        </dependency-->
     </dependencies>
 </project>

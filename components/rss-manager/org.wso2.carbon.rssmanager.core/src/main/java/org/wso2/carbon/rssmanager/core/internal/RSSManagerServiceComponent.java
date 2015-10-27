@@ -24,6 +24,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.identity.application.mgt.ApplicationManagementService;
+import org.wso2.carbon.identity.core.util.IdentityCoreInitializedEvent;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.config.RSSConfigurationManager;
@@ -72,6 +73,9 @@ import javax.transaction.TransactionManager;
  * policy="dynamic"
  * bind="setApplicationManagementService"
  * unbind="unsetApplicationManagementService"
+ * @scr.reference name="identityCoreInitializedEventService"
+ * interface="org.wso2.carbon.identity.core.util.IdentityCoreInitializedEvent" cardinality="1..1"
+ * policy="dynamic" bind="setIdentityCoreInitializedEventService" unbind="unsetIdentityCoreInitializedEventService"
  */
 public class RSSManagerServiceComponent {
 
@@ -229,4 +233,18 @@ public class RSSManagerServiceComponent {
 		}
 		RSSManagerDataHolder.getInstance().setApplicationManagementService(null);
 	}
+
+
+	protected void unsetIdentityCoreInitializedEventService(
+			IdentityCoreInitializedEvent identityCoreInitializedEvent) {
+	    /* reference IdentityCoreInitializedEvent service to guarantee that this component will wait until identity core
+         is started */
+	}
+
+	protected void setIdentityCoreInitializedEventService(
+			IdentityCoreInitializedEvent identityCoreInitializedEvent) {
+        /* reference IdentityCoreInitializedEvent service to guarantee that this component will wait until identity core
+         is started */
+	}
+
 }

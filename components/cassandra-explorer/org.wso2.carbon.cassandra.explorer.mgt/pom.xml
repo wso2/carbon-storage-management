@@ -63,8 +63,8 @@
             <artifactId>hector-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.cassandra.wso2</groupId>
-            <artifactId>apache-cassandra</artifactId>
+            <groupId>org.apache.cassandra</groupId>
+            <artifactId>cassandra-all</artifactId>
         </dependency>
     </dependencies>
 </project>

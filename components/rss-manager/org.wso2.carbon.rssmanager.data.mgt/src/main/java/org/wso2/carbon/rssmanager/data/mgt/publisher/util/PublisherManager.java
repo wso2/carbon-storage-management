@@ -18,7 +18,7 @@
  */
 package org.wso2.carbon.rssmanager.data.mgt.publisher.util;
 
-import org.wso2.carbon.databridge.agent.thrift.DataPublisher;
+import org.wso2.carbon.databridge.agent.DataPublisher;
 
 public class PublisherManager {
 	

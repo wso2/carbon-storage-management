@@ -23,7 +23,8 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.databridge.agent.thrift.DataPublisher;
+import org.wso2.carbon.databridge.agent.DataPublisher;
+import org.wso2.carbon.databridge.commons.utils.DataBridgeCommonsUtils;
 import org.wso2.carbon.ntask.core.AbstractTask;
 import org.wso2.carbon.rssmanager.data.mgt.publisher.metadata.PublishEventData;
 
@@ -31,12 +32,15 @@ public abstract class AbstractScheduleDataPublisher extends AbstractTask impleme
 
 	private static Log log = LogFactory.getLog(AbstractScheduleDataPublisher.class);
 
+	public static final String VERSION="1.0.0";
+	public static final String RSS_STATS_STREAM="rss_stats_table";
+
 	protected abstract List<PublishEventData> getStatsInfo() throws Exception;
 
 	public void execute() {
 		try {
 			DataPublisher dataPublisher = getDataPublisher();
-			String streamId = getStreamId(dataPublisher);
+			String streamId = DataBridgeCommonsUtils.generateStreamId(RSS_STATS_STREAM, VERSION);
 			List<PublishEventData> eventData = getStatsInfo();
 			
 			boolean proceed = true;
