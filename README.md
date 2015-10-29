@@ -1,11 +1,9 @@
 # carbon-storage-management
 ===========================
 ---
-
 |  Branch | Build Status |
 | :------------ |:-------------
 | master      | [![Build Status](https://wso2.org/jenkins/job/carbon-storage-management/badge/icon)](https://wso2.org/jenkins/job/carbon-storage-management) |
-
 ---
 Latest Released Versions v4.3.3.
 
