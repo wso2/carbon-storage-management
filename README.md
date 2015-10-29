@@ -1,5 +1,4 @@
 # carbon-storage-management
-===========================
 ---
 |  Branch | Build Status |
 | :------------ |:-------------
@@ -9,7 +8,7 @@ Latest Released Versions v4.3.3.
 
 #####This repository contains the source code of modules use for Storage Server.
 
-#####Following is the set of components included in carbon-commons repo.
+#####Following is the set of components included in carbon-storage-management repo.
 *rss-manager
 
 
