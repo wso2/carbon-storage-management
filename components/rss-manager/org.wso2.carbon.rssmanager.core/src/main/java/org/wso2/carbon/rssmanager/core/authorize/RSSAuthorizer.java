@@ -101,7 +101,6 @@ public class RSSAuthorizer {
 			serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
 			String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
 			String username = CarbonContext.getThreadLocalCarbonContext().getUsername();
-			String tenantLessUsername = MultitenantUtils.getTenantAwareUsername(username);
 			dataHolder.getApplicationManagementService().createApplication(serviceProvider, tenantDomain,username);
 		} catch (IdentityApplicationManagementException ex) {
 			throw new RSSManagerException("Error during creating application ", ex);
@@ -119,7 +118,6 @@ public class RSSAuthorizer {
 		RSSManagerDataHolder dataHolder = RSSManagerDataHolder.getInstance();
 		String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
 		String username = CarbonContext.getThreadLocalCarbonContext().getUsername();
-		String tenantLessUsername = MultitenantUtils.getTenantAwareUsername(username);
 		ApplicationBasicInfo[] applicationBasicInfo = dataHolder.getApplicationManagementService().getAllApplicationBasicInfo(tenantDomain,username);
 		if (applicationBasicInfo != null) {
 			for (ApplicationBasicInfo basicInfo : applicationBasicInfo) {
@@ -142,8 +140,6 @@ public class RSSAuthorizer {
 		ServiceProvider serviceProvider = null;
 		try {
 			String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
-			String username = CarbonContext.getThreadLocalCarbonContext().getUsername();
-			String tenantLessUsername = MultitenantUtils.getTenantAwareUsername(username);
 			serviceProvider = dataHolder.getApplicationManagementService().getApplicationExcludingFileBasedSPs(RSSAuthorizationUtils.SERVICE_PROVIDER_NAME,tenantDomain);
 		} catch (IdentityApplicationManagementException ex) {
 			throw new RSSManagerException("Error during creating application ", ex);
@@ -182,7 +178,6 @@ public class RSSAuthorizer {
 		try {
 			String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
 			String username = CarbonContext.getThreadLocalCarbonContext().getUsername();
-			String tenantLessUsername = MultitenantUtils.getTenantAwareUsername(username);
 			serviceProvider = dataHolder.getApplicationManagementService().getApplicationExcludingFileBasedSPs(RSSAuthorizationUtils.SERVICE_PROVIDER_NAME, tenantDomain);
 			if (serviceProvider == null) {
 				return;
