@@ -31,7 +31,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.databridge.agent.thrift.DataPublisher;
+import org.wso2.carbon.databridge.agent.DataPublisher;
 import org.wso2.carbon.rssmanager.data.mgt.common.DBType;
 import org.wso2.carbon.rssmanager.data.mgt.common.RSSPublisherConstants;
 import org.wso2.carbon.rssmanager.data.mgt.common.entity.DataSourceIdentifier;
@@ -83,7 +83,7 @@ public class TestOraclePublisher {
 		try{
 			RSSScheduleDataPublisher  dataPublisher = new RSSScheduleDataPublisher();
 			DataPublisher publisher = dataPublisher.getDataPublisher();
-			publisher.stop();
+			//publisher.stop();
 			
 			InitialContext ic = new InitialContext();
 			Util.unbind(ic, "java:comp/UserTransaction");
