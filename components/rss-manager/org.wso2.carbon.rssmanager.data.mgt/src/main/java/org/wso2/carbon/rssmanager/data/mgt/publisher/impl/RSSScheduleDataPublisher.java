@@ -21,7 +21,7 @@ package org.wso2.carbon.rssmanager.data.mgt.publisher.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.wso2.carbon.databridge.agent.thrift.DataPublisher;
+import org.wso2.carbon.databridge.agent.DataPublisher;
 import org.wso2.carbon.rssmanager.data.mgt.publisher.AbstractScheduleDataPublisher;
 import org.wso2.carbon.rssmanager.data.mgt.publisher.DataPublishable;
 import org.wso2.carbon.rssmanager.data.mgt.publisher.exception.RSSDataMgtException;
@@ -39,22 +39,22 @@ public class RSSScheduleDataPublisher extends AbstractScheduleDataPublisher {
 		return commonPublisher.getDataPublisher();
 	}
 
-	public String findStreamId(DataPublisher dataPublisher) throws RSSDataMgtException {
-		return commonPublisher.findStreamId(dataPublisher);
-	}
+//	public String findStreamId(DataPublisher dataPublisher) throws RSSDataMgtException {
+//		return commonPublisher.findStreamId(dataPublisher);
+//	}
 
-	public String getStreamId(DataPublisher dataPublisher) throws RSSDataMgtException {
-		return commonPublisher.getStreamId(dataPublisher);
-	}
+//	public String getStreamId(DataPublisher dataPublisher) throws RSSDataMgtException {
+//		return commonPublisher.getStreamId(dataPublisher);
+//	}
 
 	public void publishStats(DataPublisher dataPublisher, String streamId, PublishEventData data)
 	                                                                                             throws RSSDataMgtException {
 		commonPublisher.publishStats(dataPublisher, streamId, data);
 	}
 
-	public void deleteStreamDefinition(DataPublisher dataPublisher) throws RSSDataMgtException {
-		commonPublisher.deleteStreamDefinition(dataPublisher);
-	}
+//	public void deleteStreamDefinition(DataPublisher dataPublisher) throws RSSDataMgtException {
+//		commonPublisher.deleteStreamDefinition(dataPublisher);
+//	}
 
 	@Override
 	protected List<PublishEventData> getStatsInfo() throws RSSDataMgtException {

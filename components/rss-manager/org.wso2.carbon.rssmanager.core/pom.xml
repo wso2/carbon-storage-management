@@ -47,7 +47,8 @@
                         <Import-Package>
                             org.apache.axis2.*;
                             version="${axis2.wso2.imp.pkg.version}",
-                            javax.xml.*,
+                            javax.xml.*:
+                            version="0.0.0",
                             org.osgi.framework, org.osgi.service.component,
                             org.apache.commons.logging,
                             org.wso2.carbon.core.*,
@@ -55,7 +56,8 @@
                             org.wso2.carbon.rssmanager.common;
                             version="0.0.0",
                             org.wso2.carbon.context.*,
-                            org.wso2.carbon.transaction.manager.*,
+                            org.wso2.carbon.transaction.manager.*;
+                            version="${carbon.commons.imp.pkg.version}",
                             org.wso2.carbon.identity.application.mgt.*,
                             org.wso2.carbon.identity.application.common.*,
                         </Import-Package>

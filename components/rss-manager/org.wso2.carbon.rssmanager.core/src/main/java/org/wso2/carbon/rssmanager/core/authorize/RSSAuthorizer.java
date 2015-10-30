@@ -20,6 +20,7 @@ package org.wso2.carbon.rssmanager.core.authorize;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.identity.application.common.IdentityApplicationManagementException;
 import org.wso2.carbon.identity.application.common.model.ApplicationBasicInfo;
@@ -98,7 +99,9 @@ public class RSSAuthorizer {
 			serviceProvider = new ServiceProvider();
 			serviceProvider.setApplicationName(RSSAuthorizationUtils.SERVICE_PROVIDER_NAME);
 			serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
-			dataHolder.getApplicationManagementService().createApplication(serviceProvider);
+			String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
+			String username = CarbonContext.getThreadLocalCarbonContext().getUsername();
+			dataHolder.getApplicationManagementService().createApplication(serviceProvider, tenantDomain,username);
 		} catch (IdentityApplicationManagementException ex) {
 			throw new RSSManagerException("Error during creating application ", ex);
 		}
@@ -113,7 +116,9 @@ public class RSSAuthorizer {
 	 */
 	public static boolean isServiceProviderExist() throws IdentityApplicationManagementException {
 		RSSManagerDataHolder dataHolder = RSSManagerDataHolder.getInstance();
-		ApplicationBasicInfo[] applicationBasicInfo = dataHolder.getApplicationManagementService().getAllApplicationBasicInfo();
+		String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
+		String username = CarbonContext.getThreadLocalCarbonContext().getUsername();
+		ApplicationBasicInfo[] applicationBasicInfo = dataHolder.getApplicationManagementService().getAllApplicationBasicInfo(tenantDomain,username);
 		if (applicationBasicInfo != null) {
 			for (ApplicationBasicInfo basicInfo : applicationBasicInfo) {
 				if (RSSAuthorizationUtils.SERVICE_PROVIDER_NAME.equals(basicInfo.getApplicationName())) {
@@ -134,7 +139,8 @@ public class RSSAuthorizer {
 		RSSManagerDataHolder dataHolder = RSSManagerDataHolder.getInstance();
 		ServiceProvider serviceProvider = null;
 		try {
-			serviceProvider = dataHolder.getApplicationManagementService().getApplication(RSSAuthorizationUtils.SERVICE_PROVIDER_NAME);
+			String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
+			serviceProvider = dataHolder.getApplicationManagementService().getApplicationExcludingFileBasedSPs(RSSAuthorizationUtils.SERVICE_PROVIDER_NAME,tenantDomain);
 		} catch (IdentityApplicationManagementException ex) {
 			throw new RSSManagerException("Error during creating application ", ex);
 		}
@@ -170,7 +176,9 @@ public class RSSAuthorizer {
 		RSSManagerDataHolder dataHolder = RSSManagerDataHolder.getInstance();
 		ServiceProvider serviceProvider;
 		try {
-			serviceProvider = dataHolder.getApplicationManagementService().getApplication(RSSAuthorizationUtils.SERVICE_PROVIDER_NAME);
+			String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
+			String username = CarbonContext.getThreadLocalCarbonContext().getUsername();
+			serviceProvider = dataHolder.getApplicationManagementService().getApplicationExcludingFileBasedSPs(RSSAuthorizationUtils.SERVICE_PROVIDER_NAME, tenantDomain);
 			if (serviceProvider == null) {
 				return;
 			}
@@ -188,7 +196,7 @@ public class RSSAuthorizer {
 				permRoleConfig.setPermissions(permissionList.toArray(new ApplicationPermission[permissionList.size()]));
 				serviceProvider.setPermissionAndRoleConfig(permRoleConfig);
 			}
-			dataHolder.getApplicationManagementService().updateApplication(serviceProvider);
+			dataHolder.getApplicationManagementService().updateApplication(serviceProvider,tenantDomain,username);
 		} catch (IdentityApplicationManagementException ex) {
 			throw new RSSManagerException("Error during creating application ", ex);
 		}

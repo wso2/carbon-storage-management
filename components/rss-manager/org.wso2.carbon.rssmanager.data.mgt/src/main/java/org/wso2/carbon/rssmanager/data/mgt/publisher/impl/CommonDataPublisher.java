@@ -23,8 +23,8 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.commons.lang.StringUtils;
-import org.wso2.carbon.databridge.agent.thrift.DataPublisher;
-import org.wso2.carbon.databridge.agent.thrift.exception.AgentException;
+import org.wso2.carbon.databridge.agent.DataPublisher;
+import org.wso2.carbon.databridge.agent.exception.*;
 import org.wso2.carbon.databridge.commons.Event;
 import org.wso2.carbon.rssmanager.data.mgt.common.RSSPublisherConstants;
 import org.wso2.carbon.rssmanager.data.mgt.publisher.DataPublishable;
@@ -92,7 +92,7 @@ public class CommonDataPublisher implements DataPublishable {
 					publisher = pubManager.getPublisher();
 				} else {
 
-					publisher = new DataPublisher(config.getSecureUrl(),config.getReceiverUrl(), config.getUsername(),
+					publisher = new DataPublisher(null,config.getSecureUrl(),config.getReceiverUrl(), config.getUsername(),
 							config.getPassword());
 
 					PublisherManager pubManager = new PublisherManager(publisher, key);
@@ -113,15 +113,15 @@ public class CommonDataPublisher implements DataPublishable {
 		return publisher;
 	}
 
-	public String findStreamId(DataPublisher dataPublisher) throws RSSDataMgtException {
+	/*public String findStreamId(DataPublisher dataPublisher) throws RSSDataMgtException {
 		try {
 			return dataPublisher.findStreamId(streamName, streamVersion);
 		} catch (AgentException e) {
 			throw new RSSDataMgtException(" Error while finding Stream Id", e);
 		}
-	}
+	}*/
 
-	public String getStreamId(final DataPublisher dataPublisher) throws RSSDataMgtException {
+	/*public String getStreamId(final DataPublisher dataPublisher) throws RSSDataMgtException {
 
 		String streamId = null;
 		
@@ -160,7 +160,7 @@ public class CommonDataPublisher implements DataPublishable {
 		}		
 
 		return streamId;
-	}
+	}*/
 
 	public void publishStats(DataPublisher dataPublisher, String streamId,
 	                         final PublishEventData data) throws RSSDataMgtException {
@@ -172,14 +172,14 @@ public class CommonDataPublisher implements DataPublishable {
 			event.setPayloadData(data.getPayloadDataArray());
 		}
 
-		try {
+		//try {
 			dataPublisher.publish(event);
-		} catch (AgentException e) {
-			throw new RSSDataMgtException(" Error while publishing events", e);
-		}
+//		} catch (AgentException e) {
+//			throw new RSSDataMgtException(" Error while publishing events", e);
+//		}
 	}
 
-	public void deleteStreamDefinition(DataPublisher dataPublisher) throws RSSDataMgtException {
+	/*public void deleteStreamDefinition(DataPublisher dataPublisher) throws RSSDataMgtException {
 
 		writeLock.lock();
 		try {
@@ -190,7 +190,7 @@ public class CommonDataPublisher implements DataPublishable {
 			writeLock.unlock();
 		}
 
-	}
+	}*/
 	
 	public static PublishEventData populateEventData(final UsageStatistic stats, final long time){
 		Object [] meta = new Object[] { RSSPublisherConstants.META_DATA_PREFIX };
