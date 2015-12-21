@@ -1149,7 +1149,7 @@
 
         <carbon.analytics-common.version>5.0.5</carbon.analytics-common.version>
         <!--Carbon identity version-->
-        <carbon.identity.version>5.0.6</carbon.identity.version>
+        <carbon.identity.version>5.0.7</carbon.identity.version>
 
         <carbon.registry.version>4.4.9</carbon.registry.version>
         <carbon.storage.management.version>4.3.5-SNAPSHOT</carbon.storage.management.version>
