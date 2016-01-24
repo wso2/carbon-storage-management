@@ -3,13 +3,13 @@
     <parent>
         <artifactId>rss-manager-feature</artifactId>
         <groupId>org.wso2.carbon.storagemgt</groupId>
-        <version>4.3.4-alpha1</version>
+        <version>4.3.4-SNAPSHOT</version>
 	<relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.rssmanager.server.feature</artifactId>
-    <version>4.3.4-alpha1</version>
+    <version>4.3.4-SNAPSHOT</version>
     <name>RSS Manager Server Feature</name>
     <packaging>pom</packaging>
     <url>http://wso2.org</url>

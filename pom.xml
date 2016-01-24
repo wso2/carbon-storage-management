@@ -11,7 +11,7 @@
     <groupId>org.wso2.carbon.storagemgt</groupId>
     <artifactId>carbon-storage-management</artifactId>
     <packaging>pom</packaging>
-    <version>4.3.4-alpha1</version>
+    <version>4.3.4-SNAPSHOT</version>
     <name>WSO2 Carbon - Platform Aggregator Pom</name>
     <url>http://wso2.org</url>
 
@@ -1152,7 +1152,7 @@
         <carbon.identity.version>5.0.7</carbon.identity.version>
 
         <carbon.registry.version>4.4.9</carbon.registry.version>
-        <carbon.storage.management.version>4.3.4-alpha1</carbon.storage.management.version>
+        <carbon.storage.management.version>4.3.4-SNAPSHOT</carbon.storage.management.version>
         <cassandra.version>2.1.5</cassandra.version>
         <cassandra.thrift.version>2.1.5</cassandra.thrift.version>
         <wso2.hadoop.version>0.20.203.1.wso2v4</wso2.hadoop.version>
